@@ -1419,6 +1419,10 @@ void ProcessKeyboardInput(UINT message, WPARAM wParam, LPARAM lParam)
         keymap [(lParam & 0x1000000) ? VK_RMENU:VK_LMENU] &= ~0x80;
         SetKeyboardState (keymap);
     }
+	if (wParam == VK_F5)
+		SaveState();
+	if (wParam == VK_F7)
+		LoadState();
 
     if (message == WM_SYSKEYUP && wParam == VK_MENU) {
         /* ignore ALT key up event to stop it activating the menus */
@@ -1428,15 +1432,6 @@ void ProcessKeyboardInput(UINT message, WPARAM wParam, LPARAM lParam)
 	ctrlkey = GetKeyState(VK_CONTROL) & 0xFF000000;
 	switch(wParam)
 	{
-	case VK_F5:
-		SaveState();
-
-		break;
-
-	case VK_F7:
-		LoadState();
-
-		break;
 
 	case VK_ESCAPE:
     case VK_F4:

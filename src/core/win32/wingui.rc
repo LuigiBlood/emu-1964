@@ -51,7 +51,7 @@ BEGIN
         MENUITEM SEPARATOR
         POPUP "Save State"
         BEGIN
-            MENUITEM "To File...\tCtrl+F5",         ID_SAVESTATE, GRAYED
+            MENUITEM "To File...\t F5",         ID_SAVESTATE, GRAYED
             MENUITEM "To  Project64 Save State File...", 
                                                     ID_CPU_EXPORTPJ64STATE
             , GRAYED
@@ -71,7 +71,7 @@ BEGIN
         END
         POPUP "Load State"
         BEGIN
-            MENUITEM "From File...\tCtrl+F7",       ID_LOADSTATE, GRAYED
+            MENUITEM "From File...\tF7",       ID_LOADSTATE, GRAYED
             MENUITEM "From Project64 Save State File...", 
                                                     ID_CPU_IMPORTPJ64STATE
             , GRAYED
