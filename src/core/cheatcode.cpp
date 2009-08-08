@@ -1359,14 +1359,15 @@ BOOL IsCodeMatchRomCountryCode(int cheat_country_code, int rom_country_code)
 		}
 	case CHEAT_EUR: // Europe
 		{
-			if (rom_country_code == 0x50)
+			if (rom_country_code == 0x50 || 0x58 || 0x20 ||
+									0x21 || 0x38 || 0x70   )
 				return TRUE;
 			else
 			    return FALSE;
 		}
 	case CHEAT_AUS: // Australia
 		{
-			if (rom_country_code == 0x55)
+			if (rom_country_code == 0x55 || 0x59)
 				return TRUE;
 			else
 				return FALSE;
