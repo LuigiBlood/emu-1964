@@ -607,16 +607,6 @@ void RunSPTask(void)
 
 			emustatus.AListCount++;
 
-			if( Kaillera_Thread_Is_Running )
-			{
-				/* set the interrupt to fire */
-				(MI_INTR_REG_R) |= MI_INTR_AI;
-				if((MI_INTR_MASK_REG_R) & MI_INTR_AI)
-				{
-					SET_EXCEPTION(EXC_INT) gHWS_COP0Reg[CAUSE] |= CAUSE_IP3;
-					HandleInterrupts(0x80000180);
-				}
-			}
 		}
 
 		__except(NULL, EXCEPTION_EXECUTE_HANDLER)
@@ -738,7 +728,6 @@ void Trigger_AIInterrupt(void)
 		HandleInterrupts(0x80000180);
 	}
 
-	//KAILLERA_LOG(fprintf(ktracefile, "AI at VI=%d, compare=%08X\n", viTotalCount, Get_COUNT_Register()));
 }
 
 /*
@@ -763,7 +752,6 @@ void Trigger_CompareInterrupt(void)
 	SET_EXCEPTION(EXC_INT) gHWS_COP0Reg[CAUSE] |= CAUSE_IP8;
 
 	HandleInterrupts(0x80000180);
-	//KAILLERA_LOG(fprintf(ktracefile, "CI at VI=%d, compare=%08X\n", viTotalCount, Get_COUNT_Register()));
 }
 
 /*
@@ -780,7 +768,6 @@ void Trigger_DPInterrupt(void)
 		SET_EXCEPTION(EXC_INT) gHWS_COP0Reg[CAUSE] |= CAUSE_IP3;
 		HandleInterrupts(0x80000180);
 	}
-	//KAILLERA_LOG(fprintf(ktracefile, "DP at VI=%d, compare=%08X\n", viTotalCount, Get_COUNT_Register()));
 }
 
 /*
@@ -796,7 +783,6 @@ extern	BOOL		screenIsUpdated;
 
 void Trigger_VIInterrupt(void)
 {
-	//KAILLERA_LOG(fprintf(ktracefile, "VI at compare=%08X\n", Get_COUNT_Register() ));
 
 	{
 		if( !screenIsUpdated )	// If screen is not updated by write to VIOrigin register
@@ -917,7 +903,7 @@ void Trigger_VIInterrupt(void)
 		vi_field_number = 0;
 	}
 
-	if(emuoptions.auto_apply_cheat_code || kailleraAutoApplyCheat)
+	if(emuoptions.auto_apply_cheat_code)
 	{
 		// Apply the hack codes
 #ifndef CHEATCODE_LOCK_MEMORY
@@ -952,7 +938,6 @@ void Trigger_SIInterrupt(void)
 		SET_EXCEPTION(EXC_INT) gHWS_COP0Reg[CAUSE] |= CAUSE_IP3;
 		HandleInterrupts(0x80000180);
 	}
-	//KAILLERA_LOG(fprintf(ktracefile, "SI at VI=%d, compare=%08X\n", viTotalCount, Get_COUNT_Register()));
 }
 
 /*
@@ -969,7 +954,6 @@ void Trigger_PIInterrupt(void)
 		SET_EXCEPTION(EXC_INT) gHWS_COP0Reg[CAUSE] |= CAUSE_IP3;
 		HandleInterrupts(0x80000180);
 	}
-	//KAILLERA_LOG(fprintf(ktracefile, "PI at VI=%d, compare=%08X\n", viTotalCount, Get_COUNT_Register()));
 }
 
 /*
@@ -986,7 +970,6 @@ void Trigger_SPInterrupt(void)
 		SET_EXCEPTION(EXC_INT) gHWS_COP0Reg[CAUSE] |= CAUSE_IP3;
 		HandleInterrupts(0x80000180);
 	}
-	//KAILLERA_LOG(fprintf(ktracefile, "SP at VI=%d, compare=%08X\n", viTotalCount, Get_COUNT_Register()));
 }
 
 /*

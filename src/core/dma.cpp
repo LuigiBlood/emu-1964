@@ -731,7 +731,6 @@ void Do_DMA_MemCopy_SI_To_DRAM(void)
 		/* Skip this DMA */
 		SI_STATUS_REG |= SI_STATUS_INTERRUPT;
 		Trigger_SIInterrupt();
-		//KAILLERA_LOG(fprintf(ktracefile, "SI at pos #1 at compare = %08X\n", Get_COUNT_Register()));
 
 		return;
 	}
@@ -809,7 +808,6 @@ void Do_DMA_MemCopy_SI_To_DRAM(void)
 	EXTRA_DMA_TIMING(64);
 	SI_STATUS_REG |= SI_STATUS_INTERRUPT;
 	Trigger_SIInterrupt();
-	//KAILLERA_LOG(fprintf(ktracefile, "SI at pos #2 at compare = %08X\n", Get_COUNT_Register()));
 
 }
 
@@ -866,7 +864,6 @@ void Do_DMA_MemCopy_DRAM_to_SI(void)
 		/* Skip this DMA */
 		SI_STATUS_REG |= SI_STATUS_INTERRUPT;
 		Trigger_SIInterrupt();
-		//KAILLERA_LOG(fprintf(ktracefile, "SI at pos #3 at compare = %08X\n", Get_COUNT_Register()));
 		return;
 	}
 
@@ -933,7 +930,6 @@ void Do_DMA_MemCopy_DRAM_to_SI(void)
 
 	gHWS_COP0Reg[COUNT] = Get_COUNT_Register();		// Need this for netplay synchronization
 	SI_STATUS_REG |= SI_STATUS_INTERRUPT;
-	//KAILLERA_LOG(fprintf(ktracefile, "SI at pos #4 at compare = %08X\n", Get_COUNT_Register()));
 	Trigger_SIInterrupt();
 }
 

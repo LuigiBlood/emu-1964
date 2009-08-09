@@ -47,7 +47,6 @@ __cdecl
 Play(BOOL WithFullScreen);
 
 void				Stop(void);
-void				KailleraPlay(void);
 void				OpenROM(void);
 void				CloseROM(void);
 void				ChangeDirectory(void);

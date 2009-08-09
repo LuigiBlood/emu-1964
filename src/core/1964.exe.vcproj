@@ -709,15 +709,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Kaillera\Kaillera.h"
-					>
-				</File>
-				<File
 					RelativePath=".\n64rcp.h"
-					>
-				</File>
-				<File
-					RelativePath=".\netplay-spec.h"
 					>
 				</File>
 				<File
@@ -923,10 +915,6 @@
 							ObjectFile="$(IntDir)/$(InputName)1.obj"
 						/>
 					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\kaillera\Kaillera.cpp"
-					>
 				</File>
 			</Filter>
 			<Filter

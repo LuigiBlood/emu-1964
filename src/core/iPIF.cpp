@@ -230,28 +230,15 @@ BOOL ControllerCommand(_u8 *cmd, int device)
 
 	emustatus.ControllerReadCount++;
 
-	//KAILLERA_LOG(fprintf(ktracefile, "P%d cmd %d at VI %d\n", device, cmd[2], viTotalCount));
 
 
-	if( Kaillera_Is_Running == TRUE )
-	{
-		if( kailleraClientStatus[device] == FALSE )
-		{
-			cmd[1] |= 0x80;
-			cmd[3] = 0xFF;
-			cmd[4] = 0xFF;
-			cmd[5] = 0xFF;
-			//KAILLERA_LOG(fprintf(ktracefile, "P%d get status %08X%08X at VI %d\n", device, *(DWORD*)&cmd[0], *(DWORD*)&cmd[4], viTotalCount));
-			return TRUE;
-		}
-	}
-	else if( !Controls[device].Present )
+
+	if( !Controls[device].Present )
 	{
 		cmd[1] |= 0x80;
 		cmd[3] = 0xFF;
 		cmd[4] = 0xFF;
 		cmd[5] = 0xFF;
-		//KAILLERA_LOG(fprintf(ktracefile, "P%d get status %08X%08X at VI %d\n", device, *(DWORD*)&cmd[0], *(DWORD*)&cmd[4], viTotalCount));
 		return TRUE;
 	}
 
@@ -267,29 +254,17 @@ BOOL ControllerCommand(_u8 *cmd, int device)
 		else
 			cmd[5] = 0x00;	/* no mempak - reversed fir Adaptoid only (Bit 0x01 would be rumble-pack) */
 
-		//KAILLERA_LOG(fprintf(ktracefile, "P%d get status %08X%08X at VI %d\n", device, *(DWORD*)&cmd[0], *(DWORD*)&cmd[4], viTotalCount));
 		break;
 
 	/* Read Controller Data ... need a DInput interface first =) */
 	case 0x01:
 		{
 			BUTTONS Keys;
+			CONTROLLER_GetKeys(device, &Keys);
 
-			if(Kaillera_Is_Running )
-			{
-				KailleraGetPlayerKeyValuesFor1Player(&Keys, device);
-			}
-			else
-			{
-				CONTROLLER_GetKeys(device, &Keys);
-			}
-
-			if( ktracefile )	fprintf(ktracefile, "P%d get key value %08X at VI %d\n", device, *(DWORD *) &Keys, viTotalCount);
 			*(DWORD *) &cmd[3] = *(DWORD *) &Keys;
 			DEBUG_CONTROLLER_TRACE(TRACE2("Read controller %d, return %X", device, *(DWORD *) &Keys););
 		}
-
-		//KAILLERA_LOG(fprintf(ktracefile, "P%d get Keys %08X%08X at VI %d\n", device, *(DWORD*)&cmd[0], *(DWORD*)&cmd[4], viTotalCount));
 		break;
 
 	/* Read Controller Pak */
@@ -312,7 +287,6 @@ BOOL ControllerCommand(_u8 *cmd, int device)
 			break;
 		}
 
-		//KAILLERA_LOG(fprintf(ktracefile, "P%d get Pak %08X%08X at VI %d\n", device, *(DWORD*)&cmd[0], *(DWORD*)&cmd[4], viTotalCount));
 		return FALSE;
 		break;
 
@@ -336,7 +310,6 @@ BOOL ControllerCommand(_u8 *cmd, int device)
 			break;
 		}
 
-		//KAILLERA_LOG(fprintf(ktracefile, "P%d write Pak %08X%08X at VI %d\n", device, *(DWORD*)&cmd[0], *(DWORD*)&cmd[4], viTotalCount));
 		return FALSE;
 		break;
 
@@ -372,7 +345,6 @@ BOOL ControllerCommand(_u8 *cmd, int device)
 		else
 			cmd[5] = 0x00;	/* no mempak - for Adaptoid only (Bit 0x01 would be rumble-pack) */
 
-		//KAILLERA_LOG(fprintf(ktracefile, "P%d get status %08X%08X at VI %d\n", device, *(DWORD*)&cmd[0], *(DWORD*)&cmd[4], viTotalCount));
 		/* exit(IPIF_EXIT); */
 		break;
 	}
@@ -1128,7 +1100,7 @@ void __cdecl iPifCheck(void)
 		case 1:
 		case 2:
 		case 3:
-			if(Controls[device].RawData && Kaillera_Is_Running == FALSE )
+			if(Controls[device].RawData)
 			{
 				CONTROLLER_ControllerCommand(device, cmd);
 				CONTROLLER_ReadController(device, cmd);
@@ -1205,7 +1177,7 @@ void __cdecl iPifCheck(void)
 		2;			/* size of Command-Bytes + size of Answer-Bytes + 2 for the 2 size Bytes */
 	}
 
-	if(Controls[0].RawData && Kaillera_Is_Running == FALSE )
+	if(Controls[0].RawData)
 	{
 		CONTROLLER_ControllerCommand(-1, bufin);	/* 1 signalling end of processing the pif ram. */
 	}
