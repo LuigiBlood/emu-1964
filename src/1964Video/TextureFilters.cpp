@@ -1577,25 +1577,10 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 		delete [] buf_rgba;
 		return;
 	}
-    int scale = 0;
-    if (width == 1 * (int)entry.ti.WidthToCreate && height == 1 * (int)entry.ti.HeightToCreate)
-        scale = 1;
-    else if (width == 2 * (int)entry.ti.WidthToCreate && height == 2 * (int)entry.ti.HeightToCreate)
-        scale = 2;
-    else if (width == 4 * (int)entry.ti.WidthToCreate && height == 4 * (int)entry.ti.HeightToCreate)
-        scale = 4;
-    else if (width == 8 * (int)entry.ti.WidthToCreate && height == 8 * (int)entry.ti.HeightToCreate)
-        scale = 8;
-    else if (width == 16 * (int)entry.ti.WidthToCreate && height == 16 * (int)entry.ti.HeightToCreate)
-        scale =16;
-    else
-    {
-        int scalex = width / (int)entry.ti.WidthToCreate;
-        int scaley = height / (int)entry.ti.HeightToCreate;
-        scale = scalex > scaley ? scalex : scaley; // set scale to maximum(scalex,scaley)
-        printf("Warning: Non-integral hi-res texture scale.  Orig = (%i,%i)  Hi-res = (%i,%i)\nTextures may look incorrect\n", 
-               entry.ti.WidthToCreate, entry.ti.HeightToCreate, width, height);
-    }
+
+    int scalex = width / (int)entry.ti.WidthToCreate;
+    int scaley = height / (int)entry.ti.HeightToCreate;
+    int scale = scalex > scaley ? scalex : scaley; // set scale to maximum(scalex,scaley)
 
 	// Create new texture
 	entry.pEnhancedTexture = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scale, entry.ti.HeightToCreate*scale);
