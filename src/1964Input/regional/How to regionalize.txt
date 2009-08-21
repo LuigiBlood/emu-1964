@@ -1,0 +1,44 @@
+Thank you for helping to translate!  Here's what I need you to do.
+
+MAKE SURE YOU HAVE THE LATEST VERSION OF THIS FILE FROM:
+http://www.randomwisdom.com/files/NRage_DInput8_Lang_SDK.zip
+
+Open up this .rc file in a text editor that can save in _Unicode format_
+ (not UTF-8 but 16-bit Unicode).
+
+Scroll down to about line 160, where you will see the text:
+"N-Rage Input Plugin V2 - Configuration"
+Please replace this text, leaving the quotes in place.
+
+From this point on, please find things in quotes and replace them with the translation.
+
+Do not translate:
+-anything containing PLACEHOLDER (as it won't be displayed anyway)
+-"MS Shell Dlg" (this is a font name)
+-system words like "SysListView32"
+-the word "Button" as in the following example:
+    CONTROL         "Plugged",IDC_PLUGGED,"Button",BS_AUTOCHECKBOX |
+
+	In this case, please translate the word "Plugged" but leave the word "Button"
+	as it is a special identifier.
+
+---Special cases---
+
+When you see a string like "Player %i:\nPak changed to %s", the markers %i and %s
+will be replaced by some data (in this case, the player number and the pakname).
+Make sure your translation has the same markers in the same order.  Otherwise,
+the plugin will crash!
+
+---Special characters---
+If you need to put a newline (like the Enter key), use this: \n
+If you need to put a % sign (as in "50% chance"), use this: %%
+
+Save the file in Unicode format, and send it to me along with your name.
+
+Some of the English is ambiguous in context, so if you have a question about where
+the given text appears, please ask me.
+
+
+The resource.h file is here in case you want to compile it into a DLL yourself or check
+the spacing with a dialog editor.  If you don't know what this means, don't worry about
+it.
