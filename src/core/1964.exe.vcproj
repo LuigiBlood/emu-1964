@@ -171,7 +171,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories=".."
-				PreprocessorDefinitions="ENABLE_OPCODE_DEBUGGER,DYNAREC,WIN32,NDEBUG,_WINDOWS,ZLIB_DLL,ENABLE_64BIT_FPU"
+				PreprocessorDefinitions="ENABLE_OPCODE_DEBUGGER;DYNAREC;WIN32;NDEBUG;_WINDOWS;ZLIB_DLL;ENABLE_64BIT_FPU"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -1270,10 +1270,6 @@
 		</File>
 		<File
 			RelativePath="stdafx.h"
-			>
-		</File>
-		<File
-			RelativePath=".\TODO.txt"
 			>
 		</File>
 		<File

@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="1964Input"
-	ProjectGUID="{3DE21B49-9701-48F8-A390-996329765297}"
+	ProjectGUID="{B0290350-0E89-4880-8367-6BB5F111104C}"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -145,7 +145,7 @@
 				Optimization="3"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;NRAGE_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;NRAGE_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				GeneratePreprocessedFile="0"
 				KeepComments="false"
 				StringPooling="true"

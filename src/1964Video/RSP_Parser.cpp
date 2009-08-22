@@ -59,7 +59,7 @@ UcodeMap *ucodeMaps[] =
 	&ucodeMap1,				// ucode 1 - GBI1
 	NULL,					// ucode 2 - Golden Eye
 	&ucodeMap3,				// ucode 3 - S2DEX GBI2
-	NULL,					// ucode 4 - Wave Racer
+	&ucodeMap4,				// ucode 4 - Wave Racer
 	&ucodeMap5,				// ucode 5 - BGI2
 	NULL,					// ucode 6 - DKR
 	&ucodeMap7,				// ucode 7 - S2DEX
@@ -71,7 +71,7 @@ UcodeMap *ucodeMaps[] =
 	NULL,					// ucode 13 - modified ucode S2DEX
 	NULL,					// ucode 14 - OgreBattle Background
 	NULL,					// ucode 15 - ucode 0 with sprite2D
-	NULL,			// ucode 16 - Star War, Shadow of Empire
+	&ucodeMap16,			// ucode 16 - Star War, Shadow of Empire
 	NULL,					// ucode 17 - Star Wars - Rogue Squadron, 
 	NULL,					// ucode 18 - World Driver Championship
 	NULL,					// ucode 19 - Last Legion UX

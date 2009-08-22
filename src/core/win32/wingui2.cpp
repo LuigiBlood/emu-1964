@@ -68,6 +68,7 @@ PluginDLLInfo DesiredPluginDLLInfos[] =
 	{	{0},	"Jabo's Direct3D7 1.4",							PLUGIN_TYPE_GFX,	-1},
 	{	{0},	"TR64 OpenGL v0.8.3",							PLUGIN_TYPE_GFX,	-1},
 	{	{0},	"1964 OpenGL Graphics build 4.5.0",				PLUGIN_TYPE_GFX,	-1},
+	{	{0},	"1964Video",				PLUGIN_TYPE_GFX,	-1},
 
 	{	{0},	"schibo's Audio Plugin 1.2 based on UltraHLE",	PLUGIN_TYPE_AUDIO,	-1},
 	{	{0},	"Azimer's Audio v0.13b",						PLUGIN_TYPE_AUDIO,	-1},
@@ -85,6 +86,7 @@ PluginDLLInfo DesiredPluginDLLInfos[] =
 	{	{0},	"NooTe_DI By NooTe version 0.4.2 build 17",		PLUGIN_TYPE_CONTROLLER,	-1},
 	{	{0},	"N-Rage`s Direct-Input8 1.61",					PLUGIN_TYPE_CONTROLLER,	-1},
 	{	{0},	"N-Rage`s Direct-Input8 V2 1.80a",				PLUGIN_TYPE_CONTROLLER,	-1},
+	{	{0},	"1964Input",									PLUGIN_TYPE_CONTROLLER,	-1},
 
 	{	{0},	"Hacktarux hle rsp plugin",						PLUGIN_TYPE_RSP,	-1},
 	{	{0},	"RSP emulation Plugin",							PLUGIN_TYPE_RSP,	-1},
@@ -272,12 +274,6 @@ void __cdecl CountryCodeToCountryName_and_TVSystem(int countrycode, char *countr
 		strcpy(countryname, "Japan");
 		break;
 
-	/* Europe - PAL */
-	case 0x50:
-		*tvsystem = TV_SYSTEM_PAL;
-		strcpy(countryname, "Europe");
-		break;
-
 	case 'S':	/* Spain */
 		*tvsystem = TV_SYSTEM_PAL;
 		strcpy(countryname, "Spain");
@@ -285,25 +281,18 @@ void __cdecl CountryCodeToCountryName_and_TVSystem(int countrycode, char *countr
 
 	/* Australia */
 	case 0x55:
-		*tvsystem = TV_SYSTEM_PAL;
-		strcpy(countryname, "Australia");
-		break;
-
-	case 0x58:
-		*tvsystem = TV_SYSTEM_PAL;
-		strcpy(countryname, "Europe");
-		break;
-
-	/* Australia */
 	case 0x59:
 		*tvsystem = TV_SYSTEM_PAL;
 		strcpy(countryname, "Australia");
 		break;
 
+	/* Europe - PAL */
+	case 0x58:
 	case 0x20:
 	case 0x21:
 	case 0x38:
 	case 0x70:
+	case 0x50:
 		*tvsystem = TV_SYSTEM_PAL;
 		strcpy(countryname, "Europe");
 		break;
