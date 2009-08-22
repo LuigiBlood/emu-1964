@@ -61,7 +61,7 @@ UcodeMap *ucodeMaps[] =
 	&ucodeMap3,				// ucode 3 - S2DEX GBI2
 	&ucodeMap4,				// ucode 4 - Wave Racer
 	&ucodeMap5,				// ucode 5 - BGI2
-	NULL,					// ucode 6 - DKR
+	&ucodeMap6,				// ucode 6 - DKR
 	&ucodeMap7,				// ucode 7 - S2DEX
 	NULL,					// ucode 8 - ucode 0 with sprite2D, for Demo Puzzle Master 64
 	NULL,					// ucode 9 - Perfect Dark

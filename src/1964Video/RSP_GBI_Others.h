@@ -130,7 +130,6 @@ void RSP_Mtx_DKR(Gfx *gfx)
 	LOG_UCODE("    DKR Loading Mtx: %d, command=%d", index, dwCommand);
 	DEBUGGER_PAUSE_AND_DUMP(NEXT_MATRIX_CMD,{TRACE0("Paused at DKR Matrix Cmd");});
 }
-
 void RSP_Vtx_DKR(Gfx *gfx)
 {
 	uint32 dwAddr = RSPSegmentAddr((gfx->words.w1));

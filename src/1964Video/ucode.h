@@ -781,9 +781,95 @@ UcodeMap ucodeMap5=
 	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
 };
 
+// uCode 6 - RSP SW 2.0 Diddy
+// Games: Diddy Kong Racing
+UcodeMap ucodeMap6 =
+{
+	RSP_GBI1_SpNoop, RSP_Mtx_DKR, RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
+	RSP_Vtx_DKR, RSP_DMA_Tri_DKR, RSP_GBI0_DL, RSP_DL_In_MEM_DKR,
+	RSP_GBI1_Reserved, RSP_GBI0_Sprite2DBase, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	//10
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	//20
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//30
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	//40
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	//50
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	//60
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//70
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	//80
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//90
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//a0
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	//b0
+	RSP_RDP_Nothing, RSP_GBI0_Tri4, RSP_GBI1_RDPHalf_Cont, RSP_GBI1_RDPHalf_2,
+	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D, RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
+	RSP_GBI1_EndDL, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH, RSP_GBI1_Texture,
+	RSP_GBI1_MoveWord, RSP_GBI1_PopMtx, RSP_GBI1_CullDL, RSP_RDP_Nothing,//<<uc5_dma_offsets
+	//c0
+	RSP_GBI1_Noop, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RDP_TriFill, RDP_TriFillZ, RDP_TriTxtr, RDP_TriTxtrZ,
+	RDP_TriShade, RDP_TriShadeZ, RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	//d0
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//e0
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	DLParser_TexRect, DLParser_TexRectFlip, DLParser_RDPLoadSync, DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB, DLParser_SetKeyR,
+	DLParser_SetConvert, DLParser_SetScissor, DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
+	//f0
+	DLParser_LoadTLut, RSP_RDP_Nothing, DLParser_SetTileSize, DLParser_LoadBlock, 
+	DLParser_LoadTile, DLParser_SetTile, DLParser_FillRect, DLParser_SetFillColor,
+	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
+	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
+	//g0
+};
+
 // Ucode: S2DEX 1.--
 // Games: Yoshi's Story
-UcodeMap ucodeMap7=
+UcodeMap ucodeMap7 =
 {
 	RSP_GBI1_SpNoop,	 RSP_S2DEX_BG_1CYC_2,     RSP_S2DEX_BG_COPY, RSP_S2DEX_OBJ_RECTANGLE,
 	RSP_S2DEX_OBJ_SPRITE, RSP_S2DEX_OBJ_MOVEMEM, RSP_GBI0_DL,	RSP_GBI1_Reserved,
