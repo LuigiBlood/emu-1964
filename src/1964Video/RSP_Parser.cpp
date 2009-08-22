@@ -64,7 +64,7 @@ UcodeMap *ucodeMaps[] =
 	&ucodeMap6,				// ucode 6 - DKR
 	&ucodeMap7,				// ucode 7 - S2DEX
 	NULL,					// ucode 8 - ucode 0 with sprite2D, for Demo Puzzle Master 64
-	NULL,					// ucode 9 - Perfect Dark
+	&ucodeMap9,					// ucode 9 - Perfect Dark
 	NULL,					// ucode 10 - Conker 
 	NULL,					// ucode 11 - Gemini
 	NULL,					// ucode 12 - Silicon Valley, Spacestation
