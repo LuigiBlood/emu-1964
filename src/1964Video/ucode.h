@@ -53,6 +53,13 @@ UcodeFunc(RSP_Vtx_PD);
 UcodeFunc(RSP_Set_Vtx_CI_PD);
 UcodeFunc(RSP_Tri4_PD);
 
+UcodeFunc(RSP_Vtx_Conker);
+UcodeFunc(RSP_MoveWord_Conker);
+UcodeFunc(RSP_Tri4_Conker);
+UcodeFunc(RSP_MoveMem_Conker);
+UcodeFunc(RDP_GFX_Force_Vertex_Z_Conker);
+UcodeFunc(RSP_Quad_Conker);
+
 UcodeFunc(RSP_GBI0_Sprite2DBase);
 UcodeFunc(RSP_GBI0_Sprite2DDraw);
 UcodeFunc(RSP_GBI1_Sprite2DBase);
@@ -955,7 +962,7 @@ UcodeMap ucodeMap7 =
 	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
 };
 //uCode 9 - unknown
-//Games: Conker's Bad Fur Day
+//Games: Perfect Dark
 UcodeMap ucodeMap9 =
 {
 	RSP_GBI1_SpNoop, RSP_GBI0_Mtx, RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
@@ -1039,6 +1046,93 @@ UcodeMap ucodeMap9 =
 	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
 	//g0
 };
+//uCode 10 - unknown
+//Games: Conker
+//FIX ME This causes rendering problems
+UcodeMap ucodeMap10 =
+{
+	RSP_GBI1_SpNoop, RSP_Vtx_Conker, RSP_GBI1_ModifyVtx, RSP_GBI2_CullDL,
+	RSP_GBI1_BranchZ, RSP_GBI2_Tri1, RSP_Quad_Conker, RSP_Quad_Conker,
+	RSP_GBI2_Line3D, RSP_S2DEX_BG_1CYC, RSP_S2DEX_BG_COPY, RSP_S2DEX_OBJ_RENDERMODE/*RSP_RDP_Nothing*/,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//10
+	RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker,
+	RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker,
+	RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker,
+	RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker,
+	//20
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//30
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//40
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//50
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//60
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//70
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//80
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//90
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//a0
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//b0
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//c0
+	RSP_GBI1_Noop, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RDP_TriFill, RDP_TriFillZ, RDP_TriTxtr, RDP_TriTxtrZ,
+	RDP_TriShade, RDP_TriShadeZ, RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	//d0
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_GBI2_DL_Count, RSP_RDP_Nothing, RSP_GBI1_Texture,
+	RSP_GBI2_PopMtx, RSP_GBI2_GeometryMode, RSP_GBI2_Mtx, RSP_MoveWord_Conker,
+	RSP_MoveMem_Conker, RSP_GBI1_LoadUCode, RSP_GBI0_DL, RSP_GBI1_EndDL,
+	//e0
+	RSP_GBI1_SpNoop, RSP_GBI1_RDPHalf_1, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,
+	DLParser_TexRect, DLParser_TexRectFlip, DLParser_RDPLoadSync, DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB, DLParser_SetKeyR,
+	DLParser_SetConvert, DLParser_SetScissor, DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
+	//f0
+	DLParser_LoadTLut, RSP_GBI1_RDPHalf_2, DLParser_SetTileSize, DLParser_LoadBlock, 
+	DLParser_LoadTile, DLParser_SetTile, DLParser_FillRect, DLParser_SetFillColor,
+	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
+	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
+	//g0
+};
+
 //uCode 16 - RSP SW 2.0D EXT
 //Games: Star Wars: Shadows of the Empire
 UcodeMap ucodeMap16 = {

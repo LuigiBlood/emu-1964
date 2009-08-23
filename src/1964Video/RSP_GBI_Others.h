@@ -608,9 +608,6 @@ void RSP_Vtx_PD(Gfx *gfx)
 
 void RSP_Set_Vtx_CI_PD(Gfx *gfx)
 {
-	
-	
-
 	// Color index buf address
 	dwPDCIAddr = RSPSegmentAddr((gfx->words.w1));
 }
@@ -679,7 +676,7 @@ void RSP_Tri4_PD(Gfx *gfx)
 }
 
 
-void DLParser_Tri4_Conker(Gfx *gfx)
+void RSP_Tri4_Conker(Gfx *gfx)
 {
 	uint32 w0 = gfx->words.w0;
 	uint32 w1 = gfx->words.w1;
@@ -777,7 +774,7 @@ void RDP_GFX_Force_Vertex_Z_Conker(uint32 dwAddr)
 
 
 
-void DLParser_MoveMem_Conker(Gfx *gfx)
+void RSP_MoveMem_Conker(Gfx *gfx)
 {
 	uint32 dwType    = ((gfx->words.w0)     ) & 0xFE;
 	uint32 dwAddr = RSPSegmentAddr((gfx->words.w1));
@@ -831,9 +828,29 @@ void RSP_Vtx_Conker(Gfx *gfx)
 	status.dwNumVertices += dwN;
 	DisplayVertexInfo(dwAddr, dwV0, dwN);
 }
+void RSP_Quad_Conker (Gfx *gfx)
+{
+	if ((gfx->words.w0 & 0x00FFFFFF) == 0x2F)
+	{
+		uint32 command = gfx->words.w0>>24;
+		if (command == 0x6)
+		{
+			RSP_S2DEX_SPObjLoadTxSprite(gfx);
+			return;
+		}
+		if (command == 0x7)
+		{
+			RSP_S2DEX_SPObjLoadTxSprite(gfx);
+			return;
+		}
+	}
+	uint32 v0 = ((gfx->words.w0 >> 17) & 0x7F);
+	uint32 v1 = ((gfx->words.w0 >> 9) & 0x7F);
+	uint32 v2 = ((gfx->words.w0 >> 1) & 0x7F);
+	PrepareTriangle(v0,v1,v2);
+}
 
-
-void DLParser_MoveWord_Conker(Gfx *gfx)
+void RSP_MoveWord_Conker(Gfx *gfx)
 {
 	uint32 dwType   = ((gfx->words.w0) >> 16) & 0xFF;
 	if( dwType != RSP_MOVE_WORD_NUMLIGHT )

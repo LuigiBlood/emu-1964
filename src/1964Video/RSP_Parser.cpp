@@ -64,7 +64,7 @@ UcodeMap *ucodeMaps[] =
 	&ucodeMap6,				// ucode 6 - DKR
 	&ucodeMap7,				// ucode 7 - S2DEX
 	NULL,					// ucode 8 - ucode 0 with sprite2D, for Demo Puzzle Master 64
-	&ucodeMap9,					// ucode 9 - Perfect Dark
+	&ucodeMap9,				// ucode 9 - Perfect Dark
 	NULL,					// ucode 10 - Conker 
 	NULL,					// ucode 11 - Gemini
 	NULL,					// ucode 12 - Silicon Valley, Spacestation
@@ -420,24 +420,24 @@ void RDP_SetUcodeMap(int ucode)
 	case 10: // Conker BFD
 		memcpy( &LoadedUcodeMap, &ucodeMap5, sizeof(UcodeMap));
 		LoadedUcodeMap[1]=RSP_Vtx_Conker;
-		LoadedUcodeMap[0x10]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x11]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x12]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x13]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x14]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x15]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x16]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x17]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x18]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x19]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x1a]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x1b]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x1c]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x1d]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x1e]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0x1f]=DLParser_Tri4_Conker;
-		LoadedUcodeMap[0xdb]=DLParser_MoveWord_Conker;
-		LoadedUcodeMap[0xdc]=DLParser_MoveMem_Conker;
+		LoadedUcodeMap[0x10]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x11]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x12]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x13]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x14]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x15]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x16]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x17]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x18]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x19]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x1a]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x1b]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x1c]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x1d]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x1e]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0x1f]=RSP_Tri4_Conker;
+		LoadedUcodeMap[0xdb]=RSP_MoveWord_Conker;
+		LoadedUcodeMap[0xdc]=RSP_MoveMem_Conker;
 		status.bUseModifiedUcodeMap = true;
 		break;
 	case 12: // Silicon Velley, Space Station
