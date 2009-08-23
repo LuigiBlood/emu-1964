@@ -66,7 +66,7 @@ UcodeMap *ucodeMaps[] =
 	NULL,					// ucode 8 - ucode 0 with sprite2D, for Demo Puzzle Master 64
 	&ucodeMap9,				// ucode 9 - Perfect Dark
 	NULL,					// ucode 10 - Conker 
-	NULL,					// ucode 11 - Gemini
+	&ucodeMap11,			// ucode 11 - Gemini
 	NULL,					// ucode 12 - Silicon Valley, Spacestation
 	NULL,					// ucode 13 - modified ucode S2DEX
 	NULL,					// ucode 14 - OgreBattle Background
@@ -386,19 +386,8 @@ void RDP_SetUcodeMap(int ucode)
 	case 5:	// F3DEX GBI2
 		break;
 	case 6: // DKR, Jet Force Gemini, Mickey
+		break;
 	case 11: // DKR, Jet Force Gemini, Mickey
-		memcpy( &LoadedUcodeMap, &ucodeMap0, sizeof(UcodeMap));
-		LoadedUcodeMap[1]=RSP_Mtx_DKR;
-		LoadedUcodeMap[4]=RSP_Vtx_DKR;
-		if( ucode == 11 )	LoadedUcodeMap[4]=RSP_Vtx_Gemini;
-		LoadedUcodeMap[5]=RSP_DMA_Tri_DKR;
-		LoadedUcodeMap[7]=RSP_DL_In_MEM_DKR;
-		LoadedUcodeMap[0xbc]=RSP_MoveWord_DKR;
-		LoadedUcodeMap[0xbf]=DLParser_Set_Addr_Ucode6;
-		//LoadedUcodeMap[9]=RSP_GBI1_Sprite2DBase;
-		//LoadedUcodeMap[0xb0]=RSP_GBI1_BranchZ;
-		//LoadedUcodeMap[0xb2]=RSP_GBI1_ModifyVtx;
-		status.bUseModifiedUcodeMap = true;
 		break;
 	case 7: // S2DEX GBI1
 		break;
@@ -410,12 +399,6 @@ void RDP_SetUcodeMap(int ucode)
 		status.bUseModifiedUcodeMap = true;
 		break;
 	case 9:	// Perfect Dark
-		memcpy( &LoadedUcodeMap, &ucodeMap0, sizeof(UcodeMap));
-		LoadedUcodeMap[4]=RSP_Vtx_PD;
-		LoadedUcodeMap[7]=RSP_Set_Vtx_CI_PD;
-		LoadedUcodeMap[0xb1]=RSP_Tri4_PD;
-		LoadedUcodeMap[0xb4]=DLParser_RDPHalf_1_0xb4_GoldenEye;
-		status.bUseModifiedUcodeMap = true;
 		break;
 	case 10: // Conker BFD
 		memcpy( &LoadedUcodeMap, &ucodeMap5, sizeof(UcodeMap));
@@ -469,9 +452,6 @@ void RDP_SetUcodeMap(int ucode)
 		status.bUseModifiedUcodeMap = true;
 		break;
 	case 16: // Star War, Shadow Of Empire
-		memcpy( &LoadedUcodeMap, &ucodeMap0, sizeof(UcodeMap));
-		LoadedUcodeMap[4]=RSP_Vtx_ShadowOfEmpire;
-		status.bUseModifiedUcodeMap = true;
 		break;
 	case 17:	//Indiana Jones, does not work anyway
 		memcpy( &LoadedUcodeMap, &ucodeMap1, sizeof(UcodeMap));
