@@ -22,6 +22,7 @@
  * authors: email: schibo@emulation64.com, rice1964@yahoo.com
  */
 #include "stdafx.h"
+#include "uxtheme.h"
 
 /* Global variabls */
 ROMLIST_ENTRY	*romlist[MAX_ROMLIST];
@@ -1100,6 +1101,8 @@ BOOL WINAPI InitListViewItems(HWND hwndLV, int Sorting)
 
     SendMessage(gui.hwndRomList, LVM_SETTEXTCOLOR, 0, 0x000000);
     SendMessage(gui.hwndRomList, LVM_SETBKCOLOR, 0, 0xffffff);
+	SetWindowTheme(gui.hwndRomList, L"Explorer", NULL);
+
 
 	if( guioptions.display_boxart )
 	{

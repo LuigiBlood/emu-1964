@@ -95,7 +95,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="opengl32.lib ddraw.lib zlib\zlib.lib comctl32.lib dsound.lib kernel32.lib shell32.lib shlwapi.lib"
+				AdditionalDependencies="opengl32.lib ddraw.lib zlib\zlib.lib comctl32.lib dsound.lib kernel32.lib shell32.lib shlwapi.lib uxtheme.lib"
 				OutputFile="..\..\bin\$(ConfigurationName)\1964.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

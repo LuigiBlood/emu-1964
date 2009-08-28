@@ -782,17 +782,17 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 		if( strstr(libaa.cFileName,g_curRomInfo.szGameName) == 0 )
 			continue;
 
+		if( D3DXGetImageInfoFromFile(texturefilename, &imgInfo) != S_OK )
+		{
+			TRACE1("Cannot get image info for file: %s", libaa.cFileName);
+			continue;
+		}
+
 		TextureType type = NO_TEXTURE;
 		bool		bSeparatedAlpha = false;
 
 		if( _stricmp(_strlwr(right(libaa.cFileName,7)), "_ci.bmp") == 0 )
 		{
-			if( D3DXGetImageInfoFromFile(texturefilename, &imgInfo) != S_OK )
-			{
-				TRACE1("Cannot get image info for file: %s", libaa.cFileName);
-				continue;
-			}
-
 			if( imgInfo.Format == D3DFMT_P8 )
 				type = COLOR_INDEXED_BMP;
 			else
@@ -800,12 +800,6 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 		}
 		else if( _stricmp(_strlwr(right(libaa.cFileName,13)), "_ciByRGBA.png") == 0 )
 		{
-			if( D3DXGetImageInfoFromFile(texturefilename, &imgInfo) != S_OK )
-			{
-				TRACE1("Cannot get image info for file: %s", libaa.cFileName);
-				continue;
-			}
-
 			if( imgInfo.Format == D3DFMT_A8R8G8B8 )
 				type = RGBA_PNG_FOR_CI;
 			else
@@ -813,12 +807,6 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 		}
 		else if( _stricmp(_strlwr(right(libaa.cFileName,16)), "_allciByRGBA.png") == 0 )
 		{
-			if( D3DXGetImageInfoFromFile(texturefilename, &imgInfo) != S_OK )
-			{
-				TRACE1("Cannot get image info for file: %s", libaa.cFileName);
-				continue;
-			}
-
 			if( imgInfo.Format == D3DFMT_A8R8G8B8 )
 				type = RGBA_PNG_FOR_ALL_CI;
 			else
@@ -826,12 +814,6 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 		}
 		else if( _stricmp(_strlwr(right(libaa.cFileName,8)), "_rgb.png") == 0 )
 		{
-			if( D3DXGetImageInfoFromFile(texturefilename, &imgInfo) != S_OK )
-			{
-				TRACE1("Cannot get image info for file: %s", libaa.cFileName);
-				continue;
-			}
-
 			if( imgInfo.Format != D3DFMT_X8R8G8B8 )
 				continue;
 
@@ -862,11 +844,6 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 		}
 		else if( _stricmp(_strlwr(right(libaa.cFileName,8)), "_all.png") == 0 )
 		{
-			if( D3DXGetImageInfoFromFile(texturefilename, &imgInfo) != S_OK )
-			{
-				TRACE1("Cannot get image info for file: %s", libaa.cFileName);
-				continue;
-			}
 			if( imgInfo.Format != D3DFMT_A8R8G8B8 )
 				continue;
 

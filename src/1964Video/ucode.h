@@ -43,6 +43,8 @@ UcodeFunc(RSP_GBI0_Vtx);
 UcodeFunc(RSP_Vtx_DKR);
 UcodeFunc(RSP_Vtx_WRUS);
 UcodeFunc(RSP_Vtx_ShadowOfEmpire);
+UcodeFunc(RSP_Tri1_ShadowOfEmpire);
+UcodeFunc(RSP_Quad3d_ShadowOfEmpire);
 
 UcodeFunc(RSP_GBI0_Tri4);
 UcodeFunc(RSP_DMA_Tri_DKR);
@@ -1285,9 +1287,9 @@ UcodeMap ucodeMap16 = {
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	//b0
 	RSP_RDP_Nothing, RSP_GBI0_Tri4,  RSP_GBI1_RDPHalf_Cont, RSP_GBI1_RDPHalf_2,
-	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D, RSP_GBI1_ClearGeometryMode,  RSP_GBI1_SetGeometryMode,//RSP_GBI1_Line3D == uc4_quad3d
+	RSP_GBI1_RDPHalf_1, RSP_Quad3d_ShadowOfEmpire, RSP_GBI1_ClearGeometryMode,  RSP_GBI1_SetGeometryMode,
 	RSP_GBI1_EndDL, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH, RSP_GBI1_Texture,
-	RSP_GBI1_MoveWord, RSP_GBI1_PopMtx, RSP_GBI1_CullDL, RSP_GBI1_Tri1,
+	RSP_GBI1_MoveWord, RSP_GBI1_PopMtx, RSP_GBI1_CullDL, RSP_Tri1_ShadowOfEmpire,
 	//c0
 	RSP_GBI1_Noop,  RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  
