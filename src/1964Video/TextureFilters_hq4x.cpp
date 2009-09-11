@@ -19,6 +19,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "stdafx.h"
 
+/************************************************************************/
+/* hq4x filters                                                         */
+/************************************************************************/
+
+/*
+* This effect is derived from the hq4x effect made by Maxim Stepin
+*/
+
 static int   RGBtoYUV[4096];
 //#define RGB32toYUV(val) (RGBtoYUV[((val&0x00FF0000)>>20)+((val&0x0000FF00)>>12)+((val&0x000000FF)>>4)])
 inline int RGB32toYUV(uint32 val)
