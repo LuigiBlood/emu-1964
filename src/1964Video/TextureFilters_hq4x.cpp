@@ -49,11 +49,9 @@ inline int RGB32toYUV(uint32 val)
 }
 #define RGB16toYUV(val) (RGBtoYUV[(val&0x0FFF)])
 static int   YUV1, YUV2;
-const  int   Amask = 0xFF000000;
 const  int   Ymask = 0x00FF0000;
 const  int   Umask = 0x0000FF00;
 const  int   Vmask = 0x000000FF;
-const  int   trA   = 0x20000000;
 const  int   trY   = 0x00300000;
 const  int   trU   = 0x00000700;
 const  int   trV   = 0x00000006;
@@ -301,8 +299,7 @@ inline bool Diff_16(uint16 w1, uint16 w2)
 {
 	YUV1 = RGB16toYUV(w1);
 	YUV2 = RGB16toYUV(w2);
-	return ( ( abs((YUV1 & Amask) - (YUV2 & Amask)) > trA ) ||
-		( abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ) ||
+	return (( abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ) ||
 		( abs((YUV1 & Umask) - (YUV2 & Umask)) > trU ) ||
 		( abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ) );
 }
@@ -310,8 +307,7 @@ inline bool Diff_32(uint32 w1, uint32 w2)
 {
 	YUV1 = RGB32toYUV(w1);
 	YUV2 = RGB32toYUV(w2);
-	return ( ( abs((YUV1 & Amask) - (YUV2 & Amask)) > trA ) ||
-		( abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ) ||
+	return (( abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ) ||
 		( abs((YUV1 & Umask) - (YUV2 & Umask)) > trU ) ||
 		( abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ) );
 }
@@ -396,8 +392,7 @@ void hq4x_16( unsigned char * pIn, unsigned char * pOut, int Xres, int Yres, int
 				if ( w[k] != w[5] )
 				{
 					YUV2 = RGB16toYUV(w[k]);
-					if ( ( abs((YUV1 & Amask) - (YUV2 & Amask)) > trA ) ||
-						( abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ) ||
+					if (( abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ) ||
 						( abs((YUV1 & Umask) - (YUV2 & Umask)) > trU ) ||
 						( abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ) )
 						pattern |= flag;
@@ -515,8 +510,7 @@ void hq4x_32( unsigned char * pIn, unsigned char * pOut, int Xres, int Yres, int
 				if ( w[k] != w[5] )
 				{
 					YUV2 = RGB32toYUV(w[k]);
-					if ( ( abs((YUV1 & Amask) - (YUV2 & Amask)) > trA ) ||
-						( abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ) ||
+					if (( abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ) ||
 						( abs((YUV1 & Umask) - (YUV2 & Umask)) > trU ) ||
 						( abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ) )
 						pattern |= flag;

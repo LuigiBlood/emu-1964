@@ -344,11 +344,9 @@ bool COGLRenderTexture::InitPBuffer( void )
 
 	//Create the pbuffer
 	// Make the width and height be the power of 2
-	// Fix me here, the change of width and height
 	
-
-	m_widthCreated =0; //nextpow2(m_widthCreated);
-	m_heightCreated =0;// nextpow2(m_heightCreated);
+	m_widthCreated = nextpow2(m_widthCreated);
+	m_heightCreated = nextpow2(m_heightCreated);
 
 	m_hBuffer=wglCreatePbufferARB(hCurrentDC, pixelFormat, m_widthCreated, m_heightCreated, flags);
 	TXTRBUF_DUMP(TRACE2("Pbuffer to create: (%d x %d)", m_widthCreated, m_heightCreated));
