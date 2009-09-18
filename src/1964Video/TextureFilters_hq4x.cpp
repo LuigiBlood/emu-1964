@@ -429,6 +429,9 @@ void hq4x_16( unsigned char * pIn, unsigned char * pOut, int Xres, int Yres, int
 #undef hq4x_Interp3
 #undef hq4x_Interp4
 #undef hq4x_Interp5
+#undef hq4x_Interp6
+#undef hq4x_Interp7
+#undef hq4x_Interp8
 }
 
 void hq4x_32( unsigned char * pIn, unsigned char * pOut, int Xres, int Yres, int SrcPPL, int BpL )
@@ -438,6 +441,10 @@ void hq4x_32( unsigned char * pIn, unsigned char * pOut, int Xres, int Yres, int
 #define hq4x_Interp3 hq4x_Interp3_32
 #define hq4x_Interp4 hq4x_Interp4_32
 #define hq4x_Interp5 hq4x_Interp5_32
+#define hq4x_Interp6 hq4x_Interp6_32
+#define hq4x_Interp7 hq4x_Interp7_32
+#define hq4x_Interp8 hq4x_Interp8_32
+
 #define Diff Diff_32
 #define BPP  4
 #define BPP2  8
@@ -542,6 +549,9 @@ void hq4x_32( unsigned char * pIn, unsigned char * pOut, int Xres, int Yres, int
 #undef hq4x_Interp3
 #undef hq4x_Interp4
 #undef hq4x_Interp5
+#undef hq4x_Interp6
+#undef hq4x_Interp7
+#undef hq4x_Interp8
 }
 
 void hq4x_InitLUTs(void)
