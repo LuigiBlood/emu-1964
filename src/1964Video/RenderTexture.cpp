@@ -288,24 +288,6 @@ COGLRenderTexture::~COGLRenderTexture()
 
 static unsigned bit[0x100];
 
-inline unsigned __stdcall nextpow2(unsigned x)
-{
-	--x;
-	int shift = 0;
-	if( x & 0xFFFF0000)
-	{
-		x >>= 16;
-		shift = 16;
-	}
-	if( x & 0xFF00)
-	{
-		x >>= 8;
-		shift += 8;
-	}
-	return bit[x] << shift;
-
-}
-
 bool COGLRenderTexture::InitPBuffer( void )
 {
 	//Check for pbuffer support
@@ -345,10 +327,11 @@ bool COGLRenderTexture::InitPBuffer( void )
 	//Create the pbuffer
 	// Make the width and height be the power of 2
 	// Fix me here, the change of width and height
-	
-
-	m_widthCreated =0; //nextpow2(m_widthCreated);
-	m_heightCreated =0;// nextpow2(m_heightCreated);
+	int w, h;
+	for (w = 1; w < m_width; w <<= 1);
+	m_widthCreated = w;
+	for (h = 1; h < m_height; h <<= 1);
+	m_heightCreated = h;	
 
 	m_hBuffer=wglCreatePbufferARB(hCurrentDC, pixelFormat, m_widthCreated, m_heightCreated, flags);
 	TXTRBUF_DUMP(TRACE2("Pbuffer to create: (%d x %d)", m_widthCreated, m_heightCreated));

@@ -53,6 +53,7 @@ void RDP_GFX_DLInMem(Gfx *gfx)
 }
 
 extern Matrix dkrMatrixTransposed;
+
 void RSP_Mtx_DKR(Gfx *gfx)
 {	
 	uint32 dwAddr = RSPSegmentAddr((gfx->words.w1));
@@ -287,8 +288,6 @@ void DLParser_Set_Addr_Ucode6(Gfx *gfx)
 	gRSP.dwDKRVtxAddr = (gfx->words.w1)&0x00FFFFFF;
 	gRSP.DKRVtxCount=0;
 }
-
-
 
 void RSP_Vtx_WRUS(Gfx *gfx)
 {

@@ -364,10 +364,10 @@ typedef RDPInstruction UcodeMap[256] ;
 
 UcodeMap ucodeMap0=
 {
-	RSP_GBI1_SpNoop,	 RSP_GBI0_Mtx,     RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
-	RSP_GBI0_Vtx, RSP_GBI1_Reserved, RSP_GBI0_DL,	RSP_GBI1_Reserved,
-	RSP_GBI1_Reserved, RSP_GBI0_Sprite2DBase, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_GBI1_SpNoop,   RSP_GBI0_Mtx,		  RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
+	RSP_GBI0_Vtx,	   RSP_GBI1_Reserved,	  RSP_GBI0_DL,		 RSP_GBI1_Reserved,
+	RSP_GBI1_Reserved, RSP_GBI0_Sprite2DBase, RSP_RDP_Nothing,	 RSP_RDP_Nothing,
+	RSP_RDP_Nothing,   RSP_RDP_Nothing,		  RSP_RDP_Nothing,	 RSP_RDP_Nothing,
 //10
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
@@ -420,31 +420,31 @@ UcodeMap ucodeMap0=
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 //b0
-	RSP_RDP_Nothing, RSP_GBI0_Tri4, RSP_GBI1_RDPHalf_Cont, RSP_GBI1_RDPHalf_2,
-	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D, RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
-	RSP_GBI1_EndDL, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH, RSP_GBI1_Texture,
-	RSP_GBI1_MoveWord, RSP_GBI1_PopMtx, RSP_GBI1_CullDL, RSP_GBI1_Tri1,
+	RSP_RDP_Nothing,	RSP_GBI0_Tri4,			RSP_GBI1_RDPHalf_Cont,		RSP_GBI1_RDPHalf_2,
+	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D,		RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
+	RSP_GBI1_EndDL,		RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,		RSP_GBI1_Texture,
+	RSP_GBI1_MoveWord,  RSP_GBI1_PopMtx,		RSP_GBI1_CullDL,			RSP_GBI1_Tri1,
 
 //c0
-	RSP_GBI1_Noop,    RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RDP_TriFill, RDP_TriFillZ, RDP_TriTxtr, RDP_TriTxtrZ,
-	RDP_TriShade, RDP_TriShadeZ, RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	RSP_GBI1_Noop,   RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing,
+	RDP_TriFill,	 RDP_TriFillZ,	  RDP_TriTxtr,	    RDP_TriTxtrZ,
+	RDP_TriShade,	 RDP_TriShadeZ,	  RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
 //d0
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 //e0
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	DLParser_TexRect, DLParser_TexRectFlip, DLParser_RDPLoadSync, DLParser_RDPPipeSync,
-	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB, DLParser_SetKeyR,
-	DLParser_SetConvert, DLParser_SetScissor, DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
+	RSP_RDP_Nothing,	  RSP_RDP_Nothing,		RSP_RDP_Nothing,	   RSP_RDP_Nothing,
+	DLParser_TexRect,	  DLParser_TexRectFlip, DLParser_RDPLoadSync,  DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB,	   DLParser_SetKeyR,
+	DLParser_SetConvert,  DLParser_SetScissor,  DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
 //f0
-	DLParser_LoadTLut, RSP_RDP_Nothing, DLParser_SetTileSize, DLParser_LoadBlock, 
-	DLParser_LoadTile, DLParser_SetTile, DLParser_FillRect, DLParser_SetFillColor,
+	DLParser_LoadTLut,	  RSP_RDP_Nothing,		  DLParser_SetTileSize,	 DLParser_LoadBlock, 
+	DLParser_LoadTile,	  DLParser_SetTile,		  DLParser_FillRect,	 DLParser_SetFillColor,
 	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
-	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
+	DLParser_SetCombine,  DLParser_SetTImg,		  DLParser_SetZImg,		 DLParser_SetCImg
 };
 
 
@@ -453,10 +453,10 @@ UcodeMap ucodeMap0=
 
 UcodeMap ucodeMap1 =
 {
-	RSP_GBI1_SpNoop,	 RSP_GBI0_Mtx,     RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
-	RSP_GBI1_Vtx, RSP_GBI1_Reserved, RSP_GBI0_DL,	RSP_GBI1_Reserved,
-	RSP_GBI1_Reserved, RSP_GBI1_Sprite2DBase, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_GBI1_SpNoop,   RSP_GBI0_Mtx,		  RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
+	RSP_GBI1_Vtx,	   RSP_GBI1_Reserved,	  RSP_GBI0_DL,		 RSP_GBI1_Reserved,
+	RSP_GBI1_Reserved, RSP_GBI1_Sprite2DBase, RSP_RDP_Nothing,   RSP_RDP_Nothing,
+	RSP_RDP_Nothing,   RSP_RDP_Nothing,		  RSP_RDP_Nothing,   RSP_RDP_Nothing,
 //10
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
@@ -509,41 +509,41 @@ UcodeMap ucodeMap1 =
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_GBI1_LoadUCode,
 //b0
-	RSP_GBI1_BranchZ, RSP_GBI1_Tri2, RSP_GBI1_ModifyVtx, RSP_GBI1_RDPHalf_2,
-	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D, RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
-	RSP_GBI1_EndDL, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH, RSP_GBI1_Texture,
-	RSP_GBI1_MoveWord, RSP_GBI1_PopMtx, RSP_GBI1_CullDL, RSP_GBI1_Tri1,
+	RSP_GBI1_BranchZ,	RSP_GBI1_Tri2,			RSP_GBI1_ModifyVtx,			RSP_GBI1_RDPHalf_2,
+	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D,		RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
+	RSP_GBI1_EndDL,		RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,		RSP_GBI1_Texture,
+	RSP_GBI1_MoveWord,  RSP_GBI1_PopMtx,		RSP_GBI1_CullDL,			RSP_GBI1_Tri1,
 
 //c0
-	RSP_GBI1_Noop,    RSP_S2DEX_SPObjLoadTxtr_Ucode1, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RDP_TriFill, RDP_TriFillZ, RDP_TriTxtr, RDP_TriTxtrZ,
-	RDP_TriShade, RDP_TriShadeZ, RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	RSP_GBI1_Noop,   RSP_S2DEX_SPObjLoadTxtr_Ucode1, RSP_RDP_Nothing,  RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing,				 RSP_RDP_Nothing,  RSP_RDP_Nothing,
+	RDP_TriFill,	 RDP_TriFillZ,					 RDP_TriTxtr,	   RDP_TriTxtrZ,
+	RDP_TriShade,	 RDP_TriShadeZ,					 RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
 //d0
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 //e0
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	DLParser_TexRect, DLParser_TexRectFlip, DLParser_RDPLoadSync, DLParser_RDPPipeSync,
-	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB, DLParser_SetKeyR,
-	DLParser_SetConvert, DLParser_SetScissor, DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
+	RSP_RDP_Nothing,	  RSP_RDP_Nothing,		RSP_RDP_Nothing,	   RSP_RDP_Nothing,
+	DLParser_TexRect,	  DLParser_TexRectFlip, DLParser_RDPLoadSync,  DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB,	   DLParser_SetKeyR,
+	DLParser_SetConvert,  DLParser_SetScissor,  DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
 //f0
-	DLParser_LoadTLut, RSP_RDP_Nothing, DLParser_SetTileSize, DLParser_LoadBlock, 
-	DLParser_LoadTile, DLParser_SetTile, DLParser_FillRect, DLParser_SetFillColor,
+	DLParser_LoadTLut,	  RSP_RDP_Nothing,		  DLParser_SetTileSize,  DLParser_LoadBlock, 
+	DLParser_LoadTile,	  DLParser_SetTile,		  DLParser_FillRect,	 DLParser_SetFillColor,
 	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
-	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
+	DLParser_SetCombine,  DLParser_SetTImg,		  DLParser_SetZImg,		 DLParser_SetCImg
 };
 
 
 // Ucode 3 - S2DEX GBI2
 UcodeMap ucodeMap3=
 {
-	RSP_GBI1_Noop,	 RSP_S2DEX_OBJ_RECTANGLE,     RSP_S2DEX_OBJ_SPRITE, RSP_GBI2_CullDL,
-	RSP_S2DEX_SELECT_DL, RSP_S2DEX_SPObjLoadTxtr, RSP_S2DEX_SPObjLoadTxSprite,	RSP_S2DEX_SPObjLoadTxRect,
-	RSP_S2DEX_SPObjLoadTxRectR, RSP_S2DEX_BG_1CYC, RSP_S2DEX_BG_COPY, RSP_S2DEX_OBJ_RENDERMODE,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_GBI1_Noop,				RSP_S2DEX_OBJ_RECTANGLE, RSP_S2DEX_OBJ_SPRITE,		  RSP_GBI2_CullDL,
+	RSP_S2DEX_SELECT_DL,		RSP_S2DEX_SPObjLoadTxtr, RSP_S2DEX_SPObjLoadTxSprite, RSP_S2DEX_SPObjLoadTxRect,
+	RSP_S2DEX_SPObjLoadTxRectR, RSP_S2DEX_BG_1CYC,		 RSP_S2DEX_BG_COPY,			  RSP_S2DEX_OBJ_RENDERMODE,
+	RSP_RDP_Nothing,			RSP_RDP_Nothing,		 RSP_RDP_Nothing,			  RSP_RDP_Nothing,
 	//10
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
@@ -595,40 +595,40 @@ UcodeMap ucodeMap3=
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_GBI1_LoadUCode,
 	//b0
-	RSP_GBI1_BranchZ, RSP_GBI0_Tri4, RSP_GBI1_ModifyVtx, RSP_GBI1_RDPHalf_2,
-	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D, RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
-	RSP_GBI1_EndDL, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH, RSP_GBI1_Texture,
-	RSP_GBI1_MoveWord, RSP_GBI1_PopMtx, RSP_GBI1_CullDL, RSP_GBI1_Tri1,
+	RSP_GBI1_BranchZ,	RSP_GBI0_Tri4,			RSP_GBI1_ModifyVtx,			RSP_GBI1_RDPHalf_2,
+	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D,		RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
+	RSP_GBI1_EndDL,		RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,		RSP_GBI1_Texture,
+	RSP_GBI1_MoveWord,  RSP_GBI1_PopMtx,		RSP_GBI1_CullDL,			RSP_GBI1_Tri1,
 	//c0
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RDP_TriFill, RDP_TriFillZ, RDP_TriTxtr, RDP_TriTxtrZ,
-	RDP_TriShade, RDP_TriShadeZ, RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing,
+	RDP_TriFill,	 RDP_TriFillZ,	  RDP_TriTxtr,	    RDP_TriTxtrZ,
+	RDP_TriShade,	 RDP_TriShadeZ,	  RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
 	//d0
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_GBI2_DL_Count, RSP_GBI2_SubModule, RSP_GBI2_Texture,
-	RSP_GBI2_PopMtx, RSP_GBI2_GeometryMode, RSP_GBI2_Mtx, RSP_GBI2_MoveWord,
-	RSP_GBI2_MoveMem, RSP_GBI1_LoadUCode, RSP_GBI2_DL, RSP_GBI2_EndDL,
+	RSP_RDP_Nothing,  RSP_RDP_Nothing,		 RSP_RDP_Nothing,	 RSP_RDP_Nothing,
+	RSP_RDP_Nothing,  RSP_GBI2_DL_Count,	 RSP_GBI2_SubModule, RSP_GBI2_Texture,
+	RSP_GBI2_PopMtx,  RSP_GBI2_GeometryMode, RSP_GBI2_Mtx,		 RSP_GBI2_MoveWord,
+	RSP_GBI2_MoveMem, RSP_GBI1_LoadUCode,	 RSP_GBI2_DL,		 RSP_GBI2_EndDL,
 	//e0
-	RSP_GBI1_SpNoop, RSP_GBI1_RDPHalf_1, RSP_GBI2_SetOtherModeL, RSP_GBI2_SetOtherModeH,
-	DLParser_TexRect, DLParser_TexRectFlip, DLParser_RDPLoadSync, DLParser_RDPPipeSync,
-	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB, DLParser_SetKeyR,
-	DLParser_SetConvert, DLParser_SetScissor, DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
+	RSP_GBI1_SpNoop,	  RSP_GBI1_RDPHalf_1,	RSP_GBI2_SetOtherModeL, RSP_GBI2_SetOtherModeH,
+	DLParser_TexRect,	  DLParser_TexRectFlip, DLParser_RDPLoadSync,	DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB,		DLParser_SetKeyR,
+	DLParser_SetConvert,  DLParser_SetScissor,  DLParser_SetPrimDepth,	DLParser_RDPSetOtherMode,
 	//f0
-	DLParser_LoadTLut, RSP_RDP_Nothing, DLParser_SetTileSize, DLParser_LoadBlock, 
-	DLParser_LoadTile, DLParser_SetTile, DLParser_FillRect, DLParser_SetFillColor,
+	DLParser_LoadTLut,	  RSP_RDP_Nothing,		  DLParser_SetTileSize,  DLParser_LoadBlock, 
+	DLParser_LoadTile,	  DLParser_SetTile,		  DLParser_FillRect,	 DLParser_SetFillColor,
 	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
-	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
+	DLParser_SetCombine,  DLParser_SetTImg,		  DLParser_SetZImg,		 DLParser_SetCImg
 };
 
 // Ucode 4 - "RSP SW 2.0D", but not really
 // Games: Wave Race
 UcodeMap ucodeMap4=
 {
-	RSP_GBI1_SpNoop,	RSP_GBI0_Mtx,			RSP_GBI1_Reserved,	RSP_GBI1_MoveMem,
-	RSP_GBI1_Vtx,		RSP_GBI1_Reserved,		RSP_GBI0_DL,		RSP_GBI1_Reserved,
-	RSP_GBI1_Reserved, RSP_GBI1_Sprite2DBase, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,     
+	RSP_GBI1_SpNoop,   RSP_GBI0_Mtx,		  RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
+	RSP_GBI1_Vtx,	   RSP_GBI1_Reserved,	  RSP_GBI0_DL,		 RSP_GBI1_Reserved,
+	RSP_GBI1_Reserved, RSP_GBI1_Sprite2DBase, RSP_RDP_Nothing,	 RSP_RDP_Nothing,
+	RSP_RDP_Nothing,   RSP_RDP_Nothing,		  RSP_RDP_Nothing,	 RSP_RDP_Nothing,     
 	//10
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,        
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,        
@@ -680,30 +680,30 @@ UcodeMap ucodeMap4=
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,        
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	//b0
-	RSP_RDP_Nothing, RSP_GBI1_Tri2, RSP_GBI1_RDPHalf_Cont, RSP_GBI1_RDPHalf_2,
-	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D, RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode, // RSP_GBI1_Line3D == Quad3d
-	RSP_GBI1_EndDL, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH, RSP_GBI1_Texture,
-	RSP_GBI1_MoveWord, RSP_GBI1_PopMtx, RSP_GBI1_CullDL, RSP_GBI1_Tri1,
+	RSP_RDP_Nothing,	RSP_GBI1_Tri2,			RSP_GBI1_RDPHalf_Cont,		RSP_GBI1_RDPHalf_2,
+	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D,		RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode, // RSP_GBI1_Line3D == Quad3d
+	RSP_GBI1_EndDL,		RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,		RSP_GBI1_Texture,
+	RSP_GBI1_MoveWord,	RSP_GBI1_PopMtx,		RSP_GBI1_CullDL,			RSP_GBI1_Tri1,
 	//c0
-	RSP_GBI1_Noop, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,    
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,    
-	RDP_TriFill, RDP_TriFillZ, RDP_TriTxtr, RDP_TriTxtrZ,
-	RDP_TriShade, RDP_TriShadeZ, RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	RSP_GBI1_Noop,	 RSP_RDP_Nothing, RSP_RDP_Nothing,	RSP_RDP_Nothing,    
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,	RSP_RDP_Nothing,    
+	RDP_TriFill,	 RDP_TriFillZ,	  RDP_TriTxtr,		RDP_TriTxtrZ,
+	RDP_TriShade,	 RDP_TriShadeZ,	  RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
 	//d0
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,    
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,    
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,    
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	//e0
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,    
-	DLParser_TexRect, DLParser_TexRectFlip, DLParser_RDPLoadSync, DLParser_RDPPipeSync,
-	DLParser_RDPTileSync,DLParser_RDPFullSync, DLParser_SetKeyGB, DLParser_SetKeyR,
-	DLParser_SetConvert, DLParser_SetScissor, DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
+	RSP_RDP_Nothing,	  RSP_RDP_Nothing,		RSP_RDP_Nothing,	   RSP_RDP_Nothing,    
+	DLParser_TexRect,	  DLParser_TexRectFlip, DLParser_RDPLoadSync,  DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB,	   DLParser_SetKeyR,
+	DLParser_SetConvert,  DLParser_SetScissor,  DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
 	//f0
-	DLParser_LoadTLut, RSP_RDP_Nothing, DLParser_SetTileSize, DLParser_LoadBlock, 
-	DLParser_LoadTile, DLParser_SetTile, DLParser_FillRect, DLParser_SetFillColor,
+	DLParser_LoadTLut,	  RSP_RDP_Nothing,		  DLParser_SetTileSize,  DLParser_LoadBlock, 
+	DLParser_LoadTile,	  DLParser_SetTile,		  DLParser_FillRect,	 DLParser_SetFillColor,
 	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
-	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
+	DLParser_SetCombine,  DLParser_SetTImg,		  DLParser_SetZImg,		 DLParser_SetCImg
 	//g0
 };
 
@@ -711,10 +711,10 @@ UcodeMap ucodeMap4=
 // Zelda and new games
 UcodeMap ucodeMap5=
 {
-	RSP_GBI1_Noop,	 RSP_GBI2_Vtx,     RSP_GBI1_ModifyVtx, RSP_GBI2_CullDL,
-	RSP_GBI1_BranchZ, RSP_GBI2_Tri1, RSP_GBI2_Tri2,	RSP_GBI2_Line3D,
-	RSP_GBI2_0x8, RSP_S2DEX_BG_1CYC, RSP_S2DEX_BG_COPY, RSP_S2DEX_OBJ_RENDERMODE,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_GBI1_Noop,	  RSP_GBI2_Vtx,		 RSP_GBI1_ModifyVtx, RSP_GBI2_CullDL,
+	RSP_GBI1_BranchZ, RSP_GBI2_Tri1,	 RSP_GBI2_Tri2,		 RSP_GBI2_Line3D,
+	RSP_GBI2_0x8,	  RSP_S2DEX_BG_1CYC, RSP_S2DEX_BG_COPY,  RSP_S2DEX_OBJ_RENDERMODE,
+	RSP_RDP_Nothing,  RSP_RDP_Nothing,	 RSP_RDP_Nothing,	 RSP_RDP_Nothing,
 //10
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
@@ -767,41 +767,41 @@ UcodeMap ucodeMap5=
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_GBI1_LoadUCode,
 //b0
-	RSP_GBI1_BranchZ, RSP_GBI0_Tri4, RSP_GBI1_ModifyVtx, RSP_GBI1_RDPHalf_2,
-	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D, RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
-	RSP_GBI1_EndDL, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH, RSP_GBI1_Texture,
-	RSP_GBI1_MoveWord, RSP_GBI1_PopMtx, RSP_GBI1_CullDL, RSP_GBI1_Tri1,
+	RSP_GBI1_BranchZ,	RSP_GBI0_Tri4,			RSP_GBI1_ModifyVtx,			RSP_GBI1_RDPHalf_2,
+	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D,		RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
+	RSP_GBI1_EndDL,		RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,		RSP_GBI1_Texture,
+	RSP_GBI1_MoveWord,  RSP_GBI1_PopMtx,		RSP_GBI1_CullDL,			RSP_GBI1_Tri1,
 
 //c0
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RDP_TriFill, RDP_TriFillZ, RDP_TriTxtr, RDP_TriTxtrZ,
-	RDP_TriShade, RDP_TriShadeZ, RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing,
+	RDP_TriFill,	 RDP_TriFillZ,	  RDP_TriTxtr,		RDP_TriTxtrZ,
+	RDP_TriShade,	 RDP_TriShadeZ,	  RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
 //d0
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_GBI2_DL_Count, RSP_GBI2_SubModule, RSP_GBI2_Texture,
-	RSP_GBI2_PopMtx, RSP_GBI2_GeometryMode, RSP_GBI2_Mtx, RSP_GBI2_MoveWord,
-	RSP_GBI2_MoveMem, RSP_GBI1_LoadUCode, RSP_GBI2_DL, RSP_GBI2_EndDL,
+	RSP_RDP_Nothing,  RSP_RDP_Nothing,		 RSP_RDP_Nothing,	 RSP_RDP_Nothing,
+	RSP_RDP_Nothing,  RSP_GBI2_DL_Count,	 RSP_GBI2_SubModule, RSP_GBI2_Texture,
+	RSP_GBI2_PopMtx,  RSP_GBI2_GeometryMode, RSP_GBI2_Mtx,		 RSP_GBI2_MoveWord,
+	RSP_GBI2_MoveMem, RSP_GBI1_LoadUCode,	 RSP_GBI2_DL,		 RSP_GBI2_EndDL,
 //e0
-	RSP_GBI1_SpNoop, RSP_GBI1_RDPHalf_1, RSP_GBI2_SetOtherModeL, RSP_GBI2_SetOtherModeH,
-	DLParser_TexRect, DLParser_TexRectFlip, DLParser_RDPLoadSync, DLParser_RDPPipeSync,
-	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB, DLParser_SetKeyR,
-	DLParser_SetConvert, DLParser_SetScissor, DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
+	RSP_GBI1_SpNoop,	  RSP_GBI1_RDPHalf_1,   RSP_GBI2_SetOtherModeL, RSP_GBI2_SetOtherModeH,
+	DLParser_TexRect,	  DLParser_TexRectFlip, DLParser_RDPLoadSync,   DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB,		DLParser_SetKeyR,
+	DLParser_SetConvert,  DLParser_SetScissor,  DLParser_SetPrimDepth,	DLParser_RDPSetOtherMode,
 //f0
-	DLParser_LoadTLut, RSP_RDP_Nothing, DLParser_SetTileSize, DLParser_LoadBlock, 
-	DLParser_LoadTile, DLParser_SetTile, DLParser_FillRect, DLParser_SetFillColor,
+	DLParser_LoadTLut,	  RSP_RDP_Nothing,		  DLParser_SetTileSize,  DLParser_LoadBlock, 
+	DLParser_LoadTile,	  DLParser_SetTile,		  DLParser_FillRect,	 DLParser_SetFillColor,
 	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
-	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
+	DLParser_SetCombine,  DLParser_SetTImg,		  DLParser_SetZImg,		 DLParser_SetCImg
 };
 
 // uCode 6 - RSP SW 2.0 Diddy
 // Games: Diddy Kong Racing
 UcodeMap ucodeMap6 =
 {
-	RSP_GBI1_SpNoop, RSP_Mtx_DKR, RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
-	RSP_Vtx_DKR, RSP_DMA_Tri_DKR, RSP_GBI0_DL, RSP_DL_In_MEM_DKR,
-	RSP_GBI1_Reserved, RSP_GBI0_Sprite2DBase, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_GBI1_SpNoop,   RSP_Mtx_DKR,			  RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
+	RSP_Vtx_DKR,	   RSP_DMA_Tri_DKR,		  RSP_GBI0_DL,		 RSP_DL_In_MEM_DKR,
+	RSP_GBI1_Reserved, RSP_GBI0_Sprite2DBase, RSP_RDP_Nothing,	 RSP_RDP_Nothing,
+	RSP_RDP_Nothing,   RSP_RDP_Nothing,		  RSP_RDP_Nothing,	 RSP_RDP_Nothing, 
 	//10
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
@@ -853,30 +853,30 @@ UcodeMap ucodeMap6 =
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	//b0
-	RSP_RDP_Nothing, RSP_GBI0_Tri4, RSP_GBI1_RDPHalf_Cont, RSP_GBI1_RDPHalf_2,
-	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D, RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
-	RSP_GBI1_EndDL, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH, RSP_GBI1_Texture,
-	RSP_MoveWord_DKR, RSP_GBI1_PopMtx, RSP_GBI1_CullDL, DLParser_Set_Addr_Ucode6,//<<uc5_dma_offsets
+	RSP_RDP_Nothing,	RSP_GBI0_Tri4,			RSP_GBI1_RDPHalf_Cont,		RSP_GBI1_RDPHalf_2,
+	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D,		RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
+	RSP_GBI1_EndDL,		RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,		RSP_GBI1_Texture,
+	RSP_MoveWord_DKR,	RSP_GBI1_PopMtx,		RSP_GBI1_CullDL,			DLParser_Set_Addr_Ucode6,
 	//c0
-	RSP_GBI1_Noop, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
-	RDP_TriFill, RDP_TriFillZ, RDP_TriTxtr, RDP_TriTxtrZ,
-	RDP_TriShade, RDP_TriShadeZ, RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	RSP_GBI1_Noop,	 RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing, 
+	RDP_TriFill,	 RDP_TriFillZ,	  RDP_TriTxtr,	    RDP_TriTxtrZ,
+	RDP_TriShade,	 RDP_TriShadeZ,   RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
 	//d0
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	//e0
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
-	DLParser_TexRect, DLParser_TexRectFlip, DLParser_RDPLoadSync, DLParser_RDPPipeSync,
-	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB, DLParser_SetKeyR,
-	DLParser_SetConvert, DLParser_SetScissor, DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
+	RSP_RDP_Nothing,	  RSP_RDP_Nothing,		RSP_RDP_Nothing,	   RSP_RDP_Nothing, 
+	DLParser_TexRect,	  DLParser_TexRectFlip, DLParser_RDPLoadSync,  DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB,	   DLParser_SetKeyR,
+	DLParser_SetConvert,  DLParser_SetScissor,	DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
 	//f0
-	DLParser_LoadTLut, RSP_RDP_Nothing, DLParser_SetTileSize, DLParser_LoadBlock, 
-	DLParser_LoadTile, DLParser_SetTile, DLParser_FillRect, DLParser_SetFillColor,
+	DLParser_LoadTLut,	  RSP_RDP_Nothing,		  DLParser_SetTileSize,  DLParser_LoadBlock, 
+	DLParser_LoadTile,	  DLParser_SetTile,		  DLParser_FillRect,	 DLParser_SetFillColor,
 	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
-	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
+	DLParser_SetCombine,  DLParser_SetTImg,		  DLParser_SetZImg,		 DLParser_SetCImg
 	//g0
 };
 
@@ -884,10 +884,10 @@ UcodeMap ucodeMap6 =
 // Games: Yoshi's Story
 UcodeMap ucodeMap7 =
 {
-	RSP_GBI1_SpNoop,	 RSP_S2DEX_BG_1CYC_2,     RSP_S2DEX_BG_COPY, RSP_S2DEX_OBJ_RECTANGLE,
-	RSP_S2DEX_OBJ_SPRITE, RSP_S2DEX_OBJ_MOVEMEM, RSP_GBI0_DL,	RSP_GBI1_Reserved,
-	RSP_GBI1_Reserved, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_GBI1_SpNoop,	  RSP_S2DEX_BG_1CYC_2,	 RSP_S2DEX_BG_COPY, RSP_S2DEX_OBJ_RECTANGLE,
+	RSP_S2DEX_OBJ_SPRITE, RSP_S2DEX_OBJ_MOVEMEM, RSP_GBI0_DL,		RSP_GBI1_Reserved,
+	RSP_GBI1_Reserved,	  RSP_RDP_Nothing,		 RSP_RDP_Nothing,	RSP_RDP_Nothing,
+	RSP_RDP_Nothing,	  RSP_RDP_Nothing,		 RSP_RDP_Nothing,	RSP_RDP_Nothing,
 
 //10
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
@@ -941,31 +941,31 @@ UcodeMap ucodeMap7 =
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_GBI1_LoadUCode,
 //b0
-	RSP_S2DEX_SELECT_DL, RSP_S2DEX_OBJ_RENDERMODE_2, RSP_S2DEX_OBJ_RECTANGLE_R, RSP_GBI1_RDPHalf_2,
-	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D, RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
-	RSP_GBI1_EndDL, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH, RSP_GBI1_Texture,
-	RSP_GBI1_MoveWord, RSP_GBI1_PopMtx, RSP_GBI1_CullDL, RSP_GBI1_Tri1,
+	RSP_S2DEX_SELECT_DL, RSP_S2DEX_OBJ_RENDERMODE_2, RSP_S2DEX_OBJ_RECTANGLE_R,  RSP_GBI1_RDPHalf_2,
+	RSP_GBI1_RDPHalf_1,  RSP_GBI1_Line3D,			 RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
+	RSP_GBI1_EndDL,		 RSP_GBI1_SetOtherModeL,	 RSP_GBI1_SetOtherModeH,	 RSP_GBI1_Texture,
+	RSP_GBI1_MoveWord,	 RSP_GBI1_PopMtx,			 RSP_GBI1_CullDL,			 RSP_GBI1_Tri1,
 
 //c0
-	RSP_GBI1_Noop,    RSP_S2DEX_SPObjLoadTxtr, RSP_S2DEX_SPObjLoadTxSprite, RSP_S2DEX_SPObjLoadTxRect,
-	RSP_S2DEX_SPObjLoadTxRectR, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RDP_TriFill, RDP_TriFillZ, RDP_TriTxtr, RDP_TriTxtrZ,
-	RDP_TriShade, RDP_TriShadeZ, RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	RSP_GBI1_Noop,				RSP_S2DEX_SPObjLoadTxtr, RSP_S2DEX_SPObjLoadTxSprite, RSP_S2DEX_SPObjLoadTxRect,
+	RSP_S2DEX_SPObjLoadTxRectR, RSP_RDP_Nothing,		 RSP_RDP_Nothing,			  RSP_RDP_Nothing,
+	RDP_TriFill,				RDP_TriFillZ,			 RDP_TriTxtr,				  RDP_TriTxtrZ,
+	RDP_TriShade,				RDP_TriShadeZ,			 RDP_TriShadeTxtr,			  RDP_TriShadeTxtrZ,
 //d0
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 //e0
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_S2DEX_RDPHALF_0, DLParser_TexRectFlip, DLParser_RDPLoadSync, DLParser_RDPPipeSync,
-	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB, DLParser_SetKeyR,
-	DLParser_SetConvert, DLParser_SetScissor, DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
+	RSP_RDP_Nothing,	  RSP_RDP_Nothing,		RSP_RDP_Nothing,	   RSP_RDP_Nothing,
+	RSP_S2DEX_RDPHALF_0,  DLParser_TexRectFlip, DLParser_RDPLoadSync,  DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB,	   DLParser_SetKeyR,
+	DLParser_SetConvert,  DLParser_SetScissor,  DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
 //f0
-	DLParser_LoadTLut, RSP_RDP_Nothing, DLParser_SetTileSize, DLParser_LoadBlock, 
-	DLParser_LoadTile, DLParser_SetTile, DLParser_FillRect, DLParser_SetFillColor,
+	DLParser_LoadTLut,	  RSP_RDP_Nothing,		  DLParser_SetTileSize,  DLParser_LoadBlock, 
+	DLParser_LoadTile,	  DLParser_SetTile,		  DLParser_FillRect,	 DLParser_SetFillColor,
 	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
-	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
+	DLParser_SetCombine,  DLParser_SetTImg,		  DLParser_SetZImg,		 DLParser_SetCImg
 };
 
 
@@ -973,10 +973,10 @@ UcodeMap ucodeMap7 =
 //Games: Perfect Dark
 UcodeMap ucodeMap9 =
 {
-	RSP_GBI1_SpNoop, RSP_GBI0_Mtx, RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
-	RSP_Vtx_PD, RSP_GBI1_Reserved, RSP_GBI2_DL, RSP_Set_Vtx_CI_PD,
-	RSP_GBI1_Reserved, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_GBI1_SpNoop,   RSP_GBI0_Mtx,	  RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
+	RSP_Vtx_PD,		   RSP_GBI1_Reserved, RSP_GBI2_DL,		 RSP_Set_Vtx_CI_PD,
+	RSP_GBI1_Reserved, RSP_RDP_Nothing,	  RSP_RDP_Nothing,	 RSP_RDP_Nothing,
+	RSP_RDP_Nothing,   RSP_RDP_Nothing,	  RSP_RDP_Nothing,	 RSP_RDP_Nothing,
 	//10
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
@@ -1028,30 +1028,30 @@ UcodeMap ucodeMap9 =
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	//b0
-	RSP_RDP_Nothing, RSP_Tri4_PD, RSP_GBI1_RDPHalf_Cont, RSP_GBI1_RDPHalf_2,
-	DLParser_RDPHalf_1_0xb4_GoldenEye, RSP_GBI1_RDPHalf_2, RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
-	RSP_GBI1_EndDL, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH, RSP_GBI1_Texture,
-	RSP_GBI1_MoveWord, RSP_GBI1_PopMtx, RSP_GBI1_CullDL, RSP_GBI1_Tri1,
+	RSP_RDP_Nothing,				   RSP_Tri4_PD,			   RSP_GBI1_RDPHalf_Cont,	   RSP_GBI1_RDPHalf_2,
+	DLParser_RDPHalf_1_0xb4_GoldenEye, RSP_GBI1_RDPHalf_2,	   RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
+	RSP_GBI1_EndDL,					   RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,	   RSP_GBI1_Texture,
+	RSP_GBI1_MoveWord,				   RSP_GBI1_PopMtx,		   RSP_GBI1_CullDL,			   RSP_GBI1_Tri1,
 	//c0
-	RSP_GBI1_Noop, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
-	RDP_TriFill, RDP_TriFillZ, RDP_TriTxtr, RDP_TriTxtrZ,
-	RDP_TriShade, RDP_TriShadeZ, RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	RSP_GBI1_Noop,	 RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing, 
+	RDP_TriFill,	 RDP_TriFillZ,	  RDP_TriTxtr,	    RDP_TriTxtrZ,
+	RDP_TriShade,	 RDP_TriShadeZ,	  RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
 	//d0
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	//e0
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	DLParser_TexRect, DLParser_TexRectFlip, DLParser_RDPLoadSync, DLParser_RDPPipeSync,
-	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB, DLParser_SetKeyR,
-	DLParser_SetConvert, DLParser_SetScissor, DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
+	RSP_RDP_Nothing,	  RSP_RDP_Nothing,		RSP_RDP_Nothing,	   RSP_RDP_Nothing,
+	DLParser_TexRect,	  DLParser_TexRectFlip, DLParser_RDPLoadSync,  DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB,	   DLParser_SetKeyR,
+	DLParser_SetConvert,  DLParser_SetScissor,  DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
 	//f0
-	DLParser_LoadTLut, RSP_RDP_Nothing, DLParser_SetTileSize, DLParser_LoadBlock, 
-	DLParser_LoadTile, DLParser_SetTile, DLParser_FillRect, DLParser_SetFillColor,
+	DLParser_LoadTLut,	  RSP_RDP_Nothing,		  DLParser_SetTileSize,	 DLParser_LoadBlock, 
+	DLParser_LoadTile,	  DLParser_SetTile,		  DLParser_FillRect,	 DLParser_SetFillColor,
 	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
-	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
+	DLParser_SetCombine,  DLParser_SetTImg,		  DLParser_SetZImg,		 DLParser_SetCImg
 	//g0
 };
 
@@ -1060,10 +1060,10 @@ UcodeMap ucodeMap9 =
 //FIX ME This causes rendering problems 
 UcodeMap ucodeMap10 =
 {
-	RSP_GBI1_SpNoop, RSP_Vtx_Conker, RSP_GBI1_ModifyVtx, RSP_GBI2_CullDL,
-	RSP_GBI1_BranchZ, RSP_GBI2_Tri1, RSP_Quad_Conker, RSP_Quad_Conker,
-	RSP_GBI2_Line3D, RSP_S2DEX_BG_1CYC, RSP_S2DEX_BG_COPY, RSP_S2DEX_OBJ_RENDERMODE/*RSP_RDP_Nothing*/,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_GBI1_SpNoop,  RSP_Vtx_Conker,	 RSP_GBI1_ModifyVtx, RSP_GBI2_CullDL,
+	RSP_GBI1_BranchZ, RSP_GBI2_Tri1,	 RSP_Quad_Conker,	 RSP_Quad_Conker,
+	RSP_GBI2_Line3D,  RSP_S2DEX_BG_1CYC, RSP_S2DEX_BG_COPY,  RSP_S2DEX_OBJ_RENDERMODE/*RSP_RDP_Nothing*/,
+	RSP_RDP_Nothing,  RSP_RDP_Nothing,	 RSP_RDP_Nothing,	 RSP_RDP_Nothing,
 	//10
 	RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker,
 	RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker,
@@ -1120,25 +1120,25 @@ UcodeMap ucodeMap10 =
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	//c0
-	RSP_GBI1_Noop, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
-	RDP_TriFill, RDP_TriFillZ, RDP_TriTxtr, RDP_TriTxtrZ,
-	RDP_TriShade, RDP_TriShadeZ, RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	RSP_GBI1_Noop,	 RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing, 
+	RDP_TriFill,	 RDP_TriFillZ,	  RDP_TriTxtr,	    RDP_TriTxtrZ,
+	RDP_TriShade,	 RDP_TriShadeZ,	  RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
 	//d0
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_GBI2_DL_Count, RSP_RDP_Nothing, RSP_GBI1_Texture,
-	RSP_GBI2_PopMtx, RSP_GBI2_GeometryMode, RSP_GBI2_Mtx, RSP_MoveWord_Conker,
-	RSP_MoveMem_Conker, RSP_GBI1_LoadUCode, RSP_GBI0_DL, RSP_GBI1_EndDL,
+	RSP_RDP_Nothing,	RSP_RDP_Nothing,	   RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing,	RSP_GBI2_DL_Count,	   RSP_RDP_Nothing, RSP_GBI1_Texture,
+	RSP_GBI2_PopMtx,	RSP_GBI2_GeometryMode, RSP_GBI2_Mtx,	RSP_MoveWord_Conker,
+	RSP_MoveMem_Conker, RSP_GBI1_LoadUCode,	   RSP_GBI0_DL,		RSP_GBI1_EndDL,
 	//e0
-	RSP_GBI1_SpNoop, RSP_GBI1_RDPHalf_1, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,
-	DLParser_TexRect, DLParser_TexRectFlip, DLParser_RDPLoadSync, DLParser_RDPPipeSync,
-	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB, DLParser_SetKeyR,
-	DLParser_SetConvert, DLParser_SetScissor, DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
+	RSP_GBI1_SpNoop,	  RSP_GBI1_RDPHalf_1,	RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,
+	DLParser_TexRect,	  DLParser_TexRectFlip, DLParser_RDPLoadSync,   DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB,		DLParser_SetKeyR,
+	DLParser_SetConvert,  DLParser_SetScissor,  DLParser_SetPrimDepth,  DLParser_RDPSetOtherMode,
 	//f0
-	DLParser_LoadTLut, RSP_GBI1_RDPHalf_2, DLParser_SetTileSize, DLParser_LoadBlock, 
-	DLParser_LoadTile, DLParser_SetTile, DLParser_FillRect, DLParser_SetFillColor,
+	DLParser_LoadTLut,	  RSP_GBI1_RDPHalf_2,	  DLParser_SetTileSize,	 DLParser_LoadBlock, 
+	DLParser_LoadTile,	  DLParser_SetTile,		  DLParser_FillRect,	 DLParser_SetFillColor,
 	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
-	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
+	DLParser_SetCombine,  DLParser_SetTImg,		  DLParser_SetZImg,		 DLParser_SetCImg
 	//g0
 };
 
@@ -1146,10 +1146,10 @@ UcodeMap ucodeMap10 =
 // Games: Gemini
 UcodeMap ucodeMap11 =
 {
-	RSP_GBI1_SpNoop, RSP_Mtx_DKR, RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
-	RSP_Vtx_Gemini, RSP_DMA_Tri_DKR, RSP_GBI0_DL, RSP_DL_In_MEM_DKR,
-	RSP_GBI1_Reserved, RSP_GBI0_Sprite2DBase, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_GBI1_SpNoop,   RSP_Mtx_DKR,			  RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
+	RSP_Vtx_Gemini,	   RSP_DMA_Tri_DKR,		  RSP_GBI0_DL,		 RSP_DL_In_MEM_DKR,
+	RSP_GBI1_Reserved, RSP_GBI0_Sprite2DBase, RSP_RDP_Nothing,	 RSP_RDP_Nothing,
+	RSP_RDP_Nothing,   RSP_RDP_Nothing,		  RSP_RDP_Nothing,	 RSP_RDP_Nothing, 
 	//10
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
@@ -1201,40 +1201,40 @@ UcodeMap ucodeMap11 =
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	//b0
-	RSP_RDP_Nothing, RSP_GBI0_Tri4, RSP_GBI1_RDPHalf_Cont, RSP_GBI1_RDPHalf_2,
-	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D, RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
-	RSP_GBI1_EndDL, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH, RSP_GBI1_Texture,
-	RSP_MoveWord_DKR, RSP_GBI1_PopMtx, RSP_GBI1_CullDL, DLParser_Set_Addr_Ucode6,//<<uc5_dma_offsets
+	RSP_RDP_Nothing,	RSP_GBI0_Tri4,			RSP_GBI1_RDPHalf_Cont,		RSP_GBI1_RDPHalf_2,
+	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D,		RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
+	RSP_GBI1_EndDL,		RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,		RSP_GBI1_Texture,
+	RSP_MoveWord_DKR,	RSP_GBI1_PopMtx,		RSP_GBI1_CullDL,			DLParser_Set_Addr_Ucode6,//<<uc5_dma_offsets
 	//c0
-	RSP_GBI1_Noop, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
-	RDP_TriFill, RDP_TriFillZ, RDP_TriTxtr, RDP_TriTxtrZ,
-	RDP_TriShade, RDP_TriShadeZ, RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	RSP_GBI1_Noop,	 RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing, 
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing, 
+	RDP_TriFill,	 RDP_TriFillZ,	  RDP_TriTxtr,		RDP_TriTxtrZ,
+	RDP_TriShade,	 RDP_TriShadeZ,	  RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
 	//d0
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	//e0
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
-	DLParser_TexRect, DLParser_TexRectFlip, DLParser_RDPLoadSync, DLParser_RDPPipeSync,
-	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB, DLParser_SetKeyR,
-	DLParser_SetConvert, DLParser_SetScissor, DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
+	RSP_RDP_Nothing,	  RSP_RDP_Nothing,		RSP_RDP_Nothing,	   RSP_RDP_Nothing, 
+	DLParser_TexRect,	  DLParser_TexRectFlip, DLParser_RDPLoadSync,  DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB,	   DLParser_SetKeyR,
+	DLParser_SetConvert,  DLParser_SetScissor,	DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
 	//f0
-	DLParser_LoadTLut, RSP_RDP_Nothing, DLParser_SetTileSize, DLParser_LoadBlock, 
-	DLParser_LoadTile, DLParser_SetTile, DLParser_FillRect, DLParser_SetFillColor,
+	DLParser_LoadTLut,	  RSP_RDP_Nothing,		  DLParser_SetTileSize,  DLParser_LoadBlock, 
+	DLParser_LoadTile,	  DLParser_SetTile,		  DLParser_FillRect,	 DLParser_SetFillColor,
 	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
-	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
+	DLParser_SetCombine,  DLParser_SetTImg,		  DLParser_SetZImg,		 DLParser_SetCImg
 	//g0
 };
 
 //uCode 16 - RSP SW 2.0D EXT
 //Games: Star Wars: Shadows of the Empire
 UcodeMap ucodeMap16 = {
-	RSP_GBI1_SpNoop, RSP_GBI0_Mtx, RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
-	RSP_Vtx_ShadowOfEmpire, RSP_GBI1_Reserved, RSP_GBI0_DL, RSP_GBI1_Reserved,
-	RSP_GBI1_Reserved, RSP_GBI1_Sprite2DBase, RSP_RDP_Nothing, RSP_RDP_Nothing,
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
+	RSP_GBI1_SpNoop,		RSP_GBI0_Mtx,		   RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
+	RSP_Vtx_ShadowOfEmpire, RSP_GBI1_Reserved,	   RSP_GBI0_DL,		  RSP_GBI1_Reserved,
+	RSP_GBI1_Reserved,		RSP_GBI1_Sprite2DBase, RSP_RDP_Nothing,	  RSP_RDP_Nothing,
+	RSP_RDP_Nothing,		RSP_RDP_Nothing,	   RSP_RDP_Nothing,	  RSP_RDP_Nothing, 
 	//10
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
@@ -1286,30 +1286,30 @@ UcodeMap ucodeMap16 = {
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, 
 	//b0
-	RSP_RDP_Nothing, RSP_GBI0_Tri4,  RSP_GBI1_RDPHalf_Cont, RSP_GBI1_RDPHalf_2,
+	RSP_RDP_Nothing,	RSP_GBI0_Tri4,			   RSP_GBI1_RDPHalf_Cont,		RSP_GBI1_RDPHalf_2,
 	RSP_GBI1_RDPHalf_1, RSP_Quad3d_ShadowOfEmpire, RSP_GBI1_ClearGeometryMode,  RSP_GBI1_SetGeometryMode,
-	RSP_GBI1_EndDL, RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH, RSP_GBI1_Texture,
-	RSP_GBI1_MoveWord, RSP_GBI1_PopMtx, RSP_GBI1_CullDL, RSP_Tri1_ShadowOfEmpire,
+	RSP_GBI1_EndDL,		RSP_GBI1_SetOtherModeL,	   RSP_GBI1_SetOtherModeH,		RSP_GBI1_Texture,
+	RSP_GBI1_MoveWord,	RSP_GBI1_PopMtx,		   RSP_GBI1_CullDL,				RSP_Tri1_ShadowOfEmpire,
 	//c0
-	RSP_GBI1_Noop,  RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  
-	RDP_TriFill, RDP_TriFillZ, RDP_TriTxtr, RDP_TriTxtrZ,
-	RDP_TriShade, RDP_TriShadeZ, RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	RSP_GBI1_Noop,	 RSP_RDP_Nothing, RSP_RDP_Nothing,	RSP_RDP_Nothing,  
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,	RSP_RDP_Nothing,  
+	RDP_TriFill,	 RDP_TriFillZ,	  RDP_TriTxtr,		RDP_TriTxtrZ,
+	RDP_TriShade,	 RDP_TriShadeZ,	  RDP_TriShadeTxtr,	RDP_TriShadeTxtrZ,
 	//d0
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	//e0
-	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  
-	DLParser_TexRect, DLParser_TexRect,  DLParser_RDPLoadSync, DLParser_RDPPipeSync,
-	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB, DLParser_SetKeyR,
-	DLParser_SetConvert, DLParser_SetScissor, DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
+	RSP_RDP_Nothing,	  RSP_RDP_Nothing,		RSP_RDP_Nothing,	   RSP_RDP_Nothing,  
+	DLParser_TexRect,	  DLParser_TexRect,		DLParser_RDPLoadSync,  DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB,	   DLParser_SetKeyR,
+	DLParser_SetConvert,  DLParser_SetScissor,  DLParser_SetPrimDepth, DLParser_RDPSetOtherMode,
 	//f0
-	DLParser_LoadTLut, RSP_RDP_Nothing, DLParser_SetTileSize, DLParser_LoadBlock, 
-	DLParser_LoadTile, DLParser_SetTile, DLParser_FillRect, DLParser_SetFillColor,
+	DLParser_LoadTLut,	  RSP_RDP_Nothing,		  DLParser_SetTileSize,  DLParser_LoadBlock, 
+	DLParser_LoadTile,	  DLParser_SetTile,		  DLParser_FillRect,	 DLParser_SetFillColor,
 	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
-	DLParser_SetCombine, DLParser_SetTImg, DLParser_SetZImg, DLParser_SetCImg
+	DLParser_SetCombine,  DLParser_SetTImg,		  DLParser_SetZImg,		 DLParser_SetCImg
 	//g0
 };
 

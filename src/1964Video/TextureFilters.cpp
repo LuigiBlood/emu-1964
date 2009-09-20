@@ -705,6 +705,7 @@ enum TextureType
 	RGBA_PNG_FOR_CI,
 	RGBA_PNG_FOR_ALL_CI,
 };
+
 typedef struct {
 	int width;
 	int height;
@@ -773,6 +774,7 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 		RECT rect={0,300,windowSetting.uDisplayWidth,320};
 		OutputText(generalText,&rect);
 
+		//Check if the directory is recursive
 		if( PathIsDirectory(texturefilename) && bRecursive )
 		{
 			strcat(texturefilename, "\\");
