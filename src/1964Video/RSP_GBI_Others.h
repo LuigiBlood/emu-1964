@@ -892,7 +892,7 @@ void RDP_GFX_Force_Vertex_Z_Conker(uint32 dwAddr)
 
 void RSP_MoveMem_Conker(Gfx *gfx)
 {
-	uint32 dwType    = ((gfx->words.w0)     ) & 0xFE;
+	uint32 dwType = ((gfx->words.w0)     ) & 0xFE;
 	uint32 dwAddr = RSPSegmentAddr((gfx->words.w1));
 	if( dwType == RSP_GBI2_MV_MEM__MATRIX )
 	{

@@ -744,6 +744,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\RSP_Turbo3D.h"
+					>
+				</File>
+				<File
 					RelativePath="Timing.h"
 					>
 				</File>

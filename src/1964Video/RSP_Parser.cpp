@@ -266,6 +266,7 @@ uint32	g_dwRDPPalCrc[16];
 #include "RSP_GBI2_ext.h"
 #include "RSP_GBI_Others.h"
 #include "RSP_GBI_Sprite2D.h"
+#include "RSP_Turbo3D.h"
 #include "RDP_Texture.h"
 
 //////////////////////////////////////////////////////////
