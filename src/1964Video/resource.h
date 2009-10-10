@@ -147,6 +147,7 @@
 #define IDC_SMALL_TXT_ONLY              1139
 #define IDC_HIDE_ADVANCED_OPTIONS       1140
 #define IDC_LOAD_HIRES_TEXTURE          1141
+#define IDC_CACHE_HIRES_TEXTURE         1666
 #define IDC_LABEL5                      1142
 #define IDC_TEXRECT_ONLY3               1143
 #define IDC_DUMP_TEXTURE_TO_FILES       1144

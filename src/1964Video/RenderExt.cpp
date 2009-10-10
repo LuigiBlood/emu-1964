@@ -19,6 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "stdafx.h"
 
+// header for loading hires textures
+void LoadHiresTexture( TxtrCacheEntry &entry );
+
 extern uObjMtxReal gObjMtxReal;
 extern Matrix gD3DMtxReal;
 extern Matrix gD3DObjOffset;
@@ -162,6 +165,10 @@ void CRender::LoadTextureFromMemory(void *buf, uint32 left, uint32 top, uint32 w
 	SetCurrentTexture( 0, pEntry->pTexture,	width, height, pEntry);
 }
 
+
+// implementation of ucode with same name (e.g. opcode 0x0A of ucode map 5)
+// this is an high-level implementation for loading static backgrounds
+// It is rarely used, but Zelda, a quite popular game is using it.
 void CRender::LoadObjBGCopy(uObjBg &info)
 {
 	TxtrInfo gti;
@@ -204,7 +211,16 @@ void CRender::LoadObjBGCopy(uObjBg &info)
 	gti.WidthToLoad = gti.WidthToCreate;
 	gti.pPhysicalAddress = ((uint8*)g_pRDRAMu32)+gti.Address;
 	gti.tileNo = -1;
+	// get the original texture
 	TxtrCacheEntry *pEntry = gTextureManager.GetTexture(&gti, false);
+	// check if a hires has been enabled and not yet loaded
+	if( options.bLoadHiResTextures && (pEntry->pEnhancedTexture == NULL || pEntry->dwEnhancementFlag < TEXTURE_EXTERNAL ) )
+	{
+		// try to load hires replacement
+		LoadHiresTexture(*pEntry);
+	}
+	
+	// and push it to texture memory
 	SetCurrentTexture(0,pEntry);
 
 	DEBUGGER_IF_DUMP((pauseAtNext && (eventToPause == NEXT_OBJ_TXT_CMD||eventToPause == NEXT_FLUSH_TRI||eventToPause == NEXT_OBJ_BG)),

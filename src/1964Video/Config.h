@@ -227,6 +227,7 @@ typedef struct {
 	BOOL	bSmallTextureOnly;
 	BOOL	bDumpTexturesToFiles;
 	BOOL	bLoadHiResTextures;
+	BOOL	bCacheHiResTextures;
 
 	int		RenderBufferSetting;
 

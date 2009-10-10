@@ -213,10 +213,12 @@ BEGIN
     LTEXT           "Texture Quality:",IDC_STATIC,12,26,96,8
     COMBOBOX        IDC_TEXTURE_QUALITY,114,24,174,66,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     CONTROL         "For TexRect Only",IDC_TEXRECT_ONLY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,144,120,10
-    GROUPBOX        "Texture Enhancement && Filters",IDC_STATIC,6,90,288,86
+    GROUPBOX        "Texture Enhancement && Filters",IDC_STATIC,6,90,288,98
     CONTROL         "For Small Textures Only",IDC_SMALL_TXT_ONLY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,162,144,114,10
     CONTROL         "Load hi-res textures if available",IDC_LOAD_HIRES_TEXTURE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,156,138,10
+    CONTROL         "Cache hi-res textures",IDC_CACHE_HIRES_TEXTURE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,168,130,10
     CONTROL         "Dump textures to files",IDC_DUMP_TEXTURE_TO_FILES,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,162,156,114,10
 END

@@ -436,7 +436,7 @@ void CTextureManager::RemoveTexture(TxtrCacheEntry * pEntry)
 	while (pCurr)
 	{
 		// Check that the attributes match
-		if ( pCurr->ti == pEntry->ti )
+		if ( pCurr == pEntry )
 		{
 			if (pPrev != NULL) 
 				pPrev->pNext = pCurr->pNext;
@@ -679,6 +679,32 @@ TxtrCacheEntry * CTextureManager::GetTexture(TxtrInfo * pgti, bool fromTMEM, boo
 		dwPalCRC = CalculateRDRAMCRC(pStart, 0, 0, maxCI+1, 1, TXT_SIZE_16b, dwPalSize*2);
 		dwAsmCRC = dwAsmCRCSave;
 	}
+
+	// microdev: added fix for textures where ti is identical. In this case just the first texture has been added to the Cache.
+	// for further instances this texture has just been replaced instead of adding the additional texture to the same index
+	// in the cachelist. This was causing the slowdowns. Thus we have to iterate through the bucket of the cache list and see
+	// which of the textures that have been placed to it is the one we are looking for
+	if(pEntry && doCRCCheck && pEntry->dwCRC == dwAsmCRC && pEntry->dwPalCRC != dwPalCRC &&
+			(!loadFromTextureBuffer || gRenderTextureInfos[txtBufIdxToLoadFrom].updateAtFrame < pEntry->FrameLastUsed )){
+		bool bChecksumDoMatch=false;
+		// iterate through all textures located in the same bucket
+		while(pEntry->pNext){
+			// check the next texture in the same bucket
+			pEntry = pEntry->pNext;
+				// let's see if this one is the one we are actually looking for
+				if(pEntry->dwCRC == dwAsmCRC && pEntry->dwPalCRC == dwPalCRC && (!loadFromTextureBuffer || gRenderTextureInfos[txtBufIdxToLoadFrom].updateAtFrame < pEntry->FrameLastUsed )){
+					// found it in the neighbourhood
+					bChecksumDoMatch = true;
+					break;
+				}
+		}
+		// cannot find it 
+		if(!bChecksumDoMatch){
+			// try to load it
+			pEntry = NULL;
+		}
+	} 
+
 
 	if (pEntry && doCRCCheck )
 	{
