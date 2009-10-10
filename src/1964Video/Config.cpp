@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define MAIN_KEY		"Software\\1964Video\\1964Video Plugin"
 #define INI_FILE		"1964Video.ini"
-char *project_name =	"1964Video N64 Video Plugin";
+char *project_name =	"1964Video N64 Video Plugin community version";
 
 // Disable the config dialog box to allow Vtune call graph feature to work
 #define ENABLE_CONFIG_DIALOG
@@ -555,6 +555,10 @@ void WriteConfiguration(void)
 	DwordData = (uint32)options.bLoadHiResTextures;
 	RegSetValueEx(hKey2, "LoadHiResTextures", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
 
+	// load the saved value for the caching setting from registry
+	DwordData = (uint32)options.bCacheHiResTextures;
+	RegSetValueEx(hKey2, "CacheHiResTextures", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+
 	DwordData = (uint32)options.bDumpTexturesToFiles;
 	RegSetValueEx(hKey2, "DumpTexturesToFiles", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
 
@@ -703,6 +707,8 @@ void ReadConfiguration(void)
 		options.bTexRectOnly = FALSE;
 		options.bSmallTextureOnly = FALSE;
 		options.bLoadHiResTextures = FALSE;
+		// set caching by default to "off"
+		options.bCacheHiResTextures = FALSE;
 		options.bDumpTexturesToFiles = FALSE;
 		options.DirectXDepthBufferSetting = 0;
 		options.OpenglDepthBufferSetting = 16;
@@ -794,6 +800,8 @@ void ReadConfiguration(void)
 		options.bTexRectOnly = ReadRegistryDwordVal(MAIN_KEY, "TexRectOnly");
 		options.bSmallTextureOnly = ReadRegistryDwordVal(MAIN_KEY, "SmallTextureOnly");
 		options.bLoadHiResTextures = ReadRegistryDwordVal(MAIN_KEY, "LoadHiResTextures");
+		// load key value for hires caching from registry
+		options.bCacheHiResTextures = ReadRegistryDwordVal(MAIN_KEY, "CacheHiResTextures");
 		options.bDumpTexturesToFiles = ReadRegistryDwordVal(MAIN_KEY, "DumpTexturesToFiles");
 		options.bDumpTexturesToFiles = FALSE;	// Never starting the plugin with this option on
 		defaultRomOptions.bFastTexCRC = ReadRegistryDwordVal(MAIN_KEY, "FastTextureLoading");
@@ -3244,6 +3252,8 @@ LRESULT APIENTRY TextureSettingDialogProc(HWND hDlg, unsigned message, LONG wPar
 		SendDlgItemMessage(hDlg, IDC_TEXRECT_ONLY, BM_SETCHECK, options.bTexRectOnly ? BST_CHECKED : BST_UNCHECKED, 0);
 		SendDlgItemMessage(hDlg, IDC_SMALL_TXT_ONLY, BM_SETCHECK, options.bSmallTextureOnly ? BST_CHECKED : BST_UNCHECKED, 0);
 		SendDlgItemMessage(hDlg, IDC_LOAD_HIRES_TEXTURE, BM_SETCHECK, options.bLoadHiResTextures ? BST_CHECKED : BST_UNCHECKED, 0);
+		// fetch the value the user has set for caching from dialog
+		SendDlgItemMessage(hDlg, IDC_CACHE_HIRES_TEXTURE, BM_SETCHECK, options.bCacheHiResTextures ? BST_CHECKED : BST_UNCHECKED, 0);
 		SendDlgItemMessage(hDlg, IDC_DUMP_TEXTURE_TO_FILES, BM_SETCHECK, options.bDumpTexturesToFiles ? BST_CHECKED : BST_UNCHECKED, 0);
 
         return(TRUE);
@@ -3315,8 +3325,10 @@ LRESULT APIENTRY TextureSettingDialogProc(HWND hDlg, unsigned message, LONG wPar
 
 			{
 				BOOL bLoadHiResTextures = options.bLoadHiResTextures;
+				BOOL bCacheHiResTextures = options.bCacheHiResTextures;
 				BOOL bDumpTexturesToFiles = options.bDumpTexturesToFiles;
 				options.bLoadHiResTextures = (SendDlgItemMessage(hDlg, IDC_LOAD_HIRES_TEXTURE, BM_GETCHECK, 0, 0) == BST_CHECKED);
+				options.bCacheHiResTextures = (SendDlgItemMessage(hDlg, IDC_CACHE_HIRES_TEXTURE, BM_GETCHECK, 0, 0) == BST_CHECKED);
 				options.bDumpTexturesToFiles = (SendDlgItemMessage(hDlg, IDC_DUMP_TEXTURE_TO_FILES, BM_GETCHECK, 0, 0) == BST_CHECKED);
 
 				if( status.bGameIsRunning && bLoadHiResTextures != options.bLoadHiResTextures)
@@ -3333,6 +3345,23 @@ LRESULT APIENTRY TextureSettingDialogProc(HWND hDlg, unsigned message, LONG wPar
 						CloseHiresTextures();
 					}
 				}
+				// check if caching option has been changed
+				if( status.bGameIsRunning && bLoadHiResTextures && bCacheHiResTextures != options.bCacheHiResTextures)
+				{
+					void InitHiresCache(void);
+					void ClearHiresCache(void);
+					if( options.bCacheHiResTextures )
+					{
+						// caching has been enabled
+						InitHiresCache();
+					}
+					else
+					{
+						// caching has been disabled
+						ClearHiresCache();
+					}
+				}
+
 				if( status.bGameIsRunning && bDumpTexturesToFiles != options.bDumpTexturesToFiles)
 				{
 					void CloseTextureDump(void);

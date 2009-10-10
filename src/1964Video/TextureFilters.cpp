@@ -714,13 +714,17 @@ typedef struct {
 	int crc32;
 	int pal_crc32;
 	char *foldername;
-	//char name[40];
 	char RGBNameTail[23];
-	char AlphaNameTail[20];
+	char AlphaNameTail[23];
 	TextureType type;
 	bool		bSeparatedAlpha;
 	int scaleShift;
+	// cached texture
+	unsigned char	*pHiresTextureRGB;
+	unsigned char	*pHiresTextureAlpha;
 } ExtTxtrInfo;
+
+void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo );
 
 CSortedList<uint64,ExtTxtrInfo> gTxtrDumpInfos;
 CSortedList<uint64,ExtTxtrInfo> gHiresTxtrInfos;
@@ -728,7 +732,7 @@ CSortedList<uint64,ExtTxtrInfo> gHiresTxtrInfos;
 extern void GetPluginDir( char * Directory );
 extern char * right(char * src, int nchars);
 
-void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo> &infos, bool extraCheck, bool bRecursive)
+void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo> &infos, bool extraCheck, bool bRecursive, bool bCacheTextures = false)
 {
 	if( PathIsDirectory(foldername) == FALSE )	return;
 
@@ -778,7 +782,7 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 		if( PathIsDirectory(texturefilename) && bRecursive )
 		{
 			strcat(texturefilename, "\\");
-			FindAllTexturesFromFolder(texturefilename, infos, extraCheck, bRecursive);
+			FindAllTexturesFromFolder(texturefilename, infos, extraCheck, bRecursive, bCacheTextures);
 		}
 
 		if( strstr(libaa.cFileName,g_curRomInfo.szGameName) == 0 )
@@ -857,14 +861,14 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 		/*
 			Try to read image information here.
 
-			(CASTLEVANIA2)(#58E2333F)(#2#0#)(D7A5C6D 9)_ciByRGBA.png
-			(------1-----)(----2----)(3)(4)(----5-----)_ciByRGBA.png
+			(CASTLEVANIA2)#(58E2333F)#(2)#(0)#(D7A5C6D9)_ciByRGBA.png
+			(------1-----)#(---2----)#(3)#(4)#(---5----)_ciByRGBA.png
 
 			1. Internal ROM name
 			2. The DRAM CRC
 			3. The image pixel size (8b=0, 16b=1, 24b=2, 32b=3)
 			4. The texture format (RGBA=0, YUV=1, CI=2, IA=3, I=4)
-			5. The PAL CRC
+			5. The palette CRC
 
 			<internal Rom name>#<DRAM CRC>#<24bit>#<RGBA>#<PAL CRC>_ciByRGBA.png
 		*/
@@ -939,6 +943,21 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 				uint64 crc64 = newinfo.crc32;
 				crc64 <<= 32;
 				crc64 |= (newinfo.pal_crc32&0xFFFFFF00)|(newinfo.fmt<<4)|newinfo.siz;
+
+				// if caching has been enabled, also cache the actual texture
+				if(bCacheTextures)
+				{
+					// generate status message
+					sprintf(generalText,"Loading %d: %s", count, libaa.cFileName);
+					// prepare screen for displaying status message
+					SetWindowText(g_GraphicsInfo.hStatusBar,generalText);
+					RECT rect={0,300,windowSetting.uDisplayWidth,320};
+					OutputText(generalText,&rect);
+					// and load the texture to memory
+					CacheHiresTexture(newinfo);
+				}
+
+				// add info about available hires texture to "Hashtable" 
 				infos.add(crc64,newinfo);
 			}
 		}
@@ -1035,7 +1054,8 @@ void FindAllHiResTextures(void)
 	else
 	{
 		gHiresTxtrInfos.clear();
-		FindAllTexturesFromFolder(foldername,gHiresTxtrInfos, true, true);
+		// find all hires textures and also cache them if configured to do so
+		FindAllTexturesFromFolder(foldername,gHiresTxtrInfos, true, true, options.bCacheHiResTextures != FALSE);
 	}
 }
 
@@ -1045,6 +1065,10 @@ void CloseHiresTextures(void)
 	{
 		if( gHiresTxtrInfos[i].foldername )
 			delete [] gHiresTxtrInfos[i].foldername;
+			// don't forget to also free memory of cached textures
+			delete [] gHiresTxtrInfos[i].pHiresTextureRGB;
+			delete [] gHiresTxtrInfos[i].pHiresTextureAlpha;
+
 	}
 
 	gHiresTxtrInfos.clear();
@@ -1063,8 +1087,15 @@ void CloseTextureDump(void)
 
 void CloseExternalTextures(void)
 {
-	CloseHiresTextures();
-	CloseTextureDump();
+	static char* currentRomName = new char[200];
+	// this condition has been added to avoid reloading the game each time a savestate has been loaded
+	// The trick is quite simple: it is checked if the internal rom name has changed
+	// If it has changed, a new game has been started - then hires has to be reloaded otherwise not
+	if((currentRomName == NULL) || (strcmp(g_curRomInfo.szGameName, currentRomName) != 0)){
+		strcpy(currentRomName, g_curRomInfo.szGameName);
+		CloseHiresTextures();
+		CloseTextureDump();
+	}
 }
 
 void InitHiresTextures(void)
@@ -1080,6 +1111,38 @@ void InitHiresTextures(void)
 	}
 }
 
+// load all hires textures into cache
+void InitHiresCache(void)
+{
+	if( options.bCacheHiResTextures )
+	{
+		for( int i=0; i<gHiresTxtrInfos.size(); i++)
+		{
+
+			// generate status message
+			sprintf(generalText,"Loading Texture Nr. %d", (i+1));
+			SetWindowText(g_GraphicsInfo.hStatusBar,generalText);
+			RECT rect={0,300,windowSetting.uDisplayWidth,320};
+			OutputText(generalText,&rect);
+
+			CacheHiresTexture(gHiresTxtrInfos[i]);
+		}
+	}
+}
+
+// clear hires texture cache
+void ClearHiresCache(void)
+{
+	if( !options.bCacheHiResTextures )
+	{
+		for( int i=0; i<gHiresTxtrInfos.size(); i++)
+		{
+			SAFE_DELETE(gHiresTxtrInfos[i].pHiresTextureRGB);
+			SAFE_DELETE(gHiresTxtrInfos[i].pHiresTextureAlpha);
+		}
+	}
+}
+
 void InitTextureDump(void)
 {
 	if( options.bDumpTexturesToFiles )
@@ -1092,11 +1155,19 @@ void InitTextureDump(void)
 		FindAllDumpedTextures();
 	}
 }
+
 void InitExternalTextures(void)
 {
-	CloseExternalTextures();
-	InitHiresTextures();
-	InitTextureDump();
+	static char* currentRomName = new char[200];
+	// this condition has been added to avoid reloading the game each time a savestate has been loaded
+	// The trick is quite simple: it is checked if the internal rom name has changed
+	// If it has changed, a new game has been started - then hires has to be reloaded otherwise not
+	if((currentRomName == NULL) || (strcmp(g_curRomInfo.szGameName, currentRomName) != 0)){
+		strcpy(currentRomName, g_curRomInfo.szGameName);
+		CloseExternalTextures();
+		InitHiresTextures();
+		InitTextureDump();
+	}
 }
 
 bool IsPowerOfTwo (int value)
@@ -1472,9 +1543,6 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 {
 	if( entry.bExternalTxtrChecked )
 		return;
-	// microdev: don't load highres texture if it has already been loaded
-	if(entry.dwEnhancementFlag == TEXTURE_EXTERNAL)
-		return;
 
 	if( entry.pEnhancedTexture )
 	{
@@ -1485,104 +1553,46 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 	int idx = CheckTextureInfos(gHiresTxtrInfos,entry,ciidx,false);
 	if( idx < 0 )
 	{
+		// there is no hires replacement => indicate that
 		entry.bExternalTxtrChecked = true;
 		return;
 	}
+	
+	// if caching has been disabled, the texture data
+	// has to be loaded from file system first
+	if(!options.bCacheHiResTextures)
+		CacheHiresTexture(gHiresTxtrInfos[idx]);
 
-	// Load the bitmap file
-	char filename_rgb[256];
-	char filename_a[256];
-
-
-	strcpy(filename_rgb, gHiresTxtrInfos[idx].foldername);
-
-	sprintf(filename_rgb+strlen(filename_rgb), "%s#%08X#%d#%d", g_curRomInfo.szGameName, entry.dwCRC, entry.ti.Format, entry.ti.Size);
-	strcpy(filename_a,filename_rgb);
-	strcat(filename_rgb,gHiresTxtrInfos[idx].RGBNameTail);
-	strcat(filename_a,gHiresTxtrInfos[idx].AlphaNameTail);
-
-	// Load BMP image to buffer_rbg
-	unsigned char *buf_rgba = NULL;
-	unsigned char *buf_a = NULL;
-	int width, height;
-
-	bool bResRGBA=false, bResA=false;
-	bool bCI = ((gRDP.otherMode.text_tlut>=2 || entry.ti.Format == TXT_FMT_CI || entry.ti.Format == TXT_FMT_RGBA) && entry.ti.Size <= TXT_SIZE_8b );
-
-
-	switch( gHiresTxtrInfos[idx].type )
+	if( !gHiresTxtrInfos[idx].pHiresTextureRGB )
 	{
-	case RGB_PNG:
-		if( bCI )	
-			return;
-		else
-		{
-			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &buf_rgba, width, height);
-			if( bResRGBA && gHiresTxtrInfos[idx].bSeparatedAlpha )
-				bResA = LoadRGBBufferFromPNGFile(filename_a, &buf_a, width, height);
-		}
-		break;
-	case COLOR_INDEXED_BMP:
-		if( bCI )	
-			bResRGBA = LoadRGBABufferFromColorIndexedFile(filename_rgb, entry, &buf_rgba, width, height);
-		else
-			return;
-		break;
-	case RGBA_PNG_FOR_CI:
-	case RGBA_PNG_FOR_ALL_CI:
-		if( bCI )	
-			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &buf_rgba, width, height, 32);
-		else
-			return;
-		break;
-	case RGB_WITH_ALPHA_TOGETHER_PNG:
-		if( bCI )	
-			return;
-		else
-			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &buf_rgba, width, height, 32);
-		break;
-	default:
+		//TRACE1("Cannot get data for RGB texture");
+		return;
+	}
+	else if( gHiresTxtrInfos[idx].bSeparatedAlpha && !gHiresTxtrInfos[idx].pHiresTextureAlpha )
+	{
+		//TRACE1("Cannot get data for alpha channel");
 		return;
 	}
 
-	if( !bResRGBA )
-	{
-		TRACE1("Cannot open %s", filename_rgb);
-		return;
-	}
-	else if( gHiresTxtrInfos[idx].bSeparatedAlpha && !bResA )
-	{
-		TRACE1("Cannot open %s", filename_a);
-		delete [] buf_rgba;
-		return;
-	}
-
-    int scalex = width / (int)entry.ti.WidthToCreate;
-    int scaley = height / (int)entry.ti.HeightToCreate;
+	int scalex = gHiresTxtrInfos[idx].width / (int)entry.ti.WidthToCreate;
+    int scaley = gHiresTxtrInfos[idx].height / (int)entry.ti.HeightToCreate;
     int scale = scalex > scaley ? scalex : scaley; // set scale to maximum(scalex,scaley)
 
-	// Create new texture
 	entry.pEnhancedTexture = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scale, entry.ti.HeightToCreate*scale);
 	DrawInfo info;
 
 	if( entry.pEnhancedTexture && entry.pEnhancedTexture->StartUpdate(&info) )
 	{
-
 		if( gHiresTxtrInfos[idx].type == RGB_PNG )
 		{
-			unsigned char *pRGB = buf_rgba;
-			unsigned char *pA = buf_a;
-
-			if (info.lPitch < width * 4)
-                printf("*** Error: texture pitch %i less than width %i times 4\n", info.lPitch, width);
-            if (height > info.dwHeight)
-                printf("*** Error: texture source height %i greater than destination height %i\n", height, info.dwHeight);
+			unsigned char *pRGB = gHiresTxtrInfos[idx].pHiresTextureRGB;
+			unsigned char *pA = gHiresTxtrInfos[idx].pHiresTextureAlpha;
 
 			// Update the texture by using the buffer
-			for( int i=height-1; i>=0; i--)
+			for( int i=gHiresTxtrInfos[idx].height-1; i>=0; i--)
 			{
-				BYTE* pdst = (BYTE*)info.lpSurface + i*info.lPitch;
-				for( int j=0; j<width; j++)
+				BYTE *pdst = (BYTE*)info.lpSurface + i*info.lPitch;
+				for( int j=0; j<gHiresTxtrInfos[idx].width; j++)
 				{
 					*pdst++ = *pRGB++;		// R
 					*pdst++ = *pRGB++;		// G
@@ -1595,11 +1605,11 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 					}
 					else if( entry.ti.Format == TXT_FMT_I )
 					{
-						*pdst++ = pRGB[-1];
+						*pdst++ = *(pdst-1);
 					}
 					else
 					{
-						*pdst++ = 0xFF;
+						*pdst++ = 0xFF;;
 					}
 				}
 			}
@@ -1607,11 +1617,11 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 		else
 		{
 			// Update the texture by using the buffer
-			uint32 *pRGB = (uint32*)buf_rgba;
-			for( int i=height-1; i>=0; i--)
+			uint32 *pRGB = (uint32*)gHiresTxtrInfos[idx].pHiresTextureRGB;
+			for( int i=gHiresTxtrInfos[idx].height-1; i>=0; i--)
 			{
 				uint32 *pdst = (uint32*)((BYTE*)info.lpSurface + i*info.lPitch);
-				for( int j=0; j<width; j++)
+				for( int j=0; j<gHiresTxtrInfos[idx].width; j++)
 				{
 					*pdst++ = *pRGB++;		// RGBA
 				}
@@ -1620,23 +1630,23 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 
 		if( entry.ti.WidthToCreate/entry.ti.WidthToLoad == 2 )
 		{
-			gTextureManager.Mirror(info.lpSurface, width, entry.ti.maskS+gHiresTxtrInfos[idx].scaleShift, width*2, width*2, height, S_FLAG, 4 );
+			gTextureManager.Mirror(info.lpSurface, gHiresTxtrInfos[idx].width, entry.ti.maskS+gHiresTxtrInfos[idx].scaleShift, gHiresTxtrInfos[idx].width*2, gHiresTxtrInfos[idx].width*2, gHiresTxtrInfos[idx].height, S_FLAG, 4 );
 		}
 
 		if( entry.ti.HeightToCreate/entry.ti.HeightToLoad == 2 )
 		{
-			gTextureManager.Mirror(info.lpSurface, height, entry.ti.maskT+gHiresTxtrInfos[idx].scaleShift, height*2, entry.pEnhancedTexture->m_dwCreatedTextureWidth, height, T_FLAG, 4 );
+			gTextureManager.Mirror(info.lpSurface, gHiresTxtrInfos[idx].height, entry.ti.maskT+gHiresTxtrInfos[idx].scaleShift, gHiresTxtrInfos[idx].height*2, entry.pEnhancedTexture->m_dwCreatedTextureWidth, gHiresTxtrInfos[idx].height, T_FLAG, 4 );
 		}
 
 		if( entry.ti.WidthToCreate*scale < entry.pEnhancedTexture->m_dwCreatedTextureWidth )
 		{
 			// Clamp
-			gTextureManager.Clamp(info.lpSurface, width, entry.pEnhancedTexture->m_dwCreatedTextureWidth, entry.pEnhancedTexture->m_dwCreatedTextureWidth, height, S_FLAG, 4 );
+			gTextureManager.Clamp(info.lpSurface, gHiresTxtrInfos[idx].width, entry.pEnhancedTexture->m_dwCreatedTextureWidth, entry.pEnhancedTexture->m_dwCreatedTextureWidth, gHiresTxtrInfos[idx].height, S_FLAG, 4 );
 		}
 		if( entry.ti.HeightToCreate*scale < entry.pEnhancedTexture->m_dwCreatedTextureHeight )
 		{
 			// Clamp
-			gTextureManager.Clamp(info.lpSurface, height, entry.pEnhancedTexture->m_dwCreatedTextureHeight, entry.pEnhancedTexture->m_dwCreatedTextureWidth, height, T_FLAG, 4 );
+			gTextureManager.Clamp(info.lpSurface, gHiresTxtrInfos[idx].height, entry.pEnhancedTexture->m_dwCreatedTextureHeight, entry.pEnhancedTexture->m_dwCreatedTextureWidth, gHiresTxtrInfos[idx].height, T_FLAG, 4 );
 		}
 
 		entry.pEnhancedTexture->EndUpdate(&info);
@@ -1650,11 +1660,81 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 		TRACE0("Cannot create a new texture");
 	}
 
-	if( buf_rgba )
-		delete [] buf_rgba;
+	// if caching has been disabled, remove
+	// cached texture from memory
+	if(!options.bCacheHiResTextures)
+	{
+		SAFE_DELETE(gHiresTxtrInfos[idx].pHiresTextureRGB);
+		SAFE_DELETE(gHiresTxtrInfos[idx].pHiresTextureAlpha);
+	}
 
-	if( buf_a )
-		delete [] buf_a;
+}
+
+
+// caches the raw data of the hires texture to ExtTxrInfo
+void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
+{
+
+	// Load the bitmap file
+	char filename_rgb[256];
+	char filename_a[256];
+
+
+	strcpy(filename_rgb, ExtTexInfo.foldername);
+
+	sprintf(filename_rgb+strlen(filename_rgb), "%s#%08X#%d#%d", g_curRomInfo.szGameName, ExtTexInfo.crc32, ExtTexInfo.fmt, ExtTexInfo.siz);
+	strcpy(filename_a,filename_rgb);
+	strcat(filename_rgb,ExtTexInfo.RGBNameTail);
+	strcat(filename_a,ExtTexInfo.AlphaNameTail);
+
+	ExtTexInfo.pHiresTextureRGB = NULL;
+	ExtTexInfo.pHiresTextureAlpha = NULL;
+	int width, height;
+
+	bool bResRGBA=false, bResA=false;
+	bool bCI = ((gRDP.otherMode.text_tlut>=2 || ExtTexInfo.fmt == TXT_FMT_CI || ExtTexInfo.fmt == TXT_FMT_RGBA) && ExtTexInfo.siz <= TXT_SIZE_8b );
+
+
+	switch( ExtTexInfo.type )
+	{
+	case RGB_PNG:
+		if( bCI )	
+			return;
+		else
+		{
+			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &ExtTexInfo.pHiresTextureRGB, width, height);
+			if( bResRGBA && ExtTexInfo.bSeparatedAlpha )
+				bResA = LoadRGBBufferFromPNGFile(filename_a, &ExtTexInfo.pHiresTextureAlpha, width, height);
+		}
+		break;
+	case RGBA_PNG_FOR_CI:
+	case RGBA_PNG_FOR_ALL_CI:
+		if( bCI )	
+			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &ExtTexInfo.pHiresTextureRGB, width, height, 32);
+		else
+			return;
+		break;
+	case RGB_WITH_ALPHA_TOGETHER_PNG:
+		if( bCI )	
+			return;
+		else
+			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &ExtTexInfo.pHiresTextureRGB, width, height, 32);
+		break;
+	default:
+		return;
+	}
+
+	if( !bResRGBA )
+	{
+		TRACE1("Cannot open %s", filename_rgb);
+		return;
+	}
+	else if( ExtTexInfo.bSeparatedAlpha && !bResA )
+	{
+		TRACE1("Cannot open %s", filename_a);
+		SAFE_DELETE(ExtTexInfo.pHiresTextureRGB);
+		return;
+	}
 }
 
 #endif

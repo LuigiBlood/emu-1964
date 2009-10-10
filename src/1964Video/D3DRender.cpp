@@ -599,7 +599,15 @@ bool D3DRender::SetCurrentTexture(int tile, TxtrCacheEntry *pEntry)
 {
 	if (pEntry != NULL && pEntry->pTexture != NULL)
 	{	
-		SetCurrentTexture( tile, pEntry->pTexture,pEntry->ti.WidthToCreate, pEntry->ti.HeightToCreate, pEntry);
+		// if a hires-texture is available
+		// microdev: CHECK for side-effects (e.g. at purgeTextures)
+		if(pEntry->pEnhancedTexture != NULL)
+			// use the hires tex instead of the original one
+			SetCurrentTexture( tile, pEntry->pEnhancedTexture,pEntry->ti.WidthToCreate, pEntry->ti.HeightToCreate, pEntry);
+		// no hires replacement
+		else
+			// so use the original one
+			SetCurrentTexture( tile, pEntry->pTexture,pEntry->ti.WidthToCreate, pEntry->ti.HeightToCreate, pEntry);
 		return true;
 	}
 	else
