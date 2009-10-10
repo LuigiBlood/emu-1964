@@ -1,9 +1,8 @@
 = Todo =
 
  * All configuration in a *ini file*
- * Fix *CRC calculation* code
+ * tlut problem*
  * Add more *uCodes*
- * Fix *dumping and loading of backgrounds* (See Legend Of Zelda OOT)*
- * Add hi-res texture caching*
+ * Improve hi-res texture caching*
  * Add more *framebuffer support*
- * Make textures load arbitrarily* 
+ * Improve loading textures arbitrarily* 
