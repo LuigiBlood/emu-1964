@@ -1,8 +1,10 @@
 = Todo =
 
  * All configuration in a *ini file*
- * tlut problem*
+ * tlut problem
  * Add more *uCodes*
- * Improve hi-res texture caching*
+ * Add *texture compression* to hi-res texture caching
+ * Add support for a *WIP subfolder* for reloading new hires textues
+ * Add *Pack-Select* feature
  * Add more *framebuffer support*
  * Improve loading textures arbitrarily* 
