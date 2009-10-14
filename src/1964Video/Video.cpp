@@ -327,12 +327,13 @@ void StopVideo()
 
 
 	try {
-		CloseExternalTextures();
 
 		// Kill all textures?
 		gTextureManager.RecycleAllTextures();
 		gTextureManager.CleanUp();
 		RDP_Cleanup();
+
+		CloseExternalTextures();
 
 		CDeviceBuilder::GetBuilder()->DeleteRender();
 		CGraphicsContext::Get()->CleanUp();

@@ -1694,6 +1694,13 @@ ToolTipMsg ttmsg[] = {
 	   "Loads custom game textures, which were dumped from the game. This option is used extensively for custom "
 	   "game graphics projects by fans."
 	},
+	{ 
+	   IDC_CACHE_HIRES_TEXTURE,
+	   "Cache custom hi-res textures",
+	   "Caches all custom game textures before the game is started. This produces smoother gameplay - especially for "
+	   "large textures.\n\n But be aware that the memory occupation might become very high for large texture packs."
+	   "Furthermore it will delay the game start as the textures have to be actually loaded first."
+	},
 	{
 	   IDC_DUMP_TEXTURE_TO_FILES,
 	   "Dump textures to files",
@@ -3333,7 +3340,7 @@ LRESULT APIENTRY TextureSettingDialogProc(HWND hDlg, unsigned message, LONG wPar
 
 				if( status.bGameIsRunning && bLoadHiResTextures != options.bLoadHiResTextures)
 				{
-					void InitHiresTextures(void);
+					void InitHiresTextures(bool bWIPFolder = false);
 					void CloseHiresTextures(void);
 					if( options.bLoadHiResTextures )
 					{

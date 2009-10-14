@@ -680,7 +680,7 @@ TxtrCacheEntry * CTextureManager::GetTexture(TxtrInfo * pgti, bool fromTMEM, boo
 		dwAsmCRC = dwAsmCRCSave;
 	}
 
-	// microdev: added fix for textures where ti is identical. In this case just the first texture has been added to the Cache.
+	// Fix for textures where ti is identical. In this case just the first texture has been added to the Cache.
 	// for further instances this texture has just been replaced instead of adding the additional texture to the same index
 	// in the cachelist. This was causing the slowdowns. Thus we have to iterate through the bucket of the cache list and see
 	// which of the textures that have been placed to it is the one we are looking for
