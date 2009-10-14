@@ -1,7 +1,7 @@
 = Todo =
 
  * All configuration in a *ini file*
- * tlut problem
+ * fix the tmem bug
  * Add more *uCodes*
  * Add *texture compression* to hi-res texture caching
  * Add support for a *WIP subfolder* for reloading new hires textues
