@@ -1414,12 +1414,35 @@ bool IsPowerOfTwo (int value)
  ********************************************************************************************************************/
 int FindScaleFactor(ExtTxtrInfo &info, TxtrCacheEntry &entry)
 {
-	int scaleShiftX = info.width / (int)entry.ti.WidthToCreate - 1;
-    int scaleShiftY = info.height / (int)entry.ti.HeightToCreate - 1;
-    int scaleShift = scaleShiftX > scaleShiftY ? scaleShiftX : scaleShiftY; // set scale to maximum(scalex,scaley)
+	int scaleShift = -1;
+	// Load hires textures with original size
+	if( info.height == entry.ti.HeightToLoad && info.width == entry.ti.WidthToLoad )
+		scaleShift = 0;
+	// Load hirex texture with 2x size
+	else if (info.height == entry.ti.HeightToLoad*2 && info.width == entry.ti.WidthToLoad*2 ) 
+		scaleShift = 1;
+	// Load hirex texture with 4x size
+	else if (info.height == entry.ti.HeightToLoad*4 && info.width == entry.ti.WidthToLoad*4)
+		scaleShift = 2;
+	// Load hirex texture with 8x size
+	else if (info.height == entry.ti.HeightToLoad*8 && info.width == entry.ti.WidthToLoad*8)
+		scaleShift = 3;
+	// Load hirex texture with 16x size
+	else if (info.height == entry.ti.HeightToLoad*16 && info.width == entry.ti.WidthToLoad*16)
+		scaleShift = 4; 
+	// Load hirex texture with 32x size 
+	else if (info.height == entry.ti.HeightToLoad*32 && info.width == entry.ti.WidthToLoad*32)
+		scaleShift = 5;
+	// Load hires textures with 64x size 
+	else if (info.height == entry.ti.HeightToLoad*64 && info.width == entry.ti.WidthToLoad*64)
+		scaleShift = 6; 
+	// Load hires textures with 128x size
+	else if (info.height == entry.ti.HeightToLoad*128 && info.width == entry.ti.WidthToLoad*128)
+		scaleShift = 7;
+	// Load hires textures with 256x size
+	else if (info.height == entry.ti.HeightToLoad*256 && info.width == entry.ti.WidthToLoad*256)
+		scaleShift = 8;
 
-	info.scaleShift = scaleShift;
-	return scaleShift;
 }
 
 /********************************************************************************************************************
