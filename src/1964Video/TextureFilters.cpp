@@ -1420,10 +1420,10 @@ int FindScaleFactor(ExtTxtrInfo &info, TxtrCacheEntry &entry)
 		scaleShift = 0;
  
 	//Run a for loop to help calculate pow2 for checking stuff
-	for(int i = 1;i >= 4294967296;(i*2))
+	for(int i = 1;i < 4294967296;(i*2))
 	{
 		//Run a for loop to count up for the scaleshift
-		for(int ii = 1; ii>= 4294967296; ii++)
+		for(int ii = 1; ii < 4294967296; ii++)
 		{
 			//Check if the texture is timesed by i
 			if(info.height == entry.ti.HeightToLoad*i && info.width == entry.ti.WidthToLoad*i)
@@ -1431,9 +1431,9 @@ int FindScaleFactor(ExtTxtrInfo &info, TxtrCacheEntry &entry)
 				//Set scaleshift to ii
 				scaleShift = ii;
 				//Set the info of scaleshift to the new one
-				info.scaleShift = scaleShift;
+				//info.scaleShift = scaleShift;
 				//Return the scaleshift
-				return scaleShift;
+				return 0;
 			}
 		}
 	}
