@@ -1396,9 +1396,15 @@ void InitExternalTextures(void)
 	}
 }
 
-bool IsPowerOfTwo (int value)
+//Int version of log2 taken from http://www.southwindsgames.com/blog/2009/01/19/fast-integer-log2-function-in-cc/
+inline unsigned int Log2(unsigned int value)
 {
-  return (value & -value) == value;
+    unsigned int f=0, s=32;
+    while(s) {
+        s>>=1;
+        if( value > 1<<(f+s) ) f+=s;
+    }
+    return f;
 }
 
 /********************************************************************************************************************
@@ -1415,30 +1421,20 @@ bool IsPowerOfTwo (int value)
 int FindScaleFactor(ExtTxtrInfo &info, TxtrCacheEntry &entry)
 {
 	int scaleShift = -1;
-	//Check if there is no size increase as the bottom calculation does not take 0 in to perspective
-	if( info.height == entry.ti.HeightToLoad && info.width == entry.ti.WidthToLoad )
-		scaleShift = 0;
- 
-	//Run a for loop to help calculate pow2 for checking stuff
-	for(int i = 1;i < 4294967296;(i*2))
-	{
-		//Run a for loop to count up for the scaleshift
-		for(int ii = 1; ii < 4294967296; ii++)
-		{
-			//Check if the texture is timesed by i
-			if(info.height == entry.ti.HeightToLoad*i && info.width == entry.ti.WidthToLoad*i)
-			{
-				//Set scaleshift to ii
-				scaleShift = ii;
-				//Set the info of scaleshift to the new one
-				//info.scaleShift = scaleShift;
-				//Return the scaleshift
-				return 0;
-			}
-		}
-	}
+	// Divide the new texture width by the oringinal texture width then log2 it
+	int scaleShiftX = Log2(info.width/entry.ti.WidthToLoad);
+	// Divide the new texture height by the oringinal texture height then log2 it
+	int scaleShiftY = Log2(info.height/entry.ti.HeightToLoad);
+	// Set scaleShift to maximum(scaleShiftX,scaleShiftY)
+	scaleShift = scaleShiftX > scaleShiftY ? scaleShiftX : scaleShiftY; 
+
+	//Set the txtr info scaleshift to the new scaleshift
+	info.scaleShift = scaleShift;
+	//Return the new scalshift
+	return scaleShift;
 
 }
+
 
 /********************************************************************************************************************
  * Checks if a hires replacement for a texture is available.
