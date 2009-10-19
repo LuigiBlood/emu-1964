@@ -851,7 +851,7 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 
 		// detect the texture type by it's extention
 		// microdev: this is not the smartest way. Should be done by header analysis if possible
-		if( _stricmp(_strlwr(right(libaa.cFileName,7)), "_ci.bmp") == 0 )
+		if( _stricmp(libaa.cFileName+(strlen(libaa.cFileName)-7), "_ci.bmp")==0)
 		{
 			// indentify type
 			if( imgInfo.Format == D3DFMT_P8 )
@@ -862,7 +862,7 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 				continue;
 		}
 		// detect the texture type by it's extention
-		else if( _stricmp(_strlwr(right(libaa.cFileName,13)), "_ciByRGBA.png") == 0 )
+		else if( _stricmp(libaa.cFileName+(strlen(libaa.cFileName)-13), "_ciByRGBA.png")==0)
 		{
 			// indentify type
 			if( imgInfo.Format == D3DFMT_A8R8G8B8 )
@@ -873,7 +873,7 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 				continue;
 		}
 		// detect the texture type by it's extention
-		else if( _stricmp(_strlwr(right(libaa.cFileName,16)), "_allciByRGBA.png") == 0 )
+		else if( _stricmp(libaa.cFileName+(strlen(libaa.cFileName)-16), "_allciByRGBA.png")==0)
 		{
 			// indentify type
 			if( imgInfo.Format == D3DFMT_A8R8G8B8 )
@@ -884,7 +884,7 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 				continue;
 		}
 		// detect the texture type by it's extention
-		else if( _stricmp(_strlwr(right(libaa.cFileName,8)), "_rgb.png") == 0 )
+		else if( _stricmp(libaa.cFileName+(strlen(libaa.cFileName)-8), "_rgb.png")==0)
 		{
 			// indentify type
 			if( imgInfo.Format != D3DFMT_X8R8G8B8 )
@@ -924,7 +924,7 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 			}
 		}
 		// detect the texture type by it's extention
-		else if( _stricmp(_strlwr(right(libaa.cFileName,8)), "_all.png") == 0 )
+		else if( _stricmp(libaa.cFileName+(strlen(libaa.cFileName)-8), "_all.png")==0)
 		{
 			// check if texture is of expected type 
 			if( imgInfo.Format != D3DFMT_A8R8G8B8 )
@@ -1421,9 +1421,9 @@ inline unsigned int Log2(unsigned int value)
 int FindScaleFactor(ExtTxtrInfo &info, TxtrCacheEntry &entry)
 {
 	int scaleShift = -1;
-	// Divide the new texture width by the oringinal texture width then log2 it
+	// Divide the new texture width by the oringinal texture width then log2(Reverse it back to its power) it
 	int scaleShiftX = Log2(info.width/entry.ti.WidthToLoad);
-	// Divide the new texture height by the oringinal texture height then log2 it
+	// Divide the new texture height by the oringinal texture height then log2(Reverse it back to its power) it
 	int scaleShiftY = Log2(info.height/entry.ti.HeightToLoad);
 	// Set scaleShift to maximum(scaleShiftX,scaleShiftY)
 	scaleShift = scaleShiftX > scaleShiftY ? scaleShiftX : scaleShiftY; 
@@ -1632,6 +1632,18 @@ bool LoadRGBBufferFromPNGFile(char *filename, unsigned char **pbuf, int &width, 
 				*pDst++ = *pSrc++;
 				*pDst++ = *pSrc++;
 				*pDst++ = 0;
+			}
+		}
+		else if (img.bits_per_pixel == 32 && bits_per_pixel == 24)
+		{
+			unsigned char *pSrc = img.bits;
+			unsigned char *pDst = *pbuf;
+			for (int i = 0; i < img.width * img.height; i++)
+			{
+				*pDst++ = *pSrc++;
+				*pDst++ = *pSrc++;
+				*pDst++ = *pSrc++;
+				pSrc++;
 			}
 		}
 
