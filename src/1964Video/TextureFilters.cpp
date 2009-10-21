@@ -1831,7 +1831,20 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
     int scaley = gHiresTxtrInfos[idx].height / (int)entry.ti.HeightToCreate;
     int scale = scalex > scaley ? scalex : scaley; // set scale to maximum(scalex,scaley)
 
-	entry.pEnhancedTexture = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scale, entry.ti.HeightToCreate*scale);
+	if(scalex==0)
+		scalex == 1;
+	if(scaley==0)
+		scaley == 1;
+
+	int mirrorx = 1;
+	int mirrory = 1;
+	if(entry.ti.WidthToCreate/entry.ti.WidthToLoad == 2)
+		mirrorx = 2;
+	if(entry.ti.HeightToCreate/entry.ti.HeightToLoad == 2)
+		mirrory = 2;
+
+	//Create Texture
+	entry.pEnhancedTexture = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scalex*mirrorx, entry.ti.HeightToCreate*scaley*mirrory);
 	DrawInfo info;
 
 	if( entry.pEnhancedTexture && entry.pEnhancedTexture->StartUpdate(&info) )
@@ -1881,22 +1894,27 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 			}
 		}
 
+		//Texture was meant to be mirrored
 		if( entry.ti.WidthToCreate/entry.ti.WidthToLoad == 2 )
 		{
-			gTextureManager.Mirror(info.lpSurface, gHiresTxtrInfos[idx].width, entry.ti.maskS+gHiresTxtrInfos[idx].scaleShift, gHiresTxtrInfos[idx].width*2, gHiresTxtrInfos[idx].width*2, gHiresTxtrInfos[idx].height, S_FLAG, 4 );
+			int height = gHiresTxtrInfos[idx].height;
+			int width  = gHiresTxtrInfos[idx].width;
+			gTextureManager.Mirror(info.lpSurface, width, entry.ti.maskS+gHiresTxtrInfos[idx].scaleShift, width*2, width*2, height, S_FLAG, 4 );
 		}
 
 		if( entry.ti.HeightToCreate/entry.ti.HeightToLoad == 2 )
 		{
-			gTextureManager.Mirror(info.lpSurface, gHiresTxtrInfos[idx].height, entry.ti.maskT+gHiresTxtrInfos[idx].scaleShift, gHiresTxtrInfos[idx].height*2, entry.pEnhancedTexture->m_dwCreatedTextureWidth, gHiresTxtrInfos[idx].height, T_FLAG, 4 );
+			int height = gHiresTxtrInfos[idx].height;
+			int width  = gHiresTxtrInfos[idx].width;
+			gTextureManager.Mirror(info.lpSurface, height, entry.ti.maskT+gHiresTxtrInfos[idx].scaleShift, height*2, width, height, T_FLAG, 4 );
 		}
 
-		if( entry.ti.WidthToCreate*scale < entry.pEnhancedTexture->m_dwCreatedTextureWidth )
+		if( entry.ti.WidthToCreate*scalex*mirrorx < entry.pEnhancedTexture->m_dwCreatedTextureWidth )
 		{
 			// Clamp
 			gTextureManager.Clamp(info.lpSurface, gHiresTxtrInfos[idx].width, entry.pEnhancedTexture->m_dwCreatedTextureWidth, entry.pEnhancedTexture->m_dwCreatedTextureWidth, gHiresTxtrInfos[idx].height, S_FLAG, 4 );
 		}
-		if( entry.ti.HeightToCreate*scale < entry.pEnhancedTexture->m_dwCreatedTextureHeight )
+		if( entry.ti.HeightToCreate*scaley*mirrory < entry.pEnhancedTexture->m_dwCreatedTextureHeight )
 		{
 			// Clamp
 			gTextureManager.Clamp(info.lpSurface, gHiresTxtrInfos[idx].height, entry.pEnhancedTexture->m_dwCreatedTextureHeight, entry.pEnhancedTexture->m_dwCreatedTextureWidth, gHiresTxtrInfos[idx].height, T_FLAG, 4 );
