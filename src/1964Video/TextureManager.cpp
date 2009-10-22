@@ -1146,10 +1146,23 @@ void CTextureManager::MirrorS32(uint32 *array, uint32 width, uint32 mask, uint32
 	//Mirror widthwise...
 	for( uint32 y = 0; y<rows; y++ )
 	{
+<<<<<<< .mine
+		uint32* line = array+y*arrayWidth;
+		// mirror the current row to the destination width
+		for( uint32 x=width; x<towidth; x++ )
+=======
 		uint32* line = array+y*(2*width);
 		for( uint32 x=width; x<2*width; x++ )
+>>>>>>> .r44
 		{
+<<<<<<< .mine
+		//	DebuggerAppendMsg("(%d)line[%d] = %d<=%d ? line[%d] : line[%d-%d](%d);",y,x,x&maskval2,maskval1,x&maskval1,maskval2,x&maskval2,maskval2-(x&maskval2));
+			// mirrors the content of one line and appends it to its right 
+			// value at position x of current line = ()
+			line[x] = (x&maskval2)<=maskval1 ? line[x&maskval1] : line[maskval2-(x&maskval2)];
+=======
 			line[x] = line[(2*width-1)-x];
+>>>>>>> .r44
 		}
 	}
 }
