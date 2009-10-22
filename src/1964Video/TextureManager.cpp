@@ -1143,48 +1143,48 @@ void CTextureManager::ClampT16(uint16 *array, uint32 height, uint32 toheight, ui
 
 void CTextureManager::MirrorS32(uint32 *array, uint32 width, uint32 mask, uint32 towidth, uint32 arrayWidth, uint32 rows)
 {
-	//Mirror widthwise...
+	uint32 maskval1 = (1<<mask)-1;
+	uint32 maskval2 = (1<<(mask+1))-1;
+
 	for( uint32 y = 0; y<rows; y++ )
 	{
-<<<<<<< .mine
 		uint32* line = array+y*arrayWidth;
 		// mirror the current row to the destination width
 		for( uint32 x=width; x<towidth; x++ )
-=======
-		uint32* line = array+y*(2*width);
-		for( uint32 x=width; x<2*width; x++ )
->>>>>>> .r44
 		{
-<<<<<<< .mine
 		//	DebuggerAppendMsg("(%d)line[%d] = %d<=%d ? line[%d] : line[%d-%d](%d);",y,x,x&maskval2,maskval1,x&maskval1,maskval2,x&maskval2,maskval2-(x&maskval2));
 			// mirrors the content of one line and appends it to its right 
 			// value at position x of current line = ()
 			line[x] = (x&maskval2)<=maskval1 ? line[x&maskval1] : line[maskval2-(x&maskval2)];
-=======
-			line[x] = line[(2*width-1)-x];
->>>>>>> .r44
 		}
 	}
 }
 
 void CTextureManager::MirrorS16(uint16 *array, uint32 width, uint32 mask, uint32 towidth, uint32 arrayWidth, uint32 rows)
 {
+	uint32 maskval1 = (1<<mask)-1;
+	uint32 maskval2 = (1<<(mask+1))-1;
+
 	for( uint32 y = 0; y<rows; y++ )
 	{
-		uint16* line = array+y*(2*width);
-		for( uint32 x=width; x<2*width; x++ )
+		uint16* line = array+y*arrayWidth;
+		for( uint32 x=width; x<towidth; x++ )
 		{
-			line[x] = line[(2*width-1)-x];
+			line[x] = (x&maskval2)<=maskval1 ? line[x&maskval1] : line[maskval2-(x&maskval2)];
 		}
 	}
 }
 
 void CTextureManager::MirrorT32(uint32 *array, uint32 height, uint32 mask, uint32 toheight, uint32 arrayWidth, uint32 cols)
 {
-	for( uint32 y = height; y<2*height; y++ )
+	uint32 maskval1 = (1<<mask)-1;
+	uint32 maskval2 = (1<<(mask+1))-1;
+
+	for( uint32 y = height; y<toheight; y++ )
 	{
-		uint32* linesrc = array+arrayWidth*((2*height-1)-y);
-		uint32* linedst = array+arrayWidth*y;
+		uint32 srcy = (y&maskval2)<=maskval1 ? y&maskval1 : maskval2-(y&maskval2);
+		uint32* linesrc = array+arrayWidth*srcy;
+		uint32* linedst = array+arrayWidth*y;;
 		for( uint32 x=0; x<arrayWidth; x++ )
 		{
 			linedst[x] = linesrc[x];
@@ -1194,10 +1194,14 @@ void CTextureManager::MirrorT32(uint32 *array, uint32 height, uint32 mask, uint3
 
 void CTextureManager::MirrorT16(uint16 *array, uint32 height, uint32 mask, uint32 toheight, uint32 arrayWidth, uint32 cols)
 {
+	uint32 maskval1 = (1<<mask)-1;
+	uint32 maskval2 = (1<<(mask+1))-1;
+
 	for( uint32 y = height; y<toheight; y++ )
 	{
-		uint16* linesrc = array+arrayWidth*((2*height-1)-y);
-		uint16* linedst = array+arrayWidth*y;
+		uint32 srcy = (y&maskval2)<=maskval1 ? y&maskval1 : maskval2-(y&maskval2);
+		uint16* linesrc = array+arrayWidth*srcy;
+		uint16* linedst = array+arrayWidth*y;;
 		for( uint32 x=0; x<arrayWidth; x++ )
 		{
 			linedst[x] = linesrc[x];

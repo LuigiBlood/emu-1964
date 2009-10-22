@@ -1398,19 +1398,6 @@ void InitExternalTextures(void)
 		InitHiresTextures(true);
 }
 
-<<<<<<< .mine
-=======
-//Int version of log2 taken from http://www.southwindsgames.com/blog/2009/01/19/fast-integer-log2-function-in-cc/
-inline unsigned int Log2(unsigned int value)
-{
-    unsigned int f=0, s=32;
-    while(s) {
-        s>>=1;
-        if( value > 1<<(f+s) ) f+=s;
-    }
-    return f;
-}
->>>>>>> .r44
 
 /********************************************************************************************************************
  * Determines the scale factor for resizing the original texture to the hires replacement. The scale factor is a left 
@@ -1428,7 +1415,7 @@ inline unsigned int Log2(unsigned int value)
  ********************************************************************************************************************/
 int FindScaleFactor(ExtTxtrInfo &info, TxtrCacheEntry &entry)
 {
-<<<<<<< .mine
+
 	// init scale shift
 	info.scaleShift = 0;
 
@@ -1442,29 +1429,12 @@ int FindScaleFactor(ExtTxtrInfo &info, TxtrCacheEntry &entry)
 
 		info.scaleShift++;
 	}
-=======
-	int scaleShift = -1;
-	// Divide the new texture width by the oringinal texture width then log2(Reverse it back to its power) it
-	int scaleShiftX = Log2(info.width/entry.ti.WidthToLoad);
-	// Divide the new texture height by the oringinal texture height then log2(Reverse it back to its power) it
-	int scaleShiftY = Log2(info.height/entry.ti.HeightToLoad);
-	// Set scaleShift to maximum(scaleShiftX,scaleShiftY)
-	scaleShift = scaleShiftX > scaleShiftY ? scaleShiftX : scaleShiftY; 
->>>>>>> .r44
 
-<<<<<<< .mine
 	// original texture dimensions (x or y or both) scaled with the last scale shift have become larger than the dimensions
 	// of the hires texture. That means the dimensions of the hires replacement are not power of 2 of the original texture.
 	// Therefore indicate invalid scale shift
 	info.scaleShift = -1;
 	return info.scaleShift;
-=======
-	//Set the txtr info scaleshift to the new scaleshift
-	info.scaleShift = scaleShift;
-	//Return the new scalshift
-	return scaleShift;
->>>>>>> .r44
-
 }
 
 
@@ -1666,7 +1636,6 @@ bool LoadRGBBufferFromPNGFile(char *filename, unsigned char **pbuf, int &width, 
 				*pDst++ = 0;
 			}
 		}
-<<<<<<< .mine
 		// loaded image has alpha, needed image has to be without alpha channel
 		else if (img.bits_per_pixel == 32 && bits_per_pixel == 24)
 		{
@@ -1687,20 +1656,6 @@ bool LoadRGBBufferFromPNGFile(char *filename, unsigned char **pbuf, int &width, 
 				pSrc++;
 			}
 		}
-=======
-		else if (img.bits_per_pixel == 32 && bits_per_pixel == 24)
-		{
-			unsigned char *pSrc = img.bits;
-			unsigned char *pDst = *pbuf;
-			for (int i = 0; i < img.width * img.height; i++)
-			{
-				*pDst++ = *pSrc++;
-				*pDst++ = *pSrc++;
-				*pDst++ = *pSrc++;
-				pSrc++;
-			}
-		}
->>>>>>> .r44
 
 		width = img.width;
 		height = img.height;
@@ -1893,27 +1848,10 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
  //   int scale = scalex > scaley ? scalex : scaley; // set scale to maximum(scalex,scaley)
 	int scale = 1<<gHiresTxtrInfos[idx].scaleShift;
 
-<<<<<<< .mine
 	DebuggerAppendMsg("Ext: 0x%08X 0x%08X, folder %dx%d, %d",gHiresTxtrInfos[idx].crc32, gHiresTxtrInfos[idx].pal_crc32,gHiresTxtrInfos[idx].width, gHiresTxtrInfos[idx].height, gHiresTxtrInfos[idx].scaleShift);
 	DebuggerAppendMsg("Org: 0x%08X 0x%08X; %dx%d, %dx%d",entry.dwCRC, entry.dwPalCRC, entry.ti.WidthToCreate, entry.ti.HeightToCreate, entry.ti.WidthToLoad, entry.ti.HeightToLoad);
 
 	entry.pEnhancedTexture = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scale, entry.ti.HeightToCreate*scale);
-=======
-	if(scalex==0)
-		scalex == 1;
-	if(scaley==0)
-		scaley == 1;
-
-	int mirrorx = 1;
-	int mirrory = 1;
-	if(entry.ti.WidthToCreate/entry.ti.WidthToLoad == 2)
-		mirrorx = 2;
-	if(entry.ti.HeightToCreate/entry.ti.HeightToLoad == 2)
-		mirrory = 2;
-
-	//Create Texture
-	entry.pEnhancedTexture = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scalex*mirrorx, entry.ti.HeightToCreate*scaley*mirrory);
->>>>>>> .r44
 	DrawInfo info;
 
 	if( entry.pEnhancedTexture && entry.pEnhancedTexture->StartUpdate(&info) )
@@ -1963,27 +1901,22 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 			}
 		}
 
-		//Texture was meant to be mirrored
 		if( entry.ti.WidthToCreate/entry.ti.WidthToLoad == 2 )
 		{
-			int height = gHiresTxtrInfos[idx].height;
-			int width  = gHiresTxtrInfos[idx].width;
-			gTextureManager.Mirror(info.lpSurface, width, entry.ti.maskS+gHiresTxtrInfos[idx].scaleShift, width*2, width*2, height, S_FLAG, 4 );
+			gTextureManager.Mirror(info.lpSurface, gHiresTxtrInfos[idx].width, entry.ti.maskS+gHiresTxtrInfos[idx].scaleShift, gHiresTxtrInfos[idx].width*2, gHiresTxtrInfos[idx].width*2, gHiresTxtrInfos[idx].height, S_FLAG, 4 );
 		}
 
 		if( entry.ti.HeightToCreate/entry.ti.HeightToLoad == 2 )
 		{
-			int height = gHiresTxtrInfos[idx].height;
-			int width  = gHiresTxtrInfos[idx].width;
-			gTextureManager.Mirror(info.lpSurface, height, entry.ti.maskT+gHiresTxtrInfos[idx].scaleShift, height*2, width, height, T_FLAG, 4 );
+			gTextureManager.Mirror(info.lpSurface, gHiresTxtrInfos[idx].height, entry.ti.maskT+gHiresTxtrInfos[idx].scaleShift, gHiresTxtrInfos[idx].height*2, entry.pEnhancedTexture->m_dwCreatedTextureWidth, gHiresTxtrInfos[idx].height, T_FLAG, 4 );
 		}
 
-		if( entry.ti.WidthToCreate*scalex*mirrorx < entry.pEnhancedTexture->m_dwCreatedTextureWidth )
+		if( entry.ti.WidthToCreate*scale < entry.pEnhancedTexture->m_dwCreatedTextureWidth )
 		{
 			// Clamp
 			gTextureManager.Clamp(info.lpSurface, gHiresTxtrInfos[idx].width, entry.pEnhancedTexture->m_dwCreatedTextureWidth, entry.pEnhancedTexture->m_dwCreatedTextureWidth, gHiresTxtrInfos[idx].height, S_FLAG, 4 );
 		}
-		if( entry.ti.HeightToCreate*scaley*mirrory < entry.pEnhancedTexture->m_dwCreatedTextureHeight )
+		if( entry.ti.HeightToCreate*scale < entry.pEnhancedTexture->m_dwCreatedTextureHeight )
 		{
 			// Clamp
 			gTextureManager.Clamp(info.lpSurface, gHiresTxtrInfos[idx].height, entry.pEnhancedTexture->m_dwCreatedTextureHeight, entry.pEnhancedTexture->m_dwCreatedTextureWidth, gHiresTxtrInfos[idx].height, T_FLAG, 4 );
