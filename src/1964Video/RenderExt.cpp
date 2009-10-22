@@ -846,6 +846,16 @@ void CRender::LoadObjBG1CYC(uObjScaleBg &bg)
 	gti.tileNo = -1;
 	//Get the original texture
 	TxtrCacheEntry *pEntry = gTextureManager.GetTexture(&gti, false,true,false);
+<<<<<<< .mine
+	// check if a hires has been enabled and not yet loaded
+	if( options.bLoadHiResTextures && (pEntry->pEnhancedTexture == NULL || pEntry->dwEnhancementFlag < TEXTURE_EXTERNAL ) )
+	{
+		// try to load hires replacement
+		LoadHiresTexture(*pEntry);
+	}
+	
+	// and push it to texture memory
+=======
 	// check if a hires has been enabled and not yet loaded
 	if( options.bLoadHiResTextures && (pEntry->pEnhancedTexture == NULL || pEntry->dwEnhancementFlag < TEXTURE_EXTERNAL ) )
 	{
@@ -853,6 +863,7 @@ void CRender::LoadObjBG1CYC(uObjScaleBg &bg)
 		LoadHiresTexture(*pEntry);
 	}
 	//Push it to memory
+>>>>>>> .r44
 	SetCurrentTexture(0,pEntry);
 
 	DEBUGGER_IF_DUMP((pauseAtNext && (eventToPause == NEXT_OBJ_TXT_CMD||eventToPause == NEXT_FLUSH_TRI||eventToPause == NEXT_OBJ_BG)),

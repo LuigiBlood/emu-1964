@@ -707,8 +707,8 @@ enum TextureType
 };
 
 typedef struct {
-	int width;
-	int height;
+	unsigned int width;
+	unsigned int height;
 	int fmt;
 	int siz;
 	int crc32;
@@ -814,13 +814,13 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 		strcat(texturefilename, libaa.cFileName);
 
 		// assemble the message
-		sprintf(generalText,"Checking %d: %s", count, libaa.cFileName);
+		sprintf(generalText,"Texture %d is checked: %s", count, libaa.cFileName);
 		// display it in the status bar
 		SetWindowText(g_GraphicsInfo.hStatusBar,generalText);
 		// prepare a rectangle for on-screen display
 		RECT rect={0,300,windowSetting.uDisplayWidth,320};
 		// and also display it on-screen
-		OutputText(generalText,&rect);
+		OutputText(generalText,&rect, DT_LEFT);
 
 		//Check if the current file is a directory and if recursive scanning is enabled
 		if( PathIsDirectory(texturefilename) && bRecursive )
@@ -1005,15 +1005,20 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 				}
 			}
 
-			// if the texture is not yet in the list and it is of a supported type
+			// if the texture is not yet in the list or if it exists with another type or the current folder is the WIP folder
 			if(	foundIdx < 0 || type != infos[foundIdx].type || bWIPFolder)
 			{
 				// create a new entry
 				ExtTxtrInfo *newinfo;
 				// if WIP folder check is active, and a texture already exists,
-				// modify the existing entry
-				if(foundIdx >= 0 && type == infos[foundIdx].type && WIP_FOLDER)
+				if(foundIdx >= 0 && type == infos[foundIdx].type && bWIPFolder)
+				{
+					// modify the existing entry
 					newinfo = &infos[foundIdx];
+					// free memory for the existing texture
+					SAFE_DELETE(newinfo->pHiresTextureRGB);
+					SAFE_DELETE(newinfo->pHiresTextureAlpha);
+				}
 				else
 					// otherwise create a new one
 					newinfo = new ExtTxtrInfo;
@@ -1076,21 +1081,21 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 				if(bCacheTextures)
 				{
 					// generate status message
-					sprintf(generalText,"Loading %d: %s", count, libaa.cFileName);
+					sprintf(generalText,"Texture %d is loading: %s", count, libaa.cFileName);
 					// display status message in the status bar fo the window
 					SetWindowText(g_GraphicsInfo.hStatusBar,generalText);
 					// prepare a rectancle for displaying onscreen message
 					RECT rect={0,300,windowSetting.uDisplayWidth,320};
 					// display onscreen message
-					OutputText(generalText,&rect);
+					OutputText(generalText,&rect, DT_LEFT);
 					// cache the actual texture to memory (and of course the alpha channel as well, if existing)
 					CacheHiresTexture(*newinfo);
 				}
 
 				// a new entry only has to be added to the list if it was not an already existing one
-				if(!(foundIdx >= 0 && type == infos[foundIdx].type && WIP_FOLDER))
-				// add the new record to the list 
-				infos.add(crc64,*newinfo);
+				if(!(foundIdx >= 0 && type == infos[foundIdx].type && bWIPFolder))
+					// add the new record to the list 
+					infos.add(crc64,*newinfo);
 			}
 		}
 	// loop through all files of the current directory
@@ -1263,10 +1268,6 @@ void CloseExternalTextures(void)
 		strcpy(currentRomName, g_curRomInfo.szGameName);
 		CloseHiresTextures();
 		CloseTextureDump();
-	} else
-	{
-		// just refresh the textures that are located in the WIP folder
-		InitHiresTextures(true);
 	}
 }
 
@@ -1393,9 +1394,12 @@ void InitExternalTextures(void)
 		// prepare list of already dumped textures (for avoiding to redump them). Available hires textures will
 		// also be excluded from dumping
 		InitTextureDump();
-	}
+	} else
+		InitHiresTextures(true);
 }
 
+<<<<<<< .mine
+=======
 //Int version of log2 taken from http://www.southwindsgames.com/blog/2009/01/19/fast-integer-log2-function-in-cc/
 inline unsigned int Log2(unsigned int value)
 {
@@ -1406,6 +1410,7 @@ inline unsigned int Log2(unsigned int value)
     }
     return f;
 }
+>>>>>>> .r44
 
 /********************************************************************************************************************
  * Determines the scale factor for resizing the original texture to the hires replacement. The scale factor is a left 
@@ -1416,10 +1421,28 @@ inline unsigned int Log2(unsigned int value)
  * info: the record describing the external texture
  * entry: the original texture in the texture cache
  * return:
- * return value: the value for left shift the original texture size to the correspondinghires texture size
+ * info.scaleShift: the value for left shift the original texture size to the corresponding hires texture size
+ * return value: the value for left shift the original texture size to the corresponding hires texture size. 
+ *               The function returns -1 if the dimensions of the hires texture are not a power of two of the
+ *               original texture.
  ********************************************************************************************************************/
 int FindScaleFactor(ExtTxtrInfo &info, TxtrCacheEntry &entry)
 {
+<<<<<<< .mine
+	// init scale shift
+	info.scaleShift = 0;
+
+	// check if the original texture dimensions (x and y) scaled with the current shift is still smaller or of the same size as the hires one
+	while(info.height >= entry.ti.HeightToLoad*(1<<info.scaleShift)  && info.width >= entry.ti.WidthToLoad*(1<<info.scaleShift))
+	{
+		// check if the original texture dimensions (x and y)scaled with the current shift have the same size as the hires one
+		if(info.height == entry.ti.HeightToLoad*(1<<info.scaleShift)  && info.width == entry.ti.WidthToLoad*(1<<info.scaleShift))
+			// found appropriate scale shift, return it
+			return info.scaleShift;
+
+		info.scaleShift++;
+	}
+=======
 	int scaleShift = -1;
 	// Divide the new texture width by the oringinal texture width then log2(Reverse it back to its power) it
 	int scaleShiftX = Log2(info.width/entry.ti.WidthToLoad);
@@ -1427,11 +1450,20 @@ int FindScaleFactor(ExtTxtrInfo &info, TxtrCacheEntry &entry)
 	int scaleShiftY = Log2(info.height/entry.ti.HeightToLoad);
 	// Set scaleShift to maximum(scaleShiftX,scaleShiftY)
 	scaleShift = scaleShiftX > scaleShiftY ? scaleShiftX : scaleShiftY; 
+>>>>>>> .r44
 
+<<<<<<< .mine
+	// original texture dimensions (x or y or both) scaled with the last scale shift have become larger than the dimensions
+	// of the hires texture. That means the dimensions of the hires replacement are not power of 2 of the original texture.
+	// Therefore indicate invalid scale shift
+	info.scaleShift = -1;
+	return info.scaleShift;
+=======
 	//Set the txtr info scaleshift to the new scaleshift
 	info.scaleShift = scaleShift;
 	//Return the new scalshift
 	return scaleShift;
+>>>>>>> .r44
 
 }
 
@@ -1634,6 +1666,28 @@ bool LoadRGBBufferFromPNGFile(char *filename, unsigned char **pbuf, int &width, 
 				*pDst++ = 0;
 			}
 		}
+<<<<<<< .mine
+		// loaded image has alpha, needed image has to be without alpha channel
+		else if (img.bits_per_pixel == 32 && bits_per_pixel == 24)
+		{
+			// pointer to source image data
+			unsigned char *pSrc = img.bits;
+			// buffer for destination image
+			unsigned char *pDst = *pbuf;
+			// copy data of the loaded image to the buffer by skipping the alpha byte
+			for (unsigned int i = 0; i < img.width * img.height; i++)
+			{
+				// copy R
+				*pDst++ = *pSrc++;
+				// copy G
+				*pDst++ = *pSrc++;
+				// copy B
+				*pDst++ = *pSrc++;
+				// skip the alpha byte of the loaded image
+				pSrc++;
+			}
+		}
+=======
 		else if (img.bits_per_pixel == 32 && bits_per_pixel == 24)
 		{
 			unsigned char *pSrc = img.bits;
@@ -1646,6 +1700,7 @@ bool LoadRGBBufferFromPNGFile(char *filename, unsigned char **pbuf, int &width, 
 				pSrc++;
 			}
 		}
+>>>>>>> .r44
 
 		width = img.width;
 		height = img.height;
@@ -1788,6 +1843,8 @@ bool LoadRGBABufferFromColorIndexedFile(char *filename, TxtrCacheEntry &entry, u
  * Loads the hires equivaltent of a texture
  * parameter:
  * TxtrCacheEntry: The original texture in the texture cache
+ * return:
+ * none
  *******************************************************/
 void LoadHiresTexture( TxtrCacheEntry &entry )
 {
@@ -1803,6 +1860,9 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 	}
 
 	int ciidx;
+	// search the index of the appropriate hires replacement texture
+	// in the list containing the infos of the external textures
+	// ciidx is not needed here (just needed for dumping)
 	int idx = CheckTextureInfos(gHiresTxtrInfos,entry,ciidx,false);
 	if( idx < 0 )
 	{
@@ -1821,16 +1881,24 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 		//TRACE1("Cannot get data for RGB texture");
 		return;
 	}
+	// check if the alpha channel has been loaded if the texture has a separate alpha channel
 	else if( gHiresTxtrInfos[idx].bSeparatedAlpha && !gHiresTxtrInfos[idx].pHiresTextureAlpha )
 	{
 		//TRACE1("Cannot get data for alpha channel");
 		return;
 	}
 
-	int scalex = gHiresTxtrInfos[idx].width / (int)entry.ti.WidthToCreate;
-    int scaley = gHiresTxtrInfos[idx].height / (int)entry.ti.HeightToCreate;
-    int scale = scalex > scaley ? scalex : scaley; // set scale to maximum(scalex,scaley)
+	//int scalex = gHiresTxtrInfos[idx].width / (int)entry.ti.WidthToCreate;
+ //   int scaley = gHiresTxtrInfos[idx].height / (int)entry.ti.HeightToCreate;
+ //   int scale = scalex > scaley ? scalex : scaley; // set scale to maximum(scalex,scaley)
+	int scale = 1<<gHiresTxtrInfos[idx].scaleShift;
 
+<<<<<<< .mine
+	DebuggerAppendMsg("Ext: 0x%08X 0x%08X, folder %dx%d, %d",gHiresTxtrInfos[idx].crc32, gHiresTxtrInfos[idx].pal_crc32,gHiresTxtrInfos[idx].width, gHiresTxtrInfos[idx].height, gHiresTxtrInfos[idx].scaleShift);
+	DebuggerAppendMsg("Org: 0x%08X 0x%08X; %dx%d, %dx%d",entry.dwCRC, entry.dwPalCRC, entry.ti.WidthToCreate, entry.ti.HeightToCreate, entry.ti.WidthToLoad, entry.ti.HeightToLoad);
+
+	entry.pEnhancedTexture = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scale, entry.ti.HeightToCreate*scale);
+=======
 	if(scalex==0)
 		scalex == 1;
 	if(scaley==0)
@@ -1845,6 +1913,7 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 
 	//Create Texture
 	entry.pEnhancedTexture = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scalex*mirrorx, entry.ti.HeightToCreate*scaley*mirrory);
+>>>>>>> .r44
 	DrawInfo info;
 
 	if( entry.pEnhancedTexture && entry.pEnhancedTexture->StartUpdate(&info) )
@@ -1858,7 +1927,7 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 			for( int i=gHiresTxtrInfos[idx].height-1; i>=0; i--)
 			{
 				BYTE *pdst = (BYTE*)info.lpSurface + i*info.lPitch;
-				for( int j=0; j<gHiresTxtrInfos[idx].width; j++)
+				for( unsigned int j=0; j<gHiresTxtrInfos[idx].width; j++)
 				{
 					*pdst++ = *pRGB++;		// R
 					*pdst++ = *pRGB++;		// G
@@ -1887,7 +1956,7 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 			for( int i=gHiresTxtrInfos[idx].height-1; i>=0; i--)
 			{
 				uint32 *pdst = (uint32*)((BYTE*)info.lpSurface + i*info.lPitch);
-				for( int j=0; j<gHiresTxtrInfos[idx].width; j++)
+				for( unsigned int j=0; j<gHiresTxtrInfos[idx].width; j++)
 				{
 					*pdst++ = *pRGB++;		// RGBA
 				}
@@ -1942,45 +2011,67 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 }
 
 
-// caches the raw data of the hires texture to ExtTxrInfo
+
+/********************************************************************************************************************
+ * loads the raw data of the hires from file system and caches it to memory
+ * parameter: 
+ * ExtTexInfo: The structure describing the hires texture
+ * return:
+ * ExtTexInfo: The structure describing the hires texture containing the hires texture data and describing properties
+ ********************************************************************************************************************/
 void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 {
 
-	// Load the bitmap file
+	// the buffer for the rgb texture file name
 	char filename_rgb[256];
-	char filename_a[256];
+	// the buffer for the alpha channel file name
+	char filename_alpha[256];
 
-
+	// get the folder of the texture
 	strcpy(filename_rgb, ExtTexInfo.foldername);
 
+	// and assemble the file name (without tail)
 	sprintf(filename_rgb+strlen(filename_rgb), "%s#%08X#%d#%d", g_curRomInfo.szGameName, ExtTexInfo.crc32, ExtTexInfo.fmt, ExtTexInfo.siz);
-	strcpy(filename_a,filename_rgb);
+	// copy the path including the texture name (without tail) to the path of the alpha texture
+	strcpy(filename_alpha,filename_rgb);
+	// add the tail to the RGB texture
 	strcat(filename_rgb,ExtTexInfo.RGBNameTail);
-	strcat(filename_a,ExtTexInfo.AlphaNameTail);
+	// add the tail to the alpha texture
+	strcat(filename_alpha,ExtTexInfo.AlphaNameTail);
 
+	// init the pointer to the RGB texture data
 	ExtTexInfo.pHiresTextureRGB = NULL;
+	// init the pointer to the alpha channel data
 	ExtTexInfo.pHiresTextureAlpha = NULL;
+	// width and height of the loaded texture
 	int width, height;
 
+	// flags for indicating if texture loading was successful
 	bool bResRGBA=false, bResA=false;
+	// a color indexed texture has to (??? or color indexed format or the RGB format) and has to be 8 bit at most per pixel
 	bool bCI = ((gRDP.otherMode.text_tlut>=2 || ExtTexInfo.fmt == TXT_FMT_CI || ExtTexInfo.fmt == TXT_FMT_RGBA) && ExtTexInfo.siz <= TXT_SIZE_8b );
 
-
+	// load texture according to it's type
 	switch( ExtTexInfo.type )
 	{
 	case RGB_PNG:
+		// color indexed RGB is not supported
 		if( bCI )	
 			return;
 		else
 		{
+			// load the RGB texture to pHiresTextureRGB and set its proportions to the vars width and height  
 			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &ExtTexInfo.pHiresTextureRGB, width, height);
+			// is loading was successful and if there is a separat alpha channel
 			if( bResRGBA && ExtTexInfo.bSeparatedAlpha )
-				bResA = LoadRGBBufferFromPNGFile(filename_a, &ExtTexInfo.pHiresTextureAlpha, width, height);
+				// load the alpha channel as well
+				bResA = LoadRGBBufferFromPNGFile(filename_alpha, &ExtTexInfo.pHiresTextureAlpha, width, height);
 		}
 		break;
 	case RGBA_PNG_FOR_CI:
 	case RGBA_PNG_FOR_ALL_CI:
-		if( bCI )	
+		if( bCI )
+			// load the CI texture with 32bit/pixel
 			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &ExtTexInfo.pHiresTextureRGB, width, height, 32);
 		else
 			return;
@@ -1989,20 +2080,28 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 		if( bCI )	
 			return;
 		else
+			// load the RGB texture with alpha channel
 			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &ExtTexInfo.pHiresTextureRGB, width, height, 32);
 		break;
 	default:
 		return;
 	}
 
+	// remember dimensions
+	ExtTexInfo.width = width;
+	ExtTexInfo.height = height;
+
+	// If texture could not be loaded
 	if( !bResRGBA )
 	{
 		TRACE1("Cannot open %s", filename_rgb);
 		return;
 	}
+	// if texture has separate alpha channel but channel could not be loaded
 	else if( ExtTexInfo.bSeparatedAlpha && !bResA )
 	{
-		TRACE1("Cannot open %s", filename_a);
+		TRACE1("Cannot open %s", filename_alpha);
+		// free the memory that has been alocated for the texture
 		SAFE_DELETE(ExtTexInfo.pHiresTextureRGB);
 		return;
 	}
