@@ -7,4 +7,4 @@
  * Add support for a *WIP subfolder* for reloading new hires textues
  * Add *Pack-Select* feature
  * Add more *framebuffer support*
- * Add widescreen support (See svn://fascination.homelinux.net:7684/mupen64plus/branches/r1142-rice-video-gtk-refactor svn log for help on how to do this(Password and username is here http://code.google.com/p/mupen64plus/) - death-droid
+ * Add widescreen support (See svn://fascination.homelinux.net:7684/mupen64plus/branches/r1142-rice-video-gtk-refactor svn log for help on how to do this(Password and username is here http://code.google.com/p/mupen64plus/)
