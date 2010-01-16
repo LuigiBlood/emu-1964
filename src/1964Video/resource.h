@@ -2,6 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by Video.rc
 //
+#define	IDC_STATIC						-1
 #define IDD_DIALOG1                     101
 #define IDD_DIALOG2                     111
 #define IDD_DIALOG3                     112
