@@ -400,10 +400,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\resource.h"
-				>
-			</File>
-			<File
 				RelativePath=".\settings.h"
 				>
 			</File>
@@ -418,6 +414,10 @@
 			</File>
 			<File
 				RelativePath=".\configs\Controller1.cpf"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
 				>
 			</File>
 			<File

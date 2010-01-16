@@ -86,7 +86,7 @@
 				OutputFile="..\..\bin\$(ConfigurationName)\plugin\1964Video.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="C:\Program Files\Microsoft DirectX SDK (August 2008)\lib"
+				AdditionalLibraryDirectories="C:\Program Files\Microsoft DirectX SDK (August 2009)\lib"
 				IgnoreDefaultLibraryNames="libci.lib;libcmtd.lib"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile="../obj/1964Video/Release/1964Video.pdb"
