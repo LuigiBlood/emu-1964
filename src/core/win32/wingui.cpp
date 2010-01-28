@@ -61,11 +61,14 @@ extern unsigned char	Scratch2[];
 
 BOOL				NeedFreshromListAfterStop = TRUE;
 BOOL				NeedToApplyXPTheme = FALSE;
+BOOL				KailleraDialogIsRunning = FALSE;
 BOOL				WindowScreenSaverStatus;
 
 HANDLE				StopEmulatorEvent = NULL;
 HANDLE				ResumeEmulatorEvent = NULL;
 HANDLE				PauseEmulatorEvent = NULL;
+HANDLE				kailleraThreadStopEvent = NULL;
+HANDLE				kailleraThreadEvent = NULL;
 
 #ifdef _DEBUG
 void					ToggleDebugOptions(WPARAM wParam);
@@ -93,6 +96,7 @@ long					OnNotifyStatusBar(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 long					OnPopupMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 long					OnOpcodeDebuggerCommands(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 void					OnFreshRomList(BOOL reload);
+void					DisableNetplayMemu();
 void					IncreaseSpeedLimit();
 void					DecreaseSpeedLimit();
 void					ResetSpeedLimit();
@@ -237,7 +241,7 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 				}
 
 				/* Apply the hack codes */
-				if(emuoptions.auto_apply_cheat_code)
+				if(emuoptions.auto_apply_cheat_code && Kaillera_Is_Running == FALSE )
 				{
 #ifndef CHEATCODE_LOCK_MEMORY
 					CodeList_ApplyAllCode(INGAME);
@@ -287,7 +291,7 @@ void CreateOptionsDialog(int nStartPage)
     }
 
 
-	if (Result)
+	if (Result && !Kaillera_Is_Running)
     {
         psp[PSH_CHEAT_CODES].pszTemplate = "CHEAT_HACK";
 	    psp[PSH_CHEAT_CODES].pfnDlgProc = (DLGPROC) CheatAndHackDialog;
@@ -512,6 +516,8 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	AudioThreadStopEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
 	AudioThreadEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
     PauseEmulatorEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
+	kailleraThreadStopEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
+	kailleraThreadEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
 
 	if (ResumeEmulatorEvent == NULL)
 	{ 
@@ -527,6 +533,8 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	LoadString(hInstance, IDS_MAINDISCLAIMER, (LPSTR)MainDisclaimer, sizeof(MainDisclaimer));
 
 	Set_1964_Directory();
+	LoadDllKaillera();
+	kailleraInit();
 
 	gui.hwnd1964main = InitWin98UI(hInstance, nCmdShow);
 	if( gui.hwnd1964main == NULL) {
@@ -535,6 +543,12 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	}
 
 	ReadConfiguration();
+
+	//	Loading Netplay DLL, this must be done after loading the controller DLL because
+	//	netplay DLL will be using the controller DLL
+	///if( load_netplay_dll() == FALSE) {
+	///	DisableNetplayMemu();
+	///}
 
 	ManageMenus();
 	CheckLanguages();
@@ -604,6 +618,7 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 			}
 		}
 
+		//netplay_initialize_netplay(hinstControllerPlugin, Controls);
 		//SetStatusBarText(0, "Loading plugins");
 		pluginInitResult = LoadPlugins(LOAD_ALL_PLUGIN);
 	}
@@ -713,6 +728,9 @@ HWND InitWin98UI(HANDLE hInstance, int nCmdShow)
 	gui.hAccTable = LoadAccelerators(gui.hInst, (LPCTSTR) WINGUI_ACC);
 	gui.hMenu1964main = GetMenu(gui.hwnd1964main);
 
+	if(!IsKailleraDllLoaded())
+		EnableMenuItem(gui.hMenu1964main, ID_KAILLERA_MODE, MF_GRAYED);
+
 	return gui.hwnd1964main;
 }
 
@@ -747,12 +765,18 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			emustatus.Emu_Is_Paused = 0;
 			PauseEmulator();
+			if( Kaillera_Is_Running )
+				StopKailleraThread();
 		}
 		else
 		{
 			DWORD ThreadID;
 			emustatus.Emu_Is_Paused = 1;
 			ResumeEmulator(DO_NOTHING_AFTER_PAUSE);
+			if( Kaillera_Is_Running )
+				kailleraThreadHandle = CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)StartKailleraThread,NULL,0, &ThreadID);
+			else
+				kailleraThreadHandle = NULL;
 		}
 		break;
 	case ID_BUTTON_PLAY:
@@ -763,6 +787,9 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case ID_CPU_KILL:
 		KillCPUThread();
+		break;
+	case ID_KAILLERA_MODE:
+		KailleraPlay();
 		break;
 	case ID_OPENROM:
 	case ID_BUTTON_OPEN_ROM:
@@ -907,7 +934,7 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;		
 	case ID_FILE_CHEAT:
 		if (!guistatus.IsFullScreen)
-			if(emustatus.Emu_Is_Running)
+			if(emustatus.Emu_Is_Running && Kaillera_Is_Running == FALSE )
 			{
 				PauseEmulator();
 				CreateOptionsDialog(PSH_CHEAT_CODES);
@@ -1103,6 +1130,27 @@ MF_UNCHECKED :
 		currentromoptions.Counter_Factor = 8;
 		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
 		break;
+	case ID_LAGNESS_1:
+		SetKailleraLagness(1);
+		break;
+	case ID_LAGNESS_2:
+		SetKailleraLagness(2);
+		break;
+	case ID_LAGNESS_3:
+		SetKailleraLagness(3);
+		break;
+	case ID_LAGNESS_4:
+		SetKailleraLagness(4);
+		break;
+	case ID_LAGNESS_5:
+		SetKailleraLagness(5);
+		break;
+	case ID_LAGNESS_6:
+		SetKailleraLagness(6);
+		break;
+	case ID_LAGNESS_7:
+		SetKailleraLagness(7);
+		break;
 	case ID_INC_SPEED_LIMIT:
 	case ID_VARIABLESPEEDLIMITS_INCREASESPEED:
 		IncreaseSpeedLimit();
@@ -1248,6 +1296,18 @@ MF_UNCHECKED :
 		if (!guistatus.IsFullScreen)
 			SaveStateByDialog(SAVE_STATE_1964_085_FORMAT);
 		break;
+		//case ID_NETPLAY_CONFIG:
+		//netplay_dll_config(hWnd, NETPLAY_OPTIONS);
+		//break;
+		//case ID_NETPLAY_ADDAREMOTEPLAYER:
+		//netplay_dll_config(hWnd, NETPLAY_USER_MANAGEMENT);
+		//break;
+		//case ID_NETPLAY_DROPAREMOTEPLAYER:
+		//netplay_dll_config(hWnd, NETPLAY_USER_MANAGEMENT);
+		//break;
+		//case ID_NETPLAY_ENABLENETPLAY:
+		//netplay_dll_config(hWnd, NETPLAY_NETWORK_MANAGEMENT);
+		//break;
 	case ID_POPUP_LOADPLAY:
 	case ID_POPUP_LOADPLAYINFULLSCREEN:
 	case ID_POPUP_LOADPLAYINWINDOWMODE:
@@ -1386,6 +1446,23 @@ void ProcessKeyboardInput(UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		if (wParam == VK_F4) 
 			CloseROM();
+		break;
+		/*
+		// don't allow GS key in netplay
+	case VK_F8:
+		// Gameshark GS button
+		if( KailleraDialogIsRunning )
+			CodeList_ApplyAllCode(GSBUTTON);
+		break;
+		*/
+	case VK_F9:
+		if( KailleraDialogIsRunning )
+		{
+			CheckButton(ID_BUTTON_SYNC_SPEED, emuoptions.SyncVI ? FALSE : TRUE);
+			CheckMenuItem( gui.hMenu1964main, ID_CPU_AUDIOSYNC, emuoptions.SyncVI ? MF_UNCHECKED : MF_CHECKED);
+			emuoptions.SyncVI^=1;
+			REGISTRY_WriteVISync();
+		}
 		break;
 
 	case 0x30:	
@@ -1588,7 +1665,7 @@ long FAR PASCAL MainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	case WM_ENTERMENULOOP:
 	// To pause game when user enters the menu bar
 	{
-		if (emustatus.Emu_Is_Running && !emustatus.Emu_Is_Paused)
+		if (emustatus.Emu_Is_Running && !emustatus.Emu_Is_Paused && Kaillera_Is_Running == FALSE )
 			MenuCausedPause = 1;
 	}
 	break;
@@ -1715,12 +1792,11 @@ void Kill(void)
  =======================================================================================================================
  */
 
-
-
-
+extern void (__stdcall StartKailleraThread)(void *pVoid);
 extern void (__stdcall StartCPUThread) (void *pVoid);
 extern void (__stdcall StartAIInterruptThread) (void *pVoid);
 extern void StartAudio(void);
+extern void KailleraInitAudioPlugin(void);
 
 void __cdecl Play(BOOL WithFullScreen)
 {
@@ -1781,13 +1857,34 @@ void __cdecl Play(BOOL WithFullScreen)
 
 
 
-		AUDIO_Initialize(Audio_Info);
+		if( Kaillera_Is_Running )
+		{
+			KailleraRomOpen();
+			KailleraInitAudioPlugin();
 
-		EnableMenuItem(gui.hMenu1964main, ID_ROM_PAUSE, MF_ENABLED);
-		EnableMenuItem(gui.hMenu1964main, ID_ROM_STOP, MF_ENABLED);
-		EnableRadioButtons(TRUE);
-		CheckButton(ID_BUTTON_PLAY, TRUE);
-		EnableStateMenu();
+			EnableMenuItem(gui.hMenu1964main, ID_FILE_CHEAT, MF_GRAYED);
+			EnableMenuItem(gui.hMenu1964main, ID_CLOSEROM, MF_GRAYED);
+			EnableMenuItem(gui.hMenu1964main, ID_ROM_START, MF_GRAYED);
+			EnableMenuItem(gui.hMenu1964main, ID_ROM_PAUSE, MF_GRAYED);
+			EnableMenuItem(gui.hMenu1964main, ID_ROM_STOP, MF_ENABLED);
+			EnableRadioButtons(TRUE);
+			//EnableRadioButtons(FALSE);
+			EnableButton(ID_BUTTON_PAUSE, FALSE);
+			EnableButton(ID_BUTTON_RESET, FALSE);
+			EnableButton(ID_BUTTON_PLAY, FALSE);
+			CheckButton(ID_BUTTON_PLAY, TRUE);
+		}
+		else
+		{
+			AUDIO_Initialize(Audio_Info);
+
+			kailleraThreadHandle = NULL;
+			EnableMenuItem(gui.hMenu1964main, ID_ROM_PAUSE, MF_ENABLED);
+			EnableMenuItem(gui.hMenu1964main, ID_ROM_STOP, MF_ENABLED);
+			EnableRadioButtons(TRUE);
+			CheckButton(ID_BUTTON_PLAY, TRUE);
+			EnableStateMenu();
+		}
 
 		if(Audio_Is_Initialized == 1 && CoreDoingAIUpdate == 0 )
 		{
@@ -1839,6 +1936,14 @@ void Stop()
 				}
 				//ShowCursor(TRUE);
 
+				if(Kaillera_Is_Running == TRUE)
+				{
+					StopKailleraThread();
+					Kaillera_Is_Running = FALSE;
+					kailleraEndGame();
+					KailleraRomClosed();
+				}
+
 				AfterStop();
 			}
 		}
@@ -1853,7 +1958,85 @@ void Stop()
 		To_Stop_Reading_Rom_File = TRUE;
 	}
 }
+/*
+ =======================================================================================================================
+    Kaillera Stuff ?
+ =======================================================================================================================
+ */
+int WINAPI kailleraGameCallback(char *game, int player, int numplayers)
+{
+	int i;
 
+	sprintf(generalmessage, "C:\\yds\\KailleraLog%d.log", player-1);
+	ktracefile = fopen(generalmessage, "w");
+	sprintf(generalmessage, "C:\\yds\\KailleraUploadLog%d.log", player-1);
+	ktracefile2 = fopen(generalmessage, "w");
+
+	Kaillera_Is_Running = TRUE;
+	Kaillera_Players = numplayers;
+	kailleraLocalPlayerNumber = player-1;
+	sprintf(generalmessage, "I am Kaillera player #%d", player);
+	TRACE1("I am Kaillera player #%d", player);
+	SetStatusBarText(0, generalmessage);
+
+	// Always turn off AutoCF for Netplay
+	emuoptions.AutoCF = 0;
+	CheckButton(ID_BUTTON_AUTO_CF, FALSE);
+	CheckMenuItem( gui.hMenu1964main, ID_EMULATION_AUTOCFTIMING, MF_UNCHECKED);
+
+	if(Kaillera_Players>4)	
+		Kaillera_Players = 4;	//N64 supports up to 4 players
+
+	kailleraClientStatus[0] = kailleraClientStatus[1] = kailleraClientStatus[2] = kailleraClientStatus[3] = FALSE;
+	for( i=0; i<numplayers; i++ )
+	{
+		kailleraClientStatus[i] = TRUE;
+	}
+
+	Kaillera_Counter = 0;
+
+	for(i = 0; i < rlstatus.romlist_count; i++)
+	{
+		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+		char			szRom[50];
+		ROMLIST_ENTRY	*entry = romlist[i];
+		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+		sprintf
+		(
+			szRom,
+			"%s (%X-%X:%c)",
+			entry->pinientry->Game_Name,
+			entry->pinientry->crc1,
+			entry->pinientry->crc2,
+			entry->pinientry->countrycode
+		);
+
+		if(strcmp(szRom, game) == 0)
+		{
+			RomListOpenRom(i, 1);
+		}
+	}
+
+	return 0;
+}
+
+/*
+ =======================================================================================================================
+ =======================================================================================================================
+ */
+void WINAPI kailleraClientDroppedCallback(char *nick, int playernb)
+{
+	sprintf(generalmessage, TranslateStringByString("Kaillera player %d dropped"), playernb);
+	SetStatusBarText(0, generalmessage);
+	if( playernb > 4 )
+		return;
+
+	DEBUG_NETPLAY_TRACE1("Kaillera player %d dropped", playernb);
+	kailleraClientStatus[playernb-1] = FALSE;
+}
+
+char	szKailleraNamedRoms[50 * MAX_ROMLIST];
 /*
  =======================================================================================================================
  =======================================================================================================================
@@ -1886,6 +2069,121 @@ void __cdecl RomListGetGoodRomNameToDisplay(char *buf, int index)
 		break;
 	}
 }
+/*
+ =======================================================================================================================
+ =======================================================================================================================
+ */
+extern void WINAPI kailleraChatReceivedCallback(char *nick, char *text);
+void (__stdcall KailleraDialogThread)(void *pVoid)
+{
+	// Connect to Kaillera server
+
+	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+	int				i;
+	kailleraInfos	kInfos;
+	char			*pszKailleraNamedRoms = szKailleraNamedRoms;
+	int				saved_romlist_sort_method;
+	int				saved_romlistNameToDisplay;
+	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+	/* build roms list :) */
+	
+	memset(szKailleraNamedRoms, 0, 50 * MAX_ROMLIST);
+	EnableMenuItem(gui.hMenu1964main, IDM_PLUGINS, MF_GRAYED);
+	saved_romlistNameToDisplay = rlstatus.romlistNameToDisplay;
+	rlstatus.romlistNameToDisplay = ROMLIST_DISPLAY_INTERNAL_NAME;
+	*pszKailleraNamedRoms = '\0';
+	
+	saved_romlist_sort_method = rlstatus.romlist_sort_method;
+	rlstatus.romlist_sort_method = ROMLIST_GAMENAME;
+	NewRomList_Sort();
+	rlstatus.romlist_sort_method = saved_romlist_sort_method;
+
+	KailleraDialogIsRunning = TRUE;
+	KailleraState = GAME_IDLE;
+
+	for(i = 0; i < rlstatus.romlist_count; i++)
+	{
+		char			szRom[50];
+		char			szAlt[50];
+		ROMLIST_ENTRY	*entry = romlist[i];
+
+		RomListGetGoodRomNameToDisplay(szAlt, i);
+		if (szAlt[0] >= 'a' && szAlt[0] <= 'z') 
+			szAlt[0] -= 32;
+		szAlt[20] = '\0';
+
+		sprintf
+		(
+			szRom,
+			"%s (%X-%X:%c)",
+			szAlt,
+			entry->pinientry->crc1,
+			entry->pinientry->crc2,
+			entry->pinientry->countrycode
+		);
+
+		strncpy(pszKailleraNamedRoms, szRom, strlen(szRom) + 1);
+		pszKailleraNamedRoms += strlen(szRom) + 1;
+
+	}
+
+	rlstatus.romlistNameToDisplay = saved_romlistNameToDisplay;
+	*(++pszKailleraNamedRoms) = '\0';
+
+	kInfos.appName = CURRENT1964VERSION;
+	kInfos.gameList = szKailleraNamedRoms;
+	kInfos.gameCallback = kailleraGameCallback;
+	kInfos.chatReceivedCallback = kailleraChatReceivedCallback;
+	//kInfos.chatReceivedCallback = NULL;
+	kInfos.clientDroppedCallback = kailleraClientDroppedCallback;
+	//kInfos.moreInfosCallback = kailleraMoreInfosCallback;
+	kInfos.moreInfosCallback = NULL;
+
+	// Lock some menu items 
+	EnableMenuItem(gui.hMenu1964main, ID_KAILLERA_MODE, MF_GRAYED);
+	EnableMenuItem(gui.hMenu1964main, ID_CHANGEDIRECTORY, MF_GRAYED);
+	EnableMenuItem(gui.hMenu1964main, ID_FILE_FRESHROMLIST, MF_GRAYED);
+	for( i=0; i<16; i++ )
+	{
+		EnableMenuItem(gui.hMenu1964main, recent_rom_directory_menus[i].id,  MF_GRAYED);
+	}
+
+
+	kailleraInit();
+	kailleraSetInfos(&kInfos);
+
+	SetXPThemes(0);
+	NeedToApplyXPTheme = TRUE;
+	kailleraSelectServerDialog(NULL);
+	SetXPThemes(7);
+
+	// Stop emulator if running
+	//Stop();
+
+	// Unlock menu items
+	EnableMenuItem(gui.hMenu1964main, ID_KAILLERA_MODE, (IsKailleraDllLoaded())? MF_ENABLED:MF_GRAYED);
+	EnableMenuItem(gui.hMenu1964main, ID_CHANGEDIRECTORY, MF_ENABLED);
+	EnableMenuItem(gui.hMenu1964main, ID_FILE_FRESHROMLIST, MF_ENABLED);
+	for( i=0; i<16; i++ )
+	{
+		EnableMenuItem(gui.hMenu1964main, recent_rom_directory_menus[i].id,  MF_ENABLED);
+	}
+
+	EnableMenuItem(gui.hMenu1964main, IDM_PLUGINS, MF_ENABLED);
+	KailleraDialogIsRunning = FALSE;
+	KailleraState = DLL_NOT_LOADED;
+}
+void KailleraPlay(void)
+{
+	if( !KailleraDialogIsRunning )
+	{
+		DWORD ThreadID;
+		CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)KailleraDialogThread,NULL,0, &ThreadID);
+		Sleep(200);
+	}
+}
+
 
 /*
  =======================================================================================================================
@@ -3250,16 +3548,31 @@ void PrepareBeforePlay(int IsFullScreen)
 	EnableMenuItem(gui.hMenu1964main, ID_INTERPRETER, MF_ENABLED);
 	EnableMenuItem(gui.hMenu1964main, ID_DYNAMICCOMPILER, MF_ENABLED);
 	EnableMenuItem(gui.hMenu1964main, IDM_FULLSCREEN, MF_ENABLED);
+	EnableMenuItem(gui.hMenu1964main, ID_KAILLERA_MODE, MF_GRAYED);
 	EnableMenuItem(gui.hMenu1964main, IDM_PLUGINS, MF_GRAYED);
 	EnableMenuItem(gui.hMenu1964main, ID_CHANGEDIRECTORY, MF_GRAYED);
 	EnableMenuItem(gui.hMenu1964main, ID_FILE_FRESHROMLIST, MF_GRAYED);
 	EnableMenuItem(gui.hMenu1964main, ID_VARIABLESPEEDLIMITS_INCREASESPEED, MF_ENABLED);
 	EnableMenuItem(gui.hMenu1964main, ID_VARIABLESPEEDLIMITS_DECREASESPEED, MF_ENABLED);
 	EnableMenuItem(gui.hMenu1964main, ID_VARIABLESPEEDLIMITS_RESTORECORRECTSPEED, MF_ENABLED);
-	EnableMenuItem(gui.hMenu1964main, ID_CHEATS_APPLY, MF_ENABLED);
-	for( i=0; i<8; i++ )
+	if( !Kaillera_Is_Running )
 	{
-		EnableMenuItem(gui.hMenu1964main, cfmenulist[i], MF_ENABLED);
+		EnableMenuItem(gui.hMenu1964main, ID_CHEATS_APPLY, MF_ENABLED);
+		for( i=0; i<8; i++ )
+		{
+			EnableMenuItem(gui.hMenu1964main, cfmenulist[i], MF_ENABLED);
+		}
+	}
+	else
+	{
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_1, MF_GRAYED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_2, MF_GRAYED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_3, MF_GRAYED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_4, MF_GRAYED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_5, MF_GRAYED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_6, MF_GRAYED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_7, MF_GRAYED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_8, MF_GRAYED);
 	}
 
 	for( i=0; i<16; i++ )
@@ -3405,6 +3718,7 @@ void AfterStop(void)
 	EnableMenuItem(gui.hMenu1964main, ID_CLOSEROM, MF_ENABLED);
 	EnableMenuItem(gui.hMenu1964main, ID_ROM_START, MF_ENABLED);
 	EnableMenuItem(gui.hMenu1964main, ID_ROM_PAUSE, MF_GRAYED);
+	EnableMenuItem(gui.hMenu1964main, ID_KAILLERA_MODE, (IsKailleraDllLoaded())? MF_ENABLED:MF_GRAYED);
 	EnableMenuItem(gui.hMenu1964main, ID_VARIABLESPEEDLIMITS_INCREASESPEED, MF_GRAYED);
 	EnableMenuItem(gui.hMenu1964main, ID_VARIABLESPEEDLIMITS_DECREASESPEED, MF_GRAYED);
 	EnableMenuItem(gui.hMenu1964main, ID_VARIABLESPEEDLIMITS_RESTORECORRECTSPEED, MF_GRAYED);
@@ -3427,6 +3741,25 @@ void AfterStop(void)
 	{
 		EnableMenuItem(gui.hMenu1964main, recent_game_menus[i].id, MF_ENABLED);
 		EnableMenuItem(gui.hMenu1964main, recent_rom_directory_menus[i].id,  MF_ENABLED);
+	}
+
+	if( KailleraDialogIsRunning )
+	{
+		EnableMenuItem(gui.hMenu1964main, ID_CHANGEDIRECTORY, MF_GRAYED);
+		EnableMenuItem(gui.hMenu1964main, ID_FILE_FRESHROMLIST, MF_GRAYED);
+		for( i=0; i<16; i++ )
+		{
+			EnableMenuItem(gui.hMenu1964main, recent_rom_directory_menus[i].id,  MF_GRAYED);
+		}
+
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_1, MF_ENABLED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_2, MF_ENABLED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_3, MF_ENABLED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_4, MF_ENABLED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_5, MF_ENABLED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_6, MF_ENABLED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_7, MF_ENABLED);
+		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_8, MF_ENABLED);
 	}
 
 	EnableRadioButtons(FALSE);
@@ -3943,6 +4276,10 @@ void CaptureScreenToFile(void)
  */
 void Exit1964(void)
 {
+	//if( KailleraDialogIsRunning == TRUE )
+	//{
+	//	DisplayError("Kaillera is still running, please close it and click OK to continue");
+	//}
 
 	SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, WindowScreenSaverStatus, 0, 0); 
 
@@ -3959,6 +4296,8 @@ void Exit1964(void)
 		if(emustatus.Emu_Is_Running) 
 			Stop();
 
+		kailleraShutdown();
+
 		placement.length = sizeof(WINDOWPLACEMENT);
 		GetWindowPlacement(gui.hwnd1964main, &placement);
 		guistatus.WindowIsMaximized = (placement.showCmd == SW_SHOWMAXIMIZED);
@@ -3974,7 +4313,9 @@ void Exit1964(void)
 
 		DeleteAllIniEntries();	/* Release all ini entries */
 		ClearRomList();			/* Clean the Rom List */
+		//unload_netplay_dll();
 		FreePlugins();
+		UnloadDllKaillera();
 
 		WriteConfiguration();
 
@@ -3982,6 +4323,8 @@ void Exit1964(void)
 		if (ResumeEmulatorEvent)		CloseHandle( ResumeEmulatorEvent);
 		if (AudioThreadStopEvent)		CloseHandle( AudioThreadStopEvent);
 		if (AudioThreadEvent)			CloseHandle( AudioThreadEvent);
+		if (kailleraThreadStopEvent)		CloseHandle( kailleraThreadStopEvent);
+		if (kailleraThreadEvent)			CloseHandle( kailleraThreadEvent);
 
 		if( AllPluginDLLInfos )  
 		{
@@ -4069,6 +4412,25 @@ void DisableDebugMenu(void)
 	}
 }
 
+/*
+ *	Delete the netplay menu
+ */
+void DisableNetplayMemu(void)
+{
+	int		i, k;
+	char	str[80];
+	/*~~~~~~~~~~~~*/
+
+	i = GetMenuItemCount(gui.hMenu1964main);
+	for(k = 0; k < i; k++)
+	{
+		GetMenuString(gui.hMenu1964main, k, str, 80, MF_BYPOSITION);
+		if(strcmp(str, "Net Play") == 0)
+		{
+			DeleteMenu(gui.hMenu1964main, k, MF_BYPOSITION);
+		}
+	}
+}
 
 /*
  =======================================================================================================================
@@ -4083,6 +4445,7 @@ void SetupDebuger(void)
 	CheckMenuItem(gui.hMenu1964main, ID_DEBUGSPDMA, debugoptions.debug_sp_dma ? MF_CHECKED : MF_UNCHECKED);
 	CheckMenuItem(gui.hMenu1964main, ID_DEBUGSIDMA, debugoptions.debug_si_dma ? MF_CHECKED : MF_UNCHECKED);
 	CheckMenuItem(gui.hMenu1964main, ID_DEBUGPIDMA, debugoptions.debug_pi_dma ? MF_CHECKED : MF_UNCHECKED);
+	CheckMenuItem(gui.hMenu1964main, ID_DEBUG_NETPLAY, debugoptions.debug_netplay ? MF_CHECKED : MF_UNCHECKED);
 	CheckMenuItem(gui.hMenu1964main, ID_DEBUGMEMPAK, debugoptions.debug_si_mempak ? MF_CHECKED : MF_UNCHECKED);
 	CheckMenuItem(gui.hMenu1964main, ID_DEBUGTLB, debugoptions.debug_tlb ? MF_CHECKED : MF_UNCHECKED);
 	CheckMenuItem(gui.hMenu1964main, ID_DEBUGEEPROM, debugoptions.debug_si_eeprom ? MF_CHECKED : MF_UNCHECKED);
@@ -4174,7 +4537,7 @@ long OnPopupMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		RomListRomOptions(rlstatus.selected_rom_index);
 		break;
 	case ID_POPUP_CHEATCODE:
-		if(emustatus.Emu_Is_Running)
+		if(emustatus.Emu_Is_Running && Kaillera_Is_Running == FALSE)
 		{
 			PauseEmulator();
 			CreateOptionsDialog(PSH_CHEAT_CODES);

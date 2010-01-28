@@ -1626,7 +1626,7 @@ void r4300i_COP0_mfc0(uint32 Instruction)
 	}
 
 	gRT = (_int64) (_int32) c0FS;
-
+	//KAILLERA_LOG(fprintf(ktracefile, "mfc0 = %08X at compare=%08X\n", gRT, gHWS_COP0Reg[COUNT]));
 }
 
 uint32 RememberFPRHi[64];
@@ -1639,7 +1639,7 @@ extern uint32 Experiment;
  */
 void r4300i_COP0_mtc0(uint32 Instruction)
 {
-
+	//KAILLERA_LOG(fprintf(ktracefile, "mtc0 = %08X at compare=%08X\n", gRT, gHWS_COP0Reg[COUNT]));
 	//Note: Some of this function is now compiled.
 	
 //	__asm int 3
@@ -3199,6 +3199,7 @@ _int32 Check_LW(uint32 QuerAddr)
 	_int32			tempGPR;
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+	//KAILLERA_LOG(fprintf(ktracefile, "Write reg (%08X) = %08X at compare=%08X\n", QuerAddr, (uint32)gHWS_GPR(RT_FT), gHWS_COP0Reg[COUNT]));
 	if((QuerAddr & 0xFF000000) == 0x84000000) QuerAddr |= 0xA0000000;
 
 	if (currentromoptions.Save_Type == FLASHRAM_SAVETYPE)
@@ -3208,19 +3209,23 @@ _int32 Check_LW(uint32 QuerAddr)
 	{
 	/* AI_LEN_REG */
 	case 0xA4500004:
-		if( currentromoptions.timing_Control == DELAY_DMA_AI || currentromoptions.timing_Control == DELAY_DMA_SI_AI )
-		{
-			uint32 delayed = Get_COUNT_Register() - audioStatus.startCounter;
-			if( audioStatus.endCounter != audioStatus.startCounter && delayed < audioStatus.endCounter - audioStatus.startCounter )
-				AI_LEN_REG = audioStatus.len - audioStatus.len * delayed / (audioStatus.endCounter - audioStatus.startCounter);
-			else
-				AI_LEN_REG = 0;
-		}
+		if( Kaillera_Is_Running )
+			AI_LEN_REG = 0;
 		else
 		{
-			AI_LEN_REG = AUDIO_AiReadLength();
+			if( currentromoptions.timing_Control == DELAY_DMA_AI || currentromoptions.timing_Control == DELAY_DMA_SI_AI )
+			{
+				uint32 delayed = Get_COUNT_Register() - audioStatus.startCounter;
+				if( audioStatus.endCounter != audioStatus.startCounter && delayed < audioStatus.endCounter - audioStatus.startCounter )
+					AI_LEN_REG = audioStatus.len - audioStatus.len * delayed / (audioStatus.endCounter - audioStatus.startCounter);
+			else
+				AI_LEN_REG = 0;
+			}
+			else
+			{
+				AI_LEN_REG = AUDIO_AiReadLength();
+			}
 		}
-		
 		tempGPR = AI_LEN_REG;
 		break;
 
@@ -3295,7 +3300,7 @@ _int32 Check_LW(uint32 QuerAddr)
 #ifdef DEBUG_IO
 	DebugIO(QuerAddr, "Read", tempGPR);
 #endif
-
+	//KAILLERA_LOG(fprintf(ktracefile, "Read reg (%08X) = %08X at compare=%08X\n", QuerAddr, tempGPR, gHWS_COP0Reg[COUNT]));
 	return(tempGPR);
 }
 
@@ -3304,7 +3309,7 @@ uint32	max_vi_count;
 uint32	vi_count_per_line;
 
 uint32	SW_QuerAddr;
-
+extern uint32 AIRegK[10];	// Fake AI registers to be used when Kaillera is running
 /*
  =======================================================================================================================
  =======================================================================================================================
@@ -3425,13 +3430,19 @@ void Check_SW(uint32 QuerAddr, uint32 rt_ft)
 
 	case 0xA4500000:	/* AI_DRAM_ADDR_REG */
 		AI_DRAM_ADDR_REG = (uint32)gHWS_GPR(rt_ft);
+		AIRegK[0] = (uint32)gHWS_GPR(rt_ft);
 		break;
 	case 0xA4500004:	/* AI_LEN_REG */
 		DMA_AI();
 		AI_LEN_REG = (uint32)gHWS_GPR(rt_ft);
+		AIRegK[1] = (uint32)gHWS_GPR(rt_ft);
 		DEBUG_AUDIO_MACRO(TRACE3("%08X: Play %d bytes of audio at %08X", gHWS_pc, AI_LEN_REG, AI_DRAM_ADDR_REG));
 		DO_PROFILIER_AUDIO;
 		AUDIO_AiLenChanged();
+		if( Kaillera_Is_Running )
+		{
+			Trigger_AIInterrupt();
+		}
 
 		if( CoreDoingAIUpdate )
 		{
@@ -3479,6 +3490,7 @@ void Check_SW(uint32 QuerAddr, uint32 rt_ft)
 		break;
 	case 0xA4500010:	/* AI_DACRATE_REG */
 		AI_DACRATE_REG = (uint32)gHWS_GPR(rt_ft);
+		AIRegK[4] = (uint32)gHWS_GPR(rt_ft);
 		if(rominfo.TV_System == TV_SYSTEM_NTSC)
 			AUDIO_AiDacrateChanged(0);
 		else
@@ -3487,6 +3499,7 @@ void Check_SW(uint32 QuerAddr, uint32 rt_ft)
 		
 	case 0xA4500014:	/* AI_BITRATE_REG */
 		AI_BITRATE_REG = (uint32)gHWS_GPR(rt_ft);
+		AIRegK[5] = (uint32)gHWS_GPR(rt_ft);
 		break;
 
 		

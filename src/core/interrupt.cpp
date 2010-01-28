@@ -607,6 +607,17 @@ void RunSPTask(void)
 
 			emustatus.AListCount++;
 
+			if( Kaillera_Thread_Is_Running )
+			{
+				/* set the interrupt to fire */
+				(MI_INTR_REG_R) |= MI_INTR_AI;
+				if((MI_INTR_MASK_REG_R) & MI_INTR_AI)
+				{
+					SET_EXCEPTION(EXC_INT) gHWS_COP0Reg[CAUSE] |= CAUSE_IP3;
+					HandleInterrupts(0x80000180);
+				}
+			}
+
 		}
 
 		__except(NULL, EXCEPTION_EXECUTE_HANDLER)
@@ -903,7 +914,7 @@ void Trigger_VIInterrupt(void)
 		vi_field_number = 0;
 	}
 
-	if(emuoptions.auto_apply_cheat_code)
+	if(emuoptions.auto_apply_cheat_code || kailleraAutoApplyCheat)
 	{
 		// Apply the hack codes
 #ifndef CHEATCODE_LOCK_MEMORY

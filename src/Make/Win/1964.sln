@@ -45,8 +45,8 @@ Global
 		{1120AACC-8C31-486A-A9B8-0568DFF718F4}.Release Not Optimized|Win32.Build.0 = Release|Win32
 		{1120AACC-8C31-486A-A9B8-0568DFF718F4}.Release Opcode Debugger|Win32.ActiveCfg = Release|Win32
 		{1120AACC-8C31-486A-A9B8-0568DFF718F4}.Release Opcode Debugger|Win32.Build.0 = Release|Win32
-		{1120AACC-8C31-486A-A9B8-0568DFF718F4}.Release|Win32.ActiveCfg = Release|Win32
-		{1120AACC-8C31-486A-A9B8-0568DFF718F4}.Release|Win32.Build.0 = Release|Win32
+		{1120AACC-8C31-486A-A9B8-0568DFF718F4}.Release|Win32.ActiveCfg = Debug|Win32
+		{1120AACC-8C31-486A-A9B8-0568DFF718F4}.Release|Win32.Build.0 = Debug|Win32
 		{AF7986E3-9C5A-4247-B6B0-63E6BE58AAD3}.Debug w Opt|Win32.ActiveCfg = Debug w Opt|Win32
 		{AF7986E3-9C5A-4247-B6B0-63E6BE58AAD3}.Debug w Opt|Win32.Build.0 = Debug w Opt|Win32
 		{AF7986E3-9C5A-4247-B6B0-63E6BE58AAD3}.Debug|Win32.ActiveCfg = Debug|Win32

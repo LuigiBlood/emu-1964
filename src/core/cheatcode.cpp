@@ -183,7 +183,8 @@ BOOL __cdecl CodeList_ReadCode(char *intername_rom_name, char *filename)
 		codegroupcount = 0;
 		while(codegroupcount < numberofgroups && fgets(line, 32767, stream) && strlen(line) > 8)	//changed by Witten
 		{																							//32767 makes sure the entire line is read
-
+			//if( strstr(filename,"kaillera") != 0 )
+				//MessageBox(NULL,"Next","Msg",MB_OK);
 			/* Codes for the group are in the string line[] */
 			for(c1 = 0; line[c1] != '=' && line[c1] != '\0'; c1++) codegrouplist[codegroupcount].name[c1] = line[c1];
 
@@ -572,7 +573,7 @@ BOOL CodeList_ApplyAllCode(enum APPLYCHEATMODE mode)
 	if( IsBooting && mode != BOOTUPONCE ) 
 		return FALSE;
 
-	if(emuoptions.auto_apply_cheat_code)
+	if((emuoptions.auto_apply_cheat_code && Kaillera_Is_Running == FALSE) || (Kaillera_Is_Running && kailleraAutoApplyCheat))
 	{
 		for(i = 0; i < codegroupcount; i++)
 		{

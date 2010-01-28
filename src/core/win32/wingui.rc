@@ -216,6 +216,21 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Full Screen\tAlt+Enter",      IDM_FULLSCREEN, GRAYED
     END
+    POPUP "Net Play"
+    BEGIN
+        MENUITEM "Connect to Kaillera Server ...", ID_KAILLERA_MODE
+        MENUITEM SEPARATOR
+        POPUP "Lag"
+        BEGIN
+            MENUITEM "1 (less)",                    ID_LAGNESS_1
+            MENUITEM "2",                           ID_LAGNESS_2
+            MENUITEM "3",                           ID_LAGNESS_3
+            MENUITEM "4 (default)",                 ID_LAGNESS_4, CHECKED
+            MENUITEM "5",                           ID_LAGNESS_5
+            MENUITEM "6",                           ID_LAGNESS_6
+            MENUITEM "7 (more)",                    ID_LAGNESS_7
+        END
+    END
     POPUP "&Help"
     BEGIN
         MENUITEM "Help Manual\tF1",             ID_HELP_HELP
@@ -245,6 +260,7 @@ BEGIN
         MENUITEM "Debug EEPROM",                ID_DEBUGEEPROM, CHECKED
         MENUITEM "Debug Controller",            ID_DEBUG_CONTROLLER, CHECKED
         MENUITEM "Debug SRAM",                  ID_DEBUG_SRAM, CHECKED
+		MENUITEM "Debug Netplay",               ID_DEBUG_NETPLAY
         MENUITEM SEPARATOR
         POPUP "Self-Modifying Code Detection Method"
         BEGIN

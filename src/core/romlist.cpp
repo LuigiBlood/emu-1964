@@ -416,7 +416,7 @@ void __cdecl RomListOpenRom(int index, BOOL RunThisRom)
 			EnableMenuItem(gui.hMenu1964main, ID_FILE_CHEAT, MF_ENABLED);
 
 
-			if( RunThisRom)
+			if( RunThisRom || Kaillera_Is_Running == TRUE)
 			{
 				Play(emuoptions.auto_full_screen); /* autoplay */
 			}

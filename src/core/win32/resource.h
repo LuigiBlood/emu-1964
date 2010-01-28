@@ -119,7 +119,14 @@
 #define ID_DEBUGTLBINDETAIL             185
 #define ID_DEBUGCPUCOUNTER              186
 #define ID_DEBUG_SRAM                   187
-#define ID_DEBUGDYNA                    1945
+#define ID_NETPLAY_LAGNESS              188
+#define ID_LAGNESS_1                    189
+#define ID_LAGNESS_2                    190
+#define ID_LAGNESS_3                    191
+#define ID_LAGNESS_4                    192
+#define ID_LAGNESS_5                    193
+#define ID_DEBUGDYNA                    194
+#define ID_LAGNESS_6                    195
 #define ID_DEBUGDYNAEXECUTION           196
 #define ID_4KEEPROM                     197
 #define ID_DYNALOG                      198
@@ -168,6 +175,7 @@
 #define ID_FILE_SAVEINI                 235
 #define ID_SETBREAKPOINT                236
 #define ID_CLEAR_BREAKPOINT             237
+#define ID_KAILLERA_MODE                239
 #define ID_CF_CF1                       242
 #define ID_CF_CF2                       243
 #define ID_CF_CF3                       244
@@ -216,6 +224,10 @@
 #define ID_DEBUG_EXCEPTION_SERVICES     292
 #define ID_CPU_IMPORTPJ64STATE          293
 #define ID_CPU_EXPORTPJ64STATE          294
+#define ID_NETPLAY_CONFIG               295
+#define ID_NETPLAY_ADDAREMOTEPLAYER     296
+#define ID_NETPLAY_DROPAREMOTEPLAYER    297
+#define ID_NETPLAY_ENABLENETPLAY        298
 #define ID_POPUP_ROM_SETTING            299
 #define ID_POPUP_CHEATCODE              300
 #define ID_POPUP_LOADPLAY               301
@@ -296,6 +308,7 @@
 #define ID_VARIABLESPEEDLIMITS_DECREASESPEED 385
 #define ID_VARIABLESPEEDLIMITS_RESTORECORRECTSPEED 386
 #define ID_SAVE_1964085                 389
+#define ID_DEBUG_NETPLAY                391
 #define ID_FILE_LANGUAGE                392
 #define ID_LANGUAGE_ENGLISH             393
 #define ID_LANGUAGE_LANGUAGE1           394
@@ -922,6 +935,7 @@
 #define IDC_SPIN_BOXART_X_SPACING       1573
 #define IDC_SPIN_BOXART_Y_SPACING       1574
 #define IDC_ICON_Y_SPACING_STR          1575
+#define ID_LAGNESS_7					1576
 #define IDC_STATIC                      -1
 
 // Next default values for new objects

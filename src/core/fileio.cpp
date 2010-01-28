@@ -805,6 +805,16 @@ void GetFileName(char *filenameToReturn, char *Ext)
 	char	romname[260];
 	int		i;
 
+	if( Kaillera_Is_Running && kailleraLocalPlayerNumber != 0 )     // special handling for player 0 hasn't been implemented yet
+	//if( Kaillera_Is_Running )
+	{
+		// See comments for function KailleraResetSaveFiles in Kaillera.c
+		strcpy(filenameToReturn, directories.save_directory_to_use);
+		strcat(filenameToReturn, "kaillera.");
+		strcat(filenameToReturn, Ext);
+		return;
+	}
+
 	for(i = 0; i < 8; i++)
 	{
 		CRC[i] = ((char *) &rominfo.crc1)[i ^ 3];

@@ -586,11 +586,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\kaillera\Kaillera.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\memory2.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\n64rcp.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\netplay-spec.h"
 				>
 			</File>
 			<File
@@ -706,6 +714,10 @@
 				</File>
 				<File
 					RelativePath=".\iPIF.h"
+					>
+				</File>
+				<File
+					RelativePath=".\kaillera\Kaillera.h"
 					>
 				</File>
 				<File
