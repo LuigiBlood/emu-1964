@@ -24,7 +24,7 @@
  */
 #include "stdafx.h"
 
-char			*profiler_process_names[] = { "R4300i", "Video", "Audio", "Compiler", "Idle", "RSP", "RDP"};
+char			*profiler_process_names[] = { "R4300i", "Video", "Audio", "Compiler", "Idle", "RSP", "RDP", "Netplay", "Kaillera" };
 uint64			profiler_timer_count[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 static int		process_being_profiling = R4300I_PROF;
@@ -107,21 +107,47 @@ void format_profiler_result_msg(char *msg)
 
     if(totaltimer == 0) totaltimer = 1;
 
-	sprintf
-		(
-		msg,
-		"%s:%2.1f%% %s:%2.1f%% %s:%2.1f%% %s:%2.1f%% %s:%2.1f%%",
-		TranslateStringByString("core"),
-		(profiler_timer_count[R4300I_PROF] * 100.0f / totaltimer),
-		TranslateStringByString("video"),
-		(profiler_timer_count[VIDEO_PROF] * 100.0f / totaltimer),
-		TranslateStringByString("audio"),
-		(profiler_timer_count[AUDIO_PROF] * 100.0f / totaltimer),
-		TranslateStringByString("compiler"),
-		(profiler_timer_count[COMPILER_PROF] * 100.0f / totaltimer),
-		TranslateStringByString("idle"),
-		(profiler_timer_count[CPU_IDLE_PROF] * 100.0f / totaltimer)
-		);
+    if( Kaillera_Is_Running )
+    {
+		sprintf
+				(
+				msg,
+				"%s:%2.1f%% %s:%2.1f%% %s:%2.1f%% %s:%2.1f%% %s:%2.1f%% %s:%2.1f%% %s: %2.1f%%",
+				TranslateStringByString("core"),
+				(profiler_timer_count[R4300I_PROF] * 100.0f / totaltimer),
+				TranslateStringByString("video"),
+				(profiler_timer_count[VIDEO_PROF] * 100.0f / totaltimer),
+				TranslateStringByString("audio"),
+				(profiler_timer_count[AUDIO_PROF] * 100.0f / totaltimer),
+				TranslateStringByString("compiler"),
+				(profiler_timer_count[COMPILER_PROF] * 100.0f / totaltimer),
+				TranslateStringByString("idle"),
+				(profiler_timer_count[CPU_IDLE_PROF] * 100.0f / totaltimer),
+				TranslateStringByString("netplay"),
+				(profiler_timer_count[NETPLAY_PROF] * 100.0f / totaltimer),
+				TranslateStringByString("kaillera"),
+				(profiler_timer_count[KAILLERA_PROF] * 100.0f / totaltimer)
+				);
+    }
+    else
+    {
+		sprintf
+				(
+				msg,
+				"%s:%2.1f%% %s:%2.1f%% %s:%2.1f%% %s:%2.1f%% %s:%2.1f%%",
+				TranslateStringByString("core"),
+				(profiler_timer_count[R4300I_PROF] * 100.0f / totaltimer),
+				TranslateStringByString("video"),
+				(profiler_timer_count[VIDEO_PROF] * 100.0f / totaltimer),
+				TranslateStringByString("audio"),
+				(profiler_timer_count[AUDIO_PROF] * 100.0f / totaltimer),
+				TranslateStringByString("compiler"),
+				(profiler_timer_count[COMPILER_PROF] * 100.0f / totaltimer),
+				TranslateStringByString("idle"),
+				(profiler_timer_count[CPU_IDLE_PROF] * 100.0f / totaltimer)
+				);
+    }
+
 
 
 	cpuIdlePercentageIdx++;

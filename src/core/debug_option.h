@@ -54,6 +54,7 @@ extern char tracemessage[256];
 #define DEBUG_SI_DMA
 #define DEBUG_SP_DMA
 #define DEBUG_PI_DMA
+#define DEBUG_PI_NETPLAY
 #define DEBUG_SP_TASK
 #define DEBUG_SI_TASK
 
@@ -150,6 +151,7 @@ struct DEBUGOPTIONS
 	int debug_sp_dma;
 	int debug_si_dma;
 	int debug_pi_dma;
+	int debug_netplay;
 	int debug_si_mempak;
 	int debug_si_controller;
 	int debug_dump_mempak;
@@ -238,6 +240,28 @@ extern struct DEBUGOPTIONS	debugoptions;
 #define DEBUG_PI_DMA_MACRO(macro)
 #define DEBUG_PI_DMA_TRACE0(str)
 #define DEBUG_PI_DMA_TRACE1(str, arg1)
+#endif
+
+#ifdef DEBUG_PI_NETPLAY
+#define DEBUG_NETPLAY_MACRO(macro) \
+        if(debugoptions.debug_netplay) \
+{ \
+        macro \
+}
+#define DEBUG_NETPLAY_TRACE0(str) \
+        if(debugoptions.debug_netplay) \
+{ \
+        TRACE0(str); \
+}
+#define DEBUG_NETPLAY_TRACE1(str, arg1) \
+        if(debugoptions.debug_netplay) \
+{ \
+        TRACE1(str, arg1); \
+}
+#else
+#define DEBUG_NETPLAY_MACRO(macro)
+#define DEBUG_NETPLAY_TRACE0(str)
+#define DEBUG_NETPLAY_TRACE1(str, arg1)
 #endif
 
 #ifdef DEBUG_SP_DMA

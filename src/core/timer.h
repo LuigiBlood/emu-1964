@@ -128,7 +128,7 @@ void					Init_Count_Down_Counters(void);
 #endif
 
 /* For profiling */
-enum { R4300I_PROF, VIDEO_PROF, AUDIO_PROF, COMPILER_PROF, CPU_IDLE_PROF, RSP_PROF, RDP_PROF, MAX_PROF };
+enum { R4300I_PROF, VIDEO_PROF, AUDIO_PROF, COMPILER_PROF, CPU_IDLE_PROF, RSP_PROF, RDP_PROF, NETPLAY_PROF, KAILLERA_PROF, MAX_PROF };
 void start_profiling(int proc);
 void stop_profiling(void);
 void format_profiler_result_msg(char *msg);
@@ -143,4 +143,5 @@ void reset_profiler(void);
 #define DO_PROFILIER_CPU_IDLE	DO_PROFILIER(CPU_IDLE_PROF)
 #define DO_PROFILIER_RSP		DO_PROFILIER(RSP_PROF)
 #define DO_PROFILIER_RDP		DO_PROFILIER(RDP_PROF)
+#define DO_PROFILIER_NETPLAY	DO_PROFILIER(NETPLAY_PROF)
 #endif /* 1964_TIMER_H */

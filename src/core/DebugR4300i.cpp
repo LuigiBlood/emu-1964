@@ -80,6 +80,7 @@ void init_debug_options(void)
 	debugoptions.debug_sp_dma = 0;
 	debugoptions.debug_si_dma = 0;
 	debugoptions.debug_pi_dma = 1;
+	debugoptions.debug_netplay = 1;
 	debugoptions.debug_si_mempak = 1;
 	debugoptions.debug_dump_mempak = 0;
 	debugoptions.debug_tlb = 1;

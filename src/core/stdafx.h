@@ -51,6 +51,7 @@
 #include "gamesave.h"
 #include "fileio.h"
 #include "FrameBuffer.h"
+#include "kaillera/kaillera.h"
 #include "zlib/unzip.h"
 #include "Registers.h"
 
