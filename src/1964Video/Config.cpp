@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define MAIN_KEY		"Software\\1964Video\\1964Video Plugin"
 #define INI_FILE		"1964Video.ini"
+#define CONFIG_FILE     "1964Video.cfg"
 char *project_name =	"1964Video N64 Video Plugin community version";
 
 // Disable the config dialog box to allow Vtune call graph feature to work
@@ -349,278 +350,219 @@ void GenerateFrameBufferOptions(void)
 //////////////////////////////////////////////////////////////////////////
 
 //========================================================================
+extern void GetPluginDir( char * Directory );
 
 BOOL TestRegistry(void)
 {
-#ifndef _XBOX
-	HKEY	hKey1, hKey2;
-	uint32	rc;
-	
-	if(RegConnectRegistry(NULL, HKEY_CURRENT_USER, &hKey1) == ERROR_SUCCESS)
-	{
-		rc = RegOpenKey(hKey1, MAIN_KEY, &hKey2);
-		RegCloseKey(hKey1);
-		
-		if(rc == ERROR_SUCCESS)
-			return TRUE;
-		else
-			return FALSE;
-	}
-	else
-	{
-		ErrorMsg("Error to read Windows registry database");
-		return FALSE;
-	}
-#else
-    return FALSE;
-#endif
+   FILE *f;
+   char name[1024];
+   GetPluginDir(name);
+   strcat(name, CONFIG_FILE);
+   f = fopen(name, "rb");
+   if (!f) return FALSE;
+   fclose(f);
+   return TRUE;
 }
 
 void WriteConfiguration(void)
 {
-#ifndef _XBOX
-	HKEY	hKey1=0, hKey2=0;
-	uint32	rc;
-	uint32	cbData;
-	uint32	DwordData;
-	
-	/* Save current configuration */
-	if(RegConnectRegistry(NULL, HKEY_CURRENT_USER, &hKey1) != ERROR_SUCCESS)
+	char name[1024];
+	GetPluginDir(name);
+	strcat(name, CONFIG_FILE);
+	FILE *f = fopen(name, "rb");
+	if (!f)
 	{
-		ErrorMsg("Error to write registry");
-		return;
-	}
-
-	rc = RegOpenKey(hKey1, MAIN_KEY, &hKey2);
-	if(rc != ERROR_SUCCESS)
-	{
-		rc = RegCreateKey(hKey1, MAIN_KEY, &hKey2);
-		if(rc != ERROR_SUCCESS)
-		{
-			ErrorMsg("Error to create MAIN_KEY in the registry");
-			return;
-		}
-
-		// Initialize
 		windowSetting.uWindowDisplayWidth=640;
 		windowSetting.uWindowDisplayHeight=480;
 		windowSetting.uFullScreenDisplayWidth=640;
 		windowSetting.uFullScreenDisplayHeight=480;
 	}
+	else
+		fclose(f);
+   
+	f = fopen(name, "wb");
+	fprintf(f, "WinModeWidth ");
+	fprintf(f, "%d\n", windowSetting.uWindowDisplayWidth);
 
-	rc = RegOpenKey(hKey1, MAIN_KEY, &hKey2);
-	if(rc != ERROR_SUCCESS)
-	{
-		rc = RegCreateKey(hKey1, MAIN_KEY, &hKey2);
-		if(rc != ERROR_SUCCESS)
-		{
-			ErrorMsg("Error to create MAIN_KEY in the registry");
-			return;
-		}
-		else
-		{
-			//Set default values
-			windowSetting.uWindowDisplayWidth=640;
-			windowSetting.uWindowDisplayHeight=480;
-			windowSetting.uFullScreenDisplayWidth=640;
-			windowSetting.uFullScreenDisplayHeight=480;
-		}
-	}
+	fprintf(f, "WinModeHeight ");
+	fprintf(f, "%d\n", windowSetting.uWindowDisplayHeight);
 
-	
-	DwordData = windowSetting.uWindowDisplayWidth;
-	cbData = sizeof(DwordData);
-	RegSetValueEx(hKey2, "WinModeWidth", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
-	
-	DwordData = windowSetting.uWindowDisplayHeight;
-	RegSetValueEx(hKey2, "WinModeHeight", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
-	
-	DwordData = windowSetting.uFullScreenDisplayWidth;
-	RegSetValueEx(hKey2, "FulScreenWidth", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
-	
-	DwordData = windowSetting.uFullScreenDisplayHeight;
-	RegSetValueEx(hKey2, "FulScreenHeight", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "FulScreenWidth ");
+	fprintf(f, "%d\n", windowSetting.uFullScreenDisplayWidth);
 
-	DwordData = options.bEnableHacks;
-	RegSetValueEx(hKey2, "EnableHacks", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
-	
-	DwordData = defaultRomOptions.N64FrameBufferEmuType;
-	RegSetValueEx(hKey2, "FrameBufferSetting", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
-	
-	DwordData = defaultRomOptions.N64FrameBufferWriteBackControl;
-	RegSetValueEx(hKey2, "FrameBufferWriteBackControl", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "FulScreenHeight ");
+	fprintf(f, "%d\n", windowSetting.uFullScreenDisplayHeight);
 
-	DwordData = defaultRomOptions.N64RenderToTextureEmuType;
-	RegSetValueEx(hKey2, "RenderToTexture", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "EnableHacks ");
+	fprintf(f, "%d\n", options.bEnableHacks);
 
-	DwordData = defaultRomOptions.screenUpdateSetting;
-	RegSetValueEx(hKey2, "ScreenUpdateSetting", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "FrameBufferSetting ");
+	fprintf(f, "%d\n", defaultRomOptions.N64FrameBufferEmuType);
 
-	DwordData = options.DirectXDepthBufferSetting;
-	RegSetValueEx(hKey2, "DirectXDepthBufferSetting", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "FrameBufferWriteBackControl ");
+	fprintf(f, "%d\n", defaultRomOptions.N64FrameBufferWriteBackControl);
+	   
+	fprintf(f, "RenderToTexture ");
+	fprintf(f, "%d\n", defaultRomOptions.N64RenderToTextureEmuType);
 
-	DwordData = options.DirectXAntiAliasingValue;
-	RegSetValueEx(hKey2, "DirectXAntiAliasingValue", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "ScreenUpdateSetting ");
+	fprintf(f, "%d\n", defaultRomOptions.screenUpdateSetting);
 
-	DwordData = options.DirectXMaxFSAA;
-	RegSetValueEx(hKey2, "DirectXMaxFSAA", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "FPSColor ");
+	fprintf(f, "%d\n", options.FPSColor);
 
-	DwordData = options.FPSColor;
-	RegSetValueEx(hKey2, "FPSColor", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "OpenGLDepthBufferSetting ");
+	fprintf(f, "%d\n", options.OpenglDepthBufferSetting);
 
-	DwordData = options.DirectXMaxAnisotropy;
-	RegSetValueEx(hKey2, "DirectXMaxAnisotropy", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "ColorQuality ");
+	fprintf(f, "%d\n", options.colorQuality);
 
-	DwordData = options.DirectXAnisotropyValue;
-	RegSetValueEx(hKey2, "DirectXAnisotropyValue", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "OpenGLRenderSetting ");
+	fprintf(f, "%d\n", options.OpenglRenderSetting);
 
-	DwordData = options.OpenglDepthBufferSetting;
-	RegSetValueEx(hKey2, "OpenGLDepthBufferSetting", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "NormalAlphaBlender ");
+	fprintf(f, "%d\n", defaultRomOptions.bNormalBlender);
 
-	DwordData = options.colorQuality;
-	RegSetValueEx(hKey2, "ColorQuality", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "EnableFog ");
+	fprintf(f, "%d\n", options.bEnableFog);
 
-	DwordData = options.OpenglRenderSetting;
-	RegSetValueEx(hKey2, "OpenGLRenderSetting", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "WinFrameMode ");
+	fprintf(f, "%d\n", options.bWinFrameMode);
 
-	DwordData = defaultRomOptions.bNormalBlender;
-	RegSetValueEx(hKey2, "NormalAlphaBlender", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
-	
-	DwordData = options.bEnableFog;
-	RegSetValueEx(hKey2, "EnableFog", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
-	
-	DwordData = options.bWinFrameMode;
-	RegSetValueEx(hKey2, "WinFrameMode", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "FullTMEMEmulation ");
+	fprintf(f, "%d\n", options.bFullTMEM);
 
-	DwordData = options.bFullTMEM;
-	RegSetValueEx(hKey2, "FullTMEMEmulation", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "ForceSoftwareTnL ");
+	fprintf(f, "%d\n", options.bForceSoftwareTnL);
 
-	DwordData = options.bForceSoftwareTnL;
-	RegSetValueEx(hKey2, "ForceSoftwareTnL", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "ForceSoftwareClipper ");
+	fprintf(f, "%d\n", options.bForceSoftwareClipper);
 
-	DwordData = options.bForceSoftwareClipper;
-	RegSetValueEx(hKey2, "ForceSoftwareClipper", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "OpenGLVertexClipper ");
+	fprintf(f, "%d\n", options.bOGLVertexClipper);
 
-	DwordData = options.bOGLVertexClipper;
-	RegSetValueEx(hKey2, "OpenGLVertexClipper", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "EnableSSE ");
+	fprintf(f, "%d\n", options.bEnableSSE);
 
-	DwordData = options.bEnableSSE;
-	RegSetValueEx(hKey2, "EnableSSE", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
-	
-	DwordData = options.bEnableVertexShader;
-	RegSetValueEx(hKey2, "EnableVertexShader", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "EnableVertexShader ");
+	fprintf(f, "%d\n", options.bEnableVertexShader);
 
-	DwordData = options.bSkipFrame;
-	RegSetValueEx(hKey2, "SkipFrame", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "SkipFrame ");
+	fprintf(f, "%d\n", options.bSkipFrame);
 
-	DwordData = options.bDisplayTooltip;
-	RegSetValueEx(hKey2, "DisplayTooltip", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "DisplayTooltip ");
+	fprintf(f, "%d\n", options.bDisplayTooltip);
 
-	DwordData = options.bHideAdvancedOptions;
-	RegSetValueEx(hKey2, "HideAdvancedOptions", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "HideAdvancedOptions ");
+	fprintf(f, "%d\n", options.bHideAdvancedOptions);
 
-	DwordData = options.bDisplayOnscreenFPS;
-	RegSetValueEx(hKey2, "DisplayOnscreenFPS", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "DisplayOnscreenFPS ");
+	fprintf(f, "%d\n", options.bDisplayOnscreenFPS);
 
-	DwordData = options.RenderBufferSetting;
-	RegSetValueEx(hKey2, "FrameBufferType", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
-	
-	DwordData = windowSetting.uFullScreenDisplayHeight;
-	RegSetValueEx(hKey2, "FulScreenHeight", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "FrameBufferType ");
+	fprintf(f, "%d\n", options.RenderBufferSetting);
 
-	DwordData = defaultRomOptions.bFastTexCRC;
-	RegSetValueEx(hKey2, "FastTextureLoading", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "DirectXDepthBufferSetting ");
+	fprintf(f, "%d\n", (uint32)options.DirectXDepthBufferSetting);
 
-	DwordData = (uint32)CDeviceBuilder::GetDeviceType();
-	RegSetValueEx(hKey2, "RenderEngine", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
-	
-	DwordData = (uint32)options.DirectXCombiner;
-	RegSetValueEx(hKey2, "DirectXCombiner", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "DirectXAntiAliasingValue ");
+	fprintf(f, "%d\n", (uint32)options.DirectXAntiAliasingValue);
 
-	DwordData = (uint32)options.DirectXDevice;
-	RegSetValueEx(hKey2, "DirectXDevice", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "DirectXMaxFSAA ");
+	fprintf(f, "%d\n", (uint32)options.DirectXMaxFSAA);
 
-	DwordData = (uint32)options.forceTextureFilter;
-	RegSetValueEx(hKey2, "ForceTextureFilter", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "DirectXMaxAnisotropy ");
+	fprintf(f, "%d\n", (uint32)options.DirectXMaxAnisotropy);
 
-	DwordData = (uint32)options.textureQuality;
-	RegSetValueEx(hKey2, "TextureQuality", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "DirectXAnisotropyValue ");
+	fprintf(f, "%d\n", (uint32)options.DirectXAnisotropyValue);
 
-	DwordData = (uint32)options.bTexRectOnly;
-	RegSetValueEx(hKey2, "TexRectOnly", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "DirectXCombiner ");
+	fprintf(f, "%d\n", (uint32)options.DirectXCombiner);
 
-	DwordData = (uint32)options.bSmallTextureOnly;
-	RegSetValueEx(hKey2, "SmallTextureOnly", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "DirectXDevice ");
+	fprintf(f, "%d\n", (uint32)options.DirectXDevice);
 
-	DwordData = (uint32)options.bLoadHiResTextures;
-	RegSetValueEx(hKey2, "LoadHiResTextures", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "CacheHiResTextures ");
+	fprintf(f, "%d\n", (uint32)options.bCacheHiResTextures);
 
-	// load the saved value for the caching setting from registry
-	DwordData = (uint32)options.bCacheHiResTextures;
-	RegSetValueEx(hKey2, "CacheHiResTextures", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "FulScreenHeight ");
+	fprintf(f, "%d\n", windowSetting.uFullScreenDisplayHeight);
 
-	DwordData = (uint32)options.bDumpTexturesToFiles;
-	RegSetValueEx(hKey2, "DumpTexturesToFiles", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "FastTextureLoading ");
+	fprintf(f, "%d\n", defaultRomOptions.bFastTexCRC);
 
-	DwordData = (uint32)options.textureEnhancement;
-	RegSetValueEx(hKey2, "TextureEnhancement", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "RenderEngine ");
+	fprintf(f, "%d\n", (uint32)CDeviceBuilder::GetDeviceType());
 
-	DwordData = (uint32)options.textureEnhancementControl;
-	RegSetValueEx(hKey2, "TextureEnhancementControl", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "ForceTextureFilter ");
+	fprintf(f, "%d\n", (uint32)options.forceTextureFilter);
 
-	DwordData = (uint32)windowSetting.uFullScreenRefreshRate;
-	RegSetValueEx(hKey2, "FullScreenFrequency", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "TextureQuality ");
+	fprintf(f, "%d\n", (uint32)options.textureQuality);
 
-	DwordData = (uint32)defaultRomOptions.bAccurateTextureMapping;
-	RegSetValueEx(hKey2, "AccurateTextureMapping", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "TexRectOnly ");
+	fprintf(f, "%d\n", (uint32)options.bTexRectOnly);
 
-	DwordData = (uint32)defaultRomOptions.bInN64Resolution;
-	RegSetValueEx(hKey2, "InN64Resolution", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "SmallTextureOnly ");
+	fprintf(f, "%d\n", (uint32)options.bSmallTextureOnly);
 
-	DwordData = (uint32)defaultRomOptions.bSaveVRAM;
-	RegSetValueEx(hKey2, "SaveVRAM", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "LoadHiResTextures ");
+	fprintf(f, "%d\n", (uint32)options.bLoadHiResTextures);
 
-	DwordData = (uint32)defaultRomOptions.bOverlapAutoWriteBack;
-	RegSetValueEx(hKey2, "OverlapAutoWriteBack", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "DumpTexturesToFiles ");
+	fprintf(f, "%d\n", (uint32)options.bDumpTexturesToFiles);
 
-	DwordData = (uint32)defaultRomOptions.bDoubleSizeForSmallTxtrBuf;
-	RegSetValueEx(hKey2, "DoubleSizeForSmallTxtrBuf", 0, REG_DWORD, (LPBYTE) & DwordData, cbData);
+	fprintf(f, "TextureEnhancement ");
+	fprintf(f, "%d\n", (uint32)options.textureEnhancement);
 
-	RegCloseKey(hKey2);
-#endif
+	fprintf(f, "TextureEnhancementControl ");
+	fprintf(f, "%d\n", (uint32)options.textureEnhancementControl);
+
+	fprintf(f, "FullScreenFrequency ");
+	fprintf(f, "%d\n", (uint32)windowSetting.uFullScreenRefreshRate);
+
+	fprintf(f, "AccurateTextureMapping ");
+	fprintf(f, "%d\n", (uint32)defaultRomOptions.bAccurateTextureMapping);
+
+	fprintf(f, "InN64Resolution ");
+	fprintf(f, "%d\n", (uint32)defaultRomOptions.bInN64Resolution);
+
+	fprintf(f, "SaveVRAM ");
+	fprintf(f, "%d\n", (uint32)defaultRomOptions.bSaveVRAM);
+
+	fprintf(f, "OverlapAutoWriteBack ");
+	fprintf(f, "%d\n", (uint32)defaultRomOptions.bOverlapAutoWriteBack);
+
+	fprintf(f, "DoubleSizeForSmallTxtrBuf ");
+	fprintf(f, "%d\n", (uint32)defaultRomOptions.bDoubleSizeForSmallTxtrBuf);
+
+	fclose(f);
 }
 
-uint32 ReadRegistryDwordVal(char *MainKey, char *Field)
+uint32 ReadRegistryDwordVal(char *Field)
 {
-#ifndef _XBOX
-	HKEY	hKey1, hKey2;
-	uint32	rc;
-	uint32	cbData;
-	uint32	dwType = REG_DWORD;
-	uint32	DwordData;
-	
-	if(RegConnectRegistry(NULL, HKEY_CURRENT_USER, &hKey1) == ERROR_SUCCESS)
+	char name[1024];
+	GetPluginDir(name);
+	strcat(name, CONFIG_FILE);
+	FILE *f = fopen(name, "rb");
+	if(!f) return 0;
+	char buf[0x1000];
+	while(fscanf(f, "%s", buf) == 1)
 	{
-		char	szBuffer[260];
-		strcpy(szBuffer, MainKey);
-		
-		rc = RegOpenKey(hKey1, szBuffer, &hKey2);
-		cbData = sizeof(DwordData);
-		if(rc == ERROR_SUCCESS)
+		int dword;
+		int n = fscanf(f, "%d", &dword);
+		if (n==1)
 		{
-			rc = RegQueryValueEx(hKey2, Field, NULL, (LPDWORD)&dwType, (LPBYTE) & DwordData, (LPDWORD)&cbData);
-			RegCloseKey(hKey2);
-			if(rc == ERROR_SUCCESS && cbData != 0)
+			if (!strcmp(buf, Field))
 			{
-				return(DwordData);
+				fclose(f);
+				return dword;
 			}
 		}
-		
-		RegCloseKey(hKey1);
-		return(0);
 	}
-#endif
-	return(0);
+   fclose(f);
+   return 0;
 }
 
 
@@ -747,84 +689,83 @@ void ReadConfiguration(void)
 	}
 	else
 	{
-		windowSetting.uWindowDisplayWidth = (uint16)ReadRegistryDwordVal(MAIN_KEY, "WinModeWidth");
-		if( windowSetting.uWindowDisplayWidth == 0 )
-		{
-			windowSetting.uWindowDisplayWidth = 640;
-		}
+		windowSetting.uWindowDisplayWidth = (uint16)ReadRegistryDwordVal("WinModeWidth");
+		//if( windowSetting.uWindowDisplayWidth == 0 )
+		//{
+		//	windowSetting.uWindowDisplayWidth = 640;
+		//}
 
-		windowSetting.uWindowDisplayHeight = (uint16)ReadRegistryDwordVal(MAIN_KEY, "WinModeHeight");
-		if( windowSetting.uWindowDisplayHeight == 0 )
-		{
-			windowSetting.uWindowDisplayHeight = 480;
-		}
+		windowSetting.uWindowDisplayHeight = (uint16)ReadRegistryDwordVal("WinModeHeight");
+		//if( windowSetting.uWindowDisplayHeight == 0 )
+		//{
+		//	windowSetting.uWindowDisplayHeight = 480;
+		//}
 		
 		windowSetting.uDisplayWidth = windowSetting.uWindowDisplayWidth;
 		windowSetting.uDisplayHeight = windowSetting.uWindowDisplayHeight;
 
-
-		windowSetting.uFullScreenDisplayWidth = (uint16)ReadRegistryDwordVal(MAIN_KEY, "FulScreenWidth");
+		windowSetting.uFullScreenDisplayWidth = (uint16)ReadRegistryDwordVal("FulScreenWidth");
 		if( windowSetting.uFullScreenDisplayWidth == 0 )
 		{
 			windowSetting.uFullScreenDisplayWidth = 640;
 		}
-		windowSetting.uFullScreenDisplayHeight = (uint16)ReadRegistryDwordVal(MAIN_KEY, "FulScreenHeight");
+		windowSetting.uFullScreenDisplayHeight = (uint16)ReadRegistryDwordVal("FulScreenHeight");
 		if( windowSetting.uFullScreenDisplayHeight == 0 )
 		{
 			windowSetting.uFullScreenDisplayHeight = 480;
 		}
 
-		defaultRomOptions.N64FrameBufferEmuType = ReadRegistryDwordVal(MAIN_KEY, "FrameBufferSetting");
-		defaultRomOptions.N64FrameBufferWriteBackControl = ReadRegistryDwordVal(MAIN_KEY, "FrameBufferWriteBackControl");
-		defaultRomOptions.N64RenderToTextureEmuType = ReadRegistryDwordVal(MAIN_KEY, "RenderToTexture");
-		defaultRomOptions.bNormalBlender = ReadRegistryDwordVal(MAIN_KEY, "NormalAlphaBlender");
+		defaultRomOptions.N64FrameBufferEmuType = ReadRegistryDwordVal("FrameBufferSetting");
+		defaultRomOptions.N64FrameBufferWriteBackControl = ReadRegistryDwordVal("FrameBufferWriteBackControl");
+		defaultRomOptions.N64RenderToTextureEmuType = ReadRegistryDwordVal("RenderToTexture");
+		defaultRomOptions.bNormalBlender = ReadRegistryDwordVal("NormalAlphaBlender");
 
-		options.bEnableFog = ReadRegistryDwordVal(MAIN_KEY, "EnableFog");
-		options.bWinFrameMode = ReadRegistryDwordVal(MAIN_KEY, "WinFrameMode");
-		options.bFullTMEM = ReadRegistryDwordVal(MAIN_KEY, "FullTMEMEmulation");
-		options.bForceSoftwareTnL = ReadRegistryDwordVal(MAIN_KEY, "ForceSoftwareTnL");
-		options.bForceSoftwareClipper = ReadRegistryDwordVal(MAIN_KEY, "ForceSoftwareClipper");
-		options.bOGLVertexClipper = ReadRegistryDwordVal(MAIN_KEY, "OpenGLVertexClipper");
-		options.bEnableSSE = ReadRegistryDwordVal(MAIN_KEY, "EnableSSE");
-		options.bEnableVertexShader = ReadRegistryDwordVal(MAIN_KEY, "EnableVertexShader");
+		options.bEnableFog = ReadRegistryDwordVal("EnableFog");
+		options.bWinFrameMode = ReadRegistryDwordVal("WinFrameMode");
+		options.bFullTMEM = ReadRegistryDwordVal("FullTMEMEmulation");
+		options.bForceSoftwareTnL = ReadRegistryDwordVal("ForceSoftwareTnL");
+		options.bForceSoftwareClipper = ReadRegistryDwordVal("ForceSoftwareClipper");
+		options.bOGLVertexClipper = ReadRegistryDwordVal("OpenGLVertexClipper");
+		options.bEnableSSE = ReadRegistryDwordVal("EnableSSE");
+		options.bEnableVertexShader = ReadRegistryDwordVal("EnableVertexShader");
 		options.bEnableVertexShader = FALSE;
-		options.bSkipFrame = ReadRegistryDwordVal(MAIN_KEY, "SkipFrame");
-		options.bDisplayTooltip = ReadRegistryDwordVal(MAIN_KEY, "DisplayTooltip");
-		options.bHideAdvancedOptions = ReadRegistryDwordVal(MAIN_KEY, "HideAdvancedOptions");
-		options.bDisplayOnscreenFPS = ReadRegistryDwordVal(MAIN_KEY, "DisplayOnscreenFPS");
-		options.RenderBufferSetting = ReadRegistryDwordVal(MAIN_KEY, "FrameBufferType");
-		options.textureEnhancement = ReadRegistryDwordVal(MAIN_KEY, "TextureEnhancement");
-		options.textureEnhancementControl = ReadRegistryDwordVal(MAIN_KEY, "TextureEnhancementControl");
-		options.forceTextureFilter = ReadRegistryDwordVal(MAIN_KEY, "ForceTextureFilter");
-		options.textureQuality = ReadRegistryDwordVal(MAIN_KEY, "TextureQuality");
-		options.bTexRectOnly = ReadRegistryDwordVal(MAIN_KEY, "TexRectOnly");
-		options.bSmallTextureOnly = ReadRegistryDwordVal(MAIN_KEY, "SmallTextureOnly");
-		options.bLoadHiResTextures = ReadRegistryDwordVal(MAIN_KEY, "LoadHiResTextures");
+		options.bSkipFrame = ReadRegistryDwordVal("SkipFrame");
+		options.bDisplayTooltip = ReadRegistryDwordVal("DisplayTooltip");
+		options.bHideAdvancedOptions = ReadRegistryDwordVal("HideAdvancedOptions");
+		options.bDisplayOnscreenFPS = ReadRegistryDwordVal("DisplayOnscreenFPS");
+		options.RenderBufferSetting = ReadRegistryDwordVal("FrameBufferType");
+		options.textureEnhancement = ReadRegistryDwordVal("TextureEnhancement");
+		options.textureEnhancementControl = ReadRegistryDwordVal("TextureEnhancementControl");
+		options.forceTextureFilter = ReadRegistryDwordVal("ForceTextureFilter");
+		options.textureQuality = ReadRegistryDwordVal("TextureQuality");
+		options.bTexRectOnly = ReadRegistryDwordVal("TexRectOnly");
+		options.bSmallTextureOnly = ReadRegistryDwordVal("SmallTextureOnly");
+		options.bLoadHiResTextures = ReadRegistryDwordVal("LoadHiResTextures");
 		// load key value for hires caching from registry
-		options.bCacheHiResTextures = ReadRegistryDwordVal(MAIN_KEY, "CacheHiResTextures");
-		options.bDumpTexturesToFiles = ReadRegistryDwordVal(MAIN_KEY, "DumpTexturesToFiles");
+		options.bCacheHiResTextures = ReadRegistryDwordVal("CacheHiResTextures");
+		options.bDumpTexturesToFiles = ReadRegistryDwordVal("DumpTexturesToFiles");
 		options.bDumpTexturesToFiles = FALSE;	// Never starting the plugin with this option on
-		defaultRomOptions.bFastTexCRC = ReadRegistryDwordVal(MAIN_KEY, "FastTextureLoading");
-		options.DirectXCombiner = ReadRegistryDwordVal(MAIN_KEY, "DirectXCombiner");
-		options.DirectXDevice = ReadRegistryDwordVal(MAIN_KEY, "DirectXDevice");
-		options.DirectXDepthBufferSetting = ReadRegistryDwordVal(MAIN_KEY, "DirectXDepthBufferSetting");
-		options.DirectXAntiAliasingValue = ReadRegistryDwordVal(MAIN_KEY, "DirectXAntiAliasingValue");;
-		options.DirectXAnisotropyValue = ReadRegistryDwordVal(MAIN_KEY, "DirectXAnisotropyValue");;
-		options.DirectXMaxFSAA = ReadRegistryDwordVal(MAIN_KEY, "DirectXMaxFSAA");;
-		options.FPSColor = ReadRegistryDwordVal(MAIN_KEY, "FPSColor");;
-		options.DirectXMaxAnisotropy = ReadRegistryDwordVal(MAIN_KEY, "DirectXMaxAnisotropy");;
-		options.OpenglDepthBufferSetting = ReadRegistryDwordVal(MAIN_KEY, "OpenGLDepthBufferSetting");
-		options.colorQuality = ReadRegistryDwordVal(MAIN_KEY, "ColorQuality");
-		options.OpenglRenderSetting = ReadRegistryDwordVal(MAIN_KEY, "OpenGLRenderSetting");
-		defaultRomOptions.bFastTexCRC = ReadRegistryDwordVal(MAIN_KEY, "FastTextureLoading");
-		defaultRomOptions.bAccurateTextureMapping = ReadRegistryDwordVal(MAIN_KEY, "AccurateTextureMapping");
-		defaultRomOptions.bInN64Resolution = ReadRegistryDwordVal(MAIN_KEY, "InN64Resolution");
-		defaultRomOptions.bSaveVRAM = ReadRegistryDwordVal(MAIN_KEY, "SaveVRAM");
-		defaultRomOptions.bOverlapAutoWriteBack = ReadRegistryDwordVal(MAIN_KEY, "OverlapAutoWriteBack");
-		defaultRomOptions.bDoubleSizeForSmallTxtrBuf = ReadRegistryDwordVal(MAIN_KEY, "DoubleSizeForSmallTxtrBuf");
-		windowSetting.uFullScreenRefreshRate = ReadRegistryDwordVal(MAIN_KEY, "FullScreenFrequency");
+		defaultRomOptions.bFastTexCRC = ReadRegistryDwordVal("FastTextureLoading");
+		options.DirectXCombiner = ReadRegistryDwordVal("DirectXCombiner");
+		options.DirectXDevice = ReadRegistryDwordVal("DirectXDevice");
+		options.DirectXDepthBufferSetting = ReadRegistryDwordVal("DirectXDepthBufferSetting");
+		options.DirectXAntiAliasingValue = ReadRegistryDwordVal("DirectXAntiAliasingValue");;
+		options.DirectXAnisotropyValue = ReadRegistryDwordVal("DirectXAnisotropyValue");;
+		options.DirectXMaxFSAA = ReadRegistryDwordVal("DirectXMaxFSAA");;
+		options.FPSColor = ReadRegistryDwordVal("FPSColor");;
+		options.DirectXMaxAnisotropy = ReadRegistryDwordVal("DirectXMaxAnisotropy");;
+		options.OpenglDepthBufferSetting = ReadRegistryDwordVal("OpenGLDepthBufferSetting");
+		options.colorQuality = ReadRegistryDwordVal("ColorQuality");
+		options.OpenglRenderSetting = ReadRegistryDwordVal("OpenGLRenderSetting");
+		defaultRomOptions.bFastTexCRC = ReadRegistryDwordVal("FastTextureLoading");
+		defaultRomOptions.bAccurateTextureMapping = ReadRegistryDwordVal("AccurateTextureMapping");
+		defaultRomOptions.bInN64Resolution = ReadRegistryDwordVal("InN64Resolution");
+		defaultRomOptions.bSaveVRAM = ReadRegistryDwordVal("SaveVRAM");
+		defaultRomOptions.bOverlapAutoWriteBack = ReadRegistryDwordVal("OverlapAutoWriteBack");
+		defaultRomOptions.bDoubleSizeForSmallTxtrBuf = ReadRegistryDwordVal("DoubleSizeForSmallTxtrBuf");
+		windowSetting.uFullScreenRefreshRate = ReadRegistryDwordVal("FullScreenFrequency");
 
-		SupportedDeviceType render = (SupportedDeviceType)ReadRegistryDwordVal(MAIN_KEY, "RenderEngine");
+		SupportedDeviceType render = (SupportedDeviceType)ReadRegistryDwordVal("RenderEngine");
 #ifdef _XBOX
 		CDeviceBuilder::SelectDeviceType( DIRECTX_DEVICE );
 #else
@@ -1955,7 +1896,7 @@ char * tidy(char * s)
 
 }
 
-extern void GetPluginDir( char * Directory );
+
 
 BOOL ReadIniFile()
 {
@@ -2582,17 +2523,13 @@ LRESULT APIENTRY OptionsDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
 		}
 
 		SendDlgItemMessage(hDlg, IDC_RESOLUTION_WINDOW_MODE, CB_RESETCONTENT, 0, 0);
-		for( i=0; i<numberOfResolutions; i++ )
+		for( i=0; i<CGraphicsContext::m_numOfResolutions; i++ )
 		{
-			if( CGraphicsContext::m_FullScreenResolutions[CGraphicsContext::m_numOfResolutions - 1][0] <= resolutions[i][0] &&
-				CGraphicsContext::m_FullScreenResolutions[CGraphicsContext::m_numOfResolutions - 1][1] <= resolutions[i][1] )
-			{
-				break;
-			}
 
-			sprintf(generalText, "%d x %d", resolutions[i][0], resolutions[i][1]);
+			sprintf(generalText, "%d x %d", CGraphicsContext::m_FullScreenResolutions[i][0], CGraphicsContext::m_FullScreenResolutions[i][1]);
 			SendDlgItemMessage(hDlg, IDC_RESOLUTION_WINDOW_MODE, CB_INSERTSTRING, i, (LPARAM) generalText);
-			if( windowSetting.uWindowDisplayWidth == resolutions[i][0] )
+			if( windowSetting.uWindowDisplayWidth == CGraphicsContext::m_FullScreenResolutions[i][0] &&
+				windowSetting.uWindowDisplayHeight == CGraphicsContext::m_FullScreenResolutions[i][1] )
 			{
 				SendDlgItemMessage(hDlg, IDC_RESOLUTION_WINDOW_MODE, CB_SETCURSEL, i, 0);
 			}
@@ -2772,8 +2709,8 @@ LRESULT APIENTRY OptionsDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
 			options.colorQuality = colorQualitySettings[i].setting;
 
 			i = SendDlgItemMessage(hDlg, IDC_RESOLUTION_WINDOW_MODE, CB_GETCURSEL, 0, 0);
-			windowSetting.uWindowDisplayWidth = resolutions[i][0];
-			windowSetting.uWindowDisplayHeight = resolutions[i][1];
+			windowSetting.uWindowDisplayWidth = CGraphicsContext::m_FullScreenResolutions[i][0];
+			windowSetting.uWindowDisplayHeight = CGraphicsContext::m_FullScreenResolutions[i][1];
 
 			i = SendDlgItemMessage(hDlg, IDC_RESOLUTION_FULL_SCREEN_MODE, CB_GETCURSEL, 0, 0);
 			windowSetting.uFullScreenDisplayWidth = CGraphicsContext::m_FullScreenResolutions[i][0];
