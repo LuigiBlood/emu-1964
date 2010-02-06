@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include "1964Input.h"
 #include "DirectInput.h"
+#include "XInputController.h"
 #include "FileAccess.h"
 #include "PakIO.h"
 #include "Interface.h"
@@ -35,6 +36,7 @@
 // Prototypes //
 BOOL CALLBACK ControllerTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam );
 BOOL CALLBACK ControlsTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam );
+BOOL CALLBACK XControlsTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam );	// Xinput Control main proc. --tecnicors
 BOOL CALLBACK DevicesTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam );
 BOOL CALLBACK ModifierTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam );
 BOOL CALLBACK ControllerPakTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam );
@@ -416,7 +418,10 @@ BOOL CALLBACK ControllerTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 					switch( i )
 					{
 					case TAB_CONTROLS:
-						hTabControl = CreateDialog( g_hResourceDLL, MAKEINTRESOURCE( IDD_CONTROLS ), hDlg, ControlsTabProc );
+						if( IsDlgButtonChecked( hDlg, IDC_XINPUT_ENABLER ))	// added to show the xinput controller config tab --tecnicors
+							hTabControl = CreateDialog ( g_hResourceDLL, MAKEINTRESOURCE( IDD_XCONTROLS ), hDlg, XControlsTabProc );
+						else
+							hTabControl = CreateDialog( g_hResourceDLL, MAKEINTRESOURCE( IDD_CONTROLS ), hDlg, ControlsTabProc );
 						break;
 					case TAB_DEVICES:
 						hTabControl = CreateDialog( g_hResourceDLL, MAKEINTRESOURCE( IDD_DEVICES ), hDlg, DevicesTabProc );
@@ -516,6 +521,30 @@ BOOL CALLBACK ControllerTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 					}
 				}
 				return TRUE;
+				
+			case IDC_XINPUT_ENABLER:	// change to xinput config --tecnicors
+				if( hTabControl )
+						DestroyWindow( hTabControl );
+				if( IsDlgButtonChecked( hDlg, IDC_XINPUT_ENABLER ))
+					hTabControl = CreateDialog ( g_hResourceDLL, MAKEINTRESOURCE( IDD_XCONTROLS ), hDlg, XControlsTabProc );
+				else
+					hTabControl = CreateDialog( g_hResourceDLL, MAKEINTRESOURCE( IDD_CONTROLS ), hDlg, ControlsTabProc );
+				{
+					hDlgItem = GetDlgItem( hDlg, IDC_CONTROLLERTAB );
+
+					RECT rectWindow,
+						rectTab, rectMain; // need to know the position of the calling tab window relative to its parent
+
+					GetWindowRect( hDlg, &rectMain );
+					GetWindowRect( hDlgItem, &rectTab );
+
+					GetClientRect( hDlgItem, &rectWindow );
+					TabCtrl_AdjustRect( hDlgItem, FALSE, &rectWindow );
+
+					MoveWindow( hTabControl, rectWindow.left + (rectTab.left - rectMain.left), rectWindow.top + (rectTab.top - rectMain.top), rectWindow.right - rectWindow.left, rectWindow.bottom - rectWindow.top, FALSE );
+					ShowWindow( hTabControl, SW_SHOW );
+				}
+				return TRUE;	// END IDC_XINPUT_ENABLER
 
 			default:
 				return FALSE;
@@ -757,6 +786,60 @@ BOOL CALLBACK ControlsTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 	}
 //	return TRUE; //msg got processed
 }
+
+// XInput controllers tab	--tecnicors
+BOOL CALLBACK XControlsTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
+{
+	LPXCONTROLLER gController = &g_ivConfig->Controllers[g_ivConfig->ChosenTab].xiController;
+
+	switch( uMsg )
+	{
+	case WM_INITDIALOG:
+		for( int i = IDC_XC_A; i <= IDC_XC_START; i++ )
+			FillN64ButtonComboBox( hDlg, i );
+		for( int i = IDC_XC_DPAD; i <= IDC_XC_RTS; i++ )
+			FillN64AnalogComboBox( hDlg, i );
+		XControlsTabProc( hDlg, WM_USER_UPDATE, 0, 0 );
+		return FALSE;
+
+	case WM_USER_UPDATE:
+		{
+			TCHAR buffer[MAX_PATH];
+			GetDirectory( buffer, DIRECTORY_DLL );
+			_stprintf_s( buffer, _T("%sXInput Controller %d Config.xcc"), buffer, gController->nControl + 1 );
+			FILE *saveFile = _tfopen( buffer, _T("rS") );
+			if( saveFile )
+			{
+				LoadXInputConfigFromFile( saveFile, gController );
+				fclose( saveFile );
+			}
+		}
+		if( !ReadXInputControllerKeys( hDlg, gController ))
+			for( int i = IDC_XC_A; i <= IDC_XC_RTS; i++ )
+				SendDlgItemMessage( hDlg, i, CB_SETCURSEL, 0, ( LPARAM )0 );
+		
+		return TRUE;
+
+	case WM_COMMAND:
+		switch( LOWORD( wParam ))
+		{
+		case IDC_XC_USE:
+			StoreXInputControllerKeys( hDlg, gController );
+			{
+				TCHAR buffer[MAX_PATH];
+				GetDirectory( buffer, DIRECTORY_DLL );
+				_stprintf_s( buffer, _T("%sXInput Controller %d Config.xcc"), buffer, gController->nControl + 1 );
+				FILE *saveFile = _tfopen( buffer, _T("wS") );
+				SaveXInputConfigToFile( saveFile, gController );
+				fclose( saveFile );
+			}
+			return TRUE;
+		}
+		return FALSE;
+	default:
+		return FALSE;
+	}
+}// END Xinput Controller Tab --tecnicors
 
 BOOL CALLBACK DevicesTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {

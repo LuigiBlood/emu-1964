@@ -44,6 +44,9 @@
 #define P_realloc( memory, size ) \
 	( (memory == NULL) ? P_malloc(size) : HeapReAlloc( g_hHeap, 0, memory, size ) )
 
+#ifdef ARRAYSIZE
+#undef ARRAYSIZE
 #define ARRAYSIZE( array ) (sizeof(array) / sizeof(array[0]))
+#endif	//ARRAYSIZE
 
 #endif // #ifndef _COMMONINCLUDES_H_

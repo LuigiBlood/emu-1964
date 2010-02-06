@@ -27,6 +27,7 @@
 #include "1964Input.h"
 #include "PakIO.h"
 #include "DirectInput.h"
+#include "XInputController.h"
 #include <math.h>
 
 // ProtoTypes //
@@ -672,6 +673,9 @@ BOOL CALLBACK EnumGetEffectTypes( LPCDIEFFECTINFO pdei, LPVOID pvRef )
 // EnumMakeDeviceList has been rewritten. --rabid
 BOOL CALLBACK EnumMakeDeviceList( LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef )
 {
+	if( IsXInputDevice( &lpddi->guidProduct ) )		// Check if is XInput device --tecnicors
+        return DIENUM_CONTINUE;
+
 	if (IsEqualGUID(g_sysMouse.guidInstance, lpddi->guidInstance))
 		return DIENUM_CONTINUE;
 

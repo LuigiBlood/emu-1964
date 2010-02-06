@@ -25,6 +25,7 @@
 #define _1964INPUTPLUGIN_
 
 #include <dinput.h>
+#include "XInputController.h"
 
 /////////////////////////////////////////////////////////////////////////////////
 //General Plugin
@@ -174,6 +175,8 @@ typedef struct _CONTROLLER		// AN N64 CONTROLLER
 
 	void *pPakData;						// Pointer to Pak Data (specific): see PakIO.h
 										// pPakData->bPakType will always be a BYTE indicating what the current pak type is
+
+	XCONTROLLER xiController;			// To handle an XInput enabled controller	--tecnicors
 } CONTROLLER, *LPCONTROLLER;
 
 // This is the Index of WORD PROFILE.Button[X]
@@ -376,7 +379,6 @@ extern CRITICAL_SECTION g_critical;
 extern bool g_bRunning;
 extern bool g_bConfiguring;
 extern bool g_bExclusiveMouse;
-
 
 extern int g_iFirstController;
 
