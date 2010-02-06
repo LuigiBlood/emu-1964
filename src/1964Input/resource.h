@@ -35,6 +35,7 @@
 #define IDR_SHORTCUT1                   144
 #define IDR_SHORTCUTS_DEFAULT           144
 #define IDS_ERR_GBROM                   145
+#define IDD_XCONTROLS                   145
 #define IDS_ERR_GBSRAMERR               146
 #define IDS_VERSTRING                   147
 #define IDS_TAB_CONTROLLER              148
@@ -342,14 +343,32 @@
 #define IDC_COMBO1                      1158
 #define IDC_LANGUAGE                    1160
 #define IDC_SHOWMESSAGES                1162
+#define IDC_XC_USE                      1178
+#define IDC_XINPUT_ENABLER              1179
+#define IDC_XINPUT_TITLE                1180
+#define IDC_XC_A                        1181
+#define IDC_XC_B                        1182
+#define IDC_XC_X                        1183
+#define IDC_XC_Y                        1184
+#define IDC_XC_LB                       1185
+#define IDC_XC_RB                       1186
+#define IDC_XC_LTSB                     1187
+#define IDC_XC_RTSB                     1188
+#define IDC_XC_LT                       1189
+#define IDC_XC_RT                       1190
+#define IDC_XC_BACK                     1191
+#define IDC_XC_START                    1192
+#define IDC_XC_DPAD                     1193
+#define IDC_XC_LTS                      1194
+#define IDC_XC_RTS                      1195
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        145
+#define _APS_NEXT_RESOURCE_VALUE        147
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1163
+#define _APS_NEXT_CONTROL_VALUE         1196
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

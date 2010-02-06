@@ -375,6 +375,10 @@ bool LoadCart(LPGBCART Cart, LPCTSTR RomFileName, LPCTSTR RamFileName, LPCTSTR T
 		Cart->iNumRamBanks = 16;
 		NumQuarterBlocks = 64;
 		break;
+	case 0x05:
+		Cart->iNumRamBanks = 8;
+		NumQuarterBlocks = 32;
+		break;
 	}
 
 	DebugWriteA("GB cart has %d ROM banks, %d RAM quarter banks\n", Cart->iNumRomBanks, NumQuarterBlocks);

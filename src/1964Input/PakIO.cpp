@@ -210,8 +210,8 @@ bool InitControllerPak( const int iControl )
 //			rPak->bRumbleTyp = g_pcControllers[iControl].bRumbleTyp;
 //			rPak->bRumbleStrength = g_pcControllers[iControl].bRumbleStrength;
 //			rPak->fVisualRumble = g_pcControllers[iControl].fVisualRumble;
-			
-			CreateEffectHandle( iControl, g_pcControllers[iControl].bRumbleTyp, g_pcControllers[iControl].bRumbleStrength );
+			if( !g_pcControllers[iControl].xiController.bConnected )	//used to make sure only xinput cotroller rumbles --tecnicors
+				CreateEffectHandle( iControl, g_pcControllers[iControl].bRumbleTyp, g_pcControllers[iControl].bRumbleStrength );
 			bReturn = true;
 		}
 		break;
@@ -338,7 +338,10 @@ BYTE ReadControllerPak( const int iControl, LPBYTE Command )
 				FillMemory( Data, 32, 0x80 );
 			else
 				ZeroMemory( Data, 32 );
-			if (g_apFFDevice[iControl])
+			
+			if( g_pcControllers[iControl].xiController.bConnected )	// xinput controller rumble --tecnicors
+				VibrateXInputController( g_pcControllers[iControl].xiController.nControl, 0, 0);
+			else if (g_apFFDevice[iControl])
 				g_apFFDevice[iControl]->Acquire();
 		}
 		else
@@ -493,6 +496,15 @@ BYTE WriteControllerPak( const int iControl, LPBYTE Command )
 	case PAK_RUMBLE:
 		if( dwAddress == PAK_IO_RUMBLE )
 		{
+			if( g_pcControllers[iControl].xiController.bConnected )	// xinput controller rumble --tecnicors
+			{
+				if( *Data )
+					VibrateXInputController( g_pcControllers[iControl].xiController.nControl );
+				else
+					VibrateXInputController( g_pcControllers[iControl].xiController.nControl, 0, 0 );
+				goto end_rumble;
+			}
+
 			if( g_pcControllers[iControl].fVisualRumble )
 				FlashWindow( g_strEmuInfo.hMainWindow, ( *Data != 0 ) ? TRUE : FALSE );
 			if( g_pcControllers[iControl].bRumbleTyp == RUMBLE_DIRECT )
@@ -536,6 +548,7 @@ BYTE WriteControllerPak( const int iControl, LPBYTE Command )
 			rPak->fLastData = (*Data) ? true : false;
 		}
 
+end_rumble:		// added so after xinput controller rumbles, gets here --tecnicors
 		Data[32] = DataCRC( Data, 32 );
 		bReturn = RD_OK;
 		break;

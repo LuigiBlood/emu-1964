@@ -145,6 +145,7 @@
 				Optimization="3"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="$(DXSDK_DIR)\include\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;NRAGE_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				GeneratePreprocessedFile="0"
 				KeepComments="false"
@@ -173,10 +174,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="unicows.lib odbc32.lib odbccp32.lib dinput8.lib dxguid.lib comctl32.lib"
+				AdditionalDependencies="unicows.lib odbc32.lib odbccp32.lib dinput8.lib dxguid.lib comctl32.lib xinput.lib"
 				OutputFile="..\..\bin\$(ConfigurationName)\plugin\1964Input.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(DXSDK_DIR)\lib\x86\"
 				ProgramDatabaseFile="../obj/1964Input/Release/1964Input.pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -350,6 +352,10 @@
 				RelativePath=".\PakIO.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\XInputController.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -401,6 +407,10 @@
 			</File>
 			<File
 				RelativePath=".\settings.h"
+				>
+			</File>
+			<File
+				RelativePath=".\XInputController.h"
 				>
 			</File>
 		</Filter>

@@ -373,10 +373,23 @@ EXPORT void CALL InitiateControllers (CONTROL_INFO ControlInfo)
 		LoadShortcutsFromResource(false);
 	}
 
+	for( int i = 0; i < 4; i++)	// initiate xinput controller and plug then if connected --tecnicors
+	{
+		InitiateXInputController( &g_pcControllers[i].xiController, i );
+		if( g_pcControllers[i].xiController.bConnected )
+		{
+			g_pcControllers[i].fPlugged = true;
+			g_pcControllers[i].fGamePad = true;
+		}
+	}	// END
+
 	// Init: Find force-feedback devices and init 
 	for( int i = 3; i >= 0; i-- )
 	{
 		DebugWriteA("Controller %d: ", i+1);
+		if( g_pcControllers[i].xiController.bConnected )	// if xinput connected, we don't need other config --tecnicors
+			continue;
+
 		if( g_pcControllers[i].fPlugged )
 		{
 			// Search for right Controller
@@ -438,6 +451,9 @@ EXPORT void CALL InitiateControllers (CONTROL_INFO ControlInfo)
 EXPORT void CALL RomOpen (void)
 {
 	DebugWriteA("CALLED: RomOpen\n");
+
+	XInputEnable( TRUE );	// enables xinput --tecnicors
+
 	if( !g_strEmuInfo.fInitialisedPlugin )
 	{
 		ErrorMessage(IDS_ERR_NOINIT, 0, false);
@@ -462,6 +478,8 @@ EXPORT void CALL RomOpen (void)
 EXPORT void CALL RomClosed(void)
 {
 	int i;
+
+	XInputEnable( FALSE );	// disables xinput --tecnicors
 
 	DebugWriteA("CALLED: RomClosed\n");
 	EnterCriticalSection( &g_critical );
@@ -516,7 +534,10 @@ EXPORT void CALL GetKeys(int Control, BUTTONS * Keys )
 				GetDeviceDatas();
 				CheckShortcuts();
 			}
-			GetNControllerInput( Control, &Keys->Value );
+			if( g_pcControllers[Control].xiController.bConnected )	// reads the xinput controller keys, if connected --tecnicors
+				GetXInputControllerKeys( &g_pcControllers[Control].xiController, &Keys->Value );
+			else
+				GetNControllerInput( Control, &Keys->Value );
 		}
 		LeaveCriticalSection( &g_critical );
 	}
@@ -651,7 +672,10 @@ EXPORT void CALL ReadController( int Control, BYTE * Command )
 				GetDeviceDatas();
 				CheckShortcuts();
 			}
-			GetNControllerInput( Control, (DWORD*)&Command[3] );
+			if( g_pcControllers[Control].xiController.bConnected )	// reads xinput controller kesy, if connected --tecnicors
+				GetXInputControllerKeys( &g_pcControllers[Control].xiController, (LPDWORD)&Command[3] );
+			else
+				GetNControllerInput( Control, (DWORD*)&Command[3] );
 		}
 		break;
 		
