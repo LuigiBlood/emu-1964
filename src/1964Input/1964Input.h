@@ -30,7 +30,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //General Plugin
 
-#define	STRING_PLUGINNAME "1964 Input Plugin"
+#define	STRING_PLUGINNAME "N-Rage Input Plugin V2(1964 Input)"
 
 #define TIMER_MESSAGEWINDOW	123
 

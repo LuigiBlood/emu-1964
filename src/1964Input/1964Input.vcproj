@@ -362,6 +362,10 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath=".\1964Input.h"
+				>
+			</File>
+			<File
 				RelativePath=".\commonIncludes.h"
 				>
 			</File>
@@ -395,10 +399,6 @@
 			</File>
 			<File
 				RelativePath="International.h"
-				>
-			</File>
-			<File
-				RelativePath="NRagePluginV2.h"
 				>
 			</File>
 			<File
