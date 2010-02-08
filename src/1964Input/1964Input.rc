@@ -821,12 +821,12 @@ BEGIN
     IDS_C_BUTTON            "Button "
     IDS_C_WHEEL             "Wheel"
     IDS_C_UNKNOWN           "???"
-    IDS_DLG_ABOUT           "Help us translate 1964 Input Plugin into your language!"
+    IDS_DLG_ABOUT           "Help us translate N-Rage Input Plugin V2(1964 Input) into your language!"
 END
 
 STRINGTABLE 
 BEGIN
-    IDS_DLG_ABOUT_TITLE     "About 1964 Input Plugin"
+    IDS_DLG_ABOUT_TITLE     "About N-Rage Input Plugin V2(1964 Input)"
     IDS_ERR_NOINIT          "Plugin didn't get initialized!"
     IDS_POP_MOUSEUNLOCKED   "Mouse Unlocked"
     IDS_POP_MOUSELOCKED     "Mouse Locked"
