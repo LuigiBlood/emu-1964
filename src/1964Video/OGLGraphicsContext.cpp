@@ -154,7 +154,7 @@ bool COGLGraphicsContext::Initialize(HWND hWnd, HWND hWndStatus, uint32 dwWidth,
 
 	InitState();
 	InitOGLExtension();
-	sprintf(m_strDeviceStats, "%s - %s : %s", m_pVendorStr, m_pRenderStr, m_pVersionStr);
+	sprintf(m_strDeviceStats, "%.60s - %.128s : %.60s", m_pVendorStr, m_pRenderStr, m_pVersionStr);
 	TRACE0(m_strDeviceStats);
 	SetWindowText(m_hWndStatus, m_strDeviceStats);
 

@@ -463,98 +463,62 @@ void EnhanceTexture(TxtrCacheEntry *pEntry)
 	{
 		if( pSurfaceHandler->StartUpdate(&destInfo))
 		{
-			if( options.textureEnhancement == TEXTURE_2XSAI_ENHANCEMENT )
-			{
-				if( pEntry->pTexture->GetPixelSize() == 4 )
-					Super2xSaI_32((uint32*)(srcInfo.lpSurface),(uint32*)(destInfo.lpSurface), nWidth, realheight, nWidth);
-				else
-					Super2xSaI_16((uint16*)(srcInfo.lpSurface),(uint16*)(destInfo.lpSurface), nWidth, realheight, nWidth);
-			}
-			else if( options.textureEnhancement == TEXTURE_HQ2X_ENHANCEMENT )
-			{
-				if( pEntry->pTexture->GetPixelSize() == 4 )
-				{
-					hq2x_init(32);
-					hq2x_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-				}
-				else
-				{
-					hq2x_init(16);
-					hq2x_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-				}
-			}
-			else if( options.textureEnhancement == TEXTURE_HQ2XS_ENHANCEMENT )
-			{
-				if( pEntry->pTexture->GetPixelSize() == 4 )
-				{
-					hq2x_init(32);
-					hq2xS_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-				}
-				else
-				{
-					hq2x_init(16);
-					hq2xS_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-				}
-			}
-			else if( options.textureEnhancement == TEXTURE_LQ2X_ENHANCEMENT )
-			{
-				if( pEntry->pTexture->GetPixelSize() == 4 )
-				{
-					lq2x_init(32);
-					lq2x_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-				}
-				else
-				{
-					lq2x_init(16);
-					lq2x_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-				}
-			}
-			else if( options.textureEnhancement == TEXTURE_LQ2XS_ENHANCEMENT )
-			{
-				if( pEntry->pTexture->GetPixelSize() == 4 )
-				{
-					lq2x_init(32);
-					lq2xS_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-				}
-				else
-				{
-					lq2x_init(16);
-					lq2xS_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-				}
-			}
-			else if( options.textureEnhancement == TEXTURE_2X_ENHANCEMENT )
-			{
-				if( pEntry->pTexture->GetPixelSize() == 4 )
-				{
-					//lq2x_init(32);
-					Texture2x_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-				}
-				else
-				{
-					//lq2x_init(16);
-					Texture2x_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-				}
-			}
+			bool pixelSize4;
+			if(pEntry->pTexture->GetPixelSize() == 4)
+				pixelSize4 = true;
+			else
+				pixelSize4 = false;
 
-			else if( options.textureEnhancement == TEXTURE_HQ4X_ENHANCEMENT )
+			switch(options.textureEnhancement)
 			{
-				if( pEntry->pTexture->GetPixelSize() == 4 )
-				{
+				case TEXTURE_2XSAI_ENHANCEMENT:
+					if(pixelSize4)
+						Super2xSaI_32((uint32*)(srcInfo.lpSurface),(uint32*)(destInfo.lpSurface), nWidth, realheight, nWidth);
+					else
+						Super2xSaI_16((uint16*)(srcInfo.lpSurface),(uint16*)(destInfo.lpSurface), nWidth, realheight, nWidth);
+					break;
+				case TEXTURE_HQ2X_ENHANCEMENT:
+					if(pixelSize4)
+						hq2x_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					else
+						hq2x_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					break;
+				case TEXTURE_HQ2XS_ENHANCEMENT:
+					if(pixelSize4)
+						hq2xS_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					else
+						hq2xS_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					break;
+				case TEXTURE_LQ2X_ENHANCEMENT:
+					if(pixelSize4)
+						lq2x_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					else
+						lq2x_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					break;
+				case TEXTURE_LQ2XS_ENHANCEMENT:
+					if(pixelSize4)
+						lq2xS_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					else
+						lq2xS_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					break;
+				case TEXTURE_2X_ENHANCEMENT:
+					if(pixelSize4)
+						Texture2x_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					else
+						Texture2x_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					break;
+				case TEXTURE_HQ4X_ENHANCEMENT:
 					hq4x_InitLUTs();
-					hq4x_32((uint8*)(srcInfo.lpSurface), (uint8*)(destInfo.lpSurface), realwidth, realheight, nWidth, destInfo.lPitch);
-				}
-				else
-				{
-					hq4x_InitLUTs();
-					hq4x_16((uint8*)(srcInfo.lpSurface), (uint8*)(destInfo.lpSurface), realwidth, realheight, nWidth, destInfo.lPitch);
-				}
-			}
-			else 
-			{
-				if( pEntry->pTexture->GetPixelSize() == 4 )
-					Texture2x_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-				else
-					Texture2x_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					if(pixelSize4)
+						hq4x_32((uint8*)(srcInfo.lpSurface), (uint8*)(destInfo.lpSurface), realwidth, realheight, nWidth, destInfo.lPitch);
+					else
+						hq4x_16((uint8*)(srcInfo.lpSurface), (uint8*)(destInfo.lpSurface), realwidth, realheight, nWidth, destInfo.lPitch);
+					break;
+				default:
+					if(pixelSize4)
+						Texture2x_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					else
+						Texture2x_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
 			}
 
 			if( options.textureEnhancementControl >= TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_1 )
@@ -681,8 +645,6 @@ void MirrorTexture(uint32 dwTile, TxtrCacheEntry *pEntry)
 						pSurfaceHandler->EndUpdate(&destInfo);
 					}
 					
-					// fix me, there should be a flag to tell that it is a mirrored texture handler
-					// not the original texture handlers, so all texture coordinate should be divided by 2
 					pSurfaceHandler->SetOthersVariables();
 				}
 
@@ -829,6 +791,7 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 			strcat(texturefilename, "\\");
 			// scan detected subfolder for hires textures (recursive call)
 			FindAllTexturesFromFolder(texturefilename, infos, extraCheck, bRecursive, bCacheTextures, false);
+			continue;
 		}
 
 		// well, the current file is actually no file (probably a directory & recursive scanning is not enabled)

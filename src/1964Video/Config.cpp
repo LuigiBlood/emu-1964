@@ -802,7 +802,7 @@ BOOL InitConfiguration(void)
 	if (!ReadIniFile())
 		{
 			ErrorMsg("Unable to read ini file from disk");
-		WriteIniFile();
+			WriteIniFile();
 			return FALSE;
 		}
 
@@ -1876,9 +1876,20 @@ char * left(char * src, int nchars)
 
 char * right(char *src, int nchars)
 {
-	static char dst[300];			// BUGFIX (STRMNNRM)
-	strncpy(dst, src + strlen(src) - nchars, nchars);
-	dst[nchars]=0;
+	static char dst[300];
+
+	int srclen = strlen(src);
+	if (nchars >= srclen)
+	{
+		strcpy(dst, src);
+	}
+	else
+	{
+		strncpy(dst, src + srclen - nchars, nchars);
+		dst[nchars]=0;
+	}
+	
+	
 	return dst;
 }
 

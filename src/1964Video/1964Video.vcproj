@@ -52,6 +52,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="false"
+				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\Microsoft DirectX SDK (August 2009)\Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;DIRECTX8;_CRT_SECURE_NO_WARNINGS"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="2"
@@ -64,6 +65,7 @@
 				ProgramDataBaseFileName="../obj/1964Video/Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
 				CallingConvention="0"
 			/>
