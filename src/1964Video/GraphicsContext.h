@@ -96,7 +96,7 @@ protected:
 	DEVMODEA			m_DMsaved;
 #endif
 	
-    char				m_strDeviceStats[90];
+    char				m_strDeviceStats[256];
 
 	virtual ~CGraphicsContext();
 	CGraphicsContext();

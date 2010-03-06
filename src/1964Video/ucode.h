@@ -1057,7 +1057,7 @@ UcodeMap ucodeMap9 =
 
 //uCode 10 - unknown
 //Games: Conker
-//FIX ME This causes rendering problems 
+//FIX ME This causes rendering problems for unlown resasons
 UcodeMap ucodeMap10 =
 {
 	RSP_GBI1_SpNoop,  RSP_Vtx_Conker,	 RSP_GBI1_ModifyVtx, RSP_GBI2_CullDL,

@@ -747,6 +747,7 @@ static void lq2xS_32_def(uint32* dst0, uint32* dst1, const uint32* src0, const u
 }
 void lq2x_16(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height)
 {
+	interp_set(16);
 	uint16 *dst0 = (uint16 *)dstPtr;
 	uint16 *dst1 = dst0 + (dstPitch >> 1);
 
@@ -776,6 +777,7 @@ void lq2x_16(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int
 
 void lq2xS_16(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height)
 {
+   interp_set(16);
    uint16 *dst0 = (uint16 *)dstPtr;
    uint16 *dst1 = dst0 + (dstPitch >> 1);
 
@@ -807,6 +809,7 @@ void lq2xS_16(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, in
 
 void lq2x_32(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height)
 {
+	interp_set(32);
 	uint32 *dst0 = (uint32 *)dstPtr;
 	uint32 *dst1 = dst0 + (dstPitch >> 2);
 
@@ -835,6 +838,7 @@ void lq2x_32(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int
 
 void lq2xS_32(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height)
 {
+   interp_set(32);
    uint32 *dst0 = (uint32 *)dstPtr;
    uint32 *dst1 = dst0 + (dstPitch >> 2);
 
@@ -862,9 +866,4 @@ void lq2xS_32(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, in
    dst0 += dstPitch >> 1;
    dst1 += dstPitch >> 1;
    lq2xS_32_def(dst0, dst1, src0, src1, src1, width);
-}
-
-void lq2x_init(unsigned bits_per_pixel)
-{
-	interp_set(bits_per_pixel);
 }
