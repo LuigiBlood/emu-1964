@@ -701,7 +701,7 @@ void ConvertCI4_RGBA16(CTexture *pTexture, const TxtrInfo &tinfo)
 				nFiddle = 0x7;
 
 
-			uint32 * pDst = (uint32 *)((uint8 *)dInfo.lpSurface + y * dInfo.lPitch);
+			
 
 			uint32 dwByteOffset = ((y+tinfo.TopToLoad) * tinfo.Pitch);
             if (tinfo.WidthToLoad == 1)
@@ -1235,7 +1235,9 @@ void Convert4b(CTexture *pTexture, const TxtrInfo &tinfo)
 			nFiddle = ( y&1 )? 0x4 : 0;
 		}
 
+		uint32 * pDst = (uint32 *)((uint8 *)dInfo.lpSurface + y * dInfo.lPitch);
 		int idx = tinfo.tileNo>=0 ? tile.dwLine*8*y : ((y+tinfo.TopToLoad) * tinfo.Pitch) + (tinfo.LeftToLoad / 2);
+
         if (tinfo.WidthToLoad == 1)
         {
             // corner case
