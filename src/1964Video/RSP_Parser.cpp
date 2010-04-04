@@ -374,15 +374,7 @@ void RDP_SetUcodeMap(int ucode)
 		break;
 	case 3:	// S2DEX GBI2
 		break;
-	case 4:
-		memcpy( &LoadedUcodeMap, &ucodeMap0, sizeof(UcodeMap));
-		LoadedUcodeMap[4]=RSP_Vtx_WRUS;
-		LoadedUcodeMap[0xb1]=RSP_GBI1_Tri2;
-		//LoadedUcodeMap[9]=RSP_GBI1_Sprite2DBase;
-		//LoadedUcodeMap[0xaf]=RSP_GBI1_LoadUCode;
-		//LoadedUcodeMap[0xb0]=RSP_GBI1_BranchZ;
-		//LoadedUcodeMap[0xb2]=RSP_GBI1_ModifyVtx;
-		status.bUseModifiedUcodeMap = true;
+	case 4: // Wave racer
 		break;
 	case 5:	// F3DEX GBI2
 		break;

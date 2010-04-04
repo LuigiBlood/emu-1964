@@ -626,7 +626,7 @@ UcodeMap ucodeMap3=
 UcodeMap ucodeMap4=
 {
 	RSP_GBI1_SpNoop,   RSP_GBI0_Mtx,		  RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
-	RSP_GBI1_Vtx,	   RSP_GBI1_Reserved,	  RSP_GBI0_DL,		 RSP_GBI1_Reserved,
+	RSP_Vtx_WRUS,	   RSP_GBI1_Reserved,	  RSP_GBI0_DL,		 RSP_GBI1_Reserved,
 	RSP_GBI1_Reserved, RSP_GBI1_Sprite2DBase, RSP_RDP_Nothing,	 RSP_RDP_Nothing,
 	RSP_RDP_Nothing,   RSP_RDP_Nothing,		  RSP_RDP_Nothing,	 RSP_RDP_Nothing,     
 	//10
