@@ -478,7 +478,6 @@ void RSP_DL_In_MEM_DKR(Gfx *gfx)
 		gDlistStack[gDlistStackPointer].countdown = (((gfx->words.w0)>>16)&0xFF);
 	}
 }
-
 uint16 ConvertYUVtoR5G5B5X1(int y, int u, int v)
 {
 	float r = y + (1.370705f * (v-128));
@@ -708,6 +707,9 @@ uint32 dwPDCIAddr = 0;
 void ProcessVertexDataPD(uint32 dwAddr, uint32 dwV0, uint32 dwNum);
 void RSP_Vtx_PD(Gfx *gfx)
 {
+	
+	
+
 	SP_Timing(RSP_GBI0_Vtx);
 
 	uint32 dwAddr = RSPSegmentAddr((gfx->words.w1));
@@ -848,8 +850,8 @@ void RSP_Tri4_Conker(Gfx *gfx)
 			}
 		}
 
-		w0	= *(uint32 *)(g_pRDRAMu8 + dwPC+0);
-		w1	= *(uint32 *)(g_pRDRAMu8 + dwPC+4);
+		w0			= *(uint32 *)(g_pRDRAMu8 + dwPC+0);
+		w1			= *(uint32 *)(g_pRDRAMu8 + dwPC+4);
 		dwPC += 8;
 
 #ifdef _DEBUG
@@ -1639,18 +1641,18 @@ void DLParser_RDPHalf_1_0xb4_GoldenEye(Gfx *gfx)
 		CRender::g_pRender->SetCombinerAndBlender();
 
 		uint32 dwPC = gDlistStack[gDlistStackPointer].pc;		// This points to the next instruction
-		uint32 * dwCmd = (uint32 *)(g_pRDRAMu8 + dwPC+8);
+
 		//PD_LoadMatrix_0xb4(dwPC + 8*16 - 8);
 
-		uint32 dw1 = *dwCmd*0+4;
-		uint32 dw2 = *dwCmd*1+4;
-		uint32 dw3 = *dwCmd*2+4;
-		uint32 dw4 = *dwCmd*3+4;
-		uint32 dw5 = *dwCmd*4+4;
-		uint32 dw6 = *dwCmd*5+4;
-		uint32 dw7 = *dwCmd*6+4;
-		uint32 dw8 = *dwCmd*7+4;
-		uint32 dw9 = *dwCmd*8+4;
+		uint32 dw1 = *(uint32 *)(g_pRDRAMu8 + dwPC+8*0+4);
+		uint32 dw2 = *(uint32 *)(g_pRDRAMu8 + dwPC+8*1+4);
+		uint32 dw3 = *(uint32 *)(g_pRDRAMu8 + dwPC+8*2+4);
+		uint32 dw4 = *(uint32 *)(g_pRDRAMu8 + dwPC+8*3+4);
+		uint32 dw5 = *(uint32 *)(g_pRDRAMu8 + dwPC+8*4+4);
+		uint32 dw6 = *(uint32 *)(g_pRDRAMu8 + dwPC+8*5+4);
+		uint32 dw7 = *(uint32 *)(g_pRDRAMu8 + dwPC+8*6+4);
+		uint32 dw8 = *(uint32 *)(g_pRDRAMu8 + dwPC+8*7+4);
+		uint32 dw9 = *(uint32 *)(g_pRDRAMu8 + dwPC+8*8+4);
 
 		uint32 r = (dw8>>16)&0xFF;
 		uint32 g = (dw8    )&0xFF;
@@ -1732,16 +1734,15 @@ void DLParser_RSP_Last_Legion_0x00(Gfx *gfx)
 	if( (gfx->words.w0) == 0 && (gfx->words.w1) )
 	{
 		uint32 newaddr = RSPSegmentAddr((gfx->words.w1));
-		uint32 * dwCmd = (uint32 *)(g_pRDRAMu8 + newaddr+8);
 		if( newaddr >= g_dwRamSize )
 		{
 			RDP_GFX_PopDL();
 			return;
 		}
 
-		uint32 dw1 = *dwCmd*0+4;
-		uint32 pc1 = *dwCmd*1+4;
-		uint32 pc2 = *dwCmd*4+4;
+		uint32 dw1 = *(uint32 *)(g_pRDRAMu8 + newaddr+8*0+4);
+		uint32 pc1 = *(uint32 *)(g_pRDRAMu8 + newaddr+8*1+4);
+		uint32 pc2 = *(uint32 *)(g_pRDRAMu8 + newaddr+8*4+4);
 		pc1 = RSPSegmentAddr(pc1);
 		pc2 = RSPSegmentAddr(pc2);
 
