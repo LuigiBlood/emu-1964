@@ -43,18 +43,11 @@
 
 #include <process.h>
 
-#ifdef DIRECTX8
-#define DIRECTX_VERSION		8
-#else
-#define DIRECTX_VERSION		9
-#endif
-
-#if DIRECTX_VERSION > 8
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <d3d9types.h>
 #include <D3dx9math.h>
-#include <dxerr9.h>
+#include <dxerr.h>
 #define MYLPDIRECT3DTEXTURE			LPDIRECT3DTEXTURE9
 #define MYD3DADAPTER_IDENTIFIER		D3DADAPTER_IDENTIFIER9
 #define MYIDirect3DSurface			IDirect3DSurface9
@@ -67,23 +60,6 @@
 #define MYIDirect3DBaseTexture		IDirect3DBaseTexture9
 #define D3DRS_ZBIAS					D3DRS_DEPTHBIAS
 #define SetVertexShaderConstant		SetVertexShaderConstantF
-#else
-#include <d3d8.h>
-#include <d3dx8.h>
-#include <d3d8types.h>
-#include <D3dx8math.h>
-#define MYLPDIRECT3DTEXTURE			LPDIRECT3DTEXTURE8
-#define MYD3DADAPTER_IDENTIFIER		D3DADAPTER_IDENTIFIER8
-#define MYIDirect3DSurface			IDirect3DSurface8
-#define MYLPDIRECT3DBASETEXTURE		LPDIRECT3DBASETEXTURE8
-#define MYLPDIRECT3DSURFACE			LPDIRECT3DSURFACE8
-#define MYD3DVIEWPORT				D3DVIEWPORT8
-#define MYD3DCAPS					D3DCAPS8
-#define MYLPDIRECT3DDEVICE			LPDIRECT3DDEVICE8
-#define MYLPDIRECT3D				LPDIRECT3D8
-#define MYIDirect3DBaseTexture		IDirect3DBaseTexture8
-#endif
-
 #include <vector>
 
 #ifndef _XBOX

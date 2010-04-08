@@ -213,11 +213,7 @@ public:
 
 	HRESULT SetRenderState(D3DRENDERSTATETYPE State,DWORD Value);
 	HRESULT SetTextureStageState(DWORD Stage,D3DTEXTURESTAGESTATETYPE Type,DWORD Value);
-#if DIRECTX_VERSION == 8
-	HRESULT SetPixelShader(DWORD Handle);
-#else
 	HRESULT SetPixelShader(IDirect3DPixelShader9* pShader);
-#endif
 	HRESULT SetPixelShaderConstant (DWORD Register,float* pfdata);
 	HRESULT SetViewport (MYD3DVIEWPORT* pViewport);
 	HRESULT SetTexture (DWORD Stage,MYIDirect3DBaseTexture* pTexture);
@@ -228,11 +224,7 @@ private:
 	MYLPDIRECT3DDEVICE m_pD3DDev;
 	DWORD m_savedRenderStates[MAX_RENDER_STATE];
 	DWORD m_savedTextureStageStates[8][MAX_TEXTURE_STAGE_STATE];
-#if DIRECTX_VERSION == 8
-	DWORD m_savedPixelShader;
-#else
 	IDirect3DPixelShader9* m_savedPixelShader;
-#endif
 	DWORD m_savedFVF;
 	float m_savedPixelShaderConstants[MAX_NUM_OF_PIXEL_SHADER_CONSTANT][4];
 	MYD3DVIEWPORT m_savedViewport;

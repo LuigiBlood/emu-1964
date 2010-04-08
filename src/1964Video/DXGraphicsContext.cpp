@@ -22,11 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 MYLPDIRECT3DDEVICE g_pD3DDev = NULL;
 CD3DDevWrapper    gD3DDevWrapper;
 MYD3DCAPS g_D3DDeviceCaps;
-#if DIRECTX_VERSION == 8
-DWORD gVertexShader = 0;
-#else
 LPDIRECT3DVERTEXSHADER9 gVertexShader = NULL;
-#endif
 
 
 #ifdef _XBOX
@@ -391,11 +387,7 @@ bool CDXGraphicsContext::Initialize(HWND hWnd, HWND hWndStatus,
 	Lock();
 
 	  // Create the Direct3D object
-#if DIRECTX_VERSION == 8
-	m_pD3D = Direct3DCreate8( D3D_SDK_VERSION );
-#else
 	m_pD3D = Direct3DCreate9( D3D_SDK_VERSION );
-#endif
 	if( m_pD3D == NULL )
 	{
 		Unlock();
@@ -455,17 +447,10 @@ bool CDXGraphicsContext::Initialize(HWND hWnd, HWND hWndStatus,
 	
 #ifndef _XBOX
 	// Force to use Software T&L
-#if DIRECTX_VERSION == 8
-	if( options.bForceSoftwareTnL )
-		gD3DDevWrapper.SetRenderState(D3DRS_SOFTWAREVERTEXPROCESSING,TRUE);
-	else
-		gD3DDevWrapper.SetRenderState(D3DRS_SOFTWAREVERTEXPROCESSING,FALSE);
-#else
 	if( options.bForceSoftwareTnL )
 		g_pD3DDev->SetSoftwareVertexProcessing(TRUE);
 	else
 		g_pD3DDev->SetSoftwareVertexProcessing(FALSE);
-#endif
 
 	if( g_GraphicsInfo.hStatusBar )
 	{
@@ -507,11 +492,7 @@ void CDXGraphicsContext::InitDeviceParameters()
 
 	// Create Direct3D object
 	MYLPDIRECT3D pD3D;
-#if DIRECTX_VERSION == 8
-	pD3D = Direct3DCreate8( D3D_SDK_VERSION );
-#else
 	pD3D = Direct3DCreate9( D3D_SDK_VERSION );
-#endif
 	if( pD3D == NULL )
 	{
         DisplayD3DErrorMsg( D3DAPPERR_NODIRECT3D, MSGERR_APPMUSTEXIT );
@@ -552,13 +533,8 @@ void CDXGraphicsContext::InitDeviceParameters()
 	// Check FSAA maximum
 	for( m_maxFSAA = 16; m_maxFSAA >= 2; m_maxFSAA-- )
 	{
-#if DIRECTX_VERSION == 8
-		if( SUCCEEDED(pD3D->CheckDeviceMultiSampleType( D3DADAPTER_DEFAULT, 
-			D3DDEVTYPE_HAL , D3DFMT_X8R8G8B8, FALSE, D3DMULTISAMPLE_TYPE(D3DMULTISAMPLE_NONE+m_maxFSAA) ) ) )
-#else
 		if( SUCCEEDED(pD3D->CheckDeviceMultiSampleType( D3DADAPTER_DEFAULT, 
 			D3DDEVTYPE_HAL , D3DFMT_X8R8G8B8, FALSE, D3DMULTISAMPLE_TYPE(D3DMULTISAMPLE_NONE+m_maxFSAA), NULL ) ) )
-#endif
 		{
 			break;
 		}
@@ -747,17 +723,10 @@ HRESULT CDXGraphicsContext::InitializeD3D()
 	m_FSAAIsEnabled = false;
 	if( pDeviceInfo->MultiSampleType != D3DMULTISAMPLE_NONE && m_maxFSAA > 0 )
 	{
-#if DIRECTX_VERSION == 8
-		if( SUCCEEDED(m_pD3D->CheckDeviceMultiSampleType( D3DADAPTER_DEFAULT, 
-			//D3DDEVTYPE_HAL , pAdapterInfo->d3ddmDesktop.Format, 
-			D3DDEVTYPE_HAL , pModeInfo->Format, 
-			m_bWindowed, pDeviceInfo->MultiSampleType ) ) )
-#else
 		if( SUCCEEDED(m_pD3D->CheckDeviceMultiSampleType( D3DADAPTER_DEFAULT, 
 			//D3DDEVTYPE_HAL , pAdapterInfo->d3ddmDesktop.Format, 
 			D3DDEVTYPE_HAL , pModeInfo->Format, 
 			m_bWindowed, pDeviceInfo->MultiSampleType, NULL ) ) )
-#endif
 		{
 			m_FSAAIsEnabled = true;
 			TRACE1("Start with FSAA=%d X", pDeviceInfo->MultiSampleType-D3DMULTISAMPLE_NONE);
@@ -926,11 +895,7 @@ HRESULT CDXGraphicsContext::InitializeD3D()
 		
         // Store render target surface desc
         MYLPDIRECT3DSURFACE pBackBuffer;
-#if DIRECTX_VERSION == 8
-        m_pd3dDevice->GetBackBuffer( 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer );
-#else
         m_pd3dDevice->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer );
-#endif
         pBackBuffer->GetDesc( &m_d3dsdBackBuffer );
         pBackBuffer->Release();
 		
@@ -966,11 +931,7 @@ HRESULT CDXGraphicsContext::InitializeD3D()
 	{
 		if( IsResultGood(g_pD3DDev->CreateDepthStencilSurface(windowSetting.uDisplayWidth, windowSetting.uDisplayHeight, D3DFMT_D16_LOCKABLE, D3DMULTISAMPLE_NONE, &g_pLockableBackBuffer)) && g_pLockableBackBuffer )
 		{
-#if DIRECTX_VERSION == 8
-			g_pD3DDev->SetRenderTarget(NULL, g_pLockableBackBuffer);
-#else
 			g_pD3DDev->SetRenderTarget(0, g_pLockableBackBuffer);
-#endif
 			TRACE0("Created and use lockable depth buffer");
 		}
 		else
@@ -1020,11 +981,7 @@ HRESULT CDXGraphicsContext::ResizeD3DEnvironment()
 	
     // Store render target surface desc
     MYLPDIRECT3DSURFACE pBackBuffer;
-#if DIRECTX_VERSION == 8
-    m_pd3dDevice->GetBackBuffer( 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer );
-#else
     m_pd3dDevice->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer );
-#endif
     pBackBuffer->GetDesc( &m_d3dsdBackBuffer );
     pBackBuffer->Release();
 	
@@ -1071,11 +1028,7 @@ HRESULT CDXGraphicsContext::DoToggleFullscreen()
 	Lock();
 	CRender::GetRender()->CleanUp();
 	CleanUp();
-#if DIRECTX_VERSION == 8
-    m_pD3D = Direct3DCreate8( D3D_SDK_VERSION );
-#else
     m_pD3D = Direct3DCreate9( D3D_SDK_VERSION );
-#endif
     if( m_pD3D == NULL )
 	{
 		TRACE0("Error to create m_pD3D");
@@ -1252,11 +1205,7 @@ HRESULT CDXGraphicsContext::BuildDeviceList()
 		D3DFORMAT      formats[20];
         uint32 dwNumFormats      = 0;
         uint32 dwNumModes        = 0;
-#if DIRECTX_VERSION == 8
-        uint32 dwNumAdapterModes = m_pD3D->GetAdapterModeCount( iAdapter );
-#else
         uint32 dwNumAdapterModes = m_pD3D->GetAdapterModeCount( iAdapter, D3DFMT_X8R8G8B8 );
-#endif
 		
         // Add the adapter's current desktop format to the list of formats
         formats[dwNumFormats++] = pAdapter->d3ddmDesktop.Format;
@@ -1265,11 +1214,7 @@ HRESULT CDXGraphicsContext::BuildDeviceList()
         {
             // Get the display mode attributes
             D3DDISPLAYMODE DisplayMode;
-#if DIRECTX_VERSION == 8
-            m_pD3D->EnumAdapterModes( iAdapter, iMode, &DisplayMode );
-#else
            m_pD3D->EnumAdapterModes( iAdapter, D3DFMT_X8R8G8B8, iMode, &DisplayMode );
-#endif
 			
             // Filter out low-resolution modes
             if( DisplayMode.Width  < 320 || DisplayMode.Height < 200 )
@@ -1362,12 +1307,8 @@ HRESULT CDXGraphicsContext::BuildDeviceList()
                     // This system has a HAL device
                     bHALExists = TRUE;
 					
-#if DIRECTX_VERSION == 8
-                    if( pDevice->d3dCaps.Caps2 & D3DCAPS2_CANRENDERWINDOWED )
-#else
 					// Assume all DirectX9 can render window mode
                     //if( pDevice->d3dCaps.Caps2 & D3DCAPS2_CANRENDERWINDOWED )
-#endif
                     {
                         // HAL can run in a window for some mode
                         bHALIsWindowedCompatible = TRUE;
@@ -1478,11 +1419,7 @@ HRESULT CDXGraphicsContext::BuildDeviceList()
 			
             // Check if the device is compatible with the desktop display mode
             // (which was added initially as formats[0])
-#if DIRECTX_VERSION == 8
-            if( bFormatConfirmed[0] && (pDevice->d3dCaps.Caps2 & D3DCAPS2_CANRENDERWINDOWED) )
-#else
             if( bFormatConfirmed[0] ) //&& (pDevice->d3dCaps.Caps2 & D3DCAPS2_CANRENDERWINDOWED) )
-#endif
             {
                 pDevice->bCanDoWindowed = true;
                 pDevice->bWindowed      = true;
@@ -1818,16 +1755,9 @@ bool CDXGraphicsContext::IsResultGood(HRESULT hr, bool displayError)
 	{
 		if( displayError )
 		{
-#if DIRECTX_VERSION == 8
-			char szError[200+1];
-			D3DXGetErrorString(hr, szError, 200);
-			TRACE1("D3D Error: %s", szError);
-			ErrorMsg(szError);
-#else
-			const char *errmsg = DXGetErrorString9(hr);
+			const char *errmsg = DXGetErrorString(hr);
 			TRACE1("D3D Error: %s", errmsg);
 			//ErrorMsg(errmsg);
-#endif
 		}
 		return false;
 	}
@@ -1889,30 +1819,6 @@ bool CDXGraphicsContext::DrawText(char *str, RECT &rect, int alignment)
 	if( m_hFont && m_pID3DFont )
 	{
 		CRender::GetRender()->m_pColorCombiner->DisableCombiner();
-#if DIRECTX_VERSION == 8
-		m_pID3DFont->Begin();
-		if( alignment == 0 )
-		{
-			m_pID3DFont->DrawText(str, strlen(str), &rect, 
-				DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_NOPREFIX | DT_SINGLELINE,
-				options.FPSColor);
-		}
-		else if( alignment == 1)
-		{
-			// Align to left
-			m_pID3DFont->DrawText(str, strlen(str), &rect, 
-				DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_NOPREFIX | DT_SINGLELINE,
-				options.FPSColor);
-		}
-		else
-		{
-			// Align to left
-			m_pID3DFont->DrawText(str, strlen(str), &rect, 
-				DT_RIGHT | DT_VCENTER | DT_NOCLIP | DT_NOPREFIX | DT_SINGLELINE,
-				options.FPSColor);
-		}
-		m_pID3DFont->End();
-#else
 		if( alignment == 0 )
 		{
 			m_pID3DFont->DrawText(NULL, str, strlen(str), &rect, 
@@ -1933,7 +1839,6 @@ bool CDXGraphicsContext::DrawText(char *str, RECT &rect, int alignment)
 				DT_RIGHT | DT_VCENTER | DT_NOCLIP | DT_NOPREFIX | DT_SINGLELINE,
 				options.FPSColor);
 		}
-#endif
 	}
 #endif
 
@@ -1980,7 +1885,6 @@ HRESULT CD3DDevWrapper::SetTextureStageState(DWORD Stage,D3DTEXTURESTAGESTATETYP
 				}
 				else
 					return S_OK;
-
 				break;
 			default:
 				m_savedTextureStageStates[Stage][Type] = Value;
@@ -1992,21 +1896,6 @@ HRESULT CD3DDevWrapper::SetTextureStageState(DWORD Stage,D3DTEXTURESTAGESTATETYP
 
 	return S_OK;
 }
-#if DIRECTX_VERSION == 8
-HRESULT CD3DDevWrapper::SetPixelShader(DWORD Handle)
-{
-	if( m_pD3DDev != NULL )
-	{
-		//if( m_savedPixelShader != Handle )
-		{
-			m_savedPixelShader = Handle;
-			return m_pD3DDev->SetPixelShader(Handle);
-		}
-	}
-
-	return S_OK;
-}
-#else
 HRESULT CD3DDevWrapper::SetPixelShader(IDirect3DPixelShader9* pShader)
 {
 	if( m_pD3DDev != NULL )
@@ -2020,28 +1909,27 @@ HRESULT CD3DDevWrapper::SetPixelShader(IDirect3DPixelShader9* pShader)
 
 	return S_OK;
 }
-#endif
 
 HRESULT CD3DDevWrapper::SetPixelShaderConstant(DWORD Register, float* pfdata)
 {
 	if( m_pD3DDev != NULL )
 	{
+		//If the shaders were the last shaders to be used ignore the call.
+		if(m_savedPixelShaderConstants[Register][0] != pfdata[0] || m_savedPixelShaderConstants[Register][1] != pfdata[1] ||
+		   m_savedPixelShaderConstants[Register][2] != pfdata[2] || m_savedPixelShaderConstants[Register][3] != pfdata[3] )
 		{
 			m_savedPixelShaderConstants[Register][0] = pfdata[0];
 			m_savedPixelShaderConstants[Register][1] = pfdata[1];
 			m_savedPixelShaderConstants[Register][2] = pfdata[2];
 			m_savedPixelShaderConstants[Register][3] = pfdata[3];
 			
-#if DIRECTX_VERSION == 8
-			return m_pD3DDev->SetPixelShaderConstant(Register,pfdata,1);
-#else
 			return m_pD3DDev->SetPixelShaderConstantF(Register,pfdata,1);
-#endif
 		}
 	}
 
 	return S_OK;
 }
+
 HRESULT CD3DDevWrapper::SetViewport(MYD3DVIEWPORT* pViewport)
 {
 	if( m_pD3DDev != NULL )
@@ -2094,11 +1982,7 @@ HRESULT CD3DDevWrapper::SetFVF(DWORD FVF)
 		//if( m_savedFVF != FVF )
 		{
 			m_savedFVF = FVF;
-#if DIRECTX_VERSION == 8 
-			return m_pD3DDev->SetVertexShader(FVF);
-#else
 			return m_pD3DDev->SetFVF(FVF);
-#endif
 		}
 	}
 
@@ -2113,11 +1997,7 @@ void CD3DDevWrapper::SetD3DDev(MYLPDIRECT3DDEVICE pD3DDev)
 
 void CD3DDevWrapper::Initalize(void)
 {
-#if DIRECTX_VERSION == 8
-	m_savedPixelShader = ~0;
-#else
 	m_savedPixelShader = NULL;
-#endif
 	m_savedFVF = ~0;
 	memset(&m_savedRenderStates, 0xEE, sizeof(m_savedRenderStates));
 	memset(&m_savedPixelShaderConstants, 0xEE, sizeof(m_savedPixelShaderConstants));
