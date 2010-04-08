@@ -85,11 +85,7 @@ bool D3DRender::ClearDeviceObjects()
 
 	if( gVertexShader != NULL )
 	{
-#if DIRECTX_VERSION == 8
-		g_pD3DDev->DeleteVertexShader(gVertexShader);
-#else
 		gVertexShader->Release();
-#endif
 	}
 
 	return true;
@@ -166,13 +162,8 @@ bool D3DRender::InitDeviceObjects()
 		D3DSetMinFilter( i, D3DTEXF_LINEAR ); 
 		D3DSetMagFilter( i, D3DTEXF_LINEAR ); 
 		
-#if DIRECTX_VERSION == 8
-		gD3DDevWrapper.SetTextureStageState(i, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP ); 
-		gD3DDevWrapper.SetTextureStageState(i, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP ); 
-#else
 		g_pD3DDev->SetSamplerState(i, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP ); 
 		g_pD3DDev->SetSamplerState(i, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP ); 
-#endif
 		
 		gD3DDevWrapper.SetTextureStageState( i, D3DTSS_COLORARG1, D3DTA_TEXTURE ); 
 		gD3DDevWrapper.SetTextureStageState( i, D3DTSS_COLORARG2, D3DTA_DIFFUSE ); 
@@ -192,11 +183,7 @@ bool D3DRender::InitDeviceObjects()
 
 	if( gVertexShader != NULL )
 	{
-#if DIRECTX_VERSION == 8
-		g_pD3DDev->DeleteVertexShader(gVertexShader);
-#else
 		gVertexShader->Release();
-#endif
 	}
 
 	if( status.isVertexShaderEnabled )
@@ -207,11 +194,7 @@ bool D3DRender::InitDeviceObjects()
 		}
 	}
 
-#if DIRECTX_VERSION == 8
-	D3DCLIPSTATUS8 clippingstatus;
-#else
 	D3DCLIPSTATUS9 clippingstatus;
-#endif
 	g_pD3DDev->GetClipStatus(&clippingstatus);
 	clippingstatus.ClipUnion = D3DCS_BACK | D3DCS_BOTTOM | D3DCS_FRONT | D3DCS_LEFT | D3DCS_RIGHT | D3DCS_TOP;
 	clippingstatus.ClipIntersection = 0xFFFFFFFF;
@@ -247,14 +230,10 @@ bool D3DRender::RenderFillRect(uint32 dwColor, float depth)
 
 void ApplyZBias(uint32 bias)
 {
-#if DIRECTX_VERSION == 8
-	gD3DDevWrapper.SetRenderState(D3DRS_ZBIAS,bias*d3d_bias_factor);
-#else
 	float f1 = bias > 0 ? -0.002f : 0.0f;
 	float f2 = bias > 0 ? 1.0f : 0.0f;
 	gD3DDevWrapper.SetRenderState(D3DRS_DEPTHBIAS,*(DWORD*)(&f1));
 	gD3DDevWrapper.SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *(DWORD*)(&f2));
-#endif
 }
 void D3DRender::SetZBias(int bias)
 {
@@ -378,45 +357,6 @@ void D3DRender::DrawSimpleRect(LONG nX0, LONG nY0, LONG nX1, LONG nY1, uint32 dw
 	g_pD3DDev->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, 4, 2, wIndices, D3DFMT_INDEX16, frv, sizeof(FILLRECTVERTEX));
 }
 
-#if DIRECTX_VERSION == 8
-void D3DRender::SetTextureUFlag(TextureUVFlag dwFlag, uint32 tile)
-{
-	TileUFlags[tile] = dwFlag;
-	if( gRDP.otherMode.cycle_type  >= CYCLE_TYPE_COPY )
-	{
-		gD3DDevWrapper.SetTextureStageState(0, D3DTSS_ADDRESSU, DirectXUVFlagMaps[dwFlag].realFlag );
-	}
-	else
-	{
-		for( int i=0; i<m_curCombineInfo.nStages; i++ )
-		{
-			if( m_curCombineInfo.stages[i].dwTexture == tile-gRSP.curTile )
-			{
-				gD3DDevWrapper.SetTextureStageState(i, D3DTSS_ADDRESSU, DirectXUVFlagMaps[dwFlag].realFlag );
-			}
-		}
-	}
-}
-
-void D3DRender::SetTextureVFlag(TextureUVFlag dwFlag, uint32 tile)
-{
-	TileVFlags[tile] = dwFlag;
-	if( gRDP.otherMode.cycle_type  >= CYCLE_TYPE_COPY )
-	{
-		gD3DDevWrapper.SetTextureStageState(0, D3DTSS_ADDRESSV, DirectXUVFlagMaps[dwFlag].realFlag );
-	}
-	else
-	{
-		for( int i=0; i<m_curCombineInfo.nStages; i++ )
-		{
-			if( m_curCombineInfo.stages[i].dwTexture == tile-gRSP.curTile )
-			{
-				gD3DDevWrapper.SetTextureStageState(i, D3DTSS_ADDRESSV, DirectXUVFlagMaps[dwFlag].realFlag );
-			}
-		}
-	}
-}
-#else
 void D3DRender::SetTextureUFlag(TextureUVFlag dwFlag, uint32 tile)
 {
 	TileUFlags[tile] = dwFlag;
@@ -454,7 +394,6 @@ void D3DRender::SetTextureVFlag(TextureUVFlag dwFlag, uint32 tile)
 		}
 	}
 }
-#endif
 
 void D3DRender::SetAddressUAllStages(uint32 dwTile, TextureUVFlag dwFlag)
 {
@@ -828,11 +767,7 @@ void D3DRender::CaptureScreen(char *filename)
 {
 #ifndef _XBOX
 	MYLPDIRECT3DSURFACE surface;
-#if DIRECTX_VERSION == 8
-	g_pD3DDev->GetRenderTarget(&surface);
-#else
 	g_pD3DDev->GetRenderTarget(0,&surface);
-#endif
 	((CDXGraphicsContext*)CGraphicsContext::g_pGraphicsContext)->SaveSurfaceToFile(filename, surface, false);
 	//D3DXSaveSurfaceToFile(filename,D3DXIFF_BMP,surface,NULL,NULL);
 	surface->Release();
@@ -864,31 +799,6 @@ void D3DRender::SetCullMode(bool bCullFront, bool bCullBack)
 	*/
 }
 
-#if DIRECTX_VERSION == 8
-void D3DRender::D3DSetMinFilter(uint32 dwStage, uint32 filter)
-{
-	if( filter == D3DTEXF_LINEAR && options.DirectXAnisotropyValue > 0 )
-	{
-		// Use Anisotropy filter instead of LINEAR filter
-		gD3DDevWrapper.SetTextureStageState( dwStage, D3DTSS_MINFILTER, D3DTEXF_ANISOTROPIC  );
-		gD3DDevWrapper.SetTextureStageState( dwStage, D3DTSS_MAXANISOTROPY, min(options.DirectXAnisotropyValue, (uint32)CGraphicsContext::m_maxAnisotropy) );
-	}
-	else
-		gD3DDevWrapper.SetTextureStageState( dwStage, D3DTSS_MINFILTER, filter );
-}
-
-void D3DRender::D3DSetMagFilter(uint32 dwStage, uint32 filter)
-{
-	if( filter == D3DTEXF_LINEAR && options.DirectXAnisotropyValue > 0 )
-	{
-		// Use Anisotropy filter instead of LINEAR filter
-		gD3DDevWrapper.SetTextureStageState( dwStage, D3DTSS_MAGFILTER, D3DTEXF_ANISOTROPIC  );
-		gD3DDevWrapper.SetTextureStageState( dwStage, D3DTSS_MAXANISOTROPY, min(options.DirectXAnisotropyValue, (uint32)CGraphicsContext::m_maxAnisotropy) );
-	}
-	else
-		gD3DDevWrapper.SetTextureStageState( dwStage, D3DTSS_MAGFILTER, filter );
-}
-#else
 void D3DRender::D3DSetMinFilter(uint32 dwStage, uint32 filter)
 {
 	if( filter == D3DTEXF_LINEAR && options.DirectXAnisotropyValue > 0 )
@@ -912,5 +822,3 @@ void D3DRender::D3DSetMagFilter(uint32 dwStage, uint32 filter)
 	else
 		g_pD3DDev->SetSamplerState( dwStage, D3DSAMP_MAGFILTER, filter );
 }
-#endif
-

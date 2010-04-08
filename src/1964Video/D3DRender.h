@@ -29,11 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 class ofstream;
 extern MYLPDIRECT3DDEVICE g_pD3DDev;
 extern CD3DDevWrapper    gD3DDevWrapper;
-#if DIRECTX_VERSION == 8
-extern DWORD gVertexShader;
-#else
 extern LPDIRECT3DVERTEXSHADER9 gVertexShader;
-#endif
 
 class D3DRender : public CRender
 {

@@ -35,9 +35,7 @@ typedef struct {
 #endif
 	uint32 dwShaderID;
 	char *pShaderText;
-#if DIRECTX_VERSION > 8
 	IDirect3DPixelShader9* pShader;
-#endif
 } PixelShaderEntry;
 
 class CDirectXPixelShaderCombiner : public CDirectXColorCombiner

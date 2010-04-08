@@ -793,7 +793,7 @@ LRESULT APIENTRY DebuggerDialog(HWND hDlg, unsigned message, LONG wParam, LONG l
 			DumpInfo(thingToDump);
 			break;
 		case IDC_UPDATE_SCREEN:
-			CGraphicsContext::Get()->UpdateFrame();
+				CGraphicsContext::Get()->UpdateFrame();
 			break;
 		case IDC_CLEAR_BREAKPOINT:
 			break;

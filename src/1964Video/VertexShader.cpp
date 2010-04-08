@@ -452,18 +452,6 @@ char *shaderstr3 =
 
 bool InitVertexShader()
 {
-#if DIRECTX_VERSION == 8
-	// shader decl
-	DWORD decl[] =
-	{
-		D3DVSD_STREAM(0),
-		D3DVSD_REG(0, D3DVSDT_FLOAT3 ), // D3DVSDE_POSITION
-		D3DVSD_REG(1, D3DVSDT_FLOAT3 ), // D3DVSDE_NORMAL 
-		D3DVSD_REG(2, D3DVSDT_D3DCOLOR ), // D3DVSDE_DIFFUSE 
-		D3DVSD_REG(3, D3DVSDT_FLOAT2 ), // D3DVSDE_TEXCOORD0 
-		D3DVSD_END()
-	};
-#else
 	D3DVERTEXELEMENT9 decl[] = 
 	{
 		{ 0, 0,  D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
@@ -472,7 +460,6 @@ bool InitVertexShader()
 		{ 0, 28, D3DDECLTYPE_FLOAT2,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
 		D3DDECL_END()
 	};
-#endif
 
 	LPD3DXBUFFER pCode;
 	LPD3DXBUFFER ppCompilationErrors;
@@ -480,35 +467,21 @@ bool InitVertexShader()
 	HRESULT res;
 
 #ifdef _DEBUG
-#if DIRECTX_VERSION == 8
-	LPD3DXBUFFER ppConstants;
-	res = D3DXAssembleShaderFromFile("shader.vsh", D3DXASM_DEBUG, &ppConstants, &pCode, &ppCompilationErrors);
-#else
 	res = D3DXAssembleShaderFromFileA("D:\\n64developing\\RiceVideo\\shaderdx9.vsh", NULL, NULL, D3DXSHADER_DEBUG, &pCode, &ppCompilationErrors);
 	//res = D3DXAssembleShaderFromFileA("D:\\n64developing\\RiceVideo\\shaderdx9-2.vsh", NULL, NULL, D3DXSHADER_DEBUG, &pCode, &ppCompilationErrors);
-#endif
-#else
-#if DIRECTX_VERSION == 8
-	LPD3DXBUFFER ppConstants;
-	res = D3DXAssembleShader(shaderstr, strlen(shaderstr), 0, &ppConstants, &pCode, &ppCompilationErrors);
 #else
 	res = D3DXAssembleShader(shaderstr2, strlen(shaderstr2), NULL, NULL, D3DXSHADER_DEBUG, &pCode, &ppCompilationErrors);
-#endif
 #endif
 
 
 	if( CDXGraphicsContext::IsResultGood(res,true) )
 	{
-#if DIRECTX_VERSION == 8
-		res = g_pD3DDev->CreateVertexShader( decl, (DWORD*)pCode->GetBufferPointer(), &gVertexShader, 0 );
-#else
 		res = g_pD3DDev->CreateVertexShader( (DWORD*)pCode->GetBufferPointer(), &gVertexShader );
 		//FILE *fp = fopen("D:\\n64developing\\RiceVideo\\shaderdx9.vso","rb");
 		//BYTE buf[4000];
 		//int num = fread(buf, 1, 4000, fp);
 		//res = g_pD3DDev->CreateVertexShader( (DWORD*)buf, &gVertexShader );
 		//fclose(fp);
-#endif
 		pCode->Release();
 
 		if( !CDXGraphicsContext::IsResultGood(res,true) )

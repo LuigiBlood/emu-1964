@@ -267,11 +267,7 @@ CDirectXTexture *CDirectXTexture::DuplicateTexture()
 		MYLPDIRECT3DSURFACE pDst;
 		(MYLPDIRECT3DTEXTURE(GetTexture()))->GetSurfaceLevel(0,&pSrc);
 		(MYLPDIRECT3DTEXTURE(dsttxtr->GetTexture()))->GetSurfaceLevel(0,&pDst);
-#if DIRECTX_VERSION == 8
-		g_pD3DDev->CopyRects(pSrc,NULL,0,pDst,NULL);
-#else
 		g_pD3DDev->UpdateSurface(pSrc,NULL,pDst,NULL);
-#endif
 		pSrc->Release();
 		pDst->Release();
 	}
@@ -301,11 +297,7 @@ void CDirectXTexture::RestoreAlphaChannel(void)
 			(MYLPDIRECT3DTEXTURE(GetTexture()))->GetSurfaceLevel(0,&pDst);
 			(MYLPDIRECT3DTEXTURE(duptxtr->GetTexture()))->GetSurfaceLevel(0,&pSrc);
 			HRESULT res;
-#if DIRECTX_VERSION == 8
-			res = g_pD3DDev->CopyRects(pSrc,NULL,0,pDst,NULL);
-#else
 			res = g_pD3DDev->UpdateSurface(pSrc,NULL,pDst,NULL);
-#endif
 			//res = D3DXLoadSurfaceFromSurface(pDst,NULL,NULL,pSrc,NULL,NULL,D3DX_FILTER_POINT,0xFF000000);
 			pSrc->Release();
 			pDst->Release();

@@ -38,12 +38,7 @@ void DXFrameBufferManager::CopyBackBufferToRenderTexture(int idx, RecentCIInfo &
 	if( pSavedBuffer != NULL )
 	{
 		MYLPDIRECT3DSURFACE pBackBufferToSave = NULL;
-#if DIRECTX_VERSION == 8
-
-		g_pD3DDev->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pBackBufferToSave);
-#else
 		g_pD3DDev->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBufferToSave);
-#endif
 
 		if( pBackBufferToSave )
 		{
@@ -69,11 +64,7 @@ void DXFrameBufferManager::CopyBackBufferToRenderTexture(int idx, RecentCIInfo &
 			{
 				if( pDstRect == NULL )
 				{
-#if DIRECTX_VERSION == 8
-					res = g_pD3DDev->CopyRects(pBackBufferToSave,NULL,0,pSavedBuffer,NULL);
-#else
 					res = g_pD3DDev->UpdateSurface(pBackBufferToSave,NULL,pSavedBuffer,NULL);
-#endif
 				}
 				else
 				{
@@ -82,11 +73,7 @@ void DXFrameBufferManager::CopyBackBufferToRenderTexture(int idx, RecentCIInfo &
 					RECT srcr = { uint32(pDstRect->left*scaleX), uint32(pDstRect->top*scaleY),
 						uint32(pDstRect->right*scaleX), uint32(pDstRect->bottom*scaleY) };
 					POINT srcp = {uint32(pDstRect->left*scaleX), uint32(pDstRect->top*scaleY)};
-#if DIRECTX_VERSION == 8
-					res = g_pD3DDev->CopyRects(pBackBufferToSave,&srcr,0,pSavedBuffer,&srcp);
-#else
 					res = g_pD3DDev->UpdateSurface(pBackBufferToSave,&srcr,pSavedBuffer,&srcp);
-#endif
 				}
 			}
 
@@ -122,13 +109,8 @@ void DXFrameBufferManager::CopyD3DSurfaceToRDRAM(uint32 addr, uint32 fmt, uint32
 		D3DSURFACE_DESC desc;
 		//TRACE0("Error, cannot lock the surface");
 		surf->GetDesc(&desc);
-#if DIRECTX_VERSION == 8
-		g_pD3DDev->CreateImageSurface(desc.Width,desc.Height,desc.Format,&surf2);
-		g_pD3DDev->CopyRects(surf,NULL,0,surf2,NULL);
-#else
 		g_pD3DDev->CreateOffscreenPlainSurface(desc.Width,desc.Height,desc.Format,D3DPOOL_DEFAULT, &surf2, NULL);
 		g_pD3DDev->UpdateSurface(surf,NULL,surf2,NULL);
-#endif
 		ZeroMemory( &dlre, sizeof(D3DLOCKED_RECT) );
 		if( !SUCCEEDED(surf2->LockRect(&dlre, NULL, D3DLOCK_READONLY)) )
 		{
@@ -152,11 +134,7 @@ void DXFrameBufferManager::CopyD3DSurfaceToRDRAM(uint32 addr, uint32 fmt, uint32
 void DXFrameBufferManager::StoreBackBufferToRDRAM(uint32 addr, uint32 fmt, uint32 siz, uint32 width, uint32 height, uint32 bufWidth, uint32 bufHeight, uint32 startaddr, uint32 memsize, uint32 pitch, D3DFORMAT surf_fmt)
 {
 	MYIDirect3DSurface *backBuffer = NULL;
-#if DIRECTX_VERSION == 8
-	g_pD3DDev->GetBackBuffer(0,D3DBACKBUFFER_TYPE_MONO, &backBuffer);
-#else
 	g_pD3DDev->GetBackBuffer(0, 0,D3DBACKBUFFER_TYPE_MONO, &backBuffer);
-#endif
 
 	TXTRBUF_DUMP(DebuggerAppendMsg("Copy Back Buffer to N64 RDRAM"););
 

@@ -43,13 +43,7 @@ void D3DRender::LoadTxtrBufFromRDRAM(void)
 	LPD3DXSPRITE d3dSprite = InitSpriteDraw();
 	if( d3dSprite != NULL )
 	{
-#if DIRECTX_VERSION == 8
-		D3DXVECTOR2 scales(1, 1);
-		D3DXVECTOR2	trans(0,0);
-		d3dSprite->Draw(MYLPDIRECT3DTEXTURE(g_textures[0].m_lpsTexturePtr), NULL, &scales, NULL, 0, &trans, 0xFFFFFFFF);
-#else
 		d3dSprite->Draw(MYLPDIRECT3DTEXTURE(g_textures[0].m_lpsTexturePtr), NULL, NULL, NULL, 0xFFFFFFFF);
-#endif
 #ifdef _DEBUG
 		if( pauseAtNext && eventToPause == NEXT_RENDER_TEXTURE )
 		{
@@ -223,11 +217,7 @@ LPD3DXSPRITE D3DRender::InitSpriteDraw(void)
 	HRESULT hr = D3DXCreateSprite(g_pD3DDev, &d3dSprite);
 	if( hr == S_OK )
 	{
-#if DIRECTX_VERSION == 8
-		d3dSprite->Begin();
-#else
 		d3dSprite->Begin(D3DXSPRITE_DONOTMODIFY_RENDERSTATE|D3DXSPRITE_DONOTSAVESTATE);
-#endif
 		return d3dSprite;
 	}
 	else

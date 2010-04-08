@@ -69,20 +69,12 @@ bool CDXRenderTexture::SetAsRenderTarget(bool enable)
 				MYLPDIRECT3DSURFACE pColorBuffer;
 
 				// save the current back buffer
-#if DIRECTX_VERSION == 8
-				g_pD3DDev->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &m_pColorBufferSave);
-#else
 				g_pD3DDev->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &m_pColorBufferSave);
-#endif
 				g_pD3DDev->GetDepthStencilSurface(&m_pDepthBufferSave);
 
 				// Activate the render_texture
 				(MYLPDIRECT3DTEXTURE(m_pTexture->GetTexture()))->GetSurfaceLevel(0,&pColorBuffer);
-#if DIRECTX_VERSION == 8
-				HRESULT res = g_pD3DDev->SetRenderTarget(pColorBuffer, NULL);
-#else
 				HRESULT res = g_pD3DDev->SetRenderTarget(0, pColorBuffer);
-#endif
 				SAFE_RELEASE(pColorBuffer);
 				if( res != S_OK )
 				{
@@ -108,11 +100,7 @@ bool CDXRenderTexture::SetAsRenderTarget(bool enable)
 		{
 			if( m_pColorBufferSave && m_pDepthBufferSave )
 			{
-#if DIRECTX_VERSION == 8
-				g_pD3DDev->SetRenderTarget(m_pColorBufferSave, m_pDepthBufferSave);
-#else
 				g_pD3DDev->SetRenderTarget(0, m_pColorBufferSave);
-#endif
 				m_beingRendered = false;
 				SAFE_RELEASE(m_pColorBufferSave);
 				SAFE_RELEASE(m_pDepthBufferSave);

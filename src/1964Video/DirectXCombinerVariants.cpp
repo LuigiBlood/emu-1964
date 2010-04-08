@@ -35,11 +35,7 @@ void CDirectXPixelShaderCombiner::CleanUp(void)
 #ifdef _XBOX
 		g_pD3DDev->DeletePixelShader(m_pixelShaderList[i].dwShaderID);
 #else
-#if DIRECTX_VERSION == 8
-		g_pD3DDev->DeletePixelShader(m_pixelShaderList[i].dwShaderID);
-#else
 		SAFE_RELEASE(m_pixelShaderList[i].pShader);
-#endif
 		m_pixelShaderList[i].pVS->Release();
 #endif
 	}
@@ -652,11 +648,7 @@ int CDirectXPixelShaderCombiner::GeneratePixelShaderFromMux(void)
 	PixelShaderEntry newEntry;
 	newEntry.mux64 = m_pD3DRender->m_Mux;
 
-#if DIRECTX_VERSION == 8
-	HRESULT e =D3DXAssembleShader( m_textBuf, strlen(m_textBuf),  0, NULL, &(newEntry.pVS), NULL );
-#else
 	HRESULT e =D3DXAssembleShader( m_textBuf, strlen(m_textBuf),  0, NULL, NULL, &(newEntry.pVS), NULL );
-#endif
 	if( e != S_OK )
 	{
 #ifdef _DEBUG
@@ -666,19 +658,13 @@ int CDirectXPixelShaderCombiner::GeneratePixelShaderFromMux(void)
 #endif
 	}
 
-#if DIRECTX_VERSION == 8
-	e = g_pD3DDev->CreatePixelShader( (DWORD*)newEntry.pVS->GetBufferPointer(), (DWORD*)&(newEntry.dwShaderID) );
-#else
 	e = g_pD3DDev->CreatePixelShader( (DWORD*)newEntry.pVS->GetBufferPointer(), &(newEntry.pShader) );
-#endif
 	if( e != S_OK )
 	{
 		TRACE0("Error to create shader");
 		TRACE0(m_textBuf);
 		newEntry.dwShaderID = 0;
-#if DIRECTX_VERSION > 8
 		newEntry.pShader = NULL;
-#endif
 	}
 	
 #ifdef _DEBUG
@@ -745,11 +731,7 @@ void CDirectXPixelShaderCombiner::InitCombinerCycle12(void)
 		g_pD3DDev->SetTexture( 2, MYLPDIRECT3DTEXTURE(entry->pTexture->GetTexture()));
 	}
 #else
-#if DIRECTX_VERSION == 8
-	gD3DDevWrapper.SetPixelShader(m_pixelShaderList[idx].dwShaderID);
-#else
 	gD3DDevWrapper.SetPixelShader(m_pixelShaderList[idx].pShader);
-#endif
 
 	// Step 2: set constant colors
 	float *pf;
