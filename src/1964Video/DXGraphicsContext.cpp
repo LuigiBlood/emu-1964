@@ -1800,6 +1800,7 @@ void CDXGraphicsContext::SaveSurfaceToFile(char *filenametosave, MYLPDIRECT3DSUR
 bool CDXGraphicsContext::CreateFontObjects()
 {
 #ifndef _XBOX
+
 #if DIRECTX_VERSION == 8
 	m_hFont = (HFONT)GetStockObject(SYSTEM_FONT);
 	D3DXCreateFont(m_pd3dDevice, m_hFont, &m_pID3DFont);
@@ -1850,7 +1851,7 @@ HRESULT CD3DDevWrapper::SetRenderState(D3DRENDERSTATETYPE State,DWORD Value)
 {
 	if( m_pD3DDev != NULL )
 	{
-		///if( m_savedRenderStates[State] != Value )
+		if (m_savedRenderStates[State] != Value || !m_savedRenderStates[State])
 		{
 			m_savedRenderStates[State] = Value;
 			return m_pD3DDev->SetRenderState(State, Value);
@@ -1868,7 +1869,7 @@ HRESULT CD3DDevWrapper::SetTextureStageState(DWORD Stage,D3DTEXTURESTAGESTATETYP
 	if( m_pD3DDev != NULL )
 #endif
 	{
-		//if( m_savedTextureStageStates[Stage][Type] != Value )
+		if (m_savedTextureStageStates[Stage][Type] != Value || !m_savedTextureStageStates[Stage][Type])
 		{
 			switch( Type )
 			{
@@ -1900,7 +1901,7 @@ HRESULT CD3DDevWrapper::SetPixelShader(IDirect3DPixelShader9* pShader)
 {
 	if( m_pD3DDev != NULL )
 	{
-		//if( m_savedPixelShader != pShader )
+		if( m_savedPixelShader != pShader )
 		{
 			m_savedPixelShader = pShader;
 			return m_pD3DDev->SetPixelShader(pShader);
@@ -1975,6 +1976,7 @@ HRESULT CD3DDevWrapper::SetTexture(DWORD Stage,MYIDirect3DBaseTexture* pTexture)
 
 	return S_OK;
 }
+
 HRESULT CD3DDevWrapper::SetFVF(DWORD FVF)
 {
 	if( m_pD3DDev != NULL )
