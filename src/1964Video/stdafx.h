@@ -67,7 +67,7 @@
 #include "gl_extention_ATI.h"
 
 #ifndef SAFE_DELETE
-#define SAFE_DELETE(p)  { if(p) { delete (p);     (p)=NULL; } }
+#define SAFE_DELETE(p)  { if( (p) != NULL) { delete (p);     (p)=NULL; } } // Microdev check me.
 #endif
 
 #ifndef SAFE_CHECK
