@@ -92,9 +92,7 @@ protected:
 	bool				m_bWindowed;
 	RECT				m_rcWindowBounds;
 
-#ifndef _XBOX
 	DEVMODEA			m_DMsaved;
-#endif
 	
     char				m_strDeviceStats[256];
 

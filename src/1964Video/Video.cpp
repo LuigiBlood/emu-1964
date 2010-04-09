@@ -54,11 +54,6 @@ RECT frameWriteByCPURectArray[20][20];
 bool frameWriteByCPURectFlag[20][20];
 std::vector<uint32> frameWriteRecord;
 
-#ifdef _XBOX
-XFONT *g_defaultTrueTypeFont = NULL;
-extern bool g_bUseSetTextureMem;
-extern DWORD g_maxTextureMemUsage;
-#endif
 //---------------------------------------------------------------------------------------
 
 BOOL APIENTRY DllMain(HINSTANCE hinstDLL,  // DLL module handle
@@ -91,16 +86,12 @@ BOOL APIENTRY DllMain(HINSTANCE hinstDLL,  // DLL module handle
 
 void GetPluginDir( char * Directory ) 
 {
-#ifdef _XBOX
-	strcpy(Directory,"D:\\");
-#else
 	char path_buffer[_MAX_PATH], drive[_MAX_DRIVE] ,dir[_MAX_DIR];
 	char fname[_MAX_FNAME],ext[_MAX_EXT];
 	GetModuleFileName(windowSetting.myhInst,path_buffer,sizeof(path_buffer));
 	_splitpath( path_buffer, drive, dir, fname, ext );
 	strcpy(Directory,drive);
 	strcat(Directory,dir);
-#endif
 }
 
 //-------------------------------------------------------------------------------------
@@ -136,14 +127,11 @@ FUNC_TYPE(void) NAME_DEFINE(DllTest) ( HWND hParent )
 
 FUNC_TYPE(void) NAME_DEFINE(DllConfig) ( HWND hParent )
 {
-#ifndef _XBOX
 	CreateOptionsDialogs(hParent);
-#endif
 }
 
 void ChangeWindowStep2()
 {
-#ifndef _XBOX
 	status.bDisableFPS = true;
 	windowSetting.bDisplayFullscreen = 1-windowSetting.bDisplayFullscreen;
 	g_CritialSection.Lock();
@@ -175,7 +163,6 @@ void ChangeWindowStep2()
 	g_CritialSection.Unlock();
 	status.bDisableFPS = false;
 	status.ToToggleFullScreen = FALSE;
-#endif
 }
 
 FUNC_TYPE(void) NAME_DEFINE(ChangeWindow) ()
@@ -188,7 +175,6 @@ FUNC_TYPE(void) NAME_DEFINE(ChangeWindow) ()
 
 void ChangeWinSize( void ) 
 {
-#ifndef _XBOX
 	//ShowWindow(g_GraphicsInfo.hWnd, SW_HIDE);
 	WINDOWPLACEMENT wndpl;
     RECT rc1, swrect;
@@ -210,7 +196,6 @@ void ChangeWinSize( void )
     MoveWindow( g_GraphicsInfo.hWnd, wndpl.rcNormalPosition.left, wndpl.rcNormalPosition.top, rc1.right - rc1.left, rc1.bottom - rc1.top, TRUE );
 	//ShowWindow(g_GraphicsInfo.hWnd, SW_SHOW);
 	Sleep(100);
-#endif	
 }
 //---------------------------------------------------------------------------------------
 
@@ -251,13 +236,11 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, uint32 dwTime)
 extern void InitExternalTextures(void);
 void StartVideo(void)
 {
-#ifndef _XBOX
 	SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &windowSetting.screenSaverStatus, 0);
 	if( windowSetting.screenSaverStatus )	
 		SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, FALSE, 0, 0);		// Disable screen saver
 
 	windowSetting.timer = SetTimer(g_GraphicsInfo.hWnd, 100, 1000, (TIMERPROC)TimerProc);
-#endif
 	windowSetting.dps = windowSetting.fps = -1;
 	windowSetting.lastSecDlistCount = windowSetting.lastSecFrameCount = 0xFFFFFFFF;
 
@@ -349,12 +332,10 @@ void StopVideo()
 	windowSetting.lastSecDlistCount = windowSetting.lastSecFrameCount = 0xFFFFFFFF;
 	status.gDlistCount = status.gFrameCount = 0;
 
-#ifndef _XBOX
 	KillTimer(g_GraphicsInfo.hWnd, windowSetting.timer);
 
 	if( windowSetting.screenSaverStatus )	
 		SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, TRUE, 0, 0);	// Enable screen saver
-#endif
 
 	DEBUGGER_ONLY({delete surfTlut;});
 }
@@ -830,7 +811,6 @@ FUNC_TYPE(BOOL) NAME_DEFINE(InitiateGFX)(GFX_INFO Gfx_Info)
 
 void __cdecl MsgInfo (char * Message, ...)
 {
-#ifndef _XBOX
 	char Msg[400];
 	va_list ap;
 
@@ -840,12 +820,10 @@ void __cdecl MsgInfo (char * Message, ...)
 
 	sprintf(generalText, "%s %s",project_name, FILE_VERSION);
 	MessageBox(NULL,Msg,generalText,MB_OK|MB_ICONINFORMATION);
-#endif
 }
 
 void __cdecl ErrorMsg (char * Message, ...)
 {
-#ifndef _XBOX
 	char Msg[400];
 	va_list ap;
 	
@@ -858,7 +836,6 @@ void __cdecl ErrorMsg (char * Message, ...)
 		SetWindowText(g_GraphicsInfo.hStatusBar,Msg);
 	else
 		MessageBox(NULL,Msg,generalText,MB_OK|MB_ICONERROR);
-#endif
 }
 
 //---------------------------------------------------------------------------------------
@@ -867,11 +844,7 @@ FUNC_TYPE(void) NAME_DEFINE(CloseDLL) (void)
 { 
 	if( status.bGameIsRunning )
 	{
-#ifdef _XBOX
-		_VIDEO_RomClosed();
-#else
 		RomClosed();
-#endif
 	}
 
 	if (bIniIsChanged)
@@ -1049,66 +1022,6 @@ FUNC_TYPE(void) NAME_DEFINE(FBWrite)(uint32 addr, uint32 size)
 	g_pFrameBufferManager->FrameBufferWriteByCPU(addr, size);
 }
 
-void _VIDEO_DisplayTemporaryMessage(const char *Message)
-{
-#ifdef _XBOX
-	g_bTempMessage = TRUE;
-	strncpy(g_szTempMessage, Message, 99);
-	g_dwTempMessageStart = GetTickCount();
-#endif
-}
-
-#ifdef _XBOX
-void _VIDEO_SetMaxTextureMem(DWORD mem)
-{
-	if (mem == 0)
-	{
-		g_bUseSetTextureMem = false;
-	}
-	else
-	{
-		g_bUseSetTextureMem = true;
-		g_maxTextureMemUsage = mem * 1024 * 1024;
-	}
-}
-
-void _VIDEO_DisplayTemporaryMessage2(const char *Message, ...)
-{
-	g_bTempMessage = TRUE;
-	//strncpy(g_szTempMessage, Message, 99);
-	g_dwTempMessageStart = GetTickCount();
-
-
-	char Msg[5000];
-	va_list ap;
-
-	va_start( ap, Message );
-	vsprintf( Msg, Message, ap );
-	va_end( ap );
-	
-	strncpy(g_szTempMessage, Msg, 99);
-}
-
-//void XBOX_Debugger_Log(const char *Message, ...)
-//{
-//	FILE *fp = fopen("D:\\ricelog.log","wt");
-//	if( !fp )
-//	{
-//		g_bTempMessage = TRUE;
-//		g_dwTempMessageStart = GetTickCount();
-//
-//		char Msg[5000];
-//		va_list ap;
-//
-//		va_start( ap, Message );
-//		vsprintf( Msg, Message, ap );
-//		va_end( ap );
-//
-//		fprintf(fp,Msg);
-//		fclose(fp);
-//	}
-//}
-#endif
 /************************************************************************
 Function: FBGetFrameBufferInfo
 Purpose:  This function is called by the emulator core to retrieve frame
@@ -1183,7 +1096,6 @@ FUNC_TYPE(void) NAME_DEFINE(ShowCFB) (void)
 
 FUNC_TYPE(void) NAME_DEFINE(CaptureScreen) ( char * Directory )
 {
-#ifndef _XBOX
 	if( status.bGameIsRunning && status.gDlistCount > 0 )
 	{
 		if( !PathFileExists(Directory) )
@@ -1227,5 +1139,4 @@ FUNC_TYPE(void) NAME_DEFINE(CaptureScreen) ( char * Directory )
 		strcpy(status.screenCaptureFilename, tempname);
 		status.toCaptureScreen = true;
 	}
-#endif
 }

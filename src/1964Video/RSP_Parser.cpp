@@ -20,16 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "stdafx.h"
 
 #include "ucode.h"
-#ifdef _XBOX
-#include "./Menu/MenuMain.h"
-#include "./Menu/IngameMenu.h"
-
-extern BOOL _INPUT_IsIngameMenuWaiting();
-
-BOOL g_bTempMessage = TRUE;
-DWORD g_dwTempMessageStart = 0;
-char g_szTempMessage[100];
-#endif
 
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
@@ -831,9 +821,6 @@ void DLParser_Process(OSTask * pTask)
 	{
 		CRender::g_pRender->ClearBuffer(true,true);
 		CGraphicsContext::needCleanScene = false;
-#ifdef _XBOX
-		_VIDEO_DisplayTemporaryMessage("Clear buffer");
-#endif
 	}
 
 	SetVIScales();
@@ -847,7 +834,6 @@ void DLParser_Process(OSTask * pTask)
 		// The main loop
 		while( gDlistStackPointer >= 0 )
 		{
-#ifndef _XBOX
 #ifdef _DEBUG
 			DEBUGGER_PAUSE_COUNT_N(NEXT_UCODE);
 			if( debuggerPause )
@@ -863,7 +849,6 @@ void DLParser_Process(OSTask * pTask)
 				DebuggerAppendMsg("Error: dwPC is %08X", gDlistStack[gDlistStackPointer].pc );
 				break;
 			}
-#endif
 #endif
 
 			status.gUcodeCount++;
@@ -887,104 +872,8 @@ void DLParser_Process(OSTask * pTask)
 	catch(...)
 	{
 		TRACE0("Unknown exception happens in ProcessDList");
-#ifdef _XBOX
-		_VIDEO_DisplayTemporaryMessage("Unknown exception happens in ProcessDList");
-#endif
 		TriggerDPInterrupt();
 	}
-
-#ifdef _XBOX
-	menuWaiting = _INPUT_IsIngameMenuWaiting();
-
-	// output free mem
-	if (g_showDebugInfo && !menuWaiting)
-	{
-		if (g_defaultTrueTypeFont == NULL)
-		{
-			XFONT_OpenDefaultFont(&g_defaultTrueTypeFont);
-			g_defaultTrueTypeFont->SetBkMode(XFONT_OPAQUE);
-			g_defaultTrueTypeFont->SetBkColor(D3DCOLOR_XRGB(0,0,0));
-		}
-
-		static DWORD lastTick = GetTickCount() / 1000;
-		static int lastTickFPS = 0;
-		static int frameCount = 0;
-
-		if (lastTick != GetTickCount() / 1000)
-		{
-			lastTickFPS = frameCount;
-			frameCount = 0;
-			lastTick = GetTickCount() / 1000;
-		}
-
-		frameCount++;
-
-		static MEMORYSTATUS stat;
-		GlobalMemoryStatus(&stat);
-
-		WCHAR buf[255];
-		D3DSurface *pBackBuffer, *pFrontBuffer;
-
-		g_pD3DDev->GetBackBuffer(-1, D3DBACKBUFFER_TYPE_MONO, &pFrontBuffer);
-		g_pD3DDev->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
-
-		swprintf(buf, L"%.2fMB free - %ifps", stat.dwAvailPhys/(1024.0f*1024.0f), lastTickFPS);
-
-		g_defaultTrueTypeFont->TextOut(pFrontBuffer, buf, (unsigned)-1, 40, 40);
-		g_defaultTrueTypeFont->TextOut(pBackBuffer, buf, (unsigned)-1, 40, 40);
-
-		pFrontBuffer->Release();
-		pBackBuffer->Release();
-	}
-
-	if (g_bTempMessage)
-	{
-		if (g_defaultTrueTypeFont == NULL)
-		{
-			XFONT_OpenDefaultFont(&g_defaultTrueTypeFont);
-			g_defaultTrueTypeFont->SetBkMode(XFONT_OPAQUE);
-			g_defaultTrueTypeFont->SetBkColor(D3DCOLOR_XRGB(0,0,0));
-		}
-
-		if (GetTickCount() > g_dwTempMessageStart + 3000)
-		{
-			g_bTempMessage = FALSE;
-		}
-
-		WCHAR buf[200];
-		D3DSurface *pBackBuffer, *pFrontBuffer;
-
-		memset(buf, 0, sizeof(WCHAR) * 200);
-
-		g_pD3DDev->GetBackBuffer(-1, D3DBACKBUFFER_TYPE_MONO, &pFrontBuffer);
-		g_pD3DDev->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
-
-		mbstowcs(buf, g_szTempMessage, strlen(g_szTempMessage));
-
-		g_defaultTrueTypeFont->TextOut(pFrontBuffer, buf, (unsigned)-1, 40, 410);
-		g_defaultTrueTypeFont->TextOut(pBackBuffer, buf, (unsigned)-1, 40, 410);
-
-		pFrontBuffer->Release();
-		pBackBuffer->Release();
-	}
-
-	if (menuWaiting)
-	{
-		D3DSurface *pBackBuffer;
-		D3DSurface *pTextureSurface;
-
-		g_igmBgTexture.Destroy();
-		g_igmBgTexture.Create(256, 256, D3DFMT_X1R5G5B5);
-
-		g_pD3DDev->GetBackBuffer(-1, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
-		g_igmBgTexture.GetTexture()->GetSurfaceLevel(0, &pTextureSurface);
-
-		D3DXLoadSurfaceFromSurface(pTextureSurface, NULL, NULL, pBackBuffer, NULL, NULL, D3DX_FILTER_LINEAR, 0);
-
-		pBackBuffer->Release();
-		pTextureSurface->Release();
-	}
-#endif
 
 	CRender::g_pRender->EndRendering();
 
@@ -992,12 +881,6 @@ void DLParser_Process(OSTask * pTask)
 		TriggerDPInterrupt();
 	TriggerSPInterrupt();
 
-#ifdef _XBOX
-	if (menuWaiting)
-	{
-		RunIngameMenu();
-	}
-#endif
 }
 
 //////////////////////////////////////////////////////////

@@ -904,7 +904,6 @@ int CGeneralCombiner::ParseDecodedMux()
 		gci.stages[i].bTextureUsed = IsTextureUsedInStage(gci.stages[i]);
 	}
 
-#ifndef _XBOX
 	if( !resultIsGood && gci.nStages >= m_dwGeneralMaxStages )
 	{
 		extern int noOfTwoStages;
@@ -925,7 +924,6 @@ int CGeneralCombiner::ParseDecodedMux()
 			}
 		}
 	}
-#endif
 
 #ifdef _DEBUG
 	if( !resultIsGood )
@@ -947,7 +945,6 @@ int CGeneralCombiner::ParseDecodedMux()
 		DebuggerAppendMsg("\t\t{MOD(T0,DIF), SKIP, 1, true},	// Stage 1\n\t}\n},");
 	}
 #else
-#ifndef _XBOX
 	if( !resultIsGood )
 	{
 		FILE *fp=NULL;
@@ -972,7 +969,6 @@ int CGeneralCombiner::ParseDecodedMux()
 			fclose(fp);
 		}
 	}
-#endif
 #endif
 
 	return SaveParserResult(gci);

@@ -620,13 +620,7 @@ uint32 DLParser_CheckUcode(uint32 ucStart, uint32 ucDStart, uint32 ucSize, uint3
 
 bool IsUsedAsDI(uint32 addr);
 
-#ifdef _XBOX
-extern BOOL g_bTempMessage;
-extern DWORD g_dwTempMessageStart;
-extern char g_szTempMessage[100];
-#endif
-
-#if defined(_DEBUG) && !defined(_XBOX)
+#if defined(_DEBUG)
 void __cdecl LOG_UCODE(LPCTSTR szFormat, ...);
 #else
 // VC7

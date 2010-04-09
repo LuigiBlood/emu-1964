@@ -24,26 +24,10 @@ CD3DDevWrapper    gD3DDevWrapper;
 MYD3DCAPS g_D3DDeviceCaps;
 LPDIRECT3DVERTEXSHADER9 gVertexShader = NULL;
 
-
-#ifdef _XBOX
-extern int flickerlevel;
-extern float XBINPUT_DEADZONE;
-extern float XBINPUT_SUMMAND;
-extern bool softlevel;
-extern int vertex;
-extern int texfilter;
-#endif
-
 int FormatToSize(D3DFORMAT fmt)
 {
 	switch(fmt)
 	{
-#ifdef _XBOX
-	case D3DFMT_A8R8G8B8:
-	case D3DFMT_X8R8G8B8:
-	case D3DFMT_D24S8:
-	case TEXTURE_FMT_A8R8G8B8:
-#else
 	case D3DFMT_R8G8B8:
 	case D3DFMT_A8R8G8B8:
 	case D3DFMT_X8R8G8B8:
@@ -55,7 +39,6 @@ int FormatToSize(D3DFORMAT fmt)
 	case D3DFMT_D24X8:
 	case D3DFMT_D24X4S4:
 	case TEXTURE_FMT_A8R8G8B8:
-#endif
 		return 32;
 	default:
 		/*
@@ -88,11 +71,7 @@ int				CDXGraphicsContext::m_dwNumAdapters;
 D3DAdapterInfo	CDXGraphicsContext::m_1stAdapters;
 MYD3DCAPS		CDXGraphicsContext::m_d3dCaps;           // Caps for the device
 bool			CDXGraphicsContext::m_bSupportAnisotropy;
-#ifdef _XBOX
-const	uint32		dwNumDeviceTypes = 1;
-#else
 const	uint32		dwNumDeviceTypes = 2;
-#endif
 extern const char*	strDXDeviceDescs[];
 const	D3DDEVTYPE	DeviceTypes[] = { D3DDEVTYPE_HAL, D3DDEVTYPE_REF };
 
@@ -100,11 +79,9 @@ const	D3DDEVTYPE	DeviceTypes[] = { D3DDEVTYPE_HAL, D3DDEVTYPE_REF };
 CDXGraphicsContext::CDXGraphicsContext() :
 	m_pd3dDevice(NULL),
 	m_pD3D(NULL),
-#ifndef _XBOX
 	m_hFont(NULL),
 	m_pID3DFont(NULL),
 	m_bFontIsCreated(false),
-#endif
 	m_dwAdapter(0),			// Default Adapter
 	m_dwCreateFlags(0),
 	m_dwMinDepthBits(16),
@@ -120,9 +97,7 @@ CDXGraphicsContext::CDXGraphicsContext() :
 //*****************************************************************************
 CDXGraphicsContext::~CDXGraphicsContext()
 {
-#ifndef _XBOX
 	if( m_hFont )	DeleteObject(m_hFont);
-#endif
 	CGraphicsContext::Get()->CleanUp();
 }
 
@@ -194,7 +169,6 @@ void CDXGraphicsContext::UpdateFrame(bool swaponly)
 	}
 	else
 	{
-#ifndef _XBOX
 		// Test the cooperative level to see if it's okay to render
 		if( FAILED( hr = m_pd3dDevice->TestCooperativeLevel() ) )
 		{
@@ -226,12 +200,10 @@ void CDXGraphicsContext::UpdateFrame(bool swaponly)
 			// return hr
 			goto exit;
 		}
-#endif
 
 		if( !g_curRomInfo.bForceScreenClear )	
 			Clear(CLEAR_DEPTH_BUFFER);
 
-#ifndef _XBOX
 		if( m_bWindowed )
 		{
 			RECT dstrect={0,windowSetting.toolbarHeight,windowSetting.uDisplayWidth,windowSetting.toolbarHeight+windowSetting.uDisplayHeight};
@@ -239,7 +211,6 @@ void CDXGraphicsContext::UpdateFrame(bool swaponly)
 			hr = m_pd3dDevice->Present( &srcrect, &dstrect, NULL, NULL );
 		}
 		else
-#endif
 		{
 			hr = m_pd3dDevice->Present( NULL, NULL, NULL, NULL );
 		}
@@ -252,9 +223,7 @@ void CDXGraphicsContext::UpdateFrame(bool swaponly)
 #endif
 
 	}
-#ifndef _XBOX
 exit:
-#endif
 	
 	Unlock();
 
@@ -271,10 +240,6 @@ BOOL CDXGraphicsContext::FindDepthStencilFormat( UINT iAdapter, D3DDEVTYPE Devic
 											  D3DFORMAT TargetFormat,
 											  D3DFORMAT* pDepthStencilFormat )
 {
-#ifdef _XBOX
-	*pDepthStencilFormat = D3DFMT_D16;
-	return TRUE;
-#else
 	if( m_dwMinDepthBits <= 16 && m_dwMinStencilBits == 0 )
 	{
 		if( SUCCEEDED( m_pD3D->CheckDeviceFormat( iAdapter, DeviceType,
@@ -364,7 +329,6 @@ BOOL CDXGraphicsContext::FindDepthStencilFormat( UINT iAdapter, D3DDEVTYPE Devic
 	}
 	
 	return FALSE;
-#endif
 }
 
 //*****************************************************************************
@@ -377,12 +341,10 @@ bool CDXGraphicsContext::Initialize(HWND hWnd, HWND hWndStatus,
 {
 	HRESULT hr;
 
-#ifndef _XBOX
 	if( g_GraphicsInfo.hStatusBar )
 	{
 		SetWindowText(g_GraphicsInfo.hStatusBar,"Initializing DirectX Device, please wait");
 	}
-#endif
 
 	Lock();
 
@@ -398,7 +360,6 @@ bool CDXGraphicsContext::Initialize(HWND hWnd, HWND hWndStatus,
 	// Build a list of Direct3D adapters, modes and devices. The
     // ConfirmDevice() callback is used to confirm that only devices that
     // meet the app's requirements are considered.
-#ifndef _XBOX
     if( FAILED( hr = BuildDeviceList() ) )
     {
         if ( m_pD3D )
@@ -410,7 +371,6 @@ bool CDXGraphicsContext::Initialize(HWND hWnd, HWND hWndStatus,
         DisplayD3DErrorMsg( hr, MSGERR_APPMUSTEXIT );
 		return false;
     }
-#endif
 
 	CGraphicsContext::Initialize(hWnd, hWndStatus, dwWidth, dwHeight, bWindowed );
 	
@@ -445,7 +405,6 @@ bool CDXGraphicsContext::Initialize(HWND hWnd, HWND hWndStatus,
 		CGraphicsContext::Get()->m_supportTextureMirror = true;
 	}
 	
-#ifndef _XBOX
 	// Force to use Software T&L
 	if( options.bForceSoftwareTnL )
 		g_pD3DDev->SetSoftwareVertexProcessing(TRUE);
@@ -456,7 +415,6 @@ bool CDXGraphicsContext::Initialize(HWND hWnd, HWND hWndStatus,
 	{
 		SetWindowText(g_GraphicsInfo.hStatusBar,"DirectX device is ready");
 	}
-#endif
 
 	return hr==S_OK;
 }
@@ -468,7 +426,6 @@ bool CDXGraphicsContext::Initialize(HWND hWnd, HWND hWndStatus,
 //-----------------------------------------------------------------------------
 static int _cdecl SortModesCallback( const VOID* arg1, const VOID* arg2 )
 {
-#ifndef _XBOX
 	D3DDISPLAYMODE* p1 = (D3DDISPLAYMODE*)arg1;
 	D3DDISPLAYMODE* p2 = (D3DDISPLAYMODE*)arg2;
 
@@ -478,7 +435,6 @@ static int _cdecl SortModesCallback( const VOID* arg1, const VOID* arg2 )
 	if( p1->Width  > p2->Width )    return +1;
 	if( p1->Height < p2->Height )   return -1;
 	if( p1->Height > p2->Height )   return +1;
-#endif
 
 	return 0;
 }
@@ -486,9 +442,7 @@ static int _cdecl SortModesCallback( const VOID* arg1, const VOID* arg2 )
 // This is a static function, will be called when the plugin DLL is initialized
 void CDXGraphicsContext::InitDeviceParameters()
 {
-#ifndef _XBOX
 	SetWindowText(m_hWndStatus, "Initialize DirectX Device");
-#endif
 
 	// Create Direct3D object
 	MYLPDIRECT3D pD3D;
@@ -499,10 +453,8 @@ void CDXGraphicsContext::InitDeviceParameters()
 		return;
 	}
 
-#ifndef _XBOX
 	// Get number of adapters
 	int numAvailableAdapters = pD3D->GetAdapterCount();
-#endif
 
 	// For the 1st adapter, looking through each of its devices
 	int iAdapter=0;
@@ -638,79 +590,6 @@ HRESULT CDXGraphicsContext::InitializeD3D()
     // Set up the presentation parameters
     ZeroMemory( &m_d3dpp, sizeof(m_d3dpp) );
 
-#ifdef _XBOX
-	m_d3dpp.Windowed               = FALSE;
-	m_d3dpp.BackBufferCount        = 1;
-	//m_d3dpp.MultiSampleType        = D3DMULTISAMPLE_2_SAMPLES_MULTISAMPLE_QUINCUNX;
-	//m_d3dpp.SwapEffect             = bufferSettings[curBufferSetting].swapEffect;
-	m_d3dpp.SwapEffect             =  D3DSWAPEFFECT_COPY;
-	m_d3dpp.EnableAutoDepthStencil = TRUE; /*m_bUseDepthBuffer;*/
-	//m_d3dpp.AutoDepthStencilFormat = pModeInfo->DepthStencilFormat;
-	m_d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
-	m_d3dpp.hDeviceWindow          = m_hWnd;
-	m_d3dpp.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
-
-	m_d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
-
-	DWORD videoFlags = XGetVideoFlags();
-	if(XGetVideoStandard() == XC_VIDEO_STANDARD_PAL_I)
-	{
-		if(videoFlags & XC_VIDEO_FLAGS_PAL_60Hz)		// PAL 60 user
-			m_d3dpp.FullScreen_RefreshRateInHz = 60;
-		else
-			m_d3dpp.FullScreen_RefreshRateInHz = 50;
-	}
-
-	if( videoFlags&XC_VIDEO_FLAGS_HDTV_480p )
-	{
-		m_d3dpp.Flags = D3DPRESENTFLAG_PROGRESSIVE ;
-	}
-
-	m_d3dpp.BackBufferWidth = 640;
-	m_d3dpp.BackBufferHeight = 480;
-	m_d3dpp.BackBufferFormat = D3DFMT_X1R5G5B5;
-	//m_d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
-
-	windowSetting.uDisplayWidth = m_d3dpp.BackBufferWidth;
-	windowSetting.uDisplayHeight = m_d3dpp.BackBufferHeight;
-
-	m_desktopFormat = D3DFMT_X1R5G5B5;
-	//m_desktopFormat = D3DFMT_A8R8G8B8;
-
-	//freakdave
-	if(vertex == 0){
-		// Create the device
-		hr = m_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
-			NULL, D3DCREATE_PUREDEVICE, &m_d3dpp,
-			&m_pd3dDevice );
-
-	}
-
-
-	if(vertex == 1){
-		// Create the device
-		hr = m_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
-			NULL, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &m_d3dpp,
-			&m_pd3dDevice );
-
-	}
-
-	if(vertex == 2){
-		// Create the device
-		hr = m_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
-			NULL, D3DCREATE_HARDWARE_VERTEXPROCESSING, &m_d3dpp,
-			&m_pd3dDevice );
-
-	}
-
-	if(vertex == 3){
-		// Create the device
-		hr = m_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
-			NULL, D3DCREATE_MIXED_VERTEXPROCESSING, &m_d3dpp,
-			&m_pd3dDevice );
-
-	}
-#else
     m_d3dpp.Windowed               = pDeviceInfo->bWindowed;
     m_d3dpp.BackBufferCount        = DirectXRenderBufferSettings[options.RenderBufferSetting].number;
 	m_d3dpp.EnableAutoDepthStencil = TRUE; /*m_bUseDepthBuffer;*/
@@ -796,7 +675,6 @@ HRESULT CDXGraphicsContext::InitializeD3D()
 		m_d3dpp.MultiSampleType        = D3DMULTISAMPLE_NONE;
 		hr = m_pD3D->CreateDevice( m_dwAdapter, pDeviceInfo->DeviceType,m_hWnd, pModeInfo->dwBehavior, &m_d3dpp,	&m_pd3dDevice );
 	}
-#endif
 
     if( SUCCEEDED(hr) && m_pd3dDevice )
     {
@@ -815,24 +693,6 @@ HRESULT CDXGraphicsContext::InitializeD3D()
         // Store device Caps
         m_pd3dDevice->GetDeviceCaps( &m_d3dCaps );
 
-#ifdef _XBOX
-		//freakdave
-		if(vertex == 0){
-			m_dwCreateFlags = D3DCREATE_PUREDEVICE;
-		}
-
-		if(vertex == 1){
-			m_dwCreateFlags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
-		}
-
-		if(vertex == 2){
-			m_dwCreateFlags = D3DCREATE_HARDWARE_VERTEXPROCESSING;
-		}
-
-		if(vertex == 3){
-			m_dwCreateFlags = D3DCREATE_MIXED_VERTEXPROCESSING;
-		}
-#else
         m_dwCreateFlags = pModeInfo->dwBehavior;
 		
         if( m_bWindowed )
@@ -890,7 +750,6 @@ HRESULT CDXGraphicsContext::InitializeD3D()
 			SetWindowText(m_hWndStatus, m_strDeviceStats);
 		}
 		TRACE0(m_strDeviceStats);
-#endif
 
 		
         // Store render target surface desc
@@ -917,12 +776,10 @@ HRESULT CDXGraphicsContext::InitializeD3D()
     }
 	else
 	{
-#ifndef _XBOX
 		if( status.ToToggleFullScreen || !m_bWindowed )
-			SetWindowText(g_GraphicsInfo.hStatusBar,"Can not initialize DX8, check your Direct settings");
+			SetWindowText(g_GraphicsInfo.hStatusBar,"Can not initialize DX9, check your Direct settings");
 		else
-			MsgInfo("Can not initialize DX8, check your Direct settings");
-#endif
+			MsgInfo("Can not initialize DX9, check your Direct settings");
 	}
 	
 	/*
@@ -958,7 +815,6 @@ HRESULT CDXGraphicsContext::InitializeD3D()
 //-----------------------------------------------------------------------------
 HRESULT CDXGraphicsContext::ResizeD3DEnvironment()
 {
-#ifndef _XBOX
     HRESULT hr;
 	
     // Release all vidmem objects
@@ -990,7 +846,6 @@ HRESULT CDXGraphicsContext::ResizeD3DEnvironment()
 	{
 		CRender::GetRender()->InitDeviceObjects();
 	}
-#endif
     return S_OK;
 }
 
@@ -1001,7 +856,6 @@ HRESULT CDXGraphicsContext::ResizeD3DEnvironment()
 //-----------------------------------------------------------------------------
 HRESULT CDXGraphicsContext::DoToggleFullscreen()
 {
-#ifndef _XBOX
     // Get access to current adapter, device, and mode
 	D3DAdapterInfo* pAdapterInfo = &m_Adapters[m_dwAdapter];
 	//D3DDeviceInfo*  pDeviceInfo  = &pAdapterInfo->devices[pAdapterInfo->dwCurrentDevice];
@@ -1055,7 +909,6 @@ HRESULT CDXGraphicsContext::DoToggleFullscreen()
 			( m_rcWindowBounds.bottom - m_rcWindowBounds.top ),
 			SWP_SHOWWINDOW );
     }
-#endif
     m_bReady = true;
 	
     return S_OK;
@@ -1071,7 +924,6 @@ HRESULT CDXGraphicsContext::DoToggleFullscreen()
 //-----------------------------------------------------------------------------
 HRESULT CDXGraphicsContext::ForceWindowed()
 {
-#ifndef _XBOX
     HRESULT hr;
     D3DAdapterInfo* pAdapterInfoCur = &m_Adapters[m_dwAdapter];
     //D3DDeviceInfo*  pDeviceInfoCur  = &pAdapterInfoCur->devices[pAdapterInfoCur->dwCurrentDevice];
@@ -1133,7 +985,6 @@ HRESULT CDXGraphicsContext::ForceWindowed()
     if( FAILED( hr = InitializeD3D() ) )
         return DisplayD3DErrorMsg( hr, MSGERR_APPMUSTEXIT );
 
-#endif
     m_bReady = true;
 	
     return S_OK;
@@ -1150,7 +1001,6 @@ HRESULT CDXGraphicsContext::ForceWindowed()
 //-----------------------------------------------------------------------------
 HRESULT CDXGraphicsContext::AdjustWindowForChange()
 {
-#ifndef _XBOX
     if( m_bWindowed )
     {
         // Set windowed-mode style - but disable resizing
@@ -1166,7 +1016,6 @@ HRESULT CDXGraphicsContext::AdjustWindowForChange()
         // Set fullscreen-mode style
         SetWindowLong( m_hWnd, GWL_STYLE, WS_POPUP|WS_SYSMENU|WS_VISIBLE );
     }
-#endif
     return S_OK;
 }
 
@@ -1179,7 +1028,6 @@ HRESULT CDXGraphicsContext::AdjustWindowForChange()
 //-----------------------------------------------------------------------------
 HRESULT CDXGraphicsContext::BuildDeviceList()
 {
-#ifndef _XBOX
     BOOL bHALExists = FALSE;
     BOOL bHALIsWindowedCompatible = FALSE;
     BOOL bHALIsDesktopCompatible = FALSE;
@@ -1473,9 +1321,6 @@ HRESULT CDXGraphicsContext::BuildDeviceList()
     }
 	
     return D3DAPPERR_NOWINDOWABLEDEVICES;
-#else
-	return S_OK;
-#endif
 }
 
 int	CDXGraphicsContext::FindCurrentDisplayModeIndex()
@@ -1540,9 +1385,6 @@ HRESULT CDXGraphicsContext::ConfirmDevice( MYD3DCAPS* pCaps, uint32 dwBehavior,
 //-----------------------------------------------------------------------------
 HRESULT CDXGraphicsContext::DisplayD3DErrorMsg( HRESULT hr, uint32 dwType )
 {
-#ifdef _XBOX
-	return S_OK;
-#else
     TCHAR strMsg[512];
 	
     switch( hr )
@@ -1643,7 +1485,6 @@ HRESULT CDXGraphicsContext::DisplayD3DErrorMsg( HRESULT hr, uint32 dwType )
 		MessageBox(NULL,strMsg,"str",MB_OK|MB_ICONERROR);
 
     return hr;
-#endif
 }
 
 
@@ -1663,10 +1504,8 @@ VOID CDXGraphicsContext::CleanUp()
     {
         CleanDeviceObjects();
 		
-#ifndef _XBOX
 		SAFE_RELEASE(m_pID3DFont);
 		m_bFontIsCreated = false;
-#endif
 		SAFE_RELEASE(m_pd3dDevice);
 		SAFE_RELEASE(m_pD3D);
     }
@@ -1675,9 +1514,6 @@ VOID CDXGraphicsContext::CleanUp()
 
 int CDXGraphicsContext::ToggleFullscreen()
 {
-#ifdef _XBOX
-    return 1;
-#else
     // Toggle the fullscreen/window mode
     if( m_bActive && m_bReady )
     {
@@ -1698,7 +1534,6 @@ int CDXGraphicsContext::ToggleFullscreen()
 	}
 
 	return m_bWindowed?0:1;
-#endif
 }
 
 
@@ -1768,7 +1603,6 @@ bool CDXGraphicsContext::IsResultGood(HRESULT hr, bool displayError)
 
 void CDXGraphicsContext::SaveSurfaceToFile(char *filenametosave, MYLPDIRECT3DSURFACE surf, bool bShow)
 {
-#ifndef _XBOX
 	char filename[256];
 	strcpy(filename, filenametosave);
 
@@ -1793,19 +1627,16 @@ void CDXGraphicsContext::SaveSurfaceToFile(char *filenametosave, MYLPDIRECT3DSUR
 	}
 
 	delete dsttxtr;
-#endif
 }
 
 
 bool CDXGraphicsContext::CreateFontObjects()
 {
-#ifndef _XBOX
-
+	//Rewrite for DirectX9
 #if DIRECTX_VERSION == 8
 	m_hFont = (HFONT)GetStockObject(SYSTEM_FONT);
 	D3DXCreateFont(m_pd3dDevice, m_hFont, &m_pID3DFont);
 	m_bFontIsCreated = true;
-#endif
 #endif
 	return true;
 }
@@ -1813,7 +1644,6 @@ bool CDXGraphicsContext::CreateFontObjects()
 #include <WinGDI.h>
 bool CDXGraphicsContext::DrawText(char *str, RECT &rect, int alignment)
 {
-#ifndef _XBOX
 	if( !m_bFontIsCreated )
 		CreateFontObjects();
 
@@ -1841,7 +1671,6 @@ bool CDXGraphicsContext::DrawText(char *str, RECT &rect, int alignment)
 				options.FPSColor);
 		}
 	}
-#endif
 
 	return true;
 }
@@ -1863,11 +1692,7 @@ HRESULT CD3DDevWrapper::SetRenderState(D3DRENDERSTATETYPE State,DWORD Value)
 
 HRESULT CD3DDevWrapper::SetTextureStageState(DWORD Stage,D3DTEXTURESTAGESTATETYPE Type,DWORD Value)
 {
-#ifdef _XBOX
-	if( m_pD3DDev != NULL && Stage < 4 )
-#else
 	if( m_pD3DDev != NULL )
-#endif
 	{
 		if (m_savedTextureStageStates[Stage][Type] != Value || !m_savedTextureStageStates[Stage][Type])
 		{
@@ -1961,11 +1786,7 @@ HRESULT CD3DDevWrapper::SetViewport(MYD3DVIEWPORT* pViewport)
 }
 HRESULT CD3DDevWrapper::SetTexture(DWORD Stage,MYIDirect3DBaseTexture* pTexture)
 {
-#ifdef _XBOX
-	if( m_pD3DDev != NULL && Stage < 4 )
-#else
 	if( m_pD3DDev != NULL )
-#endif
 	{
 		//if (m_savedTexturePointers[Stage] != pTexture )
 		{

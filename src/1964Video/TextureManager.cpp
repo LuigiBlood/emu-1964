@@ -23,11 +23,7 @@ CTextureManager gTextureManager;
 
 DWORD g_maxTextureMemUsage = (5*1024*1024);
 DWORD g_amountToFree = (512*1024);
-#ifdef _XBOX
-bool g_bUseSetTextureMem = true;
-#else
 bool g_bUseSetTextureMem = false;
-#endif
 
 // Returns the first prime greater than or equal to nFirst
 inline LONG GetNextPrime(LONG nFirst)
@@ -121,13 +117,13 @@ bool CTextureManager::CleanUp()
 
 	if (!g_bUseSetTextureMem)
 	{
-	while (m_pHead)
-	{
-		TxtrCacheEntry * pVictim = m_pHead;
-		m_pHead = pVictim->pNext;
+		while (m_pHead)
+		{
+			TxtrCacheEntry * pVictim = m_pHead;
+			m_pHead = pVictim->pNext;
 
-		delete pVictim;
-	}
+			delete pVictim;
+		}
 	}
 
 	if( m_blackTextureEntry.pTexture )		delete m_blackTextureEntry.pTexture;	
@@ -154,12 +150,10 @@ bool CTextureManager::TCacheEntryIsLoaded(TxtrCacheEntry *pEntry)
 }
 
 // Purge any textures whos last usage was over 5 seconds ago
+// Check here
 void CTextureManager::PurgeOldTextures()
 {
-	if (m_pCacheTxtrList == NULL)
-		return;
-	
-	if (g_bUseSetTextureMem)
+	if (m_pCacheTxtrList == NULL || g_bUseSetTextureMem)
 		return;
 
 	static const uint32 dwFramesToKill = 5*30;			// 5 secs at 30 fps
@@ -284,7 +278,7 @@ void CTextureManager::RecycleTexture(TxtrCacheEntry *pEntry)
 	{
 		// Add to the list
 		pEntry->pNext = m_pHead;
-		// microdev: reset the texture enhancement flag
+		// Reset the texture enhancement flag
 		pEntry->dwEnhancementFlag = TEXTURE_NO_ENHANCEMENT;
 
 		SAFE_DELETE(pEntry->pEnhancedTexture);
@@ -333,10 +327,7 @@ uint32 CTextureManager::Hash(uint32 dwValue)
 
 void CTextureManager::MakeTextureYoungest(TxtrCacheEntry *pEntry)
 {
-	if (!g_bUseSetTextureMem)
-		return;
-
-	if (pEntry == m_pYoungestTexture)
+	if (!g_bUseSetTextureMem || pEntry == m_pYoungestTexture)
 		return;
 
 	// if its the oldest, then change the oldest pointer
@@ -482,10 +473,6 @@ TxtrCacheEntry * CTextureManager::CreateNewCacheEntry(uint32 dwAddr, uint32 dwWi
 	{
 		uint32 widthToCreate = dwWidth;
 		uint32 heightToCreate = dwHeight;
-#ifdef _XBOX
-		D3DFORMAT pf = D3DFMT_A8R8G8B8;
-		D3DXCheckTextureRequirements(g_pD3DDev, &widthToCreate, &heightToCreate, NULL, 0, &pf, D3DPOOL_MANAGED);
-#endif
 		DWORD freeUpSize = (widthToCreate * heightToCreate * 4) + g_amountToFree;
 
 		// make sure there is enough room for the new texture by deleting old textures
@@ -514,14 +501,12 @@ TxtrCacheEntry * CTextureManager::CreateNewCacheEntry(uint32 dwAddr, uint32 dwWi
 		pEntry = new TxtrCacheEntry;
 		if (pEntry == NULL)
 		{
-			_VIDEO_DisplayTemporaryMessage("Error to create an texture entry");
 			return NULL;
 		}
 
 		pEntry->pTexture = CDeviceBuilder::GetBuilder()->CreateTexture(dwWidth, dwHeight);
 		if (pEntry->pTexture == NULL || pEntry->pTexture->GetTexture() == NULL)
 		{
-			_VIDEO_DisplayTemporaryMessage("Error to create an texture");
 			TRACE2("Warning, unable to create %d x %d texture!", dwWidth, dwHeight);
 		}
 		else
@@ -741,7 +726,6 @@ TxtrCacheEntry * CTextureManager::GetTexture(TxtrInfo * pgti, bool fromTMEM, boo
 		if (pEntry == NULL)
 		{
 			g_lastTextureEntry = pEntry;
-			_VIDEO_DisplayTemporaryMessage("Fail to create new texture entry");
 			return NULL;
 		}
 	}

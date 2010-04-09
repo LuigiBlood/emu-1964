@@ -422,7 +422,6 @@ uint32 GetInputHex()
 extern uint32 gObjTlutAddr;
 void DumpInfo(int thingToDump)
 {
-#ifndef _XBOX
 	uint32 i;
 	switch(thingToDump)
 	{
@@ -566,7 +565,6 @@ void DumpInfo(int thingToDump)
 		DumpMatrix2(gRSP.projectionMtxs[gRSP.projectionMtxTop],"Projection Top Matrix");
 		break;
 	}
-#endif
 }
 
 
@@ -592,7 +590,6 @@ void SetLogToFile(BOOL log)
 //=====================================================================================
 LRESULT APIENTRY DebuggerDialog(HWND hDlg, unsigned message, LONG wParam, LONG lParam)
 {
-#ifndef _XBOX
 	int i;
 	int thingToDump;
 	char temp[300];
@@ -822,14 +819,12 @@ LRESULT APIENTRY DebuggerDialog(HWND hDlg, unsigned message, LONG wParam, LONG l
 		return(TRUE);
 		break;
 	}
-#endif
 
 	return(FALSE);
 }
 
 void __cdecl DebugThreadFunc( void* )
 {
-#ifndef _XBOX
 	if( hWndDlg )
 	{
 		DestroyWindow(hWndDlg);
@@ -848,12 +843,10 @@ void __cdecl DebugThreadFunc( void* )
 	}
 
 	DestroyWindow(hWndDlg);
-#endif
 }
 
 void OpenDialogBox()
 {
-#ifndef _XBOX
 	if( !debuggerWinOpened )
 	{
 		HWND hWndDlg = CreateDialog(windowSetting.myhInst, "debugger", g_GraphicsInfo.hWnd, (DLGPROC)DebuggerDialog);
@@ -864,25 +857,21 @@ void OpenDialogBox()
 	return;
 
 	_beginthread( DebugThreadFunc, 255, NULL );
-#endif
 }
 
 void CloseDialogBox()
 {
-#ifndef _XBOX
 	//if( debuggerWinOpened )
 	if( hWndDlg )
 	{
 		DestroyWindow(hWndDlg);
 		debuggerWinOpened = false;
 	}
-#endif
 }
 
 
 void __cdecl DebuggerAppendMsg(const char * Message, ...)
 {
-#ifndef _XBOX
 	if( !logToScreen && !logToFile )	return;
 
 	char Msg[5000];
@@ -926,13 +915,11 @@ void __cdecl DebuggerAppendMsg(const char * Message, ...)
 	{
 		fprintf(logFp, "%s\n", Msg);
 	}
-#endif
 }
 
 
 void DebuggerPause()
 {
-#ifndef _XBOX
 	char temp[300];
 	sprintf(temp,"%s Debug %s:Paused ",project_name, FILE_VERSION) ;
 	SetWindowText(myDialogWnd, temp );
@@ -947,7 +934,6 @@ void DebuggerPause()
 	}
 	sprintf(temp,"%s Debug %s",project_name, FILE_VERSION) ;
 	SetWindowText(myDialogWnd, temp);
-#endif
 }
 
 void __cdecl LOG_UCODE(LPCTSTR szFormat, ...)

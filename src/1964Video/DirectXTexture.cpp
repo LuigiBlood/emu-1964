@@ -17,9 +17,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include "stdafx.h"
-#ifdef _XBOX
-#include <xgraphics.h>
-#endif
 
 CDirectXTexture::CDirectXTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage) :
 	CTexture(dwWidth,dwHeight,usage)
@@ -57,10 +54,6 @@ CDirectXTexture::~CDirectXTexture()
 }
 
 
-#ifdef _XBOX
-BYTE *pTempbuffer=NULL;
-#endif
-
 //////////////////////////////////////////////////
 // Get information about the DIBitmap
 // This locks the bitmap (and stops 
@@ -71,26 +64,6 @@ bool CDirectXTexture::StartUpdate(DrawInfo *di)
 	if (m_pTexture == NULL)
 		return false;
 
-#ifdef _XBOX
-	if( pTempbuffer )
-	{
-		delete [] pTempbuffer;
-		pTempbuffer = NULL;
-	}
-
-	pTempbuffer = new BYTE[m_dwCreatedTextureHeight*m_dwCreatedTextureWidth*GetPixelSize()];
-	if( !pTempbuffer )
-		return false;
-
-	di->lpSurface = pTempbuffer;
-	di->dwHeight = (uint16)m_dwHeight;
-	di->dwWidth = (uint16)m_dwWidth;
-	di->dwCreatedHeight = m_dwCreatedTextureHeight;
-	di->dwCreatedWidth = m_dwCreatedTextureWidth;
-	di->lPitch    = m_dwCreatedTextureWidth * GetPixelSize();;
-
-	return true;
-#else
 	D3DLOCKED_RECT d3d_lr;
 	HRESULT hr = MYLPDIRECT3DTEXTURE(m_pTexture)->LockRect(0, &d3d_lr, NULL, D3DLOCK_NOSYSLOCK);
 	if (SUCCEEDED(hr))
@@ -107,7 +80,6 @@ bool CDirectXTexture::StartUpdate(DrawInfo *di)
 	{
 		return false;
 	}
-#endif
 }
 
 ///////////////////////////////////////////////////
@@ -118,22 +90,7 @@ void CDirectXTexture::EndUpdate(DrawInfo *di)
 	if (m_pTexture == NULL)
 		return;
 
-#ifdef _XBOX
-	D3DLOCKED_RECT d3d_lr;
-	HRESULT hr;
-
-	hr = MYLPDIRECT3DTEXTURE(m_pTexture)->LockRect(0, &d3d_lr, NULL, 0);
-	if (SUCCEEDED(hr))
-	{
-		XGSwizzleRect( pTempbuffer, 0, NULL, d3d_lr.pBits,
-			di->dwCreatedWidth, di->dwCreatedHeight, 
-			NULL, GetPixelSize() );
-		delete [] pTempbuffer;
-		pTempbuffer = NULL;
-	}
-#else
 	MYLPDIRECT3DTEXTURE(m_pTexture)->UnlockRect( 0 );
-#endif
 }
 
 
@@ -143,28 +100,18 @@ LPRICETEXTURE CDirectXTexture::CreateTexture(uint32 dwWidth, uint32 dwHeight, Te
 	MYLPDIRECT3DTEXTURE lpSurf = NULL;
 	unsigned int dwNumMaps = 1;
 
-#ifdef _XBOX
-	D3DFORMAT pf = D3DFMT_A8R8G8B8;
-#else
 	D3DFORMAT pf = ((CDXGraphicsContext*)(CGraphicsContext::g_pGraphicsContext))->GetFormat();
-#endif
 	switch( pf )
 	{
 	case D3DFMT_R5G6B5:
 	case D3DFMT_X1R5G5B5:
 	case D3DFMT_A1R5G5B5:
 	case D3DFMT_A4R4G4B4:
-#ifndef _XBOX
 	case D3DFMT_X4R4G4B4:
-#endif
 		switch(usage)
 		{
 		case AS_BACK_BUFFER_SAVE:
-#ifdef _XBOX
-			pf = D3DFMT_A4R4G4B4;
-#else
 			pf = D3DFMT_X4R4G4B4;
-#endif
 			break;
 		case AS_RENDER_TARGET:
 			pf = D3DFMT_A4R4G4B4;
@@ -254,8 +201,6 @@ LPRICETEXTURE CDirectXTexture::CreateTexture(uint32 dwWidth, uint32 dwHeight, Te
 		TRACE2("!!Unable to create surface!! %d x %d", dwWidth, dwHeight);
 		return NULL;
 	}
-	
-	//_VIDEO_DisplayTemporaryMessage2("Create Texture: (%d,%d), created as (%d,%d)",m_dwWidth,dwHeight,m_dwCreatedTextureWidth,m_dwCreatedTextureHeight);
 	return lpSurf;		
 }
 

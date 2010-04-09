@@ -1603,7 +1603,6 @@ bool CRender::DrawTexture(int tex, TextureChannel channel)
 
 void CRender::SaveTextureToFile(int tex, TextureChannel channel, bool bShow)
 {
-#ifndef _XBOX
 	TxtrCacheEntry &entry = *(g_textures[tex].pTextureEntry);
 
 	CTexture *pBaseTexture = entry.pTexture;
@@ -1666,7 +1665,6 @@ void CRender::SaveTextureToFile(int tex, TextureChannel channel, bool bShow)
 			DebuggerAppendMsg("Whole texture is stored at: %s", filename);
 		}
 	}
-#endif
 }
 #endif
 

@@ -60,7 +60,6 @@ uint32		CGraphicsContext::m_dwStatusWindowStyle=0;     // Saved window style for
 
 BOOL CALLBACK MyEnumChildProc(HWND hwnd, LPARAM lParam)
 {
-#ifndef _XBOX
 	int id = GetDlgCtrlID(hwnd);
 	if( id != 0 )
 	{
@@ -75,7 +74,6 @@ BOOL CALLBACK MyEnumChildProc(HWND hwnd, LPARAM lParam)
 			}
 		}
 	}
-#endif
 
 	return TRUE;
 }
@@ -84,7 +82,6 @@ void CGraphicsContext::InitWindowInfo()
 {
 	m_hWnd = g_GraphicsInfo.hWnd;
 
-#ifndef _XBOX
 	m_hWndStatus = g_GraphicsInfo.hStatusBar;
 	m_hWndToolbar = NULL;
 	EnumChildWindows(m_hWnd, MyEnumChildProc, 0);	// To find toolbar
@@ -97,11 +94,9 @@ void CGraphicsContext::InitWindowInfo()
 	m_dwStatusWindowStyle = GetWindowLong( m_hWndStatus, GWL_STYLE );
 
 	RECT rcStatus;
-#endif
 
 	// Add extra margin for the status bar
 	windowSetting.statusBarHeight = 0;
-#ifndef _XBOX
 	if ( IsWindow( m_hWndStatus ) )
 	{
 		// Add on enough space for the status bar
@@ -115,19 +110,11 @@ void CGraphicsContext::InitWindowInfo()
 		GetClientRect(m_hWndToolbar, &rcStatus);
 		windowSetting.toolbarHeight = (rcStatus.bottom - rcStatus.top);
 	}
-#endif
 }
 
 
 bool CGraphicsContext::Initialize(HWND hWnd, HWND hWndStatus, uint32 dwWidth, uint32 dwHeight, BOOL bWindowed )
 {
-#ifdef _XBOX
-	windowSetting.uDisplayWidth = windowSetting.uFullScreenDisplayWidth;
-	windowSetting.uDisplayHeight = windowSetting.uFullScreenDisplayHeight;
-
-	windowSetting.statusBarHeight = windowSetting.toolbarHeight = 
-		windowSetting.statusBarHeightToUse = windowSetting.toolbarHeightToUse = 0;
-#else
 	if( windowSetting.bDisplayFullscreen )
 	{
 		windowSetting.uDisplayWidth = windowSetting.uFullScreenDisplayWidth;
@@ -170,7 +157,6 @@ bool CGraphicsContext::Initialize(HWND hWnd, HWND hWndStatus, uint32 dwWidth, ui
 	{
 		ShowCursor( TRUE );
 	}
-#endif
 
 	g_pFrameBufferManager->Initialize();
 
@@ -182,7 +168,6 @@ void CGraphicsContext::CleanUp()
     m_bActive = false;
     m_bReady  = false;
 
-#ifndef _XBOX
 	if ( IsWindow( m_hWnd ) )
 	{
 		SetWindowLong( m_hWnd, GWL_STYLE, m_dwWindowStyle );
@@ -192,7 +177,6 @@ void CGraphicsContext::CleanUp()
 	{
 		SetWindowLong( m_hWndStatus, GWL_STYLE, m_dwStatusWindowStyle);
 	}
-#endif
 }
 
 
@@ -233,7 +217,6 @@ void CGraphicsContext::InitDeviceParameters(void)
 {
 	// Initialize common device parameters
 
-#ifndef _XBOX
 	int i=0, j;
 	DEVMODE deviceMode;
 	int	numOfFrequency=0, numOfColorDepth = 0;
@@ -290,7 +273,6 @@ void CGraphicsContext::InitDeviceParameters(void)
 
 	// To initialze device parameters for DirectX
 	COGLGraphicsContext::InitDeviceParameters();
-#endif
 
 	// To initialze device parameters for DirectX
 	CDXGraphicsContext::InitDeviceParameters();
