@@ -79,9 +79,6 @@ CDeviceBuilder* CDeviceBuilder::CreateBuilder(SupportedDeviceType type)
 {
 	if( m_pInstance == NULL )
 	{
-#ifdef _XBOX
-			m_pInstance = new DirectXDeviceBuilder();
-#else
 		switch( type )
 		{
 		case 	OGL_DEVICE:
@@ -108,7 +105,6 @@ CDeviceBuilder* CDeviceBuilder::CreateBuilder(SupportedDeviceType type)
 			ErrorMsg("Error builder type");
 			exit(1);
 		}
-#endif
 
 		SAFE_CHECK(m_pInstance);
 	}
@@ -180,7 +176,6 @@ void CDeviceBuilder::DeleteAlphaBlender(void)
 
 //========================================================================
 
-#ifndef _XBOX
 CGraphicsContext * OGLDeviceBuilder::CreateGraphicsContext(void)
 {
 	if( g_GraphicsInfo.hStatusBar )
@@ -353,15 +348,12 @@ CBlender * OGLDeviceBuilder::CreateAlphaBlender(CRender *pRender)
 
 	return m_pAlphaBlender;
 }
-#endif
 
 CGraphicsContext * DirectXDeviceBuilder::CreateGraphicsContext(void)
 {
 	if( g_GraphicsInfo.hStatusBar )
 	{
-#ifndef _XBOX
 		SetWindowText(g_GraphicsInfo.hStatusBar,"Creating DirectX Device Context");
-#endif
 	}
 	if( m_pGraphicsContext == NULL )
 	{
@@ -408,11 +400,6 @@ CColorCombiner * DirectXDeviceBuilder::CreateColorCombiner(CRender *pRender)
 		int m_dwCapsMaxStages=g_D3DDeviceCaps.MaxTextureBlendStages;
 		bool canUsePixelShader = g_D3DDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(1, 1);
 
-#ifdef _XBOX
-		type = DX_PIXEL_SHADER;
-		//type = DX_BEST_FIT;
-		//type = DX_LOW_END;
-#else
 		if( (options.DirectXCombiner == DX_PIXEL_SHADER || options.DirectXCombiner == DX_SEMI_PIXEL_SHADER)
 			&& !canUsePixelShader )
 		{
@@ -455,7 +442,6 @@ CColorCombiner * DirectXDeviceBuilder::CreateColorCombiner(CRender *pRender)
 				}
 			}
 		}
-#endif
 
 		switch( type )
 		{
@@ -468,11 +454,9 @@ CColorCombiner * DirectXDeviceBuilder::CreateColorCombiner(CRender *pRender)
 		case DX_HIGH_END:
 			m_pColorCombiner = new CDirectXColorCombiner(pRender);
 			break;
-#ifndef _XBOX
 		case DX_NVIDIA_TNT:
 			m_pColorCombiner = new CNvTNTDirectXCombiner(pRender);
 			break;
-#endif
 		case DX_2_STAGES:
 			m_pColorCombiner = new CDirectXColorCombiner(pRender);
 			((CDirectXColorCombiner*)m_pColorCombiner)->SetStageLimit(2);
@@ -491,11 +475,9 @@ CColorCombiner * DirectXDeviceBuilder::CreateColorCombiner(CRender *pRender)
 		case DX_PIXEL_SHADER:
 			m_pColorCombiner = new CDirectXPixelShaderCombiner(pRender);
 			break;
-#ifndef _XBOX
 		case DX_SEMI_PIXEL_SHADER:
 			m_pColorCombiner = new CDirectXSemiPixelShaderCombiner(pRender);
 			break;
-#endif
 		}
 	
 		SAFE_CHECK(m_pColorCombiner);

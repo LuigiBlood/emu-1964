@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define _DLLINTERFACE_H_
 
 #include "typedefs.h"
-
 typedef struct {
 	HINSTANCE myhInst;
 	float	fViWidth, fViHeight;
@@ -158,8 +157,6 @@ extern PluginStatus status;
 extern char generalText[];
 
 void SetVIScales();
-extern void _VIDEO_DisplayTemporaryMessage2(const char *msg, ...);
-extern void _VIDEO_DisplayTemporaryMessage(const char *msg);
 extern void XBOX_Debugger_Log(const char *Message, ...);
 
 #endif

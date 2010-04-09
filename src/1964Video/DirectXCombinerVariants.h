@@ -20,19 +20,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define _DIRECTX_COMBINER_VARIANTS_H_
 
 #include "DirectXCombiner.h"
-#ifndef _XBOX
 #include "OGLCombinerTNT2.h"
 #include "CNvTNTDirectXCombiner.h"
-#endif
 
 typedef struct {
 	uint64  mux64;
-#ifdef _XBOX
-	bool   bPrimLOD;
-	bool   bFog;
-#else
 	ID3DXBuffer* pVS;
-#endif
 	uint32 dwShaderID;
 	char *pShaderText;
 	IDirect3DPixelShader9* pShader;
@@ -51,10 +44,6 @@ protected:
 	void InitCombinerCycle12(void);
 	int GeneratePixelShaderFromMux(void);
 	int FindCompiledShader(void);
-
-#ifdef _XBOX
-	bool Initialize();
-#endif
 
 	std::vector<PixelShaderEntry> m_pixelShaderList;
 #ifdef _DEBUG

@@ -25,12 +25,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 extern FiddledVtx * g_pVtxBase;
 const int d3d_bias_factor = 4;
 
-#ifdef _XBOX
-int nFlickerFilter;//freakdave
-bool bSoftDisplayFilter;//freakdave
-int nTextureFilter=2;//freakdave
-#endif
-
 inline float round( float x )
 {
 	return (float)(s32)( x + 0.5f );
@@ -127,6 +121,7 @@ bool D3DRender::InitDeviceObjects()
 	gD3DDevWrapper.SetRenderState(D3DRS_FOGDENSITY,   *(uint32 *)(&density));
 	gD3DDevWrapper.SetRenderState(D3DRS_RANGEFOGENABLE, TRUE);
 //#ifdef _XBOX
+	//CHECK ME HERE
 	gD3DDevWrapper.SetRenderState( D3DRS_FOGTABLEMODE, D3DFOG_NONE );
 //#else
 //	gD3DDevWrapper.SetRenderState( D3DRS_FOGTABLEMODE, D3DFOG_LINEAR );
@@ -624,9 +619,6 @@ void D3DRender::SetFogEnable(bool bEnable)
 	{
 		gD3DDevWrapper.SetRenderState( D3DRS_FOGENABLE, TRUE);
 		gD3DDevWrapper.SetRenderState(D3DRS_FOGCOLOR, gRDP.fogColor);
-#ifdef _XBOX
-		gD3DDevWrapper.SetRenderState(D3DRS_RANGEFOGENABLE, TRUE);
-#endif
 		if( g_curRomInfo.bZHack )
 		{
 			float minf = HackZ(gRSPfFogMin);
@@ -765,14 +757,12 @@ void D3DRender::BeginRendering(void)
 
 void D3DRender::CaptureScreen(char *filename)
 {
-#ifndef _XBOX
 	MYLPDIRECT3DSURFACE surface;
 	g_pD3DDev->GetRenderTarget(0,&surface);
 	((CDXGraphicsContext*)CGraphicsContext::g_pGraphicsContext)->SaveSurfaceToFile(filename, surface, false);
 	//D3DXSaveSurfaceToFile(filename,D3DXIFF_BMP,surface,NULL,NULL);
 	surface->Release();
 	TRACE1("Capture screen to %s", filename);
-#endif
 }
 
 void D3DRender::SetCullMode(bool bCullFront, bool bCullBack)

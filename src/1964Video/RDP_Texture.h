@@ -850,24 +850,6 @@ TxtrCacheEntry* LoadTexture(uint32 tileno)
 			return NULL;
 	}
 
-#ifdef _XBOX
-	// Hack for XBOX, don't use too big textures
-	if( gti.HeightToCreate/gti.HeightToLoad >= 2 && gti.HeightToCreate > 128 )//&& tile.bClampT )//&& tile.dwMaskT )
-	{
-		tile.bClampT = 0;
-		gti.HeightToCreate = gti.HeightToLoad;
-		tile.dwHeight = gti.HeightToLoad;
-	}
-
-	if( gti.WidthToCreate/gti.WidthToLoad >= 2 && gti.WidthToCreate > 128 )//&& tile.bClampS )//&& tile.dwMaskS )
-	{
-		tile.bClampS = 0;
-		gti.WidthToCreate = gti.WidthToLoad;
-		tile.dwWidth = gti.WidthToLoad;
-	}
-#endif
-
-
 	LOG_TEXTURE(
 	{
 		TRACE0("Loading texture:\n");
@@ -927,7 +909,6 @@ void PrepareTextures()
 				TxtrCacheEntry *pEntry = LoadTexture(tilenos[i]);
 				if (pEntry && pEntry->pTexture )
 				{
-#ifndef _XBOX
 					if( pEntry->txtrBufIdx <= 0 )
 					{
 						if( pEntry->pEnhancedTexture && pEntry->dwEnhancementFlag == TEXTURE_EXTERNAL && !options.bLoadHiResTextures )
@@ -950,7 +931,6 @@ void PrepareTextures()
 							EnhanceTexture(pEntry);
 						}
 					}
-#endif
 
 					CRender::g_pRender->SetCurrentTexture( tilenos[i], 
 						(pEntry->pEnhancedTexture)?pEntry->pEnhancedTexture:pEntry->pTexture,
@@ -960,7 +940,6 @@ void PrepareTextures()
 				{
 					pEntry = gTextureManager.GetBlackTexture();
 					CRender::g_pRender->SetCurrentTexture( tilenos[i], pEntry->pTexture, 4, 4, pEntry);
-					_VIDEO_DisplayTemporaryMessage("Fail to load texture, use black to replace");
 				}
 
 			}

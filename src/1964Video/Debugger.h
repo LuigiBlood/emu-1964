@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #if !defined(AFX_DEBUGGER_H__63013E25_7F89_4826_880E_1B5D48CEA506__INCLUDED_)
 #define AFX_DEBUGGER_H__63013E25_7F89_4826_880E_1B5D48CEA506__INCLUDED_
 
-#if defined(_DEBUG) && !defined(_XBOX)
+#if defined(_DEBUG)
 
 #if _MSC_VER > 1000
 #pragma once

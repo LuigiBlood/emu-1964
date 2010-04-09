@@ -18,10 +18,6 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #define _WIN32_WINNT 0x0400
 #include <stdio.h>
-#ifdef _XBOX
-#include <xtl.h>
-#include <xfont.h>
-#else
 #define WINVER 0x0400
 #include <windows.h>
 #include <windowsx.h>			// Button_* etc
@@ -62,7 +58,6 @@
 #define SetVertexShaderConstant		SetVertexShaderConstantF
 #include <vector>
 
-#ifndef _XBOX
 #include "gl/gl.h"
 #include "gl/glu.h"
 #include "glext.h"
@@ -70,7 +65,6 @@
 #include "wglext.h"
 #include "wgl_extention_ATI.h"
 #include "gl_extention_ATI.h"
-#endif
 
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(p)  { if(p) { delete (p);     (p)=NULL; } }
@@ -119,7 +113,6 @@
 #include "Render.h"
 #include "D3DRender.h"
 
-#ifndef _XBOX
 #include "OGLTexture.h"
 #include "OGLDecodedMux.h"
 #include "CNvTNTCombiner.h"
@@ -134,7 +127,6 @@
 #include "OGLRender.h"
 #include "OGLExtRender.h"
 #include "OGLGraphicsContext.h"
-#endif
 
 #include "resource.h"
 
@@ -161,11 +153,5 @@ extern unsigned char *g_pRDRAMu8;
 
 extern GFX_INFO g_GraphicsInfo;
 
-#ifdef _XBOX
-extern XFONT *g_defaultTrueTypeFont;
-#endif
-
-
 extern char *project_name;
-#endif
 

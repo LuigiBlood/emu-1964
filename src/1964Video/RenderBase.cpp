@@ -122,10 +122,8 @@ D3DXVECTOR4	g_vtxNonTransformed[MAX_VERTS];
 D3DXVECTOR4	g_vecProjected[MAX_VERTS];
 D3DXVECTOR4	g_vtxTransformed[MAX_VERTS];
 #endif
-#ifndef _XBOX
 float		g_vtxProjected5[1000][5];
 float		g_vtxProjected5Clipped[2000][5];
-#endif
 //uint32		g_dwVtxFlags[MAX_VERTS];			// Z_POS Z_NEG etc
 VECTOR2		g_fVtxTxtCoords[MAX_VERTS];
 uint32		g_dwVtxDifColor[MAX_VERTS];
@@ -137,10 +135,8 @@ float		g_fFogCoord[MAX_VERTS];
 EXTERNAL_VERTEX	g_vtxForExternal[MAX_VERTS];
 
 TLITVERTEX			g_vtxBuffer[1000];
-#ifndef _XBOX
 TLITVERTEX			g_clippedVtxBuffer[2000];
 uint8				g_oglVtxColors[1000][4];
-#endif
 int					g_clippedVtxCount=0;
 TLITVERTEX			g_texRectTVtx[4];
 unsigned int		g_vtxIndex[1000];
@@ -730,7 +726,6 @@ void ComputeLOD(bool openGL)
 	RenderTexture &tex0 = g_textures[gRSP.curTile];
 
 	float d,dt;
-#ifndef _XBOX
 	if( openGL )
 	{
 		float x = g_vtxProjected5[0][0] / g_vtxProjected5[0][4] - g_vtxProjected5[1][0] / g_vtxProjected5[1][4];
@@ -741,7 +736,6 @@ void ComputeLOD(bool openGL)
 		d = sqrtf(x*x+y*y);
 	}
 	else
-#endif
 	{
 		float x = (v0.x - v1.x)/ windowSetting.fMultX;
 		float y = (v0.y - v1.y)/ windowSetting.fMultY;
@@ -774,7 +768,6 @@ void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture, bool openGL)
 
 	TLITVERTEX &v = g_vtxBuffer[vtxIndex];
 
-#ifndef _XBOX
 	VTX_DUMP(TRACE4("  Trans: x=%f, y=%f, z=%f, w=%f",  g_vtxTransformed[dwV].x,g_vtxTransformed[dwV].y,g_vtxTransformed[dwV].z,g_vtxTransformed[dwV].w));
 	if( openGL )
 	{
@@ -787,7 +780,6 @@ void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture, bool openGL)
 		if( g_vtxTransformed[dwV].w < 0 )	g_vtxProjected5[vtxIndex][4] = 0;
 		g_vtxIndex[vtxIndex] = vtxIndex;
 	}
-#endif
 
 	if( !openGL || options.bOGLVertexClipper == TRUE )
 	{
@@ -801,22 +793,18 @@ void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture, bool openGL)
 		if( gRSP.bProcessSpecularColor )
 		{
 			v.dcSpecular = CRender::g_pRender->PostProcessSpecularColor();
-//#ifdef _XBOX
 			if( gRSP.bFogEnabled )
 			{
 				v.dcSpecular &= 0x00FFFFFF;
 				uint32	fogFct = 0xFF-(uint8)((g_fFogCoord[dwV]-gRSPfFogMin)*gRSPfFogDivider);
 				v.dcSpecular |= (fogFct<<24);
 			}
-//#endif
 		}
-//#ifdef _XBOX
 		else if( gRSP.bFogEnabled )
 		{
 			uint32	fogFct = 0xFF-(uint8)((g_fFogCoord[dwV]-gRSPfFogMin)*gRSPfFogDivider);
 			v.dcSpecular = (fogFct<<24);
 		}
-//#endif
 	}
 	VTX_DUMP(TRACE2("  (U,V): %f, %f",  g_fVtxTxtCoords[dwV].x,g_fVtxTxtCoords[dwV].y));
 
@@ -840,7 +828,6 @@ void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture, bool openGL)
 		v.dcDiffuse = g_dwVtxDifColor[dwV];
 	}
 
-#ifndef _XBOX
 	if( openGL )
 	{
 		g_oglVtxColors[vtxIndex][0] = v.r;
@@ -848,7 +835,6 @@ void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture, bool openGL)
 		g_oglVtxColors[vtxIndex][2] = v.b;
 		g_oglVtxColors[vtxIndex][3] = v.a;
 	}
-#endif
 
 	if( bTexture )
 	{
@@ -1228,14 +1214,12 @@ void ProcessVertexDataSSE(uint32 dwAddr, uint32 dwV0, uint32 dwNum)
 
 		SSEVec3Transform(i);
 
-//#ifdef _XBOX
 		if( gRSP.bFogEnabled )
 		{
 			g_fFogCoord[i] = g_vecProjected[i].z;
 			if( g_vecProjected[i].w < 0 || g_vecProjected[i].z < 0 || g_fFogCoord[i] < gRSPfFogMin )
 				g_fFogCoord[i] = gRSPfFogMin;
 		}
-//#endif
 		ReplaceAlphaWithFogFactor(i);
 
 
@@ -1353,14 +1337,12 @@ void ProcessVertexDataNoSSE(uint32 dwAddr, uint32 dwV0, uint32 dwNum)
 			g_vecProjected[i].z = g_vtxTransformed[i].z * g_vecProjected[i].w;
 		}
 
-//#ifdef _XBOX
 		if( gRSP.bFogEnabled )
 		{
 			g_fFogCoord[i] = g_vecProjected[i].z;
 			if( g_vecProjected[i].w < 0 || g_vecProjected[i].z < 0 || g_fFogCoord[i] < gRSPfFogMin )
 				g_fFogCoord[i] = gRSPfFogMin;
 		}
-//#endif
 
 		VTX_DUMP( 
 		{
@@ -1713,14 +1695,12 @@ void ProcessVertexDataDKR(uint32 dwAddr, uint32 dwV0, uint32 dwNum)
 		VTX_DUMP(TRACE5("vtx %d: %f, %f, %f, %f", i, 
 			g_vtxTransformed[i].x,g_vtxTransformed[i].y,g_vtxTransformed[i].z,g_vtxTransformed[i].w));
 
-//#ifdef _XBOX
 		if( gRSP.bFogEnabled )
 		{
 			g_fFogCoord[i] = g_vecProjected[i].z;
 			if( g_vecProjected[i].w < 0 || g_vecProjected[i].z < 0 || g_fFogCoord[i] < gRSPfFogMin )
 				g_fFogCoord[i] = gRSPfFogMin;
 		}
-//#endif
 
 		RSP_Vtx_Clipping(i);
 
@@ -1794,11 +1774,9 @@ void ProcessVertexDataPD(uint32 dwAddr, uint32 dwV0, uint32 dwNum)
 			g_vecProjected[i].z = g_vtxTransformed[i].z * g_vecProjected[i].w;
 		}
 
-//#ifdef _XBOX
 		g_fFogCoord[i] = g_vecProjected[i].z;
 		if( g_vecProjected[i].w < 0 || g_vecProjected[i].z < 0 || g_fFogCoord[i] < gRSPfFogMin )
 			g_fFogCoord[i] = gRSPfFogMin;
-//#endif
 
 		RSP_Vtx_Clipping(i);
 
@@ -1907,11 +1885,9 @@ void ProcessVertexDataConker(uint32 dwAddr, uint32 dwV0, uint32 dwNum)
 			g_vecProjected[i].z = g_vtxTransformed[i].z * g_vecProjected[i].w;
 		}
 
-//#ifdef _XBOX
 		g_fFogCoord[i] = g_vecProjected[i].z;
 		if( g_vecProjected[i].w < 0 || g_vecProjected[i].z < 0 || g_fFogCoord[i] < gRSPfFogMin )
 			g_fFogCoord[i] = gRSPfFogMin;
-//#endif
 
 		VTX_DUMP( 
 		{
@@ -2061,11 +2037,10 @@ void ProcessVertexData_Rogue_Squadron(uint32 dwXYZAddr, uint32 dwColorAddr, uint
 				g_vecProjected[i].x,g_vecProjected[i].y,g_vecProjected[i].z,g_vecProjected[i].w);
 		});
 
-//#ifdef _XBOX
 		g_fFogCoord[i] = g_vecProjected[i].z;
 		if( g_vecProjected[i].w < 0 || g_vecProjected[i].z < 0 || g_fFogCoord[i] < gRSPfFogMin )
 			g_fFogCoord[i] = gRSPfFogMin;
-//#endif
+
 		RSP_Vtx_Clipping(i);
 
 		if( gRSP.bLightingEnable )
@@ -2267,7 +2242,6 @@ void HackZAll()
 			g_vtxBuffer[i].z = HackZ(g_vtxBuffer[i].z);
 		}
 	}
-#ifndef _XBOX
 	else
 	{
 		for( uint32 i=0; i<gRSP.numVertices; i++)
@@ -2276,7 +2250,6 @@ void HackZAll()
 			g_vtxProjected5[i][2] = HackZ(g_vtxProjected5[i][2]/w)*w;
 		}
 	}
-#endif
 }
 
 

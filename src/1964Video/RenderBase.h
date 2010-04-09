@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
 #define RICE_MATRIX_STACK		60
-#define MAX_TEXTURES				8
+#define MAX_TEXTURES			 8
 
 enum FillMode
 {
@@ -41,10 +41,8 @@ void myVec3Transform(float *vecout, float *vecin, float* m);
 // All these arrays are moved out of the class CRender
 // to be accessed in faster speed
 extern D3DXVECTOR4	g_vecProjected[MAX_VERTS];
-#ifndef _XBOX
 extern FLOAT		g_vtxProjected5[1000][5];
 extern float		g_vtxProjected5Clipped[2000][5];
-#endif
 extern VECTOR2		g_fVtxTxtCoords[MAX_VERTS];
 extern uint32		g_dwVtxDifColor[MAX_VERTS];
 //extern uint32		g_dwVtxFlags[MAX_VERTS];			// Z_POS Z_NEG etc

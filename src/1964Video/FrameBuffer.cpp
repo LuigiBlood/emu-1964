@@ -1447,11 +1447,9 @@ OK, heres the drill!
 		if( CDeviceBuilder::m_deviceGeneralType == DIRECTX_DEVICE )
 			gRenderTextureInfos[idxToUse].pRenderTexture = 
 				new CDXRenderTexture(tempRenderTextureInfo.bufferWidth, tempRenderTextureInfo.bufferHeight, &gRenderTextureInfos[idxToUse], AS_BACK_BUFFER_SAVE);
-#ifndef _XBOX
 		else
 			gRenderTextureInfos[idxToUse].pRenderTexture = 
 				new COGLRenderTexture(tempRenderTextureInfo.bufferWidth, tempRenderTextureInfo.bufferHeight, &gRenderTextureInfos[idxToUse], AS_BACK_BUFFER_SAVE);
-#endif
 	}
 
 	// Need to set all variables for gRenderTextureInfos[idxToUse]
@@ -1726,11 +1724,9 @@ void FrameBufferManager::ActiveTextureBuffer(void)
 			if( CDeviceBuilder::m_deviceGeneralType == DIRECTX_DEVICE )
 				gRenderTextureInfos[idxToUse].pRenderTexture = 
 					new CDXRenderTexture(w, newRenderTextureInfo.bufferHeight, &gRenderTextureInfos[idxToUse], AS_RENDER_TARGET);
-#ifndef _XBOX
 			else
 				gRenderTextureInfos[idxToUse].pRenderTexture = 
 					new COGLRenderTexture(w, newRenderTextureInfo.bufferHeight, &gRenderTextureInfos[idxToUse], AS_RENDER_TARGET);
-#endif
 		}
 
 		// Need to set all variables for gRenderTextureInfos[idxToUse]

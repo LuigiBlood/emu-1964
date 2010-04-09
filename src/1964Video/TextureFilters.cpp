@@ -22,10 +22,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include "Main_ScanLineTv.h"
 #include "lib/BMGDll.h"
 
-#ifndef _XBOX
-
-
-
 
 /************************************************************************/
 /* Sharpen filters                                                      */
@@ -805,7 +801,7 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 		{
 			// ehmm, wait a second... no!
 			TRACE1("Cannot get image info for file: %s", libaa.cFileName);
-			continue;
+			return;
 		}
 
 		// init texture type var
@@ -2004,7 +2000,3 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 		return;
 	}
 }
-
-#endif
-
-

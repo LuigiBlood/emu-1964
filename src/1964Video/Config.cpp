@@ -252,10 +252,8 @@ BOOL EnumChildWndTooltip(void);
 
 inline void ShowItem(HWND hDlg, UINT item, BOOL flag)
 {
-#ifndef _XBOX
 	HWND itemwnd = GetDlgItem(hDlg, item);
 	ShowWindow(itemwnd,flag?SW_SHOW:SW_HIDE);
-#endif
 }
 //////////////////////////////////////////////////////////////////////////
 void GenerateFrameBufferOptions(void)
@@ -613,15 +611,10 @@ void ReadConfiguration(void)
 	defaultRomOptions.screenUpdateSetting = SCREEN_UPDATE_AT_VI_CHANGE;
 	//defaultRomOptions.screenUpdateSetting = SCREEN_UPDATE_AT_VI_UPDATE_AND_DRAWN;
 
-#ifdef _XBOX
-	status.isMMXSupported = 1;
-	status.isSSESupported = 0;
-	status.isVertexShaderSupported = true;
-#else
 	status.isMMXSupported = isMMXSupported();
 	status.isSSESupported = isSSESupported();
 	status.isVertexShaderSupported = false;
-#endif
+
 	defaultRomOptions.N64FrameBufferEmuType = FRM_BUF_NONE;
 	defaultRomOptions.N64FrameBufferWriteBackControl = FRM_BUF_WRITEBACK_NORMAL;
 	defaultRomOptions.N64RenderToTextureEmuType = TXT_BUF_NONE;
@@ -632,15 +625,9 @@ void ReadConfiguration(void)
 		options.bWinFrameMode = FALSE;
 		options.bFullTMEM = FALSE;
 		options.bUseFullTMEM = FALSE;
-#ifdef _XBOX
-		options.bForceSoftwareTnL = FALSE;
-		options.bForceSoftwareClipper = FALSE;
-		options.bEnableSSE = FALSE;
-#else
 		options.bForceSoftwareTnL = TRUE;
 		options.bForceSoftwareClipper = TRUE;
 		options.bEnableSSE = TRUE;
-#endif
 		options.bEnableVertexShader = FALSE;
 		options.bOGLVertexClipper = FALSE;
 		options.RenderBufferSetting=1;
@@ -766,14 +753,10 @@ void ReadConfiguration(void)
 		windowSetting.uFullScreenRefreshRate = ReadRegistryDwordVal("FullScreenFrequency");
 
 		SupportedDeviceType render = (SupportedDeviceType)ReadRegistryDwordVal("RenderEngine");
-#ifdef _XBOX
-		CDeviceBuilder::SelectDeviceType( DIRECTX_DEVICE );
-#else
 		if( render == DIRECTX_DEVICE )
 			CDeviceBuilder::SelectDeviceType( DIRECTX_DEVICE );
 		else
 			CDeviceBuilder::SelectDeviceType( (SupportedDeviceType)options.OpenglRenderSetting);
-#endif
 	}
 
 	status.isSSEEnabled = status.isSSESupported && options.bEnableSSE;
@@ -1697,7 +1680,6 @@ int numOfTTMsgs = sizeof(ttmsg)/sizeof(ToolTipMsg);
 
 BOOL CreateDialogTooltip(void) 
 {
-#ifndef _XBOX
 #ifdef ENABLE_CONFIG_DIALOG
     // Ensure that the common control DLL is loaded, and create
     // a tooltip control.
@@ -1742,17 +1724,12 @@ BOOL CreateDialogTooltip(void)
     if (g_hhk == (HHOOK) NULL)
         return FALSE;
 #endif
-#endif
     return TRUE;
 } 
 
 BOOL EnumChildWndTooltip(void)
 {
-#ifdef _XBOX
-    return TRUE;
-#else
 	return (!EnumChildWindows(g_hwndDlg, (WNDENUMPROC) EnumChildProc, 0));
-#endif
 }
 
 // EmumChildProc - registers control windows with a tooltip control by
@@ -1763,7 +1740,6 @@ BOOL EnumChildWndTooltip(void)
 // lParam - application-defined value (not used). 
 extern "C"  BOOL __stdcall EnumChildProc(HWND hwndCtrl, LPARAM lParam) 
 { 
-#ifndef _XBOX
     TOOLINFO ti; 
 	
     ti.cbSize = sizeof(TOOLINFO); 
@@ -1774,11 +1750,9 @@ extern "C"  BOOL __stdcall EnumChildProc(HWND hwndCtrl, LPARAM lParam)
     ti.lpszText = LPSTR_TEXTCALLBACK; 
     SendMessage(g_hwndTT, TTM_ADDTOOL, 0, 
        (LPARAM) (LPTOOLINFO) &ti); 
-#endif
     return TRUE; 
 } 
 
-#ifndef _XBOX
 // GetMsgProc - monitors the message stream for mouse messages intended 
 //     for a control window in the dialog box. 
 // Returns a message-dependent value. 
@@ -1857,8 +1831,6 @@ VOID OnWMNotify(LPARAM lParam)
 	} 
 	return;
 }
-#endif
-
 std::ifstream& getline( std::ifstream &is, char *str );
 
 
@@ -2473,7 +2445,6 @@ uint32 CountryCodeToTVSystem(uint32 countryCode)
 
 LRESULT APIENTRY OptionsDialogProc(HWND hDlg, unsigned message, LONG wParam, LONG lParam)
 {
-#ifndef _XBOX
 	int i;
 	int maxres;
 	HWND item;
@@ -2744,12 +2715,10 @@ LRESULT APIENTRY OptionsDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
 	    }
     }
 
-#endif
     return FALSE;
 }
 LRESULT APIENTRY DirectXDialogProc(HWND hDlg, unsigned message, LONG wParam, LONG lParam)
 {
-#ifndef _XBOX
 	int i;
 	HWND item;
 	uint32 dwPos;
@@ -3041,12 +3010,10 @@ LRESULT APIENTRY DirectXDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
 
 
     return FALSE;
-#endif
 	return(TRUE);
 }
 LRESULT APIENTRY OpenGLDialogProc(HWND hDlg, unsigned message, LONG wParam, LONG lParam)
 {
-#ifndef _XBOX
 	int i;
 	HWND item;
 
@@ -3152,13 +3119,11 @@ LRESULT APIENTRY OpenGLDialogProc(HWND hDlg, unsigned message, LONG wParam, LONG
 			return(TRUE);
 	    }
     }
-#endif
 
     return FALSE;
 }
 LRESULT APIENTRY TextureSettingDialogProc(HWND hDlg, unsigned message, LONG wParam, LONG lParam)
 {
-#ifndef _XBOX
 	int i;
 	HWND item;
 	int setting;
@@ -3342,13 +3307,11 @@ LRESULT APIENTRY TextureSettingDialogProc(HWND hDlg, unsigned message, LONG wPar
 			return(TRUE);
 	    }
     }
-#endif
 
     return FALSE;
 }
 LRESULT APIENTRY DefaultSettingDialogProc(HWND hDlg, unsigned message, LONG wParam, LONG lParam)
 {
-#ifndef _XBOX
 	int i;
 	HWND item;
 
@@ -3464,13 +3427,11 @@ LRESULT APIENTRY DefaultSettingDialogProc(HWND hDlg, unsigned message, LONG wPar
 			return(TRUE);
 	    }
     }
-#endif
 
 	return FALSE;
 }
 LRESULT APIENTRY RomSettingProc(HWND hDlg, unsigned message, LONG wParam, LONG lParam)
 {
-#ifndef _XBOX
 	int i;
 	uint32 state;
 
@@ -3678,13 +3639,11 @@ LRESULT APIENTRY RomSettingProc(HWND hDlg, unsigned message, LONG wParam, LONG l
 			return(TRUE);
 	    }
     }
-#endif
 
     return FALSE;
 }
 LRESULT APIENTRY UnavailableProc(HWND hDlg, unsigned message, LONG wParam, LONG lParam)
 {
-#ifndef _XBOX
 	switch(message)
 	{
 	case WM_INITDIALOG:
@@ -3722,7 +3681,6 @@ LRESULT APIENTRY UnavailableProc(HWND hDlg, unsigned message, LONG wParam, LONG 
 			return(TRUE);
 	    }
     }
-#endif
 
     return FALSE;
 }
@@ -3730,7 +3688,6 @@ LRESULT APIENTRY UnavailableProc(HWND hDlg, unsigned message, LONG wParam, LONG 
 //Test: Creating property pages for all options
 void CreateOptionsDialogs(HWND hParent)
 {
-#ifndef _XBOX
 #ifdef ENABLE_CONFIG_DIALOG
 	PROPSHEETPAGE	psp[6]; //Change this array size if you change the number of pages.
 	PROPSHEETHEADER psh;
@@ -3853,7 +3810,6 @@ void CreateOptionsDialogs(HWND hParent)
 
 	//g_hhk = NULL;
 	//g_hwndDlg = NULL;
-#endif
 #endif
 }
 

@@ -56,7 +56,6 @@ protected:
 	CBlender* m_pAlphaBlender;
 };
 
-#ifndef _XBOX
 class OGLDeviceBuilder : public CDeviceBuilder
 {
 	friend class CDeviceBuilder;
@@ -72,7 +71,6 @@ protected:
 	~OGLDeviceBuilder() {};
 
 };
-#endif
 
 class DirectXDeviceBuilder : public CDeviceBuilder
 {

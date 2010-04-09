@@ -186,11 +186,9 @@ protected:
 
 	bool				m_FSAAIsEnabled;
 
-#ifndef _XBOX
 	HFONT				m_hFont;
 	ID3DXFont*			m_pID3DFont;
 	bool				m_bFontIsCreated;
-#endif
 };
 
 #define MAX_RENDER_STATE					152
