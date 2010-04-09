@@ -976,9 +976,9 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 				{
 					// modify the existing entry
 					newinfo = &infos[foundIdx];
-					// free memory for the existing texture (WARNING FOLLOWING CODE CAUSES CRASH)
-					//SAFE_DELETE(newinfo->pHiresTextureRGB);
-					//SAFE_DELETE(newinfo->pHiresTextureAlpha);
+					// free memory for the existing texture
+					SAFE_DELETE(newinfo->pHiresTextureRGB);
+					SAFE_DELETE(newinfo->pHiresTextureAlpha);
 				}
 				else
 					// otherwise create a new one
