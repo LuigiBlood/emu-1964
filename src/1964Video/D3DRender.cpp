@@ -156,10 +156,12 @@ bool D3DRender::InitDeviceObjects()
 		// Texturing stuff 
 		D3DSetMinFilter( i, D3DTEXF_LINEAR ); 
 		D3DSetMagFilter( i, D3DTEXF_LINEAR ); 
+		D3DSetMipFilter( i, D3DTEXF_LINEAR );
 		
 		g_pD3DDev->SetSamplerState(i, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP ); 
 		g_pD3DDev->SetSamplerState(i, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP ); 
-		
+		g_pD3DDev->SetSamplerState(i, D3DSAMP_MIPMAPLODBIAS, 10.0f);
+
 		gD3DDevWrapper.SetTextureStageState( i, D3DTSS_COLORARG1, D3DTA_TEXTURE ); 
 		gD3DDevWrapper.SetTextureStageState( i, D3DTSS_COLORARG2, D3DTA_DIFFUSE ); 
 		gD3DDevWrapper.SetTextureStageState( i, D3DTSS_COLORARG0, D3DTA_DIFFUSE ); 
@@ -445,6 +447,7 @@ TextureFilterMap DXTexFilterMap[2]=
 
 void D3DRender::ApplyTextureFilter()
 {
+
 	if( gRDP.otherMode.cycle_type  >= CYCLE_TYPE_COPY )
 	{
 		D3DSetMinFilter( 0, DXTexFilterMap[m_dwMinFilter].realFilter );
@@ -811,4 +814,16 @@ void D3DRender::D3DSetMagFilter(uint32 dwStage, uint32 filter)
 	}
 	else
 		g_pD3DDev->SetSamplerState( dwStage, D3DSAMP_MAGFILTER, filter );
+}
+
+void D3DRender::D3DSetMipFilter(uint32 dwStage, uint32 filter)
+{
+	if( filter == D3DTEXF_LINEAR && options.DirectXAnisotropyValue > 0 )
+	{
+		// Use Anisotropy filter instead of LINEAR filter
+		g_pD3DDev->SetSamplerState( dwStage, D3DSAMP_MIPFILTER, D3DTEXF_ANISOTROPIC  );
+		g_pD3DDev->SetSamplerState( dwStage, D3DSAMP_MAXANISOTROPY, min(options.DirectXAnisotropyValue, (uint32)CGraphicsContext::m_maxAnisotropy) );
+	}
+	else
+		g_pD3DDev->SetSamplerState( dwStage, D3DSAMP_MIPFILTER, filter );
 }

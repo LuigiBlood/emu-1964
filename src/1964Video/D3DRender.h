@@ -141,6 +141,7 @@ protected:
 
 	void D3DSetMinFilter(uint32 dwStage, uint32 filter);
 	void D3DSetMagFilter(uint32 dwStage, uint32 filter);
+	void D3DSetMipFilter(uint32 dwStage, uint32 filter);
 	
 	// Extended render functions
 public:
