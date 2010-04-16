@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "stdafx.h"
 
+
 COGLTexture::COGLTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage) :
 	CTexture(dwWidth,dwHeight,usage),
 	m_glFmt(GL_RGBA)
@@ -94,8 +95,8 @@ void COGLTexture::EndUpdate(DrawInfo *di)
 	glBindTexture(GL_TEXTURE_2D, m_dwTextureName);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	// Copy the image data from main memory to video card texture memory
-	glTexImage2D(GL_TEXTURE_2D, 0, m_glFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, m_pTexture);
+	// Copy the image data from main memory to video card texture memory and build 2D mip maps
+	gluBuild2DMipmaps(GL_TEXTURE_2D, m_glFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, GL_BGRA_EXT, GL_UNSIGNED_BYTE, m_pTexture);
 }
 
 

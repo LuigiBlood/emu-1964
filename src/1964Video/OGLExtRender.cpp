@@ -232,10 +232,10 @@ void COGLExtRender::ApplyTextureFilter()
 			{
 				mtex[i] = m_curBoundTex[i];
 				glActiveTextureARB(GL_TEXTURE0_ARB+i);
-				minflag[i] = m_dwMinFilter;
-				magflag[i] = m_dwMagFilter;
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, m_dwMinFilter);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_dwMagFilter);
+				minflag[i] = GL_LINEAR_MIPMAP_NEAREST;
+				magflag[i] = GL_NEAREST_MIPMAP_NEAREST;
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			}
 			else
 			{

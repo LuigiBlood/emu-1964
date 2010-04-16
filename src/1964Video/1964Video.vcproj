@@ -84,7 +84,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
 				AdditionalOptions="/MACHINE:I386 /FIXED:NO"
-				AdditionalDependencies="odbc32.lib odbccp32.lib d3dx9.lib d3d9.lib dxguid.lib dxerr.lib shlwapi.lib winmm.lib opengl32.lib comctl32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib d3dx9.lib d3d9.lib dxguid.lib dxerr.lib shlwapi.lib winmm.lib opengl32.lib comctl32.lib Glu32.lib"
 				OutputFile="..\..\bin\$(ConfigurationName)\plugin\1964Video.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
