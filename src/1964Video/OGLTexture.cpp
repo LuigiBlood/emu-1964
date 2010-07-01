@@ -45,7 +45,7 @@ COGLTexture::COGLTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage) :
 	m_fYScale = (float)m_dwCreatedTextureHeight/(float)m_dwHeight;
 	m_fXScale = (float)m_dwCreatedTextureWidth/(float)m_dwWidth;
 
-	m_pTexture = VirtualAlloc( NULL, m_dwCreatedTextureWidth * m_dwCreatedTextureHeight * GetPixelSize(), MEM_COMMIT, PAGE_READWRITE );
+	m_pTexture = malloc(m_dwCreatedTextureWidth * m_dwCreatedTextureHeight * GetPixelSize());
 
 	switch( options.textureQuality )
 	{
@@ -69,7 +69,7 @@ COGLTexture::~COGLTexture()
 		// Fix me, if usage is AS_RENDER_TARGET, we need to destroy the pbuffer
 	}
 	glDeleteTextures(1, &m_dwTextureName );
-	VirtualFree(m_pTexture, 0, MEM_RELEASE);
+	free(m_pTexture);
 	m_pTexture = NULL;
 	m_dwWidth = 0;
 	m_dwHeight = 0;
@@ -93,10 +93,17 @@ bool COGLTexture::StartUpdate(DrawInfo *di)
 void COGLTexture::EndUpdate(DrawInfo *di)
 {
 	glBindTexture(GL_TEXTURE_2D, m_dwTextureName);
+	OPENGL_CHECK_ERRORS;
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	OPENGL_CHECK_ERRORS;
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	OPENGL_CHECK_ERRORS;
+
 	// Copy the image data from main memory to video card texture memory and build 2D mip maps
 	gluBuild2DMipmaps(GL_TEXTURE_2D, m_glFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, GL_BGRA_EXT, GL_UNSIGNED_BYTE, m_pTexture);
+	OPENGL_CHECK_ERRORS;
 }
 
 

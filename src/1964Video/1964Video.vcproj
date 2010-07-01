@@ -365,6 +365,10 @@
 				RelativePath=".\Debugger.h"
 				>
 			</File>
+			<File
+				RelativePath=".\OGLDebug.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
