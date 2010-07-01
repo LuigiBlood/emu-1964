@@ -49,6 +49,7 @@ public:
 	void SetZCompare(BOOL bZCompare);
 	void SetZUpdate(BOOL bZUpdate);
 	void SetZBias(int bias);
+	void ApplyZBias(int bias);
 	void SetAlphaRef(uint32 dwAlpha);
 	void ForceAlphaRef(uint32 dwAlpha);
 	void SetFillMode(FillMode mode);

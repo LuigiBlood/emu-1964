@@ -348,7 +348,7 @@ bool CDXGraphicsContext::Initialize(HWND hWnd, HWND hWndStatus,
 
 	Lock();
 
-	  // Create the Direct3D object
+	// Create the Direct3D object
 	m_pD3D = Direct3DCreate9( D3D_SDK_VERSION );
 	if( m_pD3D == NULL )
 	{

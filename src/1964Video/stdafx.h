@@ -124,6 +124,7 @@
 #include "OGLCombinerTNT2.h"
 #include "OGLFragmentShaders.h"
 
+#include "OGLDebug.h"
 #include "OGLRender.h"
 #include "OGLExtRender.h"
 #include "OGLGraphicsContext.h"
