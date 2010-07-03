@@ -491,8 +491,8 @@ TxtrCacheEntry * CTextureManager::CreateNewCacheEntry(uint32 dwAddr, uint32 dwWi
 	}
 	else
 	{
-	// Find a used texture
-	pEntry = ReviveTexture(dwWidth, dwHeight);
+		// Find a used texture
+		pEntry = ReviveTexture(dwWidth, dwHeight);
     }
 
 	if (pEntry == NULL || g_bUseSetTextureMem)
