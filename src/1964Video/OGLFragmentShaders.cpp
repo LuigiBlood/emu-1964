@@ -88,6 +88,7 @@ COGL_FragmentProgramCombiner::~COGL_FragmentProgramCombiner()
 	{
 		GLuint ID = m_vCompiledShaders[i].programID;
 		glDeleteProgramsARB(1, &ID);
+		OPENGL_CHECK_ERRORS;
 		m_vCompiledShaders[i].programID = 0;
 	}
 
@@ -113,49 +114,49 @@ bool COGL_FragmentProgramCombiner::Initialize(void)
 void COGL_FragmentProgramCombiner::DisableCombiner(void)
 {
 	glDisable(GL_FRAGMENT_PROGRAM_ARB);
+	OPENGL_CHECK_ERRORS;
 	COGLColorCombiner4::DisableCombiner();
 }
 
 void COGL_FragmentProgramCombiner::InitCombinerCycleCopy(void)
 {
 	glDisable(GL_FRAGMENT_PROGRAM_ARB);
+	OPENGL_CHECK_ERRORS;
 	COGLColorCombiner4::InitCombinerCycleCopy();
 }
 
 void COGL_FragmentProgramCombiner::InitCombinerCycleFill(void)
 {
 	glDisable(GL_FRAGMENT_PROGRAM_ARB);
+	OPENGL_CHECK_ERRORS;
 	COGLColorCombiner4::InitCombinerCycleFill();
 }
 
 
-char *muxToFP_Maps[][2] = {
-	// color   --		alpha
-	"0",				"0",	//MUX_0 = 0,
-	"1",				"1",	//MUX_1,
-	"comb",				"comb.a",			//MUX_COMBINED,
-	"t0",				"t0.a",				//MUX_TEXEL0,
-	"t1",				"t1.a",				//MUX_TEXEL1,
-	"program.env[2]",	"program.env[2].a",	//MUX_PRIM,
-	"shade",			"shade.a",			//MUX_SHADE,
-	"program.env[1]",	"program.env[1].a",	//MUX_ENV,
-
-	"comb.a",			"comb.a",			//MUX_COMBALPHA,		
-	"t0.a",				"t0.a",				//MUX_T0_ALPHA,			
-	"t1.a",				"t1.a",				//MUX_T1_ALPHA,			
-	"primcolor.a",		"primcolor.a",		//MUX_PRIM_ALPHA,		
-	"shade.a",			"shade.a",			//MUX_SHADE_ALPHA,		
-	"envcolor.a",		"envcolor.a",		//MUX_ENV_ALPHA,		
-
-	"program.env[3]",	"program.env[3]",	//MUX_LODFRAC,
-	"program.env[4]",	"program.env[4]",	//MUX_PRIMLODFRAC,
-	"1",				"1",				//MUX_K5,
-
-	"1",				"1",				//MUX_UNK,				// Should not be used
+const char *muxToFP_Maps[][2] = {
+	//color -- alpha
+	{"0", "0"}, //MUX_0 = 0,
+	{"1", "1"}, //MUX_1,
+	{"comb", "comb.a"}, //MUX_COMBINED,
+	{"t0", "t0.a"}, //MUX_TEXEL0,
+	{"t1", "t1.a"}, //MUX_TEXEL1,
+	{"program.env[2]", "program.env[2].a"}, //MUX_PRIM,
+	{"fragment.color", "fragment.color.a"}, //MUX_SHADE,
+	{"program.env[1]", "program.env[1].a"}, //MUX_ENV,
+	{"comb.a", "comb.a"}, //MUX_COMBALPHA,
+	{"t0.a", "t0.a"}, //MUX_T0_ALPHA,   
+	{"t1.a", "t1.a"}, //MUX_T1_ALPHA,   
+	{"primcolor.a", "primcolor.a"}, //MUX_PRIM_ALPHA,   
+	{"fragment.color.a", "fragment.color.a"}, //MUX_SHADE_ALPHA,    
+	{"envcolor.a", "envcolor.a"}, //MUX_ENV_ALPHA,  
+	{"program.env[3]", "program.env[3]"}, //MUX_LODFRAC,
+	{"program.env[4]", "program.env[4]"}, //MUX_PRIMLODFRAC,
+	{"1", "1"}, //MUX_K5,
+	{"1", "1"}, //MUX_UNK,  // Should not be used
 };
 
 
-char *oglFPTest = 
+const char *oglFPTest = 
 "!!ARBfp1.0\n"
 "#Declarations\n"
 "TEMP t0;\n"
@@ -187,19 +188,15 @@ char* MuxToOC(uint8 val)
 {
 	// For color channel
 	if( val&MUX_ALPHAREPLICATE )
-	{
-		return muxToFP_Maps[val&0x1F][1];
-	}
+		return (char*)muxToFP_Maps[val&0x1F][1];
 	else
-	{
-		return muxToFP_Maps[val&0x1F][0];
-	}
+		return (char*)muxToFP_Maps[val&0x1F][0];
 }
 
 char* MuxToOA(uint8 val)
 {
 	// For alpha channel
-	return muxToFP_Maps[val&0x1F][0];
+	return (char*)muxToFP_Maps[val&0x1F][0];
 }
 
 void COGL_FragmentProgramCombiner::GenerateProgramStr()
@@ -285,17 +282,22 @@ int COGL_FragmentProgramCombiner::ParseDecodedMux()
 
 	OGLShaderCombinerSaveType res;
 
-	GenerateProgramStr();
+	
 	glGenProgramsARB( 1, &res.programID);
+	OPENGL_CHECK_ERRORS;
+	GenerateProgramStr();
 	glBindProgramARB( GL_FRAGMENT_PROGRAM_ARB, res.programID);
 
 	glProgramStringARB(	GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, strlen(oglNewFP), oglNewFP);
+	OPENGL_CHECK_ERRORS;
 	//glProgramStringARB(	GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, strlen(oglFPTest), oglFPTest);
 
 	if (glGetError() !=	0)
-	{
-		int	position;
-		char *str = (char*)glGetString(GL_PROGRAM_ERROR_STRING_ARB);
+	{OPENGL_CHECK_ERRORS;
+		GLint	position;
+#ifdef _DEBUG
+			char *str = (char*)glGetString(GL_PROGRAM_ERROR_STRING_ARB);
+#endif
 		glGetIntegerv( GL_PROGRAM_ERROR_POSITION_ARB, &position);
 		if( position >= 0 )
 		{
@@ -309,6 +311,7 @@ int COGL_FragmentProgramCombiner::ParseDecodedMux()
 	}
 
 	glEnable(GL_FRAGMENT_PROGRAM_ARB);
+	OPENGL_CHECK_ERRORS;
 	res.dwMux0 = m_pDecodedMux->m_dwMux0;
 	res.dwMux1 = m_pDecodedMux->m_dwMux1;
 	res.fogIsUsed = gRDP.bFogEnableInBlender && gRSP.bFogEnabled;
@@ -323,7 +326,9 @@ void COGL_FragmentProgramCombiner::GenerateCombinerSetting(int index)
 {
 	GLuint ID = m_vCompiledShaders[index].programID;
 	glBindProgramARB( GL_FRAGMENT_PROGRAM_ARB, ID );
+	OPENGL_CHECK_ERRORS;
 	glEnable(GL_FRAGMENT_PROGRAM_ARB);
+	OPENGL_CHECK_ERRORS;
 }
 
 void COGL_FragmentProgramCombiner::GenerateCombinerSettingConstants(int index)
@@ -331,21 +336,27 @@ void COGL_FragmentProgramCombiner::GenerateCombinerSettingConstants(int index)
 	float *pf;
 	pf = GetEnvColorfv();
 	glProgramEnvParameter4fvARB(GL_FRAGMENT_PROGRAM_ARB, 1, pf);
+	OPENGL_CHECK_ERRORS;
 	pf = GetPrimitiveColorfv();
 	glProgramEnvParameter4fvARB(GL_FRAGMENT_PROGRAM_ARB, 2, pf);
+	OPENGL_CHECK_ERRORS;
 
 	float frac = gRDP.LODFrac / 255.0f;
 	float tempf[4] = {frac,frac,frac,frac};
 	glProgramEnvParameter4fvARB(GL_FRAGMENT_PROGRAM_ARB, 3, tempf);
+	OPENGL_CHECK_ERRORS;
 
 	float frac2 = gRDP.primLODFrac / 255.0f;
 	float tempf2[4] = {frac2,frac2,frac2,frac2};
 	glProgramEnvParameter4fvARB(GL_FRAGMENT_PROGRAM_ARB, 4, tempf2);
+	OPENGL_CHECK_ERRORS;
 
 	float tempf3[4] = {0,0,0,0};
 	glProgramEnvParameter4fvARB(GL_FRAGMENT_PROGRAM_ARB, 0, tempf3);
+	OPENGL_CHECK_ERRORS;
 	float tempf4[4] = {1.0f,1.0f,1.0f,1.0f};
 	glProgramEnvParameter4fvARB(GL_FRAGMENT_PROGRAM_ARB, 6, tempf3);
+	OPENGL_CHECK_ERRORS;
 }
 
 int COGL_FragmentProgramCombiner::FindCompiledMux()

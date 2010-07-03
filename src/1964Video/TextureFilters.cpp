@@ -649,7 +649,6 @@ void MirrorTexture(uint32 dwTile, TxtrCacheEntry *pEntry)
 				pEntry->dwEnhancementFlag = TEXTURE_MIRRORED;
 			}
 
-
 			pEntry->pEnhancedTexture = pSurfaceHandler;
 		}
 	}
@@ -1989,14 +1988,19 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 	if( !bResRGBA )
 	{
 		TRACE1("Cannot open %s", filename_rgb);
+		// free the memory that has been alocated for the texture
+		SAFE_DELETE(ExtTexInfo.pHiresTextureRGB);
 		return;
 	}
 	// if texture has separate alpha channel but channel could not be loaded
 	else if( ExtTexInfo.bSeparatedAlpha && !bResA )
 	{
 		TRACE1("Cannot open %s", filename_alpha);
+
 		// free the memory that has been alocated for the texture
 		SAFE_DELETE(ExtTexInfo.pHiresTextureRGB);
+		SAFE_DELETE(ExtTexInfo.pHiresTextureAlpha);
+		
 		return;
 	}
 }

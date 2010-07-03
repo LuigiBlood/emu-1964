@@ -23,8 +23,6 @@ COGLTexture::COGLTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage) :
 	CTexture(dwWidth,dwHeight,usage),
 	m_glFmt(GL_RGBA)
 {
-
-
 	if(m_Usage == AS_RENDER_TARGET){
 		// Fix me, if usage is AS_RENDER_TARGET, we need to create pbuffer instead of regular texture
 	}

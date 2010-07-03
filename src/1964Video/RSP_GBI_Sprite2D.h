@@ -25,9 +25,6 @@ uint32 g_SavedUcode=1;
  
 void RSP_GBI_Sprite2DBase(Gfx *gfx)
 {
-	
-	
-
 	uint32 dwAddr = RSPSegmentAddr((gfx->words.w1));
 	dwAddr &= (g_dwRamSize-1);
 
@@ -157,9 +154,6 @@ void RSP_GBI1_Sprite2DScaleFlip(Gfx *gfx)
 
 void RSP_GBI1_Sprite2DBase(Gfx *gfx)
 {
-	
-	
-
 	if( !status.bUseModifiedUcodeMap )
 	{
 		memcpy( &LoadedUcodeMap, &ucodeMap1, sizeof(UcodeMap));

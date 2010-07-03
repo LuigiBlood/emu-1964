@@ -328,6 +328,7 @@ void COGLColorCombiner::InitCombinerBlenderForSimpleTextureDraw(uint32 tile)
 	OPENGL_CHECK_ERRORS;
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);	// Linear Filtering
 	OPENGL_CHECK_ERRORS;
+
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	OPENGL_CHECK_ERRORS;
 	m_pOGLRender->SetAlphaTestEnable(FALSE);

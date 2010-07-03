@@ -44,11 +44,8 @@ CDirectXTexture::CDirectXTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage u
 	
 CDirectXTexture::~CDirectXTexture()
 {
-	if (m_pTexture)
-	{
-		MYLPDIRECT3DTEXTURE(m_pTexture)->Release();
-		m_pTexture = NULL;
-	}
+	MYLPDIRECT3DTEXTURE(m_pTexture)->Release();
+	m_pTexture = NULL;
 	m_dwWidth = 0;
 	m_dwHeight = 0;
 }
