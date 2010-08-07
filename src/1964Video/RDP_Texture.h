@@ -17,6 +17,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+// CODE MODIFICATION
+#include <time.h>
+// /CODE MODIFICATION
+
 // Texture related ucode
 
 uint32 g_TmemFlag[16];
@@ -874,6 +878,11 @@ TxtrCacheEntry* LoadTexture(uint32 tileno)
 	return gTextureManager.GetTexture(&gti, true, true, true);	// Load the texture by using texture cache
 }
 
+// CODE MODIFICATION
+int synchronizedCurrentAltTexIndex;
+long synchronizedLastModified;
+// /CODE MODIFICATION
+
 void PrepareTextures()
 {
 	if( gRDP.textureIsChanged || !currentRomOptions.bFastTexCRC ||
@@ -894,7 +903,6 @@ void PrepareTextures()
 		else
 			tilenos[1] = -1;
 
-
 		for( int i=0; i<2; i++ )
 		{
 			if( tilenos[i] < 0 )	continue;
@@ -907,10 +915,12 @@ void PrepareTextures()
 			else
 			{
 				TxtrCacheEntry *pEntry = LoadTexture(tilenos[i]);
+				
 				if (pEntry && pEntry->pTexture )
 				{
 					if( pEntry->txtrBufIdx <= 0 )
 					{
+
 						if( pEntry->pEnhancedTexture && pEntry->dwEnhancementFlag == TEXTURE_EXTERNAL && !options.bLoadHiResTextures )
 						{
 							SAFE_DELETE(pEntry->pEnhancedTexture);
@@ -932,9 +942,72 @@ void PrepareTextures()
 						}
 					}
 
-					CRender::g_pRender->SetCurrentTexture( tilenos[i], 
+					/*CRender::g_pRender->SetCurrentTexture( tilenos[i], 
+						(pEntry->pEnhancedTexture)?pEntry->pEnhancedTexture:pEntry->pTexture,
+						pEntry->ti.WidthToLoad, pEntry->ti.HeightToLoad, pEntry);*/
+
+
+					// CODE MODIFICATION
+					//pEntry->count = 0;
+					// no alternative textures
+					if (pEntry->count == 0)
+						CRender::g_pRender->SetCurrentTexture( tilenos[i], 
 						(pEntry->pEnhancedTexture)?pEntry->pEnhancedTexture:pEntry->pTexture,
 						pEntry->ti.WidthToLoad, pEntry->ti.HeightToLoad, pEntry);
+					// there are some alternative textures
+					else {
+						clock_t nowClock = clock();
+						long now = nowClock * 1000 / CLOCKS_PER_SEC; // now in milliseconds
+
+						if (pEntry->shuffle && (pEntry->lastModified == 0))
+							srand (now);
+						
+					    // if the period is over
+
+						// synchronized texture
+						if (pEntry->synchronized) {
+							if ((now - synchronizedLastModified) > pEntry->period) {
+								if (pEntry->shuffle) 
+									synchronizedCurrentAltTexIndex = rand() % (pEntry->count + 1);
+								else {
+									synchronizedCurrentAltTexIndex++;
+									if (synchronizedCurrentAltTexIndex > pEntry->count)
+										synchronizedCurrentAltTexIndex = 0;
+								}
+
+								synchronizedLastModified = now;
+								//DebuggerAppendMsg("(sync) PERIOD : %d / LAST MODIFIED : %d / INDEX : %d", pEntry->period, pEntry->lastModified, pEntry->currentAltTexIndex);
+							}
+
+							pEntry->currentAltTexIndex = synchronizedCurrentAltTexIndex;
+						}	
+
+						// unsynchronized texture
+						if (!pEntry->synchronized && ((now - pEntry->lastModified) > pEntry->period)) {
+							if (pEntry->shuffle) 
+								pEntry->currentAltTexIndex = rand() % (pEntry->count + 1);
+							else {
+								pEntry->currentAltTexIndex++;
+								if (pEntry->currentAltTexIndex > pEntry->count)
+									pEntry->currentAltTexIndex = 0;
+							}
+
+							pEntry->lastModified = now;
+
+							//DebuggerAppendMsg("(unsync) PERIOD : %d / LAST MODIFIED : %d / INDEX : %d", pEntry->period, pEntry->lastModified, pEntry->currentAltTexIndex);
+						}	
+
+						if (pEntry->currentAltTexIndex == pEntry->count) {
+							CRender::g_pRender->SetCurrentTexture( tilenos[i], 
+							(pEntry->pEnhancedTexture)?pEntry->pEnhancedTexture:pEntry->pTexture,
+							pEntry->ti.WidthToLoad, pEntry->ti.HeightToLoad, pEntry);
+						} else {
+							CRender::g_pRender->SetCurrentTexture( tilenos[i], 
+							(pEntry->pEnhancedTextureAlts)?pEntry->pEnhancedTextureAlts[pEntry->currentAltTexIndex]:pEntry->pTexture,
+							pEntry->ti.WidthToLoad, pEntry->ti.HeightToLoad, pEntry);
+						}
+					}
+					// /CODE MODIFICATION
 				}
 				else
 				{

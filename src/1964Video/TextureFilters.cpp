@@ -680,6 +680,15 @@ typedef struct {
 	// cached texture
 	unsigned char	*pHiresTextureRGB;
 	unsigned char	*pHiresTextureAlpha;
+
+	// CODE MODIFICATION
+	unsigned char	**pHiresTextureRGBAlts;
+	unsigned char	**pHiresTextureAlphaAlts;
+	bool shuffle;
+	int count;
+	int period;
+	bool synchronized;
+	// /CODE MODIFICATION
 } ExtTxtrInfo;
 
 void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo );
@@ -1778,7 +1787,7 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 	// search the index of the appropriate hires replacement texture
 	// in the list containing the infos of the external textures
 	// ciidx is not needed here (just needed for dumping)
-	int idx = CheckTextureInfos(gHiresTxtrInfos,entry,ciidx,false);
+	int idx = CheckTextureInfos(gHiresTxtrInfos,entry,ciidx,false); 
 	if( idx < 0 )
 	{
 		// there is no hires replacement => indicate that
@@ -1786,6 +1795,7 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 		return;
 	}
 	
+	 
 	// if caching has been disabled, the texture data
 	// has to be loaded from file system first
 	if(!options.bCacheHiResTextures)
@@ -1807,9 +1817,6 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
  //   int scaley = gHiresTxtrInfos[idx].height / (int)entry.ti.HeightToCreate;
  //   int scale = scalex > scaley ? scalex : scaley; // set scale to maximum(scalex,scaley)
 	int scale = 1<<gHiresTxtrInfos[idx].scaleShift;
-
-	DebuggerAppendMsg("Ext: 0x%08X 0x%08X, folder %dx%d, %d",gHiresTxtrInfos[idx].crc32, gHiresTxtrInfos[idx].pal_crc32,gHiresTxtrInfos[idx].width, gHiresTxtrInfos[idx].height, gHiresTxtrInfos[idx].scaleShift);
-	DebuggerAppendMsg("Org: 0x%08X 0x%08X; %dx%d, %dx%d",entry.dwCRC, entry.dwPalCRC, entry.ti.WidthToCreate, entry.ti.HeightToCreate, entry.ti.WidthToLoad, entry.ti.HeightToLoad);
 
 	entry.pEnhancedTexture = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scale, entry.ti.HeightToCreate*scale);
 	DrawInfo info;
@@ -1893,6 +1900,110 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 		TRACE0("Cannot create a new texture");
 	}
 
+
+
+	// CODE MODIFICATION
+	int count = gHiresTxtrInfos[idx].count;
+	if (count > 0) {
+		entry.count = gHiresTxtrInfos[idx].count;
+		entry.shuffle = gHiresTxtrInfos[idx].shuffle;
+		entry.period = gHiresTxtrInfos[idx].period;
+		entry.synchronized = gHiresTxtrInfos[idx].synchronized;
+		entry.currentAltTexIndex = 0;
+		entry.lastModified = 0;
+
+		//DebuggerAppendMsg("Enhancing %d textures ", count);
+		entry.pEnhancedTextureAlts = new CTexture*[count];
+		for (int i = 0; i < count; i++) {
+			//DebuggerAppendMsg("Enhancing texture %d ", i);
+			entry.pEnhancedTextureAlts[i] = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scale, entry.ti.HeightToCreate*scale);
+			DrawInfo info2;
+
+			if( gHiresTxtrInfos[idx].pHiresTextureRGBAlts[i] && entry.pEnhancedTextureAlts[i] && entry.pEnhancedTextureAlts[i]->StartUpdate(&info2) )
+			{
+				if( gHiresTxtrInfos[idx].type == RGB_PNG )
+				{
+					unsigned char *pRGB = gHiresTxtrInfos[idx].pHiresTextureRGBAlts[i];
+					unsigned char *pA = gHiresTxtrInfos[idx].pHiresTextureAlphaAlts[i];
+
+					// Update the texture by using the buffer
+					for( int i=gHiresTxtrInfos[idx].height-1; i>=0; i--)
+					{
+						BYTE *pdst = (BYTE*)info2.lpSurface + i*info2.lPitch;
+						for( unsigned int j=0; j<gHiresTxtrInfos[idx].width; j++)
+						{
+							*pdst++ = *pRGB++;		// R
+							*pdst++ = *pRGB++;		// G
+							*pdst++ = *pRGB++;		// B
+
+							if( gHiresTxtrInfos[idx].bSeparatedAlpha )
+							{
+								*pdst++ = *pA;
+								pA += 3;
+							}
+							else if( entry.ti.Format == TXT_FMT_I )
+							{
+								*pdst++ = *(pdst-1);
+							}
+							else
+							{
+								*pdst++ = 0xFF;;
+							}
+						}
+					}
+				}
+				else
+				{
+					// Update the texture by using the buffer
+					uint32 *pRGB = (uint32*)gHiresTxtrInfos[idx].pHiresTextureRGBAlts[i];
+					for( int i=gHiresTxtrInfos[idx].height-1; i>=0; i--)
+					{
+						uint32 *pdst = (uint32*)((BYTE*)info2.lpSurface + i*info2.lPitch);
+						for( unsigned int j=0; j<gHiresTxtrInfos[idx].width; j++)
+						{
+							*pdst++ = *pRGB++;		// RGBA
+						}
+					}
+				}
+
+				if( entry.ti.WidthToCreate/entry.ti.WidthToLoad == 2 )
+				{
+					gTextureManager.Mirror(info2.lpSurface, gHiresTxtrInfos[idx].width, entry.ti.maskS+gHiresTxtrInfos[idx].scaleShift, gHiresTxtrInfos[idx].width*2, gHiresTxtrInfos[idx].width*2, gHiresTxtrInfos[idx].height, S_FLAG, 4 );
+				}
+
+				if( entry.ti.HeightToCreate/entry.ti.HeightToLoad == 2 )
+				{
+					gTextureManager.Mirror(info2.lpSurface, gHiresTxtrInfos[idx].height, entry.ti.maskT+gHiresTxtrInfos[idx].scaleShift, gHiresTxtrInfos[idx].height*2, entry.pEnhancedTextureAlts[i]->m_dwCreatedTextureWidth, gHiresTxtrInfos[idx].height, T_FLAG, 4 );
+				}
+
+				if( entry.ti.WidthToCreate*scale < entry.pEnhancedTextureAlts[i]->m_dwCreatedTextureWidth )
+				{
+					// Clamp
+					gTextureManager.Clamp(info2.lpSurface, gHiresTxtrInfos[idx].width, entry.pEnhancedTextureAlts[i]->m_dwCreatedTextureWidth, entry.pEnhancedTextureAlts[i]->m_dwCreatedTextureWidth, gHiresTxtrInfos[idx].height, S_FLAG, 4 );
+				}
+				if( entry.ti.HeightToCreate*scale < entry.pEnhancedTextureAlts[i]->m_dwCreatedTextureHeight )
+				{
+					// Clamp
+					gTextureManager.Clamp(info2.lpSurface, gHiresTxtrInfos[idx].height, entry.pEnhancedTextureAlts[i]->m_dwCreatedTextureHeight, entry.pEnhancedTextureAlts[i]->m_dwCreatedTextureWidth, gHiresTxtrInfos[idx].height, T_FLAG, 4 );
+				}
+
+				entry.pEnhancedTextureAlts[i]->EndUpdate(&info2);
+
+				entry.pEnhancedTextureAlts[i]->SetOthersVariables();
+				entry.pEnhancedTextureAlts[i]->m_bIsEnhancedTexture = true;
+				entry.dwEnhancementFlag = TEXTURE_EXTERNAL;
+			}
+			else
+			{
+				TRACE0("Cannot create a new texture");
+			}
+		}
+	}
+	// /CODE MODIFICATION
+
+
+
+
 	// if caching has been disabled, remove
 	// cached texture from memory
 	if(!options.bCacheHiResTextures)
@@ -1903,6 +2014,51 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 
 }
 
+
+// CODE MODIFICATION
+#include <string>
+#include <fstream>
+#include <iostream>
+
+void lookForAlternatives( ExtTxtrInfo &ExtTexInfo, int* count, bool* shuffle, int* period, bool* synchronized) {
+	char infoFileName[256];
+	strcpy(infoFileName, ExtTexInfo.foldername);
+	sprintf(infoFileName+strlen(infoFileName), "%s#%08X#%d#%d", g_curRomInfo.szGameName, ExtTexInfo.crc32, ExtTexInfo.fmt, ExtTexInfo.siz);
+	strcat(infoFileName, "_infos.txt");
+
+	std::ifstream infoFile(infoFileName);
+
+    if (infoFile)  {
+        std::string line; 
+		while (std::getline(infoFile, line)) {
+			if (strcmp(line.c_str(), "# COUNT") == 0) {
+				std::string value;
+				std::getline( infoFile, value );
+				sscanf(value.c_str(), "%d", count);
+			}
+
+			if (strcmp(line.c_str(), "# SHUFFLE") == 0) {
+				std::string value;
+				std::getline( infoFile, value );
+				*shuffle = (strcmp(value.c_str(), "yes") == 0);
+			}
+
+			if (strcmp(line.c_str(), "# PERIOD") == 0) {
+				std::string value;
+				std::getline( infoFile, value );
+				sscanf(value.c_str(), "%d", period);
+			}
+
+			if (strcmp(line.c_str(), "# SYNCHRONIZED") == 0) {
+				std::string value;
+				std::getline( infoFile, value );
+				*synchronized = (strcmp(value.c_str(), "yes") == 0);
+			}
+        }
+    }
+
+}
+// /CODE MODIFICATION
 
 
 /********************************************************************************************************************
@@ -1939,6 +2095,49 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 	// width and height of the loaded texture
 	int width, height;
 
+
+
+	// CODE MODIFICATION
+	ExtTexInfo.count = 0;
+	ExtTexInfo.shuffle = false;
+	ExtTexInfo.period = 0;
+	ExtTexInfo.synchronized = false;
+	ExtTexInfo.pHiresTextureRGBAlts = NULL;
+	ExtTexInfo.pHiresTextureAlphaAlts = NULL;
+
+	bool lookForAlt = true;
+	if (lookForAlt)
+		lookForAlternatives(ExtTexInfo, &ExtTexInfo.count, &ExtTexInfo.shuffle, &ExtTexInfo.period, &ExtTexInfo.synchronized);
+
+	//DebuggerAppendMsg("resultat parsing %d , %d, %d", ExtTexInfo.count, ExtTexInfo.shuffle, ExtTexInfo.period);
+
+	int count = ExtTexInfo.count;
+	char** filenames_rgbAlt = new char*[count];
+	char** filenames_alphaAlt = new char*[count];
+
+	if (count > 0) {
+		ExtTexInfo.pHiresTextureRGBAlts = new unsigned char*[count];
+		ExtTexInfo.pHiresTextureAlphaAlts = new unsigned char*[count];
+
+		for (int i = 0; i < count; i++)
+			filenames_rgbAlt[i] = new char[256];
+
+		for (int i = 0; i < count; i++)
+			filenames_alphaAlt[i] = new char[256];
+
+		for (int i = 0; i < count; i++) {
+			strcpy(filenames_rgbAlt[i], ExtTexInfo.foldername);
+			sprintf(filenames_rgbAlt[i]+strlen(filenames_rgbAlt[i]), "%s#%08X#%d#%d_alt%d", g_curRomInfo.szGameName, ExtTexInfo.crc32, ExtTexInfo.fmt, ExtTexInfo.siz, i);
+			strcpy(filenames_alphaAlt[i],filenames_rgbAlt[i]);
+			strcat(filenames_rgbAlt[i],ExtTexInfo.RGBNameTail);
+			strcat(filenames_alphaAlt[i],ExtTexInfo.AlphaNameTail);
+		}
+	}
+	// /CODE MODIFICATION
+
+
+
+
 	// flags for indicating if texture loading was successful
 	bool bResRGBA=false, bResA=false;
 	// a color indexed texture has to (??? or color indexed format or the RGB format) and has to be 8 bit at most per pixel
@@ -1959,22 +2158,52 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 			if( bResRGBA && ExtTexInfo.bSeparatedAlpha )
 				// load the alpha channel as well
 				bResA = LoadRGBBufferFromPNGFile(filename_alpha, &ExtTexInfo.pHiresTextureAlpha, width, height);
+
+			// CODE MODIFICATION
+			//if(count >= 1)
+			{
+				for (int i = 0; i < count; i++) {
+					bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height);
+					if( bResRGBA && ExtTexInfo.bSeparatedAlpha )
+						bResA = LoadRGBBufferFromPNGFile(filenames_alphaAlt[i], &ExtTexInfo.pHiresTextureAlphaAlts[i], width, height);
+				}
+			}
+			//CODE MODIFICATION
 		}
 		break;
 	case RGBA_PNG_FOR_CI:
 	case RGBA_PNG_FOR_ALL_CI:
-		if( bCI )
+		if( bCI ) {
 			// load the CI texture with 32bit/pixel
 			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &ExtTexInfo.pHiresTextureRGB, width, height, 32);
-		else
+
+			// CODE MODIFICATION
+			//if(count >= 1)
+			{
+				for (int i = 0; i < count; i++) {
+					bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height, 32);
+				}
+			}
+			// /CODE MODIFICATION
+		} else
 			return;
 		break;
 	case RGB_WITH_ALPHA_TOGETHER_PNG:
-		if( bCI )	
+		if( bCI ) 
 			return;
-		else
+		else {
 			// load the RGB texture with alpha channel
 			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &ExtTexInfo.pHiresTextureRGB, width, height, 32);
+
+			// CODE MODIFICATION
+			//if(count >= 1)
+			{
+				for (int i = 0; i < count; i++) {
+					bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height, 32);
+				}
+			}
+			// /CODE MODIFICATION
+		}
 		break;
 	default:
 		return;
