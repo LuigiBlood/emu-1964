@@ -282,6 +282,23 @@ void CTextureManager::RecycleTexture(TxtrCacheEntry *pEntry)
 		pEntry->dwEnhancementFlag = TEXTURE_NO_ENHANCEMENT;
 
 		SAFE_DELETE(pEntry->pEnhancedTexture);
+
+		// CODE MODIFICATION
+		//if(pEntry->count >=1)
+		{
+			for (int i = 0 ; i < pEntry->count ; i++)
+				SAFE_DELETE(pEntry->pEnhancedTextureAlts[i]);
+			SAFE_DELETE(pEntry->pEnhancedTextureAlts);
+		}
+
+		pEntry->count = 0;
+		pEntry->shuffle = false;
+		pEntry->period = 0;
+		pEntry->synchronized = false;
+		pEntry->currentAltTexIndex = 0;
+		pEntry->lastModified = 0;
+		// /CODE MODIFCATION
+
 		m_pHead = pEntry;
 	}
 }
