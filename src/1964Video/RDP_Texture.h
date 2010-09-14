@@ -950,10 +950,15 @@ void PrepareTextures()
 					// CODE MODIFICATION
 					//pEntry->count = 0;
 					// no alternative textures
-					if (pEntry->count == 0)
+					
+					if (pEntry->count == 0 || pEntry->pEnhancedTextureAlts == NULL)
+					{
+						pEntry->count = 0;
+						SAFE_DELETE(pEntry->pEnhancedTextureAlts);
 						CRender::g_pRender->SetCurrentTexture( tilenos[i], 
 						(pEntry->pEnhancedTexture)?pEntry->pEnhancedTexture:pEntry->pTexture,
 						pEntry->ti.WidthToLoad, pEntry->ti.HeightToLoad, pEntry);
+					}
 					// there are some alternative textures
 					else {
 						clock_t nowClock = clock();
