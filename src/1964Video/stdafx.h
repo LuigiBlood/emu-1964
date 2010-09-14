@@ -67,8 +67,9 @@
 #include "gl_extention_ATI.h"
 
 #ifndef SAFE_DELETE
-#define SAFE_DELETE(p)  { if( (p) != NULL) { delete (p);     (p)=NULL; } } // Microdev check me.
+#define SAFE_DELETE(p)  { if(p) { delete (p);     (p)=NULL; } }// Microdev check me.
 #endif
+
 
 #ifndef SAFE_CHECK
 #define SAFE_CHECK(a)	if( (a) == NULL ) {ErrorMsg("Creater out of memory"); throw new std::exception();}

@@ -284,12 +284,9 @@ void CTextureManager::RecycleTexture(TxtrCacheEntry *pEntry)
 		SAFE_DELETE(pEntry->pEnhancedTexture);
 
 		// CODE MODIFICATION
-		//if(pEntry->count >=1)
-		{
 			for (int i = 0 ; i < pEntry->count ; i++)
 				SAFE_DELETE(pEntry->pEnhancedTextureAlts[i]);
 			SAFE_DELETE(pEntry->pEnhancedTextureAlts);
-		}
 
 		pEntry->count = 0;
 		pEntry->shuffle = false;

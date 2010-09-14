@@ -1905,6 +1905,7 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 	// CODE MODIFICATION
 	int count = gHiresTxtrInfos[idx].count;
 	if (count > 0) {
+
 		entry.count = gHiresTxtrInfos[idx].count;
 		entry.shuffle = gHiresTxtrInfos[idx].shuffle;
 		entry.period = gHiresTxtrInfos[idx].period;
@@ -2134,9 +2135,6 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 		}
 	}
 	// /CODE MODIFICATION
-
-
-
 
 	// flags for indicating if texture loading was successful
 	bool bResRGBA=false, bResA=false;

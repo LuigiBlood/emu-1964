@@ -229,6 +229,10 @@
 			Name="Plugin"
 			>
 			<File
+				RelativePath=".\_BldNum.h"
+				>
+			</File>
+			<File
 				RelativePath="Config.cpp"
 				>
 			</File>
@@ -285,10 +289,6 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
-			<File
-				RelativePath=".\_BldNum.h"
-				>
-			</File>
 			<File
 				RelativePath=".\Lib\BMGDLL.h"
 				>
