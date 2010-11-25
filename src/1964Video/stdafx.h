@@ -138,7 +138,6 @@
 #include "CritSect.h"
 #include "Timing.h"
 
-
 extern WindowSettingStruct windowSetting;
 
 void __cdecl MsgInfo (char * Message, ...);

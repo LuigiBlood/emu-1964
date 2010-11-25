@@ -7,7 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "windows.h"
+#include "afxres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -217,8 +217,7 @@ BEGIN
     CONTROL         "For Small Textures Only",IDC_SMALL_TXT_ONLY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,162,144,114,10
     CONTROL         "Load hi-res textures if available",IDC_LOAD_HIRES_TEXTURE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,156,138,10
-    CONTROL         "Cache hi-res textures",IDC_CACHE_HIRES_TEXTURE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,168,130,10
+    CONTROL         "Cache hi-res textures",IDC_CACHE_HIRES_TEXTURE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,168,130,10
     CONTROL         "Dump textures to files",IDC_DUMP_TEXTURE_TO_FILES,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,162,156,114,10
 END

@@ -184,7 +184,6 @@ void CTextureManager::PurgeOldTextures()
 	TxtrCacheEntry * pCurr;
 	TxtrCacheEntry * pNext;
 	
-	
 	pPrev = NULL;
 	pCurr = m_pHead;
 	
