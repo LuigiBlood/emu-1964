@@ -167,6 +167,7 @@ public:
 	virtual D3DCOLOR PostProcessSpecularColor()=0;
 	
 	bool DrawTriangles();
+	bool AddTri(unsigned int dw0,unsigned int dw1,unsigned int dw2);
 	virtual bool RenderFlushTris()=0;
 
 	bool TexRect(LONG nX0, LONG nY0, LONG nX1, LONG nY1, float fS0, float fT0, float fScaleS, float fScaleT, bool colorFlag=false, uint32 difcolor=0xFFFFFFFF);

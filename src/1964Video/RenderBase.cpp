@@ -1576,14 +1576,8 @@ void ModifyVertexInfo(uint32 where, uint32 vertex, uint32 val)
 		break;
 	case RSP_MV_WORD_OFFSET_POINT_XYSCREEN:		// Modify X,Y
 		{
-			uint16 nX = (uint16)(val>>16);
-			short x = *((short*)&nX);
-			x /= 4;
-
-			uint16 nY = uint16(val&0xFFFF);
-			short y = *((short*)&nY);
-			y /= 4;
-
+			uint16 x = (uint16)(val>>16) / 4.0f;
+			uint16 y = (uint16)(val & 0xFFFF) / 4.0f;
 			// Should do viewport transform.
 
 
@@ -1624,6 +1618,9 @@ void ModifyVertexInfo(uint32 where, uint32 vertex, uint32 val)
 			LOG_UCODE("      Setting vertex %d tu/tv to %f, %f", vertex, (float)tu, (float)tv);
 			CRender::g_pRender->SetVtxTextureCoord(vertex, ftu/gRSP.fTexScaleX, ftv/gRSP.fTexScaleY);
 		}
+		break;
+	default:
+		RSP_RDP_NOIMPL("RSP_GBI1_ModifyVtx: Setting unk value: 0x%02x, 0x%08x", dwWhere, dwValue);
 		break;
 	}
 	DEBUGGER_PAUSE_AND_DUMP(NEXT_VERTEX_CMD,{TRACE0("Paused at ModVertex Cmd");});

@@ -328,47 +328,19 @@ void RSP_Quad3d_ShadowOfEmpire(Gfx *gfx)
 	uint32 dwPC = gDlistStack[gDlistStackPointer].pc;
 
 	do {
+		//Tri #1
 		uint32 dwV0 = ((gfx->words.w1 >> 24) & 0xFF) / 5;
 		uint32 dwV1 = ((gfx->words.w1 >> 16) & 0xFF) / 5;
 		uint32 dwV2 = ((gfx->words.w1 >>  8) & 0xFF) / 5;
 
+		bTrisAdded |= CRender::g_pRender->AddTri(dwV0, dwV1, dwV2);
+
+		//Tri #2
 		uint32 dwV3 = ((gfx->words.w1 >> 24) & 0xFF) / 5;
 		uint32 dwV4 = ((gfx->words.w1 >>  8) & 0xFF) / 5;
 		uint32 dwV5 = ((gfx->words.w1      ) & 0xFF) / 5;
 
-		// Do first tri
-		if (IsTriangleVisible(dwV0, dwV1, dwV2))
-		{
-			DEBUG_DUMP_VERTEXES("Tri2 1/2", dwV0, dwV1, dwV2);
-			if (!bTrisAdded)
-			{
-				if( bTexturesAreEnabled )
-			{
-				PrepareTextures();
-				InitVertexTextureConstants();
-			}
-				CRender::g_pRender->SetCombinerAndBlender();
-				bTrisAdded = true;
-			}
-			PrepareTriangle(dwV0, dwV1, dwV2);
-		}
-
-		// Do second tri
-		if (IsTriangleVisible(dwV3, dwV4, dwV5))
-		{
-			DEBUG_DUMP_VERTEXES("Tri2 2/2", dwV3, dwV4, dwV5);
-			if (!bTrisAdded)
-			{
-				if( bTexturesAreEnabled )
-			{
-				PrepareTextures();
-				InitVertexTextureConstants();
-			}
-				CRender::g_pRender->SetCombinerAndBlender();
-				bTrisAdded = true;
-			}
-			PrepareTriangle(dwV3, dwV4, dwV5);
-		}
+		bTrisAdded |= CRender::g_pRender->AddTri(dwV3, dwV4, dwV5);
 		
 		gfx++;
 		dwPC += 8;
@@ -402,27 +374,12 @@ void RSP_Tri1_ShadowOfEmpire(Gfx *gfx)
 	
 	do
 	{
+		//Tri #1
 		uint32 dwV0 = ((gfx->words.w1 >> 16) & 0xFF) / 5;
 		uint32 dwV1 = ((gfx->words.w1 >> 8) & 0xFF) / 5;
 		uint32 dwV2 = (gfx->words.w1 & 0xFF) / 5;
 
-		if (IsTriangleVisible(dwV0, dwV1, dwV2))
-		{
-			DEBUG_DUMP_VERTEXES("Tri1", dwV0, dwV1, dwV2);
-			LOG_UCODE("    Tri1: 0x%08x 0x%08x %d,%d,%d", gfx->words.w0, gfx->words.w1, dwV0, dwV1, dwV2);
-
-			if (!bTrisAdded)
-			{
-				if( bTexturesAreEnabled )
-				{
-					PrepareTextures();
-					InitVertexTextureConstants();
-				}
-				CRender::g_pRender->SetCombinerAndBlender();
-				bTrisAdded = true;
-			}
-			PrepareTriangle(dwV0, dwV1, dwV2);
-		}
+		bTrisAdded |= CRender::g_pRender->AddTri(dwV0, dwV1, dwV2);
 
 		gfx++;
 		dwPC += 8;
@@ -739,37 +696,21 @@ void RSP_Tri4_PD(Gfx *gfx)
 	// While the next command pair is Tri2, add vertices
 	uint32 dwPC = gDlistStack[gDlistStackPointer].pc;
 
-	BOOL bTrisAdded = FALSE;
+	bool bTrisAdded = FALSE;
 
 	do {
 		uint32 dwFlag = (w0>>16)&0xFF;
 		LOG_UCODE("    PD Tri4: 0x%08x 0x%08x Flag: 0x%02x", w0, w1, dwFlag);
 
-		BOOL bVisible;
 		for( uint32 i=0; i<4; i++)
 		{
+			//Tri #1,2,3,4
 			uint32 v0 = (w1>>(4+(i<<3))) & 0xF;
 			uint32 v1 = (w1>>(  (i<<3))) & 0xF;
 			uint32 v2 = (w0>>(  (i<<2))) & 0xF;
-			bVisible = IsTriangleVisible(v0, v2, v1);
-			LOG_UCODE("       (%d, %d, %d) %s", v0, v1, v2, bVisible ? "": "(clipped)");
-			if (bVisible)
-			{
-				DEBUG_DUMP_VERTEXES("Tri4_PerfectDark 1/2", v0, v1, v2);
-				if (!bTrisAdded && CRender::g_pRender->IsTextureEnabled())
-				{
-					PrepareTextures();
-					InitVertexTextureConstants();
-				}
+			DEBUG_DUMP_VERTEXES("Tri4_PerfectDark 1/2", v0, v1, v2);
 
-				if( !bTrisAdded )
-				{
-					CRender::g_pRender->SetCombinerAndBlender();
-				}
-
-				bTrisAdded = true;
-				PrepareTriangle(v0, v2, v1);
-			}
+			bTrisAdded |= CRender::g_pRender->AddTri(v0,v1,v2);
 		}
 
 		w0			= *(uint32 *)(g_pRDRAMu8 + dwPC+0);
@@ -792,63 +733,46 @@ void RSP_Tri4_PD(Gfx *gfx)
 	DEBUG_TRIANGLE(TRACE0("Pause at PD Tri4"));
 }
 
-
 void RSP_Tri4_Conker(Gfx *gfx)
 {
 	uint32 w0 = gfx->words.w0;
 	uint32 w1 = gfx->words.w1;
-
+	
 	status.primitiveType = PRIM_TRI2;
 
 	// While the next command pair is Tri2, add vertices
 	uint32 dwPC = gDlistStack[gDlistStackPointer].pc;
-
-	BOOL bTrisAdded = FALSE;
+	bool bTrisAdded = FALSE;
 
 	do {
 		LOG_UCODE("    Conker Tri4: 0x%08x 0x%08x", w0, w1);
 		uint32 idx[12];
+		//Tri #1
 		idx[0] = (w1   )&0x1F;
 		idx[1] = (w1>> 5)&0x1F;
 		idx[2] = (w1>>10)&0x1F;
+
+		bTrisAdded |= CRender::g_pRender->AddTri(idx[0],idx[1],idx[2]);
+
+		//Tri #2
 		idx[3] = (w1>>15)&0x1F;
 		idx[4] = (w1>>20)&0x1F;
 		idx[5] = (w1>>25)&0x1F;
+		bTrisAdded |= CRender::g_pRender->AddTri(idx[3],idx[4],idx[5]);
 
+		//Tri #3
 		idx[6] = (w0    )&0x1F;
 		idx[7] = (w0>> 5)&0x1F;
 		idx[8] = (w0>>10)&0x1F;
 
-		idx[ 9] = (((w0>>15)&0x7)<<2)|(w1>>30);
+		bTrisAdded |= CRender::g_pRender->AddTri(idx[6],idx[7],idx[8]);
+
+		//Tri #4
+		idx[9] = (((w0>>15)&0x7)<<2)|(w1>>30);
 		idx[10] = (w0>>18)&0x1F;
 		idx[11] = (w0>>23)&0x1F;
 
-		BOOL bVisible;
-		for( uint32 i=0; i<4; i++)
-		{
-			uint32 v0=idx[i*3  ];
-			uint32 v1=idx[i*3+1];
-			uint32 v2=idx[i*3+2];
-			bVisible = IsTriangleVisible(v0, v1, v2);
-			LOG_UCODE("       (%d, %d, %d) %s", v0, v1, v2, bVisible ? "": "(clipped)");
-			if (bVisible)
-			{
-				DEBUG_DUMP_VERTEXES("Tri4 Conker:", v0, v1, v2);
-				if (!bTrisAdded && CRender::g_pRender->IsTextureEnabled())
-				{
-					PrepareTextures();
-					InitVertexTextureConstants();
-				}
-
-				if( !bTrisAdded )
-				{
-					CRender::g_pRender->SetCombinerAndBlender();
-				}
-
-				bTrisAdded = true;
-				PrepareTriangle(v0, v1, v2);
-			}
-		}
+		bTrisAdded |= CRender::g_pRender->AddTri(idx[9],idx[10],idx[11]);
 
 		w0			= *(uint32 *)(g_pRDRAMu8 + dwPC+0);
 		w1			= *(uint32 *)(g_pRDRAMu8 + dwPC+4);
@@ -1028,8 +952,6 @@ void ProcessVertexData_Rogue_Squadron(uint32 dwXYZAddr, uint32 dwColorAddr, uint
 
 void DLParser_RS_Color_Buffer(Gfx *gfx)
 {
-	
-	
 
 	uint32 dwPC = gDlistStack[gDlistStackPointer].pc-8;
 	uint32 dwAddr = RSPSegmentAddr((gfx->words.w1));
@@ -1522,9 +1444,6 @@ void DLParser_Ucode8_0xb5(Gfx *gfx)
 
 void DLParser_Ucode8_0xbc(Gfx *gfx)
 {
-	
-	
-
 	if( ((gfx->words.w0)&0xFFF) == 0x58C )
 	{
 		DLParser_Ucode8_DL(gfx);
@@ -1538,9 +1457,6 @@ void DLParser_Ucode8_0xbc(Gfx *gfx)
 
 void DLParser_Ucode8_0xbd(Gfx *gfx)
 {
-	
-	
-
 	/*
 	00359A68: BD000000, DB5B0077 - RSP_POPMTX
 	00359A70: C8C0A000, 00240024 - RDP_TriFill

@@ -1329,6 +1329,25 @@ bool CRender::DrawTriangles()
 	return res;
 }
 
+bool CRender::AddTri(unsigned int dw0,unsigned int dw1,unsigned int dw2)
+{
+	BOOL bVisible;
+	bVisible = IsTriangleVisible(dw0, dw1, dw2);
+	LOG_UCODE("       (%d, %d, %d) %s", dw0, dw1, dw2, bVisible ? "": "(clipped)");
+	if (bVisible)
+	{
+		PrepareTextures();
+		InitVertexTextureConstants();
+		SetCombinerAndBlender();
+		PrepareTriangle(dw0, dw1, dw2);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 inline int ReverseCITableLookup(uint32 *pTable, int size, uint32 val)
 {
 	for( int i=0; i<size; i++)

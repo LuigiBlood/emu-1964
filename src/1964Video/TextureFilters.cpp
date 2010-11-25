@@ -1320,6 +1320,8 @@ void ClearHiresCache(void)
 		{
 			SAFE_DELETE(gHiresTxtrInfos[i].pHiresTextureRGB);
 			SAFE_DELETE(gHiresTxtrInfos[i].pHiresTextureAlpha);
+			SAFE_DELETE(gHiresTxtrInfos[i].pHiresTextureRGBAlts);
+			SAFE_DELETE(gHiresTxtrInfos[i].pHiresTextureAlphaAlts);
 		}
 	}
 }
@@ -1900,8 +1902,6 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 		TRACE0("Cannot create a new texture");
 	}
 
-
-
 	// CODE MODIFICATION
 	int count = gHiresTxtrInfos[idx].count;
 	if (count > 0) {
@@ -2002,15 +2002,15 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 	}
 	// /CODE MODIFICATION
 
-
-
-
 	// if caching has been disabled, remove
 	// cached texture from memory
 	if(!options.bCacheHiResTextures)
 	{
 		SAFE_DELETE(gHiresTxtrInfos[idx].pHiresTextureRGB);
 		SAFE_DELETE(gHiresTxtrInfos[idx].pHiresTextureAlpha);
+
+		SAFE_DELETE(gHiresTxtrInfos[idx].pHiresTextureRGBAlts);
+		SAFE_DELETE(gHiresTxtrInfos[idx].pHiresTextureAlphaAlts);
 	}
 
 }
@@ -2099,20 +2099,30 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 
 
 	// CODE MODIFICATION
+
+	// the counter for the amount of alternate textures that are available
 	ExtTexInfo.count = 0;
+	// the boolean to check if the alterante textures should be in a random order
 	ExtTexInfo.shuffle = false;
+	// the time between each alternate texture
 	ExtTexInfo.period = 0;
+	// wether the texture is synchronized with another animated texture so they change at the same time
 	ExtTexInfo.synchronized = false;
+	// Init the pointer to the alternate RGB textures data
 	ExtTexInfo.pHiresTextureRGBAlts = NULL;
+	// Init the pointer to the alternate alpha channel data
 	ExtTexInfo.pHiresTextureAlphaAlts = NULL;
 
 	bool lookForAlt = true;
+
+	//Look for any alterante textures to be used as an animation
 	if (lookForAlt)
 		lookForAlternatives(ExtTexInfo, &ExtTexInfo.count, &ExtTexInfo.shuffle, &ExtTexInfo.period, &ExtTexInfo.synchronized);
 
 	//DebuggerAppendMsg("resultat parsing %d , %d, %d", ExtTexInfo.count, ExtTexInfo.shuffle, ExtTexInfo.period);
 
 	int count = ExtTexInfo.count;
+
 	char** filenames_rgbAlt = new char*[count];
 	char** filenames_alphaAlt = new char*[count];
 
@@ -2217,6 +2227,9 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 		TRACE1("Cannot open %s", filename_rgb);
 		// free the memory that has been alocated for the texture
 		SAFE_DELETE(ExtTexInfo.pHiresTextureRGB);
+
+		// free the memory that has been alocated for any alt textures
+		SAFE_DELETE(ExtTexInfo.pHiresTextureRGBAlts);
 		return;
 	}
 	// if texture has separate alpha channel but channel could not be loaded
@@ -2227,7 +2240,10 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 		// free the memory that has been alocated for the texture
 		SAFE_DELETE(ExtTexInfo.pHiresTextureRGB);
 		SAFE_DELETE(ExtTexInfo.pHiresTextureAlpha);
-		
+
+		// free the memory that has been alocated for any alt textures
+		SAFE_DELETE(ExtTexInfo.pHiresTextureRGBAlts);
+		SAFE_DELETE(ExtTexInfo.pHiresTextureAlphaAlts);
 		return;
 	}
 }
