@@ -358,15 +358,15 @@
 			Name="Debugger"
 			>
 			<File
-				RelativePath=".\Debugger.cpp"
+				RelativePath=".\Debugger\Debugger.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Debugger.h"
+				RelativePath=".\Debugger\Debugger.h"
 				>
 			</File>
 			<File
-				RelativePath=".\OGLDebug.h"
+				RelativePath=".\Debugger\OGLDebug.h"
 				>
 			</File>
 		</Filter>
@@ -390,94 +390,94 @@
 				Name="Combiner"
 				>
 				<File
-					RelativePath=".\blender.cpp"
+					RelativePath=".\Combiner\blender.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\blender.h"
+					RelativePath=".\Combiner\blender.h"
 					>
 				</File>
 				<File
-					RelativePath="CNvTNTCombiner.cpp"
+					RelativePath=".\Combiner\CNvTNTCombiner.cpp"
 					>
 				</File>
 				<File
-					RelativePath="CNvTNTCombiner.h"
+					RelativePath=".\Combiner\CNvTNTCombiner.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Combiner.cpp"
+					RelativePath=".\Combiner\Combiner.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Combiner.h"
+					RelativePath=".\Combiner\Combiner.h"
 					>
 				</File>
 				<File
-					RelativePath=".\CombinerDefs.h"
+					RelativePath=".\Combiner\CombinerDefs.h"
 					>
 				</File>
 				<File
-					RelativePath=".\CombinerTable.cpp"
+					RelativePath=".\Combiner\CombinerTable.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\DecodedMux.cpp"
+					RelativePath=".\Combiner\DecodedMux.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\DecodedMux.h"
+					RelativePath=".\Combiner\DecodedMux.h"
 					>
 				</File>
 				<File
-					RelativePath=".\GeneralCombiner.cpp"
+					RelativePath=".\Combiner\GeneralCombiner.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\GeneralCombiner.h"
+					RelativePath=".\Combiner\GeneralCombiner.h"
 					>
 				</File>
 				<Filter
 					Name="DirectXCombiner"
 					>
 					<File
-						RelativePath="CNvTNTDirectXCombiner.cpp"
+						RelativePath=".\Combiner\DirectXCombiner\CNvTNTDirectXCombiner.cpp"
 						>
 					</File>
 					<File
-						RelativePath="CNvTNTDirectXCombiner.h"
+						RelativePath=".\Combiner\DirectXCombiner\CNvTNTDirectXCombiner.h"
 						>
 					</File>
 					<File
-						RelativePath=".\DirectXBlender.cpp"
+						RelativePath=".\Combiner\DirectXCombiner\DirectXBlender.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\DirectXBlender.h"
+						RelativePath=".\Combiner\DirectXCombiner\DirectXBlender.h"
 						>
 					</File>
 					<File
-						RelativePath=".\DirectXCombiner.cpp"
+						RelativePath=".\Combiner\DirectXCombiner\DirectXCombiner.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\DirectXCombiner.h"
+						RelativePath=".\Combiner\DirectXCombiner\DirectXCombiner.h"
 						>
 					</File>
 					<File
-						RelativePath="DirectXCombinerVariants.cpp"
+						RelativePath=".\Combiner\DirectXCombiner\DirectXCombinerVariants.cpp"
 						>
 					</File>
 					<File
-						RelativePath="DirectXCombinerVariants.h"
+						RelativePath=".\Combiner\DirectXCombiner\DirectXCombinerVariants.h"
 						>
 					</File>
 					<File
-						RelativePath=".\DirectXDecodedMux.cpp"
+						RelativePath=".\Combiner\DirectXCombiner\DirectXDecodedMux.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\DirectXDecodedMux.h"
+						RelativePath=".\Combiner\DirectXCombiner\DirectXDecodedMux.h"
 						>
 					</File>
 				</Filter>
@@ -485,51 +485,51 @@
 					Name="OpenGLCombiner"
 					>
 					<File
-						RelativePath=".\OGLCombiner.cpp"
+						RelativePath=".\Combiner\OpenGLCombiner\OGLCombiner.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLCombiner.h"
+						RelativePath=".\Combiner\OpenGLCombiner\OGLCombiner.h"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLCombinerNV.cpp"
+						RelativePath=".\Combiner\OpenGLCombiner\OGLCombinerNV.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLCombinerNV.h"
+						RelativePath=".\Combiner\OpenGLCombiner\OGLCombinerNV.h"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLCombinerTNT2.cpp"
+						RelativePath=".\Combiner\OpenGLCombiner\OGLCombinerTNT2.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLCombinerTNT2.h"
+						RelativePath=".\Combiner\OpenGLCombiner\OGLCombinerTNT2.h"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLDecodedMux.cpp"
+						RelativePath=".\Combiner\OpenGLCombiner\OGLDecodedMux.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLDecodedMux.h"
+						RelativePath=".\Combiner\OpenGLCombiner\OGLDecodedMux.h"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLExtCombiner.cpp"
+						RelativePath=".\Combiner\OpenGLCombiner\OGLExtCombiner.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLExtCombiner.h"
+						RelativePath=".\Combiner\OpenGLCombiner\OGLExtCombiner.h"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLFragmentShaders.cpp"
+						RelativePath=".\Combiner\OpenGLCombiner\OGLFragmentShaders.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLFragmentShaders.h"
+						RelativePath=".\Combiner\OpenGLCombiner\OGLFragmentShaders.h"
 						>
 					</File>
 				</Filter>
@@ -538,62 +538,62 @@
 				Name="Render"
 				>
 				<File
-					RelativePath=".\ExtendedRender.h"
+					RelativePath=".\Render\ExtendedRender.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Render.cpp"
+					RelativePath=".\Render\Render.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Render.h"
+					RelativePath=".\Render\Render.h"
 					>
 				</File>
 				<File
-					RelativePath=".\RenderBase.cpp"
+					RelativePath=".\Render\RenderBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\RenderBase.h"
+					RelativePath=".\Render\RenderBase.h"
 					>
 				</File>
 				<File
-					RelativePath=".\RenderExt.cpp"
+					RelativePath=".\Render\RenderExt.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\shaderdx9.vsh"
+					RelativePath=".\Render\shaderdx9.vsh"
 					>
 				</File>
 				<File
-					RelativePath=".\shaderdx9_include.h"
+					RelativePath=".\Render\shaderdx9_include.h"
 					>
 				</File>
 				<File
-					RelativePath=".\VertexClipper.cpp"
+					RelativePath=".\Render\VertexClipper.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\VertexShader.cpp"
+					RelativePath=".\Render\VertexShader.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\VertexShaderConstantDef.h"
+					RelativePath=".\Render\VertexShaderConstantDef.h"
 					>
 				</File>
 				<Filter
 					Name="DirectX"
 					>
 					<File
-						RelativePath=".\D3DRender.cpp"
+						RelativePath=".\Render\DirectX\D3DRender.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\D3DRender.h"
+						RelativePath=".\Render\DirectX\D3DRender.h"
 						>
 					</File>
 					<File
-						RelativePath=".\D3DRenderExt.cpp"
+						RelativePath=".\Render\DirectX\D3DRenderExt.cpp"
 						>
 					</File>
 				</Filter>
@@ -601,23 +601,23 @@
 					Name="OpenGL"
 					>
 					<File
-						RelativePath=".\OGLExtRender.cpp"
+						RelativePath=".\Render\OpenGL\OGLExtRender.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLExtRender.h"
+						RelativePath=".\Render\OpenGL\OGLExtRender.h"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLRender.cpp"
+						RelativePath=".\Render\OpenGL\OGLRender.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLRender.h"
+						RelativePath=".\Render\OpenGL\OGLRender.h"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLRenderExt.cpp"
+						RelativePath=".\Render\OpenGL\OGLRenderExt.cpp"
 						>
 					</File>
 				</Filter>
@@ -626,7 +626,7 @@
 				Name="Device"
 				>
 				<File
-					RelativePath=".\DeviceBuilder.cpp"
+					RelativePath=".\Device\DeviceBuilder.cpp"
 					>
 					<FileConfiguration
 						Name="Release|Win32"
@@ -646,46 +646,46 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\DeviceBuilder.h"
+					RelativePath=".\Device\DeviceBuilder.h"
 					>
 				</File>
 				<File
-					RelativePath=".\FrameBuffer.cpp"
+					RelativePath=".\Device\FrameBuffer.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\FrameBuffer.h"
+					RelativePath=".\Device\FrameBuffer.h"
 					>
 				</File>
 				<File
-					RelativePath=".\FrameBufferDX.cpp"
+					RelativePath=".\Device\FrameBufferDX.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\GraphicsContext.cpp"
+					RelativePath=".\Device\GraphicsContext.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\GraphicsContext.h"
+					RelativePath=".\Device\GraphicsContext.h"
 					>
 				</File>
 				<File
-					RelativePath=".\RenderTexture.cpp"
+					RelativePath=".\Device\RenderTexture.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\RenderTexture.h"
+					RelativePath=".\Device\RenderTexture.h"
 					>
 				</File>
 				<Filter
 					Name="DirectXDevice"
 					>
 					<File
-						RelativePath=".\DXGraphicsContext.cpp"
+						RelativePath=".\Device\DirectXDevice\DXGraphicsContext.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\DXGraphicsContext.h"
+						RelativePath=".\Device\DirectXDevice\DXGraphicsContext.h"
 						>
 					</File>
 				</Filter>
@@ -693,11 +693,11 @@
 					Name="OGLDevice"
 					>
 					<File
-						RelativePath=".\OGLGraphicsContext.cpp"
+						RelativePath=".\Device\OGLDevice\OGLGraphicsContext.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLGraphicsContext.h"
+						RelativePath=".\Device\OGLDevice\OGLGraphicsContext.h"
 						>
 					</File>
 				</Filter>
@@ -706,63 +706,63 @@
 				Name="Parser"
 				>
 				<File
-					RelativePath=".\RDP_Texture.h"
+					RelativePath=".\Parser\RDP_Texture.h"
 					>
 				</File>
 				<File
-					RelativePath=".\RSP_GBI0.h"
+					RelativePath=".\Parser\RSP_GBI0.h"
 					>
 				</File>
 				<File
-					RelativePath=".\RSP_GBI1.h"
+					RelativePath=".\Parser\RSP_GBI1.h"
 					>
 				</File>
 				<File
-					RelativePath=".\RSP_GBI2.h"
+					RelativePath=".\Parser\RSP_GBI2.h"
 					>
 				</File>
 				<File
-					RelativePath=".\RSP_GBI2_ext.h"
+					RelativePath=".\Parser\RSP_GBI2_ext.h"
 					>
 				</File>
 				<File
-					RelativePath=".\RSP_GBI_Others.h"
+					RelativePath=".\Parser\RSP_GBI_Others.h"
 					>
 				</File>
 				<File
-					RelativePath=".\RSP_GBI_Sprite2D.h"
+					RelativePath=".\Parser\RSP_GBI_Sprite2D.h"
 					>
 				</File>
 				<File
-					RelativePath=".\RSP_Parser.cpp"
+					RelativePath=".\Parser\RSP_Parser.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\RSP_Parser.h"
+					RelativePath=".\Parser\RSP_Parser.h"
 					>
 				</File>
 				<File
-					RelativePath=".\RSP_S2DEX.cpp"
+					RelativePath=".\Parser\RSP_S2DEX.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\RSP_S2DEX.h"
+					RelativePath=".\Parser\RSP_S2DEX.h"
 					>
 				</File>
 				<File
-					RelativePath=".\RSP_Turbo3D.h"
+					RelativePath=".\Parser\RSP_Turbo3D.h"
 					>
 				</File>
 				<File
-					RelativePath="Timing.h"
+					RelativePath=".\Parser\Timing.h"
 					>
 				</File>
 				<File
-					RelativePath=".\ucode.h"
+					RelativePath=".\Parser\ucode.h"
 					>
 				</File>
 				<File
-					RelativePath=".\UcodeDefs.h"
+					RelativePath=".\Parser\UcodeDefs.h"
 					>
 				</File>
 			</Filter>
@@ -770,19 +770,19 @@
 				Name="Utility"
 				>
 				<File
-					RelativePath=".\CritSect.h"
+					RelativePath=".\Utility\CritSect.h"
 					>
 				</File>
 				<File
-					RelativePath="CSortedList.h"
+					RelativePath=".\Utility\CSortedList.h"
 					>
 				</File>
 				<File
-					RelativePath=".\IColor.h"
+					RelativePath=".\Utility\IColor.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Unique.h"
+					RelativePath=".\Utility\Unique.h"
 					>
 				</File>
 			</Filter>
@@ -790,42 +790,42 @@
 				Name="Texture"
 				>
 				<File
-					RelativePath=".\ConvertImage.cpp"
+					RelativePath=".\Texture\ConvertImage.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\ConvertImage.h"
+					RelativePath=".\Texture\ConvertImage.h"
 					>
 				</File>
 				<File
-					RelativePath=".\ConvertImage16.cpp"
+					RelativePath=".\Texture\ConvertImage16.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Texture.cpp"
+					RelativePath=".\Texture\Texture.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Texture.h"
+					RelativePath=".\Texture\Texture.h"
 					>
 				</File>
 				<File
-					RelativePath=".\TextureManager.cpp"
+					RelativePath=".\Texture\TextureManager.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\TextureManager.h"
+					RelativePath=".\Texture\TextureManager.h"
 					>
 				</File>
 				<Filter
 					Name="DirectXTexture"
 					>
 					<File
-						RelativePath=".\DirectXTexture.cpp"
+						RelativePath=".\Texture\DirectXTexture\DirectXTexture.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\DirectXTexture.h"
+						RelativePath=".\Texture\DirectXTexture\DirectXTexture.h"
 						>
 					</File>
 				</Filter>
@@ -833,11 +833,11 @@
 					Name="OGLTexture"
 					>
 					<File
-						RelativePath=".\OGLTexture.cpp"
+						RelativePath=".\Texture\OGLTexture\OGLTexture.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\OGLTexture.h"
+						RelativePath=".\Texture\OGLTexture\OGLTexture.h"
 						>
 					</File>
 				</Filter>
@@ -845,61 +845,65 @@
 					Name="Texture Filters"
 					>
 					<File
-						RelativePath=".\TextureFilters.cpp"
+						RelativePath=".\Texture\TextureFilters\TextureFilters.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\TextureFilters.h"
+						RelativePath=".\Texture\TextureFilters\TextureFilters.h"
 						>
 					</File>
 					<File
-						RelativePath=".\TextureFilters_2xsai.cpp"
+						RelativePath=".\Texture\TextureFilters\TextureFilters_2xsai.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\TextureFilters_2xsai.h"
+						RelativePath=".\Texture\TextureFilters\TextureFilters_2xsai.h"
 						>
 					</File>
 					<File
-						RelativePath=".\TextureFilters_hq2x.cpp"
+						RelativePath=".\Texture\TextureFilters\TextureFilters_hq2x.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\TextureFilters_hq2x.h"
+						RelativePath=".\Texture\TextureFilters\TextureFilters_hq2x.h"
 						>
 					</File>
 					<File
-						RelativePath=".\TextureFilters_hq4x.cpp"
+						RelativePath=".\Texture\TextureFilters\TextureFilters_hq4x.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\TextureFilters_hq4x.h"
+						RelativePath=".\Texture\TextureFilters\TextureFilters_hq4x.h"
 						>
 					</File>
 					<File
-						RelativePath=".\TextureFilters_lq2x.cpp"
+						RelativePath=".\Texture\TextureFilters\TextureFilters_lq2x.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\TextureFilters_lq2x.h"
+						RelativePath=".\Texture\TextureFilters\TextureFilters_lq2x.h"
 						>
 					</File>
 					<File
-						RelativePath=".\TextureFilters_sharpen.cpp"
+						RelativePath=".\Texture\TextureFilters\TextureFilters_sharpen.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\TextureFilters_smooth.cpp"
+						RelativePath=".\Texture\TextureFilters\TextureFilters_smooth.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\TextureFilters_texture2x.cpp"
+						RelativePath=".\Texture\TextureFilters\TextureFilters_texture2x.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\TextureFilters_texture2x.h"
+						RelativePath=".\Texture\TextureFilters\TextureFilters_texture2x.h"
 						>
 					</File>
+				</Filter>
+				<Filter
+					Name="HiresTexture"
+					>
 				</Filter>
 			</Filter>
 		</Filter>
