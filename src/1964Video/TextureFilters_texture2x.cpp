@@ -167,3 +167,11 @@ void Texture2x_16(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch
     }
   }
 }
+
+void Texture2x(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height, bool bPixelSize4)
+{
+	if(bPixelSize4)
+		Texture2x_32((uint8*)(srcPtr), srcPitch, (uint8*)(dstPtr), dstPitch, width, height);
+	else
+		Texture2x_16((uint8*)(srcPtr), srcPitch, (uint8*)(dstPtr), dstPitch, width, height);
+}

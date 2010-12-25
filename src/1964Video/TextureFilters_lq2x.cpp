@@ -867,3 +867,19 @@ void lq2xS_32(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, in
    dst1 += dstPitch >> 1;
    lq2xS_32_def(dst0, dst1, src0, src1, src1, width);
 }
+
+void lq2x(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height,bool bPixelSize4)
+{
+	if(bPixelSize4)
+		lq2x_32((uint8*)(srcPtr), srcPitch, (uint8*)(dstPtr), dstPitch, width, height);
+	else
+		lq2x_16((uint8*)(srcPtr), srcPitch, (uint8*)(dstPtr), dstPitch, width, height);
+}
+
+void lq2xS(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height,bool bPixelSize4)
+{
+	if(bPixelSize4)
+		lq2xS_32((uint8*)(srcPtr), srcPitch, (uint8*)(dstPtr), dstPitch, width, height);
+	else
+		lq2xS_16((uint8*)(srcPtr), srcPitch, (uint8*)(dstPtr), dstPitch, width, height);
+}
