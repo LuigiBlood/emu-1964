@@ -6,4 +6,4 @@
  * Add support for a *WIP subfolder* for reloading new hires textues
  * Add *Pack-Select* feature
  * Add more *framebuffer support*
- * Add widescreen suppor
+ * Add widescreen support
