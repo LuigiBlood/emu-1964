@@ -575,3 +575,11 @@ void hq4x_InitLUTs(void)
 	}
 }
 
+void hq4x( unsigned char * pIn, unsigned char * pOut, int Xres, int Yres, int SrcPPL, int BpL, bool bPixelSize4 )
+{
+	hq4x_InitLUTs();
+	if(bPixelSize4)
+		hq4x_32((uint8*)(pIn), (uint8*)(pOut), Xres, Yres, SrcPPL, BpL);
+	else
+		hq4x_16((uint8*)(pIn), (uint8*)(pOut), Xres, Yres, SrcPPL, BpL);
+}

@@ -885,6 +885,14 @@
 						>
 					</File>
 					<File
+						RelativePath=".\TextureFilters_sharpen.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\TextureFilters_smooth.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\TextureFilters_texture2x.cpp"
 						>
 					</File>

@@ -22,356 +22,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include "Main_ScanLineTv.h"
 #include "lib/BMGDll.h"
 
-
-/************************************************************************/
-/* Sharpen filters                                                      */
-/************************************************************************/
-void SharpenFilter_32(uint32 *pdata, uint32 width, uint32 height, uint32 pitch, uint32 filter)
-{
-	uint32 len=height*pitch;
-	uint32 *pcopy = new uint32[len];
-
-	if( !pcopy )	return;
-
-	memcpy(pcopy, pdata, len<<2);
-
-	uint32 mul1, mul2, mul3, shift4;
-	switch( filter )
-	{
-	case TEXTURE_SHARPEN_MORE_ENHANCEMENT:
-		mul1=1;
-		mul2=8;
-		mul3=12;
-		shift4=2;
-		break;
-	case TEXTURE_SHARPEN_ENHANCEMENT:
-	default:
-		mul1=1;
-		mul2=8;
-		mul3=16;
-		shift4=3;
-		break;
-	}
-
-	uint32 x,y,z;
-	uint32 *src1, *src2, *src3, *dest;
-	uint32 val[4];
-	uint32 t1,t2,t3,t4,t5,t6,t7,t8,t9;
-
-	for( y=1; y<height-1; y++)
-	{
-		dest = pdata+y*pitch;
-		src1 = pcopy+(y-1)*pitch;
-		src2 = src1 + pitch;
-		src3 = src2 + pitch;
-		for( x=1; x<width-1; x++)
-		{
-			for( z=0; z<4; z++ )
-			{
-				t1 = *((uint8*)(src1+x-1)+z);
-				t2 = *((uint8*)(src1+x  )+z);
-				t3 = *((uint8*)(src1+x+1)+z);
-				t4 = *((uint8*)(src2+x-1)+z);
-				t5 = *((uint8*)(src2+x  )+z);
-				t6 = *((uint8*)(src2+x+1)+z);
-				t7 = *((uint8*)(src3+x-1)+z);
-				t8 = *((uint8*)(src3+x  )+z);
-				t9 = *((uint8*)(src3+x+1)+z);
-				val[z]=t5;
-				if( (t5*mul2) > (t1+t3+t7+t9+t2+t4+t6+t8)*mul1 )
-				{
-					val[z]= min((((t5*mul3) - (t1+t3+t7+t9+t2+t4+t6+t8)*mul1)>>shift4),0xFF);
-				}
-			}
-			dest[x] = val[0]|(val[1]<<8)|(val[2]<<16)|(val[3]<<24);
-		}
-	}
-	delete [] pcopy;
-}
-
-void SharpenFilter_16(uint16 *pdata, uint32 width, uint32 height, uint32 pitch, uint32 filter)
-{
-	//return;	// Sharpen does not make sense for 16 bits
-
-	uint32 len=height*pitch;
-	uint16 *pcopy = new uint16[len];
-
-	if( !pcopy )	return;
-
-	memcpy(pcopy, pdata, len<<1);
-
-	uint16 mul1, mul2, mul3, shift4;
-	switch( filter )
-	{
-	case TEXTURE_SHARPEN_MORE_ENHANCEMENT:
-		mul1=1;
-		mul2=8;
-		mul3=12;
-		shift4=2;
-		break;
-	case TEXTURE_SHARPEN_ENHANCEMENT:
-	default:
-		mul1=1;
-		mul2=8;
-		mul3=16;
-		shift4=3;
-		break;
-	}
-
-	uint32 x,y,z;
-	uint16 *src1, *src2, *src3, *dest;
-	uint16 val[4];
-	uint16 t1,t2,t3,t4,t5,t6,t7,t8,t9;
-
-	for( y=1; y<height-1; y++)
-	{
-		dest = pdata+y*pitch;
-		src1 = pcopy+(y-1)*pitch;
-		src2 = src1 + pitch;
-		src3 = src2 + pitch;
-		for( x=1; x<width-1; x++)
-		{
-			for( z=0; z<4; z++ )
-			{
-				uint32 shift = (z%1)?4:0;
-				t1 = (*((uint8*)(src1+x-1)+(z>>1)))>>shift;
-				t2 = (*((uint8*)(src1+x  )+(z>>1)))>>shift;
-				t3 = (*((uint8*)(src1+x+1)+(z>>1)))>>shift;
-				t4 = (*((uint8*)(src2+x-1)+(z>>1)))>>shift;
-				t5 = (*((uint8*)(src2+x  )+(z>>1)))>>shift;
-				t6 = (*((uint8*)(src2+x+1)+(z>>1)))>>shift;
-				t7 = (*((uint8*)(src3+x-1)+(z>>1)))>>shift;
-				t8 = (*((uint8*)(src3+x  )+(z>>1)))>>shift;
-				t9 = (*((uint8*)(src3+x+1)+(z>>1)))>>shift;
-				val[z]=t5;
-				if( (t5*mul2) > (t1+t3+t7+t9+t2+t4+t6+t8)*mul1 )
-				{
-					val[z] = (((t5*mul3) - (t1+t3+t7+t9+t2+t4+t6+t8)*mul1)>>shift4);
-					val[z]= min(val[z],0xF);
-				}
-			}
-			dest[x] = val[0]|(val[1]<<4)|(val[2]<<8)|(val[3]<<12);
-		}
-	}
-	delete [] pcopy;
-}
-
-/************************************************************************/
-/* Smooth filters                                                       */
-/************************************************************************/
-void SmoothFilter_32(uint32 *pdata, uint32 width, uint32 height, uint32 pitch, uint32 filter)
-{
-	uint32 len=height*pitch;
-	uint32 *pcopy = new uint32[len];
-
-	if( !pcopy )	return;
-
-	memcpy(pcopy, pdata, len<<2);
-
-	uint32 mul1, mul2, mul3, shift4;
-	switch( filter )
-	{
-	case TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_1:
-		mul1=1;
-		mul2=2;
-		mul3=4;
-		shift4=4;
-		break;
-	case TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_2:
-		mul1=1;
-		mul2=1;
-		mul3=8;
-		shift4=4;
-		break;
-	case TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_3:
-		mul1=1;
-		mul2=1;
-		mul3=2;
-		shift4=2;
-		break;
-	case TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_4:
-	default:
-		mul1=1;
-		mul2=1;
-		mul3=6;
-		shift4=3;
-		break;
-	}
-
-	uint32 x,y,z;
-	uint32 *src1, *src2, *src3, *dest;
-	uint32 val[4];
-	uint32 t1,t2,t3,t4,t5,t6,t7,t8,t9;
-
-	if( filter == TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_3 || filter == TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_4 )
-	{
-		for( y=1; y<height-1; y+=2)
-		{
-			dest = pdata+y*pitch;
-			src1 = pcopy+(y-1)*pitch;
-			src2 = src1 + pitch;
-			src3 = src2 + pitch;
-			for( x=0; x<width; x++)
-			{
-				for( z=0; z<4; z++ )
-				{
-					t2 = *((uint8*)(src1+x  )+z);
-					t5 = *((uint8*)(src2+x  )+z);
-					t8 = *((uint8*)(src3+x  )+z);
-					val[z] = ((t2+t8)*mul2+(t5*mul3))>>shift4;
-				}
-				dest[x] = val[0]|(val[1]<<8)|(val[2]<<16)|(val[3]<<24);
-			}
-		}
-	}
-	else
-	{
-		for( y=0; y<height; y++)
-		{
-			dest = pdata+y*pitch;
-			if( y>0 )
-			{
-				src1 = pcopy+(y-1)*pitch;
-				src2 = src1 + pitch;
-			}
-			else
-			{
-				src1 = src2 = pcopy;
-			}
-
-			src3 = src2;
-			if( y<height-1)	src3 += pitch;
-
-			for( x=1; x<width-1; x++)
-			{
-				for( z=0; z<4; z++ )
-				{
-					t1 = *((uint8*)(src1+x-1)+z);
-					t2 = *((uint8*)(src1+x  )+z);
-					t3 = *((uint8*)(src1+x+1)+z);
-					t4 = *((uint8*)(src2+x-1)+z);
-					t5 = *((uint8*)(src2+x  )+z);
-					t6 = *((uint8*)(src2+x+1)+z);
-					t7 = *((uint8*)(src3+x-1)+z);
-					t8 = *((uint8*)(src3+x  )+z);
-					t9 = *((uint8*)(src3+x+1)+z);
-					val[z] = ((t1+t3+t7+t9)*mul1+((t2+t4+t6+t8)*mul2)+(t5*mul3))>>shift4;
-				}
-				dest[x] = val[0]|(val[1]<<8)|(val[2]<<16)|(val[3]<<24);
-			}
-		}
-	}
-	delete [] pcopy;
-}
-
-void SmoothFilter_16(uint16 *pdata, uint32 width, uint32 height, uint32 pitch, uint32 filter)
-{
-	uint32 len=height*pitch;
-	uint16 *pcopy = new uint16[len];
-
-	if( !pcopy )	return;
-
-	memcpy(pcopy, pdata, len<<1);
-
-	uint16 mul1, mul2, mul3, shift4;
-	switch( filter )
-	{
-	case TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_1:
-		mul1=1;
-		mul2=2;
-		mul3=4;
-		shift4=4;
-		break;
-	case TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_2:
-		mul1=1;
-		mul2=1;
-		mul3=8;
-		shift4=4;
-		break;
-	case TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_3:
-		mul1=1;
-		mul2=1;
-		mul3=2;
-		shift4=2;
-		break;
-	case TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_4:
-	default:
-		mul1=1;
-		mul2=1;
-		mul3=6;
-		shift4=3;
-		break;
-	}
-
-	uint32 x,y,z;
-	uint16 *src1, *src2, *src3, *dest;
-	uint16 val[4];
-	uint16 t1,t2,t3,t4,t5,t6,t7,t8,t9;
-
-	if( filter == TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_3 || filter == TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_4 )
-	{
-		for( y=1; y<height-1; y+=2)
-		{
-			dest = pdata+y*pitch;
-			src1 = pcopy+(y-1)*pitch;
-			src2 = src1 + pitch;
-			src3 = src2 + pitch;
-			for( x=0; x<width; x++)
-			{
-				for( z=0; z<4; z++ )
-				{
-					uint32 shift = (z&1)?4:0;
-					t2 = (*((uint8*)(src1+x  )+(z>>1)))>>shift;
-					t5 = (*((uint8*)(src2+x  )+(z>>1)))>>shift;
-					t8 = (*((uint8*)(src3+x  )+(z>>1)))>>shift;
-					val[z] = ((t2+t8)*mul2+(t5*mul3))>>shift4;
-				}
-				dest[x] = val[0]|(val[1]<<4)|(val[2]<<8)|(val[3]<<12);
-			}
-		}
-	}
-	else
-	{
-		for( y=0; y<height; y++)
-		{
-			dest = pdata+y*pitch;
-			if( y>0 )
-			{
-				src1 = pcopy+(y-1)*pitch;
-				src2 = src1 + pitch;
-			}
-			else
-			{
-				src1 = src2 = pcopy;
-			}
-
-			src3 = src2;
-			if( y<height-1)	src3 += pitch;
-
-			for( x=1; x<width-1; x++)
-			{
-				for( z=0; z<4; z++ )
-				{
-					uint32 shift = (z&1)?4:0;
-					t1 = (*((uint8*)(src1+x-1)+(z>>1)))>>shift;
-					t2 = (*((uint8*)(src1+x  )+(z>>1)))>>shift;
-					t3 = (*((uint8*)(src1+x+1)+(z>>1)))>>shift;
-					t4 = (*((uint8*)(src2+x-1)+(z>>1)))>>shift;
-					t5 = (*((uint8*)(src2+x  )+(z>>1)))>>shift;
-					t6 = (*((uint8*)(src2+x+1)+(z>>1)))>>shift;
-					t7 = (*((uint8*)(src3+x-1)+(z>>1)))>>shift;
-					t8 = (*((uint8*)(src3+x  )+(z>>1)))>>shift;
-					t9 = (*((uint8*)(src3+x+1)+(z>>1)))>>shift;
-					val[z] = ((t1+t3+t7+t9)*mul1+((t2+t4+t6+t8)*mul2)+(t5*mul3))>>shift4;
-				}
-				dest[x] = val[0]|(val[1]<<4)|(val[2]<<8)|(val[3]<<12);
-			}
-		}
-	}
-	delete [] pcopy;
-}
-
-
 void EnhanceTexture(TxtrCacheEntry *pEntry)
 {
 	if( pEntry->dwEnhancementFlag == options.textureEnhancement )
@@ -379,9 +29,13 @@ void EnhanceTexture(TxtrCacheEntry *pEntry)
 		// The texture has already been enhanced
 		return;
 	}
-	else if( options.textureEnhancement == TEXTURE_NO_ENHANCEMENT )
+	else if( options.textureEnhancement == TEXTURE_NO_ENHANCEMENT ) 
 	{
+		//Texture enhancement has being turned off
+
+		//Delete any allocated memory for the enhanced texture
 		SAFE_DELETE(pEntry->pEnhancedTexture);
+		//Set the enhancement flag so the texture wont be processed again
 		pEntry->dwEnhancementFlag = TEXTURE_NO_ENHANCEMENT;
 		return;
 	}
@@ -392,8 +46,11 @@ void EnhanceTexture(TxtrCacheEntry *pEntry)
 	}
 
 	DrawInfo srcInfo;	
+	//Start the draw update
 	if( pEntry->pTexture->StartUpdate(&srcInfo) == false )
 	{
+		//If we get here we were unable to start the draw update
+		//Delete any allocated memory for the enhanced texture
 		SAFE_DELETE(pEntry->pEnhancedTexture);
 		return;
 	}
@@ -402,26 +59,37 @@ void EnhanceTexture(TxtrCacheEntry *pEntry)
 	uint32 realheight = srcInfo.dwHeight;
 	uint32 nWidth = srcInfo.dwCreatedWidth;
 	uint32 nHeight = srcInfo.dwCreatedHeight;
-
+		bool bPixelSize4 = (pEntry->pTexture->GetPixelSize() == 4);
+			if(pEntry->pTexture->GetPixelSize() == 4)
+				bPixelSize4 = true;
+			else
+				bPixelSize4 = false;
+	//Sharpen option is enabled, sharpen the texture
 	if( options.textureEnhancement == TEXTURE_SHARPEN_ENHANCEMENT || options.textureEnhancement == TEXTURE_SHARPEN_MORE_ENHANCEMENT )
 	{
-		if( pEntry->pTexture->GetPixelSize() == 4 )
-			SharpenFilter_32((uint32*)srcInfo.lpSurface, nWidth, nHeight, nWidth, options.textureEnhancement);
-		else
-			SharpenFilter_16((uint16*)srcInfo.lpSurface, nWidth, nHeight, nWidth, options.textureEnhancement);
+		SharpenFilter((uint32*)srcInfo.lpSurface, nWidth, nHeight, nWidth, options.textureEnhancement, bPixelSize4);
+		//Set the enhcanement flag for the texture
 		pEntry->dwEnhancementFlag = options.textureEnhancement;
+		//End the draw update
 		pEntry->pTexture->EndUpdate(&srcInfo);
+		//Delete any allocated memory for the enhanced texture
 		SAFE_DELETE(pEntry->pEnhancedTexture);
 		return;
 	}
 
 	pEntry->dwEnhancementFlag = options.textureEnhancement;
+
+	//Only use small textures is enabled
 	if( options.bSmallTextureOnly )
-	{
+	{	
+		//Check the size of the texture and make sure it isnt greater then 256
 		if( nWidth + nHeight > 256 )
 		{
+			//End the draw update
 			pEntry->pTexture->EndUpdate(&srcInfo);
+			//Delete any allocated memory for the enhanced texture
 			SAFE_DELETE(pEntry->pEnhancedTexture);
+			//Set the enhancement flag so the texture wont be processed again
 			pEntry->dwEnhancementFlag = TEXTURE_NO_ENHANCEMENT;
 			return;
 		}
@@ -431,26 +99,34 @@ void EnhanceTexture(TxtrCacheEntry *pEntry)
 	CTexture* pSurfaceHandler = NULL;
 	if( options.textureEnhancement == TEXTURE_HQ4X_ENHANCEMENT )
 	{
+		// Don't enhance for large textures
 		if( nWidth + nHeight > 1024/4 )
 		{
-			// Don't enhance for large textures
+			//End the draw update
 			pEntry->pTexture->EndUpdate(&srcInfo);
+			//Delete any data allocated for the enhanced texture
 			SAFE_DELETE(pEntry->pEnhancedTexture);
+			//Set the enhancement flag so the texture wont be processed again
 			pEntry->dwEnhancementFlag = TEXTURE_NO_ENHANCEMENT;
 			return;
 		}
+		//Create the surface for the texture
 		pSurfaceHandler = CDeviceBuilder::GetBuilder()->CreateTexture(nWidth*4, nHeight*4);
 	}
 	else
 	{
+		// Don't enhance for large textures
 		if( nWidth + nHeight > 1024/2 )
 		{
-			// Don't enhance for large textures
+			//End the draw update
 			pEntry->pTexture->EndUpdate(&srcInfo);
+			//Delete any data allocated for the enhanced texture
 			SAFE_DELETE(pEntry->pEnhancedTexture);
+			//Set the enhancement flag so the texture wont be processed again
 			pEntry->dwEnhancementFlag = TEXTURE_NO_ENHANCEMENT;
 			return;
 		}
+		//Create the surface for the texture
 		pSurfaceHandler = CDeviceBuilder::GetBuilder()->CreateTexture(nWidth*2, nHeight*2);
 	}
 
@@ -459,62 +135,32 @@ void EnhanceTexture(TxtrCacheEntry *pEntry)
 	{
 		if( pSurfaceHandler->StartUpdate(&destInfo))
 		{
-			bool pixelSize4;
-			if(pEntry->pTexture->GetPixelSize() == 4)
-				pixelSize4 = true;
-			else
-				pixelSize4 = false;
 
 			switch(options.textureEnhancement)
 			{
 				case TEXTURE_2XSAI_ENHANCEMENT:
-					if(pixelSize4)
-						Super2xSaI_32((uint32*)(srcInfo.lpSurface),(uint32*)(destInfo.lpSurface), nWidth, realheight, nWidth);
-					else
-						Super2xSaI_16((uint16*)(srcInfo.lpSurface),(uint16*)(destInfo.lpSurface), nWidth, realheight, nWidth);
+					Super2xSaI((uint32*)(srcInfo.lpSurface),(uint32*)(destInfo.lpSurface), nWidth, realheight, nWidth, bPixelSize4);
 					break;
 				case TEXTURE_HQ2X_ENHANCEMENT:
-					if(pixelSize4)
-						hq2x_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-					else
-						hq2x_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					hq2x((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight, bPixelSize4);
 					break;
 				case TEXTURE_HQ2XS_ENHANCEMENT:
-					if(pixelSize4)
-						hq2xS_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-					else
-						hq2xS_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					hq2xS((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight, bPixelSize4);
 					break;
 				case TEXTURE_LQ2X_ENHANCEMENT:
-					if(pixelSize4)
-						lq2x_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-					else
-						lq2x_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					lq2x((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight, bPixelSize4);
 					break;
 				case TEXTURE_LQ2XS_ENHANCEMENT:
-					if(pixelSize4)
-						lq2xS_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-					else
-						lq2xS_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					lq2xS((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight, bPixelSize4);
 					break;
 				case TEXTURE_2X_ENHANCEMENT:
-					if(pixelSize4)
-						Texture2x_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-					else
-						Texture2x_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					Texture2x((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight, bPixelSize4);
 					break;
 				case TEXTURE_HQ4X_ENHANCEMENT:
-					hq4x_InitLUTs();
-					if(pixelSize4)
-						hq4x_32((uint8*)(srcInfo.lpSurface), (uint8*)(destInfo.lpSurface), realwidth, realheight, nWidth, destInfo.lPitch);
-					else
-						hq4x_16((uint8*)(srcInfo.lpSurface), (uint8*)(destInfo.lpSurface), realwidth, realheight, nWidth, destInfo.lPitch);
+					hq4x((uint8*)(srcInfo.lpSurface), (uint8*)(destInfo.lpSurface), realwidth, realheight, nWidth, destInfo.lPitch, bPixelSize4);
 					break;
 				default:
-					if(pixelSize4)
-						Texture2x_32((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
-					else
-						Texture2x_16((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight);
+					Texture2x((uint8*)(srcInfo.lpSurface), srcInfo.lPitch, (uint8*)(destInfo.lpSurface), destInfo.lPitch, nWidth, realheight, bPixelSize4);
 					break;
 			}
 
@@ -522,17 +168,11 @@ void EnhanceTexture(TxtrCacheEntry *pEntry)
 			{
 				if( options.textureEnhancement != TEXTURE_HQ4X_ENHANCEMENT )
 				{
-					if( pEntry->pTexture->GetPixelSize() == 4 )
-						SmoothFilter_32((uint32*)destInfo.lpSurface, realwidth<<1, realheight<<1, nWidth<<1, options.textureEnhancementControl);
-					else
-						SmoothFilter_16((uint16*)destInfo.lpSurface, realwidth<<1, realheight<<1, nWidth<<1, options.textureEnhancementControl);
+					SmoothFilter((uint32*)destInfo.lpSurface, realwidth<<1, realheight<<1, nWidth<<1, options.textureEnhancementControl, bPixelSize4);
 				}
 				else
 				{
-					if( pEntry->pTexture->GetPixelSize() == 4 )
-						SmoothFilter_32((uint32*)destInfo.lpSurface, realwidth<<2, realheight<<2, nWidth<<2, options.textureEnhancementControl);
-					else
-						SmoothFilter_16((uint16*)destInfo.lpSurface, realwidth<<2, realheight<<2, nWidth<<2, options.textureEnhancementControl);
+					SmoothFilter((uint32*)destInfo.lpSurface, realwidth<<1, realheight<<1, nWidth<<1, options.textureEnhancementControl, bPixelSize4);
 				}
 			}
 

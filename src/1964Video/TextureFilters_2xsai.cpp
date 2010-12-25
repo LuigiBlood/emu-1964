@@ -188,3 +188,11 @@ void Super2xSaI_16( uint16 *srcPtr, uint16 *destPtr, uint32 width, uint32 height
 
 #include"TextureFilters_2xsai.h"
 }
+
+void Super2xSaI( uint32 *srcPtr, uint32 *destPtr, uint32 width, uint32 height, uint32 pitch, bool bPixelSize4)
+{
+	if(bPixelSize4)
+		Super2xSaI_32((uint32*)(srcPtr),(uint32*)(destPtr), width, height, pitch);
+	else
+		Super2xSaI_16((uint16*)(srcPtr),(uint16*)(destPtr), width, height, pitch);
+}

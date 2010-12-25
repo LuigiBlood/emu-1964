@@ -30,34 +30,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define DWORD_MAKE(r, g, b, a)   ((uint32) (((a) << 24) | ((r) << 16) | ((g) << 8) | (b)))
 #define WORD_MAKE(r, g, b, a)   ((uint16) (((a) << 12) | ((r) << 8) | ((g) << 4) | (b)))
 
-void Texture2x_32( uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height);
-void Texture2x_16( uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height);
+void Texture2x( uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height, bool bPixelSize4);
 
-void Texture2x_Interp_32( DrawInfo &srcInfo, DrawInfo &destInfo);
-void Texture2x_Interp_16( DrawInfo &srcInfo, DrawInfo &destInfo);
+void Super2xSaI( uint32 *srcPtr, uint32 *destPtr, uint32 width, uint32 height, uint32 pitch, bool bPixelSize4);
 
-void Super2xSaI_32( uint32 *srcPtr, uint32 *destPtr, uint32 width, uint32 height, uint32 pitch);
-void Super2xSaI_16( uint16 *srcPtr, uint16 *destPtr, uint32 width, uint32 height, uint32 pitch);
+void hq4x( unsigned char * pIn, unsigned char * pOut, int Xres, int Yres, int SrcPPL, int BpL, bool bPixelSize4 );
 
-void hq4x_16( unsigned char * pIn, unsigned char * pOut, int Xres, int Yres, int SrcPPL, int BpL );
-void hq4x_32( unsigned char * pIn, unsigned char * pOut, int Xres, int Yres, int SrcPPL, int BpL );
-void hq4x_InitLUTs(void);
+void SmoothFilter(uint32 *pdata, uint32 width, uint32 height, uint32 pitch, uint32 filter=TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_1, bool bPixelSize4 = true);
 
-void SmoothFilter_32(uint32 *pdata, uint32 width, uint32 height, uint32 pitch, uint32 filter=TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_1);
-void SmoothFilter_16(uint16 *pdata, uint32 width, uint32 height, uint32 pitch, uint32 filter=TEXTURE_ENHANCEMENT_WITH_SMOOTH_FILTER_1);
+void SharpenFilter(uint32 *pdata, uint32 width, uint32 height, uint32 pitch, uint32 filter=TEXTURE_SHARPEN_ENHANCEMENT, bool bPixelSize4  = true);
 
-void SharpenFilter_32(uint32 *pdata, uint32 width, uint32 height, uint32 pitch, uint32 filter=TEXTURE_SHARPEN_ENHANCEMENT);
-void SharpenFilter_16(uint16 *pdata, uint32 width, uint32 height, uint32 pitch, uint32 filter=TEXTURE_SHARPEN_ENHANCEMENT);
+void hq2x(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height, bool bPixelSize4);
+void hq2xS(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height, bool bPixelSize4);
 
-void hq2x_16(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height);
-void hq2x_32(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height);
-void hq2xS_16(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height);
-void hq2xS_32(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height);
-
-void lq2x_16(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height);
-void lq2x_32(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height);
-void lq2xS_16(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height);
-void lq2xS_32(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height);
+void lq2x(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height, bool bPixelSize4);
+void lq2xS(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height, bool bPixelSize4);
 
 void InitHiresTextures(bool bWIPFolder = false);
 

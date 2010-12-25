@@ -640,16 +640,18 @@ void hq2xS_16(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, in
   hq2xS_16_def(dst0, dst1, src0, src1, src1, width);
 }
 
+void hq2x(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height,bool bPixelSize4)
+{
+	if(bPixelSize4)
+		hq2x_32((uint8*)(srcPtr), srcPitch, (uint8*)(dstPtr), dstPitch, width, height);
+	else
+		hq2x_16((uint8*)(srcPtr), srcPitch, (uint8*)(dstPtr), dstPitch, width, height);
+}
 
-/************************************************************************/
-/* hq3x filters                                                         */
-/************************************************************************/
-
-/************************************************************************/
-/* scale2x filters                                                      */
-/************************************************************************/
-
-/************************************************************************/
-/* scale3x filters                                                      */
-/************************************************************************/
-
+void hq2xS(uint8 *srcPtr, uint32 srcPitch, uint8 *dstPtr, uint32 dstPitch, int width, int height,bool bPixelSize4)
+{
+	if(bPixelSize4)
+		hq2xS_32((uint8*)(srcPtr), srcPitch, (uint8*)(dstPtr), dstPitch, width, height);
+	else
+		hq2xS_16((uint8*)(srcPtr), srcPitch, (uint8*)(dstPtr), dstPitch, width, height);
+}
