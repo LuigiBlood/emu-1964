@@ -47,7 +47,6 @@ __cdecl
 Play(BOOL WithFullScreen);
 
 void				Stop(void);
-void				KailleraPlay(void);
 void				OpenROM(void);
 void				CloseROM(void);
 void				ChangeDirectory(void);
@@ -209,7 +208,7 @@ enum { LOAD_ALL_PLUGIN, LOAD_VIDEO_PLUGIN, LOAD_AUDIO_PLUGIN, LOAD_INPUT_PLUGIN,
 void FreePlugins(void);
 BOOL LoadPlugins(int type);
 
-enum { SAVE_STATE_1964_FORMAT, SAVE_STATE_PJ64_FORMAT, SAVE_STATE_1964_085_FORMAT};
+enum { SAVE_STATE_1964_FORMAT, SAVE_STATE_PJ64_FORMAT};
 
 typedef enum {
 	CMDLINE_AUDIO_PLUGIN,

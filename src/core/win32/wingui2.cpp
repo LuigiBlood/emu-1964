@@ -1950,8 +1950,6 @@ enum {
 	COUNTER_FACTOR_MENU,
 	VARIABLE_SPEED_MENU,
 	PLUGIN_MENU,
-	NETPLAY_MENU,
-	NETPLAY_LAG_MENU,
 	HELP_MENU,
 	POPUP_MENU1,
 	POPUP_MENU2,
@@ -1976,7 +1974,6 @@ LangMapEntry langMapEntries[] =
 	{6,		SAVESTATE_MENU,	"Save State",		0,	0},
 	{7,		ID_SAVESTATE,	"To File...",		"F5",	0},
 	{8,		ID_CPU_EXPORTPJ64STATE,	"To  Project64 Save State File...",		0,	0},
-	{9,		ID_SAVE_1964085,	"To 1964.085 File...",						0,	0},
 	{10,	ID_SAVE_STATE_0,	"To Slot 0",	0,	0},
 	{11,	ID_SAVE_STATE_1,	"To Slot 1",	0,	0},
 	{12,	ID_SAVE_STATE_2,	"To Slot 2",	0,	0},
@@ -2044,16 +2041,6 @@ LangMapEntry langMapEntries[] =
 	{72,	ID_DI_CONFIG,	"&Input Settings...",		"Ctrl+I",	0},
 	{73,	ID_RSP_CONFIG,	"RSP Settings...",			"Ctrl+R",	0},
 	{74,	IDM_FULLSCREEN,	"Full Screen",				"Alt+Enter",	0},
-	{75,	NETPLAY_MENU,	"Net Play",		0,	0},
-	{76,	ID_KAILLERA_MODE,	"Connect to Kaillera Server ...",	0,	0},
-	{77,	NETPLAY_LAG_MENU,	"Lag",		0,	0},
-	{78,	ID_LAGNESS_1,	"1 (less)",		0,	0},
-	{79,	ID_LAGNESS_2,	"2",			0,	0},
-	{80,	ID_LAGNESS_3,	"3",			0,	0},
-	{81,	ID_LAGNESS_4,	"4 (default)",	0,	0},
-	{82,	ID_LAGNESS_5,	"5",			0,	0},
-	{83,	ID_LAGNESS_6,	"6",			0,	0},
-	{84,	ID_LAGNESS_7,	"7 (more)",		0,	0},
 	{85,	HELP_MENU,		"&Help",			0,	0},
 	{86,	ID_ONLINE_HELP,	"Online Help",	0,	0},
 	{87,	ID_HELP_HELP,	"Help Manual",	"F1",	0},
@@ -2410,7 +2397,6 @@ StringMapEntry StringMapEntries[] = {
 	{22,0,0, "CreateWindow() failed: Cannot create a window."},
 	{23,0,0, "Running"},
 	{24,0,0, "Loaded"},
-	{25,0,0, "Kaillera player %d dropped"},
 	{26,0,0, "Saving State"},
 	{27,0,0, "Loading State"},
 	{28,0,0, "State File"},
@@ -2442,11 +2428,6 @@ StringMapEntry StringMapEntries[] = {
 	{54,0,0, "This savestate is incompatible with this version of 1964."},
 	{55,0,0, "Version Conflict"},
 	{56,0,0, "Loading"},
-	{57,0,0, "Kaillera timeout"},
-	{58,0,0, "Upload game setting to other players"},
-	{59,0,0, "Upload cheat codes to other players"},
-	{60,0,0, "Kaillera starts the game"},
-	{61,0,0, "Kaillera wait for 1 second"},
 	{62,0,0, "default"},
 	{63,0,0, "Default"},
 	{64,0,0, "No"},
@@ -2511,8 +2492,6 @@ StringMapEntry StringMapEntries[] = {
 	{123,0,0,	"audio"},
 	{124,0,0,	"compiler"},
 	{125,0,0,	"idle"},
-	{126,0,0,	"netplay"},
-	{127,0,0,	"kaillera"},
 	{128,0,0,	"Demo"},
 	{129,0,0,	"Beta"},
 	{130,0,0,	"USA/Japan"},
@@ -2788,7 +2767,6 @@ void TranslateMenu(HMENU hMenu, HWND mainHWND)
 	SetMenuTranslatedString(hMenu,1,EDIT_MENU);
 	SetMenuTranslatedString(hMenu,2,EMULATION_MENU);
 	SetMenuTranslatedString(hMenu,3,PLUGIN_MENU);
-	SetMenuTranslatedString(hMenu,4,NETPLAY_MENU);
 	SetMenuTranslatedString(hMenu,5,HELP_MENU);
 
 	//File menu
@@ -2804,7 +2782,6 @@ void TranslateMenu(HMENU hMenu, HWND mainHWND)
 	subsubmenu = GetSubMenu(submenu,5) ;
 	SetMenuTranslatedString(subsubmenu,0,ID_SAVESTATE);
 	SetMenuTranslatedString(subsubmenu,1,ID_CPU_EXPORTPJ64STATE);
-	SetMenuTranslatedString(subsubmenu,2,ID_SAVE_1964085);
 	SetMenuTranslatedString(subsubmenu,4,ID_SAVE_STATE_0);
 	SetMenuTranslatedString(subsubmenu,5,ID_SAVE_STATE_1);
 	SetMenuTranslatedString(subsubmenu,6,ID_SAVE_STATE_2);
@@ -2888,19 +2865,6 @@ void TranslateMenu(HMENU hMenu, HWND mainHWND)
 	SetMenuTranslatedString(submenu,4,ID_DI_CONFIG);
 	SetMenuTranslatedString(submenu,5,ID_RSP_CONFIG);
 	SetMenuTranslatedString(submenu,7,IDM_FULLSCREEN);
-
-	// Netplay menu
-	submenu = GetSubMenu(hMenu,4) ;
-	SetMenuTranslatedString(submenu,0,ID_KAILLERA_MODE);
-	SetMenuTranslatedString(submenu,2,NETPLAY_LAG_MENU);
-	subsubmenu = GetSubMenu(submenu,2) ;
-	SetMenuTranslatedString(subsubmenu,0,ID_LAGNESS_1);
-	SetMenuTranslatedString(subsubmenu,1,ID_LAGNESS_2);
-	SetMenuTranslatedString(subsubmenu,2,ID_LAGNESS_3);
-	SetMenuTranslatedString(subsubmenu,3,ID_LAGNESS_4);
-	SetMenuTranslatedString(subsubmenu,4,ID_LAGNESS_5);
-	SetMenuTranslatedString(subsubmenu,5,ID_LAGNESS_6);
-	SetMenuTranslatedString(subsubmenu,6,ID_LAGNESS_7);
 
 	// Help menu
 	submenu = GetSubMenu(hMenu,5) ;
@@ -3101,24 +3065,4 @@ void TranslateDialag(HWND hDlg, char *dlgName)
 		}	
 	}
 
-}
-
-void SetXPThemes(DWORD flag)
-{
-	void (__cdecl *g_pfnSetThemeAppProperties)(DWORD) = NULL;
-	HMODULE hModUXTheme = LoadLibrary("uxtheme.dll");
-
-	if ( hModUXTheme != NULL )
-	{
-		g_pfnSetThemeAppProperties =	(void (__cdecl *)(DWORD))GetProcAddress(hModUXTheme,"SetThemeAppProperties");
-	}
-	else
-	{
-		g_pfnSetThemeAppProperties = NULL;
-	}
-
-	if (g_pfnSetThemeAppProperties != NULL ) 
-	{
-		g_pfnSetThemeAppProperties(flag);
-	} 
 }

@@ -186,7 +186,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="dsound.lib dxguid.lib odbc32.lib odbccp32.lib"
-				OutputFile="..\..\..\..\bin\$(ConfigurationName)\plugin\1964Aud.dll"
+				OutputFile="..\..\..\bin\$(ConfigurationName)\plugin\1964Aud.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DXSDK_DIR)\lib\x86\"

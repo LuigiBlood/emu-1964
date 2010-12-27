@@ -80,7 +80,6 @@ void init_debug_options(void)
 	debugoptions.debug_sp_dma = 0;
 	debugoptions.debug_si_dma = 0;
 	debugoptions.debug_pi_dma = 1;
-	debugoptions.debug_netplay = 1;
 	debugoptions.debug_si_mempak = 1;
 	debugoptions.debug_dump_mempak = 0;
 	debugoptions.debug_tlb = 1;
@@ -103,9 +102,6 @@ void init_debug_options(void)
 	debugoptions.debug_exception_services = 0;
 	debugoptions.debug_framebuffer_rw = 0;
 }
-
-
-char	tracemessage[256];	/* message buffer to display message into debug box */
 
 void	RefreshDebugger(void);
 char	op_str[0xFF];
@@ -2086,24 +2082,6 @@ void debug_r4300i_COP1_sqrt_d(uint32 Instruction)
  =======================================================================================================================
  =======================================================================================================================
  */
-void debug_r4300i_COP1_sub_s(uint32 Instruction)
-{
-	DBGPRINT_FD_FS_FT("SUB.S   ");
-};
-
-/*
- =======================================================================================================================
- =======================================================================================================================
- */
-void debug_r4300i_COP1_sub_d(uint32 Instruction)
-{
-	DBGPRINT_FD_FS_FT("SUB.D   ");
-};
-
-/*
- =======================================================================================================================
- =======================================================================================================================
- */
 void debug_r4300i_COP1_truncl(uint32 Instruction)
 {
 	DBGPRINT_FPR64BIT_FS_FD("TRUNC.L.fmt ");
@@ -2463,7 +2441,6 @@ void (*DebugCOP1BCInstruction[4]) (uint32 Instruction) =
 void (*DebugCOP1SInstruction[64]) (uint32 Instruction) =
 {
 	debug_r4300i_COP1_add_s,
-	debug_r4300i_COP1_sub_s,
 	debug_r4300i_COP1_mul_s,
 	debug_r4300i_COP1_div_s,
 	debug_r4300i_COP1_sqrt_s,
@@ -2531,7 +2508,6 @@ void (*DebugCOP1SInstruction[64]) (uint32 Instruction) =
 void (*DebugCOP1DInstruction[64]) (uint32 Instruction) =
 {
 	debug_r4300i_COP1_add_d,
-	debug_r4300i_COP1_sub_d,
 	debug_r4300i_COP1_mul_d,
 	debug_r4300i_COP1_div_d,
 	debug_r4300i_COP1_sqrt_d,

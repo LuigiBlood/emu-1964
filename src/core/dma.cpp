@@ -927,8 +927,6 @@ void Do_DMA_MemCopy_DRAM_to_SI(void)
 	}
 
 	EXTRA_DMA_TIMING(64);
-
-	gHWS_COP0Reg[COUNT] = Get_COUNT_Register();		// Need this for netplay synchronization
 	SI_STATUS_REG |= SI_STATUS_INTERRUPT;
 	Trigger_SIInterrupt();
 }
