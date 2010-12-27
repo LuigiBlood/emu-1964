@@ -44,7 +44,6 @@ void		FileIO_gzSaveState(void);
 void		FileIO_gzLoadState(void);
 void		FileIO_gzSaveStateFile(const char *filename, DWORD version);
 void		FileIO_gzSaveStateFile_099(const char *filename);
-void		FileIO_gzSaveStateFile_085(const char *filename);
 void		FileIO_gzLoadStateFile(const char *filename);
 void		FileIO_ImportPJ64State(const char *filename);
 void		FileIO_ExportPJ64State(const char *filename);

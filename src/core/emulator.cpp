@@ -204,7 +204,7 @@ void ResumeEmulator(int action_after_pause)
 	emustatus.action_after_resume = action_after_pause;
 
 	/* Apply the hack codes */
-	if( emuoptions.auto_apply_cheat_code  || kailleraAutoApplyCheat)
+	if( emuoptions.auto_apply_cheat_code )
 	{
 		CodeList_ApplyAllCode(INGAME);
 #ifdef CHEATCODE_LOCK_MEMORY
@@ -299,7 +299,6 @@ void StopEmulator(void)
 		{
 			RSPRomClosed();
 		}
-		//netplay_rom_closed();
 	}
 
 	// Double confirm the video is closed. This line won't matter if the VIDEO_RomClosed is already closed
@@ -433,7 +432,6 @@ void InitEmu(void)
 	{
 		VIDEO_RomOpen();
 		CONTROLLER_RomOpen();
-		//netplay_rom_open();
 	}
     
 
@@ -516,7 +514,7 @@ void N64_Boot(void)
 		}
 	}
 
-	if(emuoptions.auto_apply_cheat_code || kailleraAutoApplyCheat)
+	if(emuoptions.auto_apply_cheat_code)
 	{
 		CodeList_ApplyAllCode(BOOTUPONCE);
 #ifdef CHEATCODE_LOCK_MEMORY

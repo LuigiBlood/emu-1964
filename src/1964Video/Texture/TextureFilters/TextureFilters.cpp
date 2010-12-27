@@ -849,7 +849,6 @@ void CloseHiresTextures(void)
 			// don't forget to also free memory of cached textures
 			delete [] gHiresTxtrInfos[i].pHiresTextureRGB;
 			delete [] gHiresTxtrInfos[i].pHiresTextureAlpha;
-
 	}
 
 	gHiresTxtrInfos.clear();

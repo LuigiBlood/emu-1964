@@ -27,7 +27,6 @@ BOOL	Is_Reading_Rom_File = FALSE;;
 BOOL	To_Stop_Reading_Rom_File = FALSE;
 
 #define CURRENT_SAVE_STATE_VERSION		(0x19640099)
-#define SAVE_STATE_VERSION_085		(0x19640064)
 
 uint32 SaveStateVersionList[] = {
     0x19640064,
@@ -805,16 +804,6 @@ void GetFileName(char *filenameToReturn, char *Ext)
 	char	romname[260];
 	int		i;
 
-	if( Kaillera_Is_Running && kailleraLocalPlayerNumber != 0 )     // special handling for player 0 hasn't been implemented yet
-	//if( Kaillera_Is_Running )
-	{
-		// See comments for function KailleraResetSaveFiles in Kaillera.c
-		strcpy(filenameToReturn, directories.save_directory_to_use);
-		strcat(filenameToReturn, "kaillera.");
-		strcat(filenameToReturn, Ext);
-		return;
-	}
-
 	for(i = 0; i < 8; i++)
 	{
 		CRC[i] = ((char *) &rominfo.crc1)[i ^ 3];
@@ -1138,93 +1127,6 @@ void FileIO_gzReadHardwareState(gzFile *stream, uint32 magic1964)
         gzread(stream, &gHardwareState.COP0Con, sizeof(gHardwareState.COP0Con));
 }
 
-/*
-=======================================================================================================================
-=======================================================================================================================
-*/
-/*
-The old sHardwareState struct in version 0.85
-*/
-typedef struct	sHardwareState_085
-{
-_int64	GPR[34];				// General Purpose Registers GPR[32] = lo, GPR[33] = hi
-uint32	COP0Reg[32];			// Coprocessor0 Registers
-uint32	fpr32[64];				// 32bit 64 items needed!
-uint32	LLbit;					// LoadLinked Bit
-uint32	pc;						// program counter
-uint32	COP1Con[32];			// FPControl Registers, only 0 and 31 is used
-
-
-
-uint32	COP0Con[64];			// FPControl Registers
-uint32	RememberFprHi[32];
-uint32	code;					// The instruction
-} HardwareSaveState_085;
-HardwareSaveState_085 gHardwareSaveState_085;
-
-
-void FileIO_gzReadHardwareState_085(gzFile *stream)
-{
-	memset((uint8 *) (&gHardwareSaveState_085), 0, sizeof(gHardwareSaveState_085));
-	gzread(
-		stream,	(uint8 *) (&gHardwareSaveState_085),
-		(
-		sizeof(gHardwareSaveState_085) - sizeof(gHardwareSaveState_085.COP0Con) - sizeof(gHardwareSaveState_085.RememberFprHi) - sizeof
-		(gHardwareSaveState_085.code)
-		)
-	);
-
-	memcpy(&r.r_.gpr, &gHardwareSaveState_085.GPR, sizeof(r.r_.gpr));
-	r.r_.grlo=gHardwareSaveState_085.GPR[32];
-	r.r_.grhi=gHardwareSaveState_085.GPR[33];
-	memcpy(&gHardwareState.COP0Reg, &gHardwareSaveState_085.COP0Reg, sizeof(gHardwareState.COP0Reg));
-	memcpy(&gHardwareState.fpr32, &gHardwareSaveState_085.fpr32,   sizeof(gHardwareState.fpr32));
-	gHardwareState.LLbit=gHardwareSaveState_085.LLbit;
-	r.r_.pc=gHardwareSaveState_085.pc;
-	memcpy(&gHardwareState.COP1Con, &gHardwareSaveState_085.COP1Con, sizeof(gHardwareState.COP1Con));
-
-	/*
-	*/
-}
-
-
-void FileIO_gzWriteHardwareState_085(gzFile *stream)
-{
-	gHWS_COP0Reg[COUNT] = Get_COUNT_Register();	//Refresh the COUNT register
-
-#ifndef _DEBUG
-	if(currentromoptions.Assume_32bit == ASSUME_32BIT_YES)
-	{
-		int k;
-        for(k = 0; k < 32; k++)
-            if (k != _t1) /* The weird return value */
-			    gHardwareSaveState.GPR[k] = (_int64) (_int32) gHardwareSaveState.GPR[k];
-
-		gHardwareSaveState.grlo = (_int64) (_int32)gHardwareSaveState.grlo;
-		gHardwareSaveState.grhi = (_int64) (_int32)gHardwareSaveState.grhi;
-	}
-#endif
-
-	memcpy(&gHardwareSaveState_085.GPR, &r.r_.gpr, sizeof(gHardwareSaveState_085.GPR));
-	gHardwareSaveState_085.GPR[32]=r.r_.grlo;
-	gHardwareSaveState_085.GPR[33]=r.r_.grhi;
-	memcpy(&gHardwareSaveState_085.COP0Reg, &gHardwareState.COP0Reg, sizeof(gHardwareSaveState_085.COP0Reg));
-	memcpy(&gHardwareSaveState_085.fpr32, &gHardwareState.fpr32,   sizeof(gHardwareSaveState_085.fpr32));
-	gHardwareSaveState_085.LLbit=gHardwareState.LLbit;
-	gHardwareSaveState_085.pc=r.r_.pc;
-	memcpy(&gHardwareSaveState_085.COP1Con, &gHardwareState.COP1Con, sizeof(gHardwareSaveState_085.COP1Con));
-
-	gzwrite
-		(
-		stream,
-		(uint8 *) (&gHardwareSaveState_085),
-		(
-		sizeof(gHardwareSaveState_085) - sizeof(gHardwareSaveState_085.COP0Con) - sizeof(gHardwareSaveState_085.RememberFprHi) - sizeof
-		(gHardwareSaveState_085.code)
-		)
-		);
-}
-
 
 /*
  =======================================================================================================================
@@ -1293,10 +1195,7 @@ void FileIO_gzSaveStateFile(const char *filename, DWORD	magic1964)
 	gzwrite(stream, (uint8 *) (&current_rdram_size), sizeof(uint32));
 
 	/* All CPU registers */
-	if( magic1964 == 0x19640064 )
-		FileIO_gzWriteHardwareState_085(stream);
-	else
-		FileIO_gzWriteHardwareState(stream);
+	FileIO_gzWriteHardwareState(stream);
 
 	/* All IO registers should be saved */
 	gzwrite(stream, (uint8 *) gMS_ramRegs0, 0x30);	/* ramRegs0 */
@@ -1331,10 +1230,6 @@ void FileIO_gzSaveStateFile(const char *filename, DWORD	magic1964)
 void FileIO_gzSaveStateFile_099(const char *filename)
 {
 	FileIO_gzSaveStateFile(filename, CURRENT_SAVE_STATE_VERSION);
-}
-void FileIO_gzSaveStateFile_085(const char *filename)
-{
-	FileIO_gzSaveStateFile(filename, SAVE_STATE_VERSION_085);
 }
 /*
  =======================================================================================================================
@@ -1398,10 +1293,7 @@ void FileIO_gzLoadStateFile(const char *filename)
     gzread(stream, (uint8 *) (&rdram_size), sizeof(uint32));
 	ResetRdramSize(rdram_size == 0x400000 ? RDRAMSIZE_4MB : RDRAMSIZE_8MB);
 
-	if( magic1964 == 0x19640064 )
-		FileIO_gzReadHardwareState_085(stream);
-	else
-		FileIO_gzReadHardwareState(stream, magic1964);
+	FileIO_gzReadHardwareState(stream, magic1964);
 
 	/* All IO registers should be saved */
 	gzread(stream, (uint8 *) gMS_ramRegs0, 0x30);					/* ramRegs0 */
