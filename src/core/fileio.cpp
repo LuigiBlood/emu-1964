@@ -22,7 +22,6 @@
  * authors: email: schibo@emulation64.com, rice1964@yahoo.com
  */
 #include "stdafx.h"
-
 BOOL	Is_Reading_Rom_File = FALSE;;
 BOOL	To_Stop_Reading_Rom_File = FALSE;
 
