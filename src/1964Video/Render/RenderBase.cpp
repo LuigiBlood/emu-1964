@@ -1578,8 +1578,7 @@ void ModifyVertexInfo(uint32 where, uint32 vertex, uint32 val)
 		{
 			uint16 x = (uint16)(val>>16) / 4.0f;
 			uint16 y = (uint16)(val & 0xFFFF) / 4.0f;
-			// Should do viewport transform.
-
+			// Should do viewport transform
 
 			x -= windowSetting.uViWidth/2;
 			y = windowSetting.uViHeight/2-y;

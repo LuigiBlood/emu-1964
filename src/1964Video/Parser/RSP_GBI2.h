@@ -243,13 +243,26 @@ void RSP_GBI2_Tri1(Gfx *gfx)
 
 		do
 		{
-			#
 			uint32 dwV2 = gfx->gbi2tri1.v2/gRSP.vertexMult;
 			uint32 dwV1 = gfx->gbi2tri1.v1/gRSP.vertexMult;
 			uint32 dwV0 = gfx->gbi2tri1.v0/gRSP.vertexMult;
 
-			DEBUG_DUMP_VERTEXES("ZeldaTri1", dwV0, dwV1, dwV2);
-			CRender::g_pRender->AddTri(dwV0, dwV1, dwV2);
+			if (IsTriangleVisible(dwV0, dwV1, dwV2))
+			{
+				DEBUG_DUMP_VERTEXES("ZeldaTri1", dwV0, dwV1, dwV2);
+				LOG_UCODE("    ZeldaTri1: 0x%08x 0x%08x %d,%d,%d", gfx->words.w0, gfx->words.w1, dwV0, dwV1, dwV2);
+				if (!bTrisAdded)
+				{
+					if( bTexturesAreEnabled )
+				{
+					PrepareTextures();
+					InitVertexTextureConstants();
+				}
+					CRender::g_pRender->SetCombinerAndBlender();
+					bTrisAdded = true;
+				}
+				PrepareTriangle(dwV0, dwV1, dwV2);
+			}
 
 			gfx++;
 			dwPC += 8;
@@ -284,7 +297,7 @@ void RSP_GBI2_Tri2(Gfx *gfx)
 	else
 	{
 		status.primitiveType = PRIM_TRI2;
-		bool bTrisAdded = FALSE;
+		BOOL bTrisAdded = FALSE;
 
 		// While the next command pair is Tri2, add vertices
 		uint32 dwPC = gDlistStack[gDlistStackPointer].pc;
@@ -303,13 +316,41 @@ void RSP_GBI2_Tri2(Gfx *gfx)
 			LOG_UCODE("           V0: %d, V1: %d, V2: %d", dwV0, dwV1, dwV2);
 			LOG_UCODE("           V3: %d, V4: %d, V5: %d", dwV3, dwV4, dwV5);
 
-			//Tri #1
-			DEBUG_DUMP_VERTEXES("ZeldaTri2 1/2", dwV0, dwV1, dwV2);
-			bTrisAdded |= CRender::g_pRender->AddTri( dwV0, dwV1, dwV2);
+			// Do first tri
+			if (IsTriangleVisible(dwV0, dwV1, dwV2))
+			{
+				DEBUG_DUMP_VERTEXES("ZeldaTri2 1/2", dwV0, dwV1, dwV2);
+				if (!bTrisAdded)
+				{
+					if( bTexturesAreEnabled )
+				{
+					PrepareTextures();
+					InitVertexTextureConstants();
+				}
+					CRender::g_pRender->SetCombinerAndBlender();
+					bTrisAdded = true;
+				}
 
-			//Tri #2
-			DEBUG_DUMP_VERTEXES("ZeldaTri2 2/2", dwV3, dwV4, dwV5);
-			bTrisAdded |= CRender::g_pRender->AddTri( dwV3, dwV4, dwV2);
+				PrepareTriangle(dwV0, dwV1, dwV2);
+			}
+
+			// Do second tri
+			if (IsTriangleVisible(dwV3, dwV4, dwV5))
+			{
+				DEBUG_DUMP_VERTEXES("ZeldaTri2 2/2", dwV3, dwV4, dwV5);
+				if (!bTrisAdded)
+				{
+					if( bTexturesAreEnabled )
+				{
+					PrepareTextures();
+					InitVertexTextureConstants();
+				}
+					CRender::g_pRender->SetCombinerAndBlender();
+					bTrisAdded = true;
+				}
+
+				PrepareTriangle(dwV3, dwV4, dwV5);
+			}
 			
 			gfx++;
 			dwPC += 8;
@@ -345,7 +386,7 @@ void RSP_GBI2_Line3D(Gfx *gfx)
 
 		uint32 dwPC = gDlistStack[gDlistStackPointer].pc;
 
-		bool bTrisAdded = FALSE;
+		BOOL bTrisAdded = FALSE;
 
 		do {
 			uint32 dwV0 = gfx->gbi2line3d.v0/gRSP.vertexMult;
@@ -360,14 +401,43 @@ void RSP_GBI2_Line3D(Gfx *gfx)
 			LOG_UCODE("           V0: %d, V1: %d, V2: %d", dwV0, dwV1, dwV2);
 			LOG_UCODE("           V3: %d, V4: %d, V5: %d", dwV3, dwV4, dwV5);
 
-			//Tri #1
-			DEBUG_DUMP_VERTEXES("ZeldaTri3 1/2", dwV0, dwV1, dwV2);
-			bTrisAdded |= CRender::g_pRender->AddTri( dwV0, dwV1, dwV2);
+			// Do first tri
+			if (IsTriangleVisible(dwV0, dwV1, dwV2))
+			{
+				DEBUG_DUMP_VERTEXES("ZeldaTri3 1/2", dwV0, dwV1, dwV2);
+				if (!bTrisAdded && CRender::g_pRender->IsTextureEnabled())
+				{
+					PrepareTextures();
+					InitVertexTextureConstants();
+				}
 
+				if( !bTrisAdded )
+				{
+					CRender::g_pRender->SetCombinerAndBlender();
+				}
 
-			//Tri #2bTrisAdded |= CRender::g_pRender->AddTri( dwV0, dwV1, dwV2);
-			DEBUG_DUMP_VERTEXES("ZeldaTri3 2/2", dwV3, dwV4, dwV5);
-			bTrisAdded |= CRender::g_pRender->AddTri( dwV0, dwV1, dwV2);
+				bTrisAdded = true;
+				PrepareTriangle(dwV0, dwV1, dwV2);
+			}
+
+			// Do second tri
+			if (IsTriangleVisible(dwV3, dwV4, dwV5))
+			{
+				DEBUG_DUMP_VERTEXES("ZeldaTri3 2/2", dwV3, dwV4, dwV5);
+				if (!bTrisAdded && CRender::g_pRender->IsTextureEnabled())
+				{
+					PrepareTextures();
+					InitVertexTextureConstants();
+				}
+
+				if( !bTrisAdded )
+				{
+					CRender::g_pRender->SetCombinerAndBlender();
+				}
+
+				bTrisAdded = true;
+				PrepareTriangle(dwV3, dwV4, dwV5);
+			}
 			
 			gfx++;
 			dwPC += 8;
