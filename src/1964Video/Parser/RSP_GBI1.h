@@ -63,7 +63,19 @@ void RSP_GBI1_ModifyVtx(Gfx *gfx)
 			return;
 		}
 
-		ModifyVertexInfo(dwWhere, dwVert, dwValue);
+		// Data for other commands?
+		switch (dwWhere)
+		{
+		case RSP_MV_WORD_OFFSET_POINT_RGBA:			// Modify RGBA
+		case RSP_MV_WORD_OFFSET_POINT_XYSCREEN:		// Modify X,Y
+		case RSP_MV_WORD_OFFSET_POINT_ZSCREEN:		// Modify C
+		case RSP_MV_WORD_OFFSET_POINT_ST:			// Texture
+			ModifyVertexInfo(dwWhere, dwVert, dwValue);
+			break;
+		default:
+			RSP_RDP_NOIMPL("RSP_GBI1_ModifyVtx: Setting unk value: 0x%02x, 0x%08x", dwWhere, dwValue);
+			break;
+		}
 	}
 }
 
@@ -78,23 +90,47 @@ void RSP_GBI1_Tri2(Gfx *gfx)
 
 	do {
 		// Vertex indices are multiplied by 10 for Mario64, by 2 for MarioKart
-		//Tri #1
 		uint32 dwV0 = gfx->gbi1tri2.v0/gRSP.vertexMult;
 		uint32 dwV1 = gfx->gbi1tri2.v1/gRSP.vertexMult;
 		uint32 dwV2 = gfx->gbi1tri2.v2/gRSP.vertexMult;
 
-		DEBUG_DUMP_VERTEXES("Tri2 1/2", dwV0, dwV1, dwV2);
-		bTrisAdded |= CRender::g_pRender->AddTri(dwV0, dwV1, dwV2);
-		
-		//Tri #2
 		uint32 dwV3 = gfx->gbi1tri2.v3/gRSP.vertexMult;
 		uint32 dwV4 = gfx->gbi1tri2.v4/gRSP.vertexMult;
 		uint32 dwV5 = gfx->gbi1tri2.v5/gRSP.vertexMult;
 
-		DEBUG_DUMP_VERTEXES("Tri2 2/2", dwV3, dwV4, dwV5);
-		bTrisAdded |= CRender::g_pRender->AddTri(dwV3, dwV4, dwV5);
-			
-			
+		// Do first tri
+		if (IsTriangleVisible(dwV0, dwV1, dwV2))
+		{
+			DEBUG_DUMP_VERTEXES("Tri2 1/2", dwV0, dwV1, dwV2);
+			if (!bTrisAdded)
+			{
+				if( bTexturesAreEnabled )
+			{
+				PrepareTextures();
+				InitVertexTextureConstants();
+			}
+				CRender::g_pRender->SetCombinerAndBlender();
+				bTrisAdded = true;
+			}
+			PrepareTriangle(dwV0, dwV1, dwV2);
+		}
+
+		// Do second tri
+		if (IsTriangleVisible(dwV3, dwV4, dwV5))
+		{
+			DEBUG_DUMP_VERTEXES("Tri2 2/2", dwV3, dwV4, dwV5);
+			if (!bTrisAdded)
+			{
+				if( bTexturesAreEnabled )
+			{
+				PrepareTextures();
+				InitVertexTextureConstants();
+			}
+				CRender::g_pRender->SetCombinerAndBlender();
+				bTrisAdded = true;
+			}
+			PrepareTriangle(dwV3, dwV4, dwV5);
+		}
 		
 		gfx++;
 		dwPC += 8;

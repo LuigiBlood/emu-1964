@@ -9,7 +9,9 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
+#ifndef ZLIB_WINAPI
 #define ZLIB_WINAPI
+#endif
 
 // Windows Header Files:
 #include <windows.h>

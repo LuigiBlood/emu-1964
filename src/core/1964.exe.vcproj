@@ -594,10 +594,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\netplay-spec.h"
-				>
-			</File>
-			<File
 				RelativePath=".\profiler.cpp"
 				>
 			</File>
