@@ -1060,7 +1060,8 @@ int FindScaleFactor(ExtTxtrInfo &info, TxtrCacheEntry &entry)
  ********************************************************************************************************************/
 int CheckTextureInfos( CSortedList<uint64,ExtTxtrInfo> &infos, TxtrCacheEntry &entry, int &indexa, bool bForDump = false )
 {
-	if( entry.ti.WidthToCreate/entry.ti.WidthToLoad > 2 || entry.ti.HeightToCreate/entry.ti.HeightToLoad > 2 )
+	if( (entry.ti.WidthToLoad  != 0 && entry.ti.WidthToCreate/entry.ti.WidthToLoad > 2) || 
+		(entry.ti.HeightToLoad  != 0 &&entry.ti.HeightToCreate/entry.ti.HeightToLoad > 2))
 	{
 		//TRACE0("Hires texture does not support extreme texture replication");
 		return -1;
@@ -1266,6 +1267,30 @@ bool LoadRGBBufferFromPNGFile(char *filename, unsigned char **pbuf, int &width, 
 				pSrc++;
 			}
 		}
+		else if (img.bits_per_pixel == 8 && (bits_per_pixel == 24 || bits_per_pixel == 32))
+		{
+			// do palette lookup and convert 8bpp to 24/32bpp
+			int destBytePP = bits_per_pixel / 8;
+			int paletteBytePP = img.bytes_per_palette_entry;
+			unsigned char *pSrc = img.bits;
+			unsigned char *pDst = *pbuf;
+			// clear the destination image data (just to clear alpha if bpp=32)
+			memset(*pbuf, 0, img.width*img.height*destBytePP);
+			for (int i = 0; i < (int)(img.width*img.height); i++)
+			{
+				unsigned char clridx = *pSrc++;
+				unsigned char *palcolor = img.palette + clridx * paletteBytePP;
+				pDst[0] = palcolor[2]; // red
+				pDst[1] = palcolor[1]; // green
+				pDst[2] = palcolor[0]; // blue
+				pDst += destBytePP;
+			}
+		}
+        else
+        {
+            delete [] *pbuf;
+            *pbuf = NULL;
+        }
 
 		width = img.width;
 		height = img.height;
