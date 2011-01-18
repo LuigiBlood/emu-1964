@@ -93,16 +93,27 @@ void COGLTexture::EndUpdate(DrawInfo *di)
 	glBindTexture(GL_TEXTURE_2D, m_dwTextureName);
 	OPENGL_CHECK_ERRORS;
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	OPENGL_CHECK_ERRORS;
-
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	OPENGL_CHECK_ERRORS;
 
-	// Copy the image data from main memory to video card texture memory and build 2D mip maps
-	gluBuild2DMipmaps(GL_TEXTURE_2D, m_glFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, GL_BGRA_EXT, GL_UNSIGNED_BYTE, m_pTexture);
-	OPENGL_CHECK_ERRORS;
+	//Check if automatic mipmapping has being enabled
+	if(options.bMipMaps)
+	{
+		//Tell the hardware to build the mipmaps itself when glTexImage2D is called.
+		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+		OPENGL_CHECK_ERRORS;
+	}
+	else
+	{
+		//Mipmaping isnt enabled, enable the linear filter
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        OPENGL_CHECK_ERRORS;
+	}
+
+	//Copy the image data from main memory to to video card texture memory
+	glTexImage2D(GL_TEXTURE_2D, 0, m_glFmt, m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, m_pTexture);
 }
+
 
 
 // Keep in mind that the real texture is not scaled to fix the created opengl texture yet.

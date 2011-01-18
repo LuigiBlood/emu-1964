@@ -205,6 +205,7 @@ typedef struct {
 	BOOL	bEnableHacks;
 	BOOL	bEnableFog;
 	BOOL	bWinFrameMode;
+	BOOL	bMipMaps;
 	BOOL	bForceSoftwareTnL;
 	BOOL	bForceSoftwareClipper;
 	BOOL	bOGLVertexClipper;

@@ -2,7 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by Video.rc
 //
-#define	IDC_STATIC						-1
 #define IDD_DIALOG1                     101
 #define IDD_DIALOG2                     111
 #define IDD_DIALOG3                     112
@@ -148,7 +147,7 @@
 #define IDC_SMALL_TXT_ONLY              1139
 #define IDC_HIDE_ADVANCED_OPTIONS       1140
 #define IDC_LOAD_HIRES_TEXTURE          1141
-#define IDC_CACHE_HIRES_TEXTURE         1666
+#define IDC_CHECK2                      1141
 #define IDC_LABEL5                      1142
 #define IDC_TEXRECT_ONLY3               1143
 #define IDC_DUMP_TEXTURE_TO_FILES       1144
@@ -160,11 +159,12 @@
 #define IDC_ENABLE_LOD                  1150
 #define IDC_LOG_TO_FILE                 1151
 #define IDC_LOG_MICROCODE               1152
-#define IDC_CHECK1                      1153
+#define IDC_MIPMAPS                     1153
 #define IDC_LOG_FOG                     1154
 #define IDC_OGL_VERTEX_CLIPPER          1155
 #define IDC_VERTEX_SHADER               1156
 #define IDC_DETAILS                     1157
+#define IDC_CACHE_HIRES_TEXTURE         1666
 
 // Next default values for new objects
 // 
@@ -172,7 +172,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        113
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1140
+#define _APS_NEXT_CONTROL_VALUE         1142
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

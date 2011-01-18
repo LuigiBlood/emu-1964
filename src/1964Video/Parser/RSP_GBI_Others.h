@@ -1632,7 +1632,7 @@ void PD_LoadMatrix_0xb4(uint32 addr)
 #endif // _DEBUG
 }	
 
-void DLParser_RDPHalf_1_0xb4_GoldenEye(Gfx *gfx)		
+void DLParser_RDPHalf1_GoldenEye(Gfx *gfx)		
 {
 	SP_Timing(RSP_GBI1_RDPHalf_1);
 	if( ((gfx->words.w1)>>24) == 0xce )
