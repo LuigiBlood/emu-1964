@@ -235,6 +235,9 @@ void COGLExtRender::ApplyTextureFilter()
 	static uint32 minflag[8], magflag[8];
 	static uint32 mtex[8];
 
+	int iMinFilter = ( options.bMipMaps ? (m_dwMinFilter == FILTER_LINEAR ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_NEAREST) : (m_dwMinFilter == FILTER_LINEAR ? GL_LINEAR : GL_NEAREST));
+	int iMagFilter = ( options.bMipMaps ? (m_dwMagFilter == FILTER_LINEAR ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_NEAREST) : (m_dwMagFilter == FILTER_LINEAR ? GL_LINEAR : GL_NEAREST));
+
 	for( int i=0; i<m_maxTexUnits; i++ )
 	{
 		if( m_texUnitEnabled[i] )
@@ -244,11 +247,11 @@ void COGLExtRender::ApplyTextureFilter()
 				mtex[i] = m_curBoundTex[i];
 				glActiveTextureARB(GL_TEXTURE0_ARB+i);
 				OPENGL_CHECK_ERRORS;
-				minflag[i] = GL_LINEAR_MIPMAP_NEAREST;
-				magflag[i] = GL_NEAREST_MIPMAP_NEAREST;
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				minflag[i] = iMinFilter;
+				magflag[i] = iMagFilter;
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, iMinFilter);
 				OPENGL_CHECK_ERRORS;
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, iMagFilter);
 				OPENGL_CHECK_ERRORS;
 			}
 			else

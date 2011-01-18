@@ -149,14 +149,28 @@ LPRICETEXTURE CDirectXTexture::CreateTexture(uint32 dwWidth, uint32 dwHeight, Te
 	if( m_Usage == AS_RENDER_TARGET)
 	{
 		D3DXCheckTextureRequirements(g_pD3DDev, &m_dwCreatedTextureWidth, &m_dwCreatedTextureHeight, &dwNumMaps,D3DUSAGE_AUTOGENMIPMAP | D3DUSAGE_RENDERTARGET, &pf, D3DPOOL_DEFAULT);
-		hr = g_pD3DDev->CreateTexture(m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0 , D3DUSAGE_AUTOGENMIPMAP | D3DUSAGE_RENDERTARGET, pf, D3DPOOL_DEFAULT, &lpSurf,NULL);
-		lpSurf->GenerateMipSubLevels(); // Hint to the GPU to generate the mip maps
+		if(options.bMipMaps)
+		{
+			hr = g_pD3DDev->CreateTexture(m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0 , D3DUSAGE_AUTOGENMIPMAP | D3DUSAGE_RENDERTARGET, pf, D3DPOOL_DEFAULT, &lpSurf,NULL);
+			lpSurf->GenerateMipSubLevels(); // Hint to the GPU to generate the mip maps
+		}
+		else
+		{
+			hr = g_pD3DDev->CreateTexture(m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0 , D3DUSAGE_RENDERTARGET, pf, D3DPOOL_DEFAULT, &lpSurf,NULL);
+		}
 	}
 	else
 	{
 		D3DXCheckTextureRequirements(g_pD3DDev, &m_dwCreatedTextureWidth, &m_dwCreatedTextureHeight, &dwNumMaps, D3DUSAGE_AUTOGENMIPMAP, &pf, D3DPOOL_MANAGED);
-		hr = g_pD3DDev->CreateTexture(m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, D3DUSAGE_AUTOGENMIPMAP, pf, D3DPOOL_MANAGED, &lpSurf,NULL);
-		lpSurf->GenerateMipSubLevels(); // Hint to the GPU to generate the mip maps
+		if(options.bMipMaps)
+		{
+			hr = g_pD3DDev->CreateTexture(m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 0, D3DUSAGE_AUTOGENMIPMAP, pf, D3DPOOL_MANAGED, &lpSurf,NULL);
+			lpSurf->GenerateMipSubLevels(); // Hint to the GPU to generate the mip maps
+		}
+		else
+		{
+			hr = g_pD3DDev->CreateTexture(m_dwCreatedTextureWidth, m_dwCreatedTextureHeight, 1, 0, pf, D3DPOOL_MANAGED, &lpSurf,NULL);
+		}
 	}
 
 #ifdef _DEBUG

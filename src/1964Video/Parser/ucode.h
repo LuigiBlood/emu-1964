@@ -124,7 +124,7 @@ UcodeFunc(DLParser_SetTImg);
 UcodeFunc(DLParser_SetZImg);
 UcodeFunc(DLParser_SetCImg);
 
-UcodeFunc(DLParser_RDPHalf_1_0xb4_GoldenEye);
+UcodeFunc(DLParser_RDPHalf1_GoldenEye);
 
 UcodeFunc(RSP_GBI2_DL);
 UcodeFunc(RSP_GBI2_CullDL);
@@ -536,6 +536,92 @@ UcodeMap ucodeMap1 =
 	DLParser_SetCombine,  DLParser_SetTImg,		  DLParser_SetZImg,		 DLParser_SetCImg
 };
 
+// uCode 2 - RSP SW 2.0X
+// Games: Golden Eye
+UcodeMap ucodeMap2 =
+{
+	RSP_GBI1_SpNoop,   RSP_GBI0_Mtx, 	      RSP_GBI1_Reserved, RSP_GBI1_MoveMem,
+	RSP_GBI0_Vtx,	   RSP_GBI1_Reserved,     RSP_GBI0_DL, 	     RSP_GBI1_Reserved,
+	RSP_GBI1_Reserved, RSP_GBI1_Sprite2DBase, RSP_RDP_Nothing,   RSP_RDP_Nothing,
+	RSP_RDP_Nothing,   RSP_RDP_Nothing, 	  RSP_RDP_Nothing, 	 RSP_RDP_Nothing,
+	//10
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//20
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//30
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//40
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//50
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//60
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//70
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+
+	//80
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//90
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//a0
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//b0
+	RSP_RDP_Nothing,		     RSP_GBI0_Tri4, 		 RSP_GBI1_RDPHalf_Cont, 	 RSP_GBI1_RDPHalf_2,
+	DLParser_RDPHalf1_GoldenEye, RSP_GBI1_Line3D, 		 RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
+	RSP_GBI1_EndDL, 			 RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,	 RSP_GBI1_Texture,
+	RSP_GBI1_MoveWord, 			 RSP_GBI1_PopMtx, 		 RSP_GBI1_CullDL, 			 RSP_GBI1_Tri1,
+
+	//c0
+	RSP_GBI1_Noop,	 RSP_RDP_Nothing, RSP_RDP_Nothing,	RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,	RSP_RDP_Nothing,
+	RDP_TriFill,	 RDP_TriFillZ,	  RDP_TriTxtr,	    RDP_TriTxtrZ,
+	RDP_TriShade,	 RDP_TriShadeZ,	  RDP_TriShadeTxtr, RDP_TriShadeTxtrZ,
+	//d0
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
+	//e0
+	RSP_RDP_Nothing,	  RSP_RDP_Nothing,	    RSP_RDP_Nothing,        RSP_RDP_Nothing,
+	DLParser_TexRect,	  DLParser_TexRectFlip, DLParser_RDPLoadSync,   DLParser_RDPPipeSync,
+	DLParser_RDPTileSync, DLParser_RDPFullSync, DLParser_SetKeyGB,      DLParser_SetKeyR,
+	DLParser_SetConvert,  DLParser_SetScissor,  DLParser_SetPrimDepth,	DLParser_RDPSetOtherMode,
+	//f0
+	DLParser_LoadTLut,	  RSP_RDP_Nothing, 		  DLParser_SetTileSize,  DLParser_LoadBlock, 
+	DLParser_LoadTile,    DLParser_SetTile, 	  DLParser_FillRect, 	 DLParser_SetFillColor,
+	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
+	DLParser_SetCombine,  DLParser_SetTImg, 	  DLParser_SetZImg, 	 DLParser_SetCImg
+};
 
 // Ucode 3 - S2DEX GBI2
 UcodeMap ucodeMap3=
@@ -1029,7 +1115,7 @@ UcodeMap ucodeMap9 =
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,
 	//b0
 	RSP_RDP_Nothing,				   RSP_Tri4_PD,			   RSP_GBI1_RDPHalf_Cont,	   RSP_GBI1_RDPHalf_2,
-	DLParser_RDPHalf_1_0xb4_GoldenEye, RSP_GBI1_RDPHalf_2,	   RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
+	DLParser_RDPHalf1_GoldenEye, RSP_GBI1_RDPHalf_2,	   RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
 	RSP_GBI1_EndDL,					   RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,	   RSP_GBI1_Texture,
 	RSP_GBI1_MoveWord,				   RSP_GBI1_PopMtx,		   RSP_GBI1_CullDL,			   RSP_GBI1_Tri1,
 	//c0
@@ -1057,7 +1143,7 @@ UcodeMap ucodeMap9 =
 
 //uCode 10 - unknown
 //Games: Conker
-//FIX ME This causes rendering problems for unlown resasons
+//FIX ME This causes rendering problems for unknown resasons
 UcodeMap ucodeMap10 =
 {
 	RSP_GBI1_SpNoop,  RSP_Vtx_Conker,	 RSP_GBI1_ModifyVtx, RSP_GBI2_CullDL,

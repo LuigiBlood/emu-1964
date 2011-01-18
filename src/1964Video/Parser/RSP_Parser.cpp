@@ -47,7 +47,7 @@ UcodeMap *ucodeMaps[] =
 {
 	&ucodeMap0,				// ucode 0 - Mario
 	&ucodeMap1,				// ucode 1 - GBI1
-	NULL,					// ucode 2 - Golden Eye
+	&ucodeMap2,				// ucode 2 - Golden Eye
 	&ucodeMap3,				// ucode 3 - S2DEX GBI2
 	&ucodeMap4,				// ucode 4 - Wave Racer
 	&ucodeMap5,				// ucode 5 - BGI2
@@ -354,12 +354,6 @@ void RDP_SetUcodeMap(int ucode)
 	case 20:
 		break;
 	case 2: // Golden Eye
-		memcpy( &LoadedUcodeMap, &ucodeMap0, sizeof(UcodeMap));
-		//LoadedUcodeMap[9]=RSP_GBI1_Sprite2DBase;
-		//LoadedUcodeMap[0xaf]=RSP_GBI1_LoadUCode;
-		//LoadedUcodeMap[0xb0]=RSP_GBI1_BranchZ;
-		LoadedUcodeMap[0xb4]=DLParser_RDPHalf_1_0xb4_GoldenEye;
-		status.bUseModifiedUcodeMap = true;
 		break;
 	case 3:	// S2DEX GBI2
 		break;

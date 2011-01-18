@@ -427,6 +427,9 @@ void WriteConfiguration(void)
 	fprintf(f, "WinFrameMode ");
 	fprintf(f, "%d\n", options.bWinFrameMode);
 
+	fprintf(f, "MipMaps ");
+	fprintf(f, "%d\n", options.bMipMaps);
+
 	fprintf(f, "FullTMEMEmulation ");
 	fprintf(f, "%d\n", options.bFullTMEM);
 
@@ -623,6 +626,7 @@ void ReadConfiguration(void)
 	{
 		options.bEnableFog = TRUE;
 		options.bWinFrameMode = FALSE;
+		options.bMipMaps = TRUE;
 		options.bFullTMEM = FALSE;
 		options.bUseFullTMEM = FALSE;
 		options.bForceSoftwareTnL = TRUE;
@@ -709,6 +713,7 @@ void ReadConfiguration(void)
 
 		options.bEnableFog = ReadRegistryDwordVal("EnableFog");
 		options.bWinFrameMode = ReadRegistryDwordVal("WinFrameMode");
+		options.bMipMaps = ReadRegistryDwordVal("MipMaps");
 		options.bFullTMEM = ReadRegistryDwordVal("FullTMEMEmulation");
 		options.bForceSoftwareTnL = ReadRegistryDwordVal("ForceSoftwareTnL");
 		options.bForceSoftwareClipper = ReadRegistryDwordVal("ForceSoftwareClipper");
@@ -1612,6 +1617,11 @@ ToolTipMsg ttmsg[] = {
 			"Enable wireframes (WinFrame)",
 			"If enabled, graphics will be drawn in wireframe mode instead of solid and texture mode."
 	},
+	{
+		IDC_MIPMAPS,
+			"Enables automatic mipmaping."
+			"This will allow textures to look nicer when viewed far away and increase performance in some cases."
+	},
 	{ 
 	   IDC_LOAD_HIRES_TEXTURE,
 	   "Load custom hi-res textures",
@@ -2458,6 +2468,7 @@ LRESULT APIENTRY OptionsDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
 
 		SendDlgItemMessage(hDlg, IDC_FOG, BM_SETCHECK, options.bEnableFog ? BST_CHECKED : BST_UNCHECKED, 0);
 		SendDlgItemMessage(hDlg, IDC_WINFRAME_MODE, BM_SETCHECK, options.bWinFrameMode ? BST_CHECKED : BST_UNCHECKED, 0);
+		SendDlgItemMessage(hDlg, IDC_MIPMAPS, BM_SETCHECK, options.bMipMaps ? BST_CHECKED : BST_UNCHECKED, 0);
 
 		if( status.isSSESupported )
 		{
@@ -2649,6 +2660,7 @@ LRESULT APIENTRY OptionsDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
 			options.bWinFrameMode = (SendDlgItemMessage(hDlg, IDC_WINFRAME_MODE, BM_GETCHECK, 0, 0) == BST_CHECKED);
 			options.bSkipFrame = (SendDlgItemMessage(hDlg, IDC_SKIP_FRAME, BM_GETCHECK, 0, 0) == BST_CHECKED);
 			options.bDisplayTooltip = (SendDlgItemMessage(hDlg, IDC_TOOLTIP, BM_GETCHECK, 0, 0) == BST_CHECKED);
+			options.bMipMaps = (SendDlgItemMessage(hDlg, IDC_MIPMAPS, BM_GETCHECK, 0, 0) == BST_CHECKED);
 			options.bHideAdvancedOptions = (SendDlgItemMessage(hDlg, IDC_HIDE_ADVANCED_OPTIONS, BM_GETCHECK, 0, 0) == BST_CHECKED);
 
 			options.bEnableSSE = (SendDlgItemMessage(hDlg, IDC_SSE, BM_GETCHECK, 0, 0) == BST_CHECKED);

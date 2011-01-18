@@ -156,11 +156,14 @@ bool D3DRender::InitDeviceObjects()
 		// Texturing stuff 
 		D3DSetMinFilter( i, D3DTEXF_LINEAR ); 
 		D3DSetMagFilter( i, D3DTEXF_LINEAR ); 
-		D3DSetMipFilter( i, D3DTEXF_LINEAR );
-		
+		if(options.bMipMaps)
+		{
+			D3DSetMipFilter( i, D3DTEXF_LINEAR );
+			g_pD3DDev->SetSamplerState(i, D3DSAMP_MIPMAPLODBIAS, 10.0f);
+		}
 		g_pD3DDev->SetSamplerState(i, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP ); 
 		g_pD3DDev->SetSamplerState(i, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP ); 
-		g_pD3DDev->SetSamplerState(i, D3DSAMP_MIPMAPLODBIAS, 10.0f);
+		
 
 		gD3DDevWrapper.SetTextureStageState( i, D3DTSS_COLORARG1, D3DTA_TEXTURE ); 
 		gD3DDevWrapper.SetTextureStageState( i, D3DTSS_COLORARG2, D3DTA_DIFFUSE ); 
