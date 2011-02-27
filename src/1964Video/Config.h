@@ -339,9 +339,9 @@ typedef struct IniSection
 
 extern bool bIniIsChanged;
 extern char	szIniFileName[300];
-	void WriteIniFile();
+void WriteIniFile();
 BOOL ReadIniFile();
-	void OutputSectionDetails(uint32 i, FILE * fh);
+void OutputSectionDetails(uint32 i, FILE * fh);
 int FindIniEntry(uint32 dwCRC1, uint32 dwCRC2, uint8 nCountryID, LPCTSTR szName); 
 
 
@@ -423,6 +423,7 @@ extern GameSetting g_curRomInfo;
 
 void ROM_GetRomNameFromHeader(TCHAR * szName, ROMHeader * pHdr);
 void ROM_ByteSwap_3210(void *v, uint32 dwLen);
+uint32 ReadRegistryDwordValFromFile(char *Field, char FileName[1024]);
 
 #define TV_SYSTEM_NTSC		1
 #define TV_SYSTEM_PAL		0

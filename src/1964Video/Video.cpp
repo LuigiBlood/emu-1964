@@ -234,7 +234,7 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, uint32 dwTime)
 }
 
 extern void InitExternalTextures(void);
-void StartVideo(void)
+bool StartVideo(void)
 {
 	SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &windowSetting.screenSaverStatus, 0);
 	if( windowSetting.screenSaverStatus )	
@@ -276,13 +276,17 @@ void StartVideo(void)
 		
 		windowSetting.bDisplayFullscreen = FALSE;
 		bool res = CGraphicsContext::Get()->Initialize(g_GraphicsInfo.hWnd, g_GraphicsInfo.hStatusBar, 640, 480, TRUE);
+		
+		if(!res)
+		{
+			g_CritialSection.Unlock();
+			return false;
+		}
+
 		CDeviceBuilder::GetBuilder()->CreateRender();
 		CRender::GetRender()->Initialize();
 		
-		if( res )
-		{
-			DLParser_Init();
-		}
+		DLParser_Init();
 		
 		status.bGameIsRunning = true;
 	}
@@ -293,6 +297,7 @@ void StartVideo(void)
 	}
 
 	g_CritialSection.Unlock();
+	return true;
 }
 
 extern void CloseExternalTextures(void);
@@ -420,7 +425,7 @@ FUNC_TYPE(void) NAME_DEFINE(RomClosed) (void)
 	TRACE0("Video is stopped");
 }
 
-FUNC_TYPE(void) NAME_DEFINE(RomOpen) (void)
+FUNC_TYPE(int) NAME_DEFINE(RomOpen) (void)
 {
 	if( g_CritialSection.IsLocked() )
 	{
@@ -473,7 +478,10 @@ FUNC_TYPE(void) NAME_DEFINE(RomOpen) (void)
 
 #else
 
-	StartVideo();
+	if (!StartVideo())
+		return 0;
+
+	return 1;
 #endif
 }
 

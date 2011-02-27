@@ -131,15 +131,11 @@ typedef struct TxtrCacheEntry
 		SAFE_DELETE(pEnhancedTexture);
 
 		// CODE MODIFICATION
-		//if(count >= 1)
+		for (int i = 0 ; i < count ; i++)
 		{
-			for (int i = 0 ; i < count ; i++)
-			{
-				SAFE_DELETE(pEnhancedTextureAlts[i]);
-				SAFE_DELETE(pEnhancedTextureAlts);
-			}
+			SAFE_DELETE(pEnhancedTextureAlts[i]);
+			SAFE_DELETE(pEnhancedTextureAlts);
 		}
-		// /CODE MODIFCATION
 	}
 	
 	struct TxtrCacheEntry *pNext;		// Must be first element!
