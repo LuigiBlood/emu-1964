@@ -566,6 +566,28 @@ uint32 ReadRegistryDwordVal(char *Field)
    return 0;
 }
 
+uint32 ReadRegistryDwordValFromFile(char *Field, char FileName[1024])
+{
+	FILE *f = fopen(FileName, "rb");
+	if(!f) return 0;
+	char buf[0x1000];
+	while(fscanf(f, "%s", buf) == 1)
+	{
+		int dword;
+		int n = fscanf(f, "%d", &dword);
+		if (n==1)
+		{
+			if (!strcmp(buf, Field))
+			{
+				fclose(f);
+				return dword;
+			}
+		}
+	}
+   fclose(f);
+   return 0;
+}
+
 
 bool isMMXSupported() 
 { 

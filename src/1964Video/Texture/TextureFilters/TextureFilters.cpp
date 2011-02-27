@@ -16,8 +16,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
 #include "stdafx.h"
+#include <string>
+#include <fstream>
+#include <iostream>
 #include "TextureFilters.h"
 //#include "Main_ScanLineTv.h"
 #include "../../lib/BMGDll.h"
@@ -60,10 +62,7 @@ void EnhanceTexture(TxtrCacheEntry *pEntry)
 	uint32 nWidth = srcInfo.dwCreatedWidth;
 	uint32 nHeight = srcInfo.dwCreatedHeight;
 		bool bPixelSize4 = (pEntry->pTexture->GetPixelSize() == 4);
-			if(pEntry->pTexture->GetPixelSize() == 4)
-				bPixelSize4 = true;
-			else
-				bPixelSize4 = false;
+
 	//Sharpen option is enabled, sharpen the texture
 	if( options.textureEnhancement == TEXTURE_SHARPEN_ENHANCEMENT || options.textureEnhancement == TEXTURE_SHARPEN_MORE_ENHANCEMENT )
 	{
@@ -633,7 +632,7 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 					newinfo = new ExtTxtrInfo;
 
 				// store the width
-				newinfo->width =	imgInfo.Width;
+				newinfo->width = imgInfo.Width;
 				// store the height
 				newinfo->height = imgInfo.Height;
 				//allocate space for the name of the folder it has been found in
@@ -1480,8 +1479,8 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 	}
 
 	//int scalex = gHiresTxtrInfos[idx].width / (int)entry.ti.WidthToCreate;
- //   int scaley = gHiresTxtrInfos[idx].height / (int)entry.ti.HeightToCreate;
- //   int scale = scalex > scaley ? scalex : scaley; // set scale to maximum(scalex,scaley)
+	//int scaley = gHiresTxtrInfos[idx].height / (int)entry.ti.HeightToCreate;
+	//int scale = scalex > scaley ? scalex : scaley; // set scale to maximum(scalex,scaley)
 	int scale = 1<<gHiresTxtrInfos[idx].scaleShift;
 
 	entry.pEnhancedTexture = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scale, entry.ti.HeightToCreate*scale);
@@ -1567,9 +1566,8 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 	}
 
 	// CODE MODIFICATION
-	int count = gHiresTxtrInfos[idx].count;
-	if (count > 0) {
-
+	if (gHiresTxtrInfos[idx].count > 0)
+	{
 		entry.count = gHiresTxtrInfos[idx].count;
 		entry.shuffle = gHiresTxtrInfos[idx].shuffle;
 		entry.period = gHiresTxtrInfos[idx].period;
@@ -1578,8 +1576,8 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 		entry.lastModified = 0;
 
 		//DebuggerAppendMsg("Enhancing %d textures ", count);
-		entry.pEnhancedTextureAlts = new CTexture*[count];
-		for (int i = 0; i < count; i++) {
+		entry.pEnhancedTextureAlts = new CTexture*[entry.count];
+		for (int i = 0; i < entry.count; i++) {
 			//DebuggerAppendMsg("Enhancing texture %d ", i);
 			entry.pEnhancedTextureAlts[i] = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scale, entry.ti.HeightToCreate*scale);
 			DrawInfo info2;
@@ -1681,47 +1679,16 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 
 
 // CODE MODIFICATION
-#include <string>
-#include <fstream>
-#include <iostream>
-
 void lookForAlternatives( ExtTxtrInfo &ExtTexInfo, int* count, bool* shuffle, int* period, bool* synchronized) {
-	char infoFileName[256];
+	char infoFileName[1024];
 	strcpy(infoFileName, ExtTexInfo.foldername);
 	sprintf(infoFileName+strlen(infoFileName), "%s#%08X#%d#%d", g_curRomInfo.szGameName, ExtTexInfo.crc32, ExtTexInfo.fmt, ExtTexInfo.siz);
 	strcat(infoFileName, "_infos.txt");
 
-	std::ifstream infoFile(infoFileName);
-
-    if (infoFile)  {
-        std::string line; 
-		while (std::getline(infoFile, line)) {
-			if (strcmp(line.c_str(), "# COUNT") == 0) {
-				std::string value;
-				std::getline( infoFile, value );
-				sscanf(value.c_str(), "%d", count);
-			}
-
-			if (strcmp(line.c_str(), "# SHUFFLE") == 0) {
-				std::string value;
-				std::getline( infoFile, value );
-				*shuffle = (strcmp(value.c_str(), "yes") == 0);
-			}
-
-			if (strcmp(line.c_str(), "# PERIOD") == 0) {
-				std::string value;
-				std::getline( infoFile, value );
-				sscanf(value.c_str(), "%d", period);
-			}
-
-			if (strcmp(line.c_str(), "# SYNCHRONIZED") == 0) {
-				std::string value;
-				std::getline( infoFile, value );
-				*synchronized = (strcmp(value.c_str(), "yes") == 0);
-			}
-        }
-    }
-
+	*count = ReadRegistryDwordValFromFile("Count", infoFileName);
+	*shuffle = ReadRegistryDwordValFromFile("Shuffle", infoFileName);
+	*period = ReadRegistryDwordValFromFile("Period", infoFileName);
+	*synchronized = ReadRegistryDwordValFromFile("Synchronized", infoFileName);
 }
 // /CODE MODIFICATION
 
@@ -1760,8 +1727,6 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 	// width and height of the loaded texture
 	int width, height;
 
-
-
 	// CODE MODIFICATION
 
 	// the counter for the amount of alternate textures that are available
@@ -1785,22 +1750,20 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 
 	//DebuggerAppendMsg("resultat parsing %d , %d, %d", ExtTexInfo.count, ExtTexInfo.shuffle, ExtTexInfo.period);
 
-	int count = ExtTexInfo.count;
+	char** filenames_rgbAlt = new char*[ExtTexInfo.count];
+	char** filenames_alphaAlt = new char*[ExtTexInfo.count];
 
-	char** filenames_rgbAlt = new char*[count];
-	char** filenames_alphaAlt = new char*[count];
+	if (ExtTexInfo.count > 0) {
+		ExtTexInfo.pHiresTextureRGBAlts = new unsigned char*[ExtTexInfo.count];
+		ExtTexInfo.pHiresTextureAlphaAlts = new unsigned char*[ExtTexInfo.count];
 
-	if (count > 0) {
-		ExtTexInfo.pHiresTextureRGBAlts = new unsigned char*[count];
-		ExtTexInfo.pHiresTextureAlphaAlts = new unsigned char*[count];
-
-		for (int i = 0; i < count; i++)
+		for (int i = 0; i < ExtTexInfo.count; i++)
 			filenames_rgbAlt[i] = new char[256];
 
-		for (int i = 0; i < count; i++)
+		for (int i = 0; i < ExtTexInfo.count; i++)
 			filenames_alphaAlt[i] = new char[256];
 
-		for (int i = 0; i < count; i++) {
+		for (int i = 0; i < ExtTexInfo.count; i++) {
 			strcpy(filenames_rgbAlt[i], ExtTexInfo.foldername);
 			sprintf(filenames_rgbAlt[i]+strlen(filenames_rgbAlt[i]), "%s#%08X#%d#%d_alt%d", g_curRomInfo.szGameName, ExtTexInfo.crc32, ExtTexInfo.fmt, ExtTexInfo.siz, i);
 			strcpy(filenames_alphaAlt[i],filenames_rgbAlt[i]);
@@ -1832,13 +1795,10 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 				bResA = LoadRGBBufferFromPNGFile(filename_alpha, &ExtTexInfo.pHiresTextureAlpha, width, height);
 
 			// CODE MODIFICATION
-			//if(count >= 1)
-			{
-				for (int i = 0; i < count; i++) {
-					bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height);
-					if( bResRGBA && ExtTexInfo.bSeparatedAlpha )
-						bResA = LoadRGBBufferFromPNGFile(filenames_alphaAlt[i], &ExtTexInfo.pHiresTextureAlphaAlts[i], width, height);
-				}
+			for (int i = 0; i < ExtTexInfo.count; i++) {
+				bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height);
+				if( bResRGBA && ExtTexInfo.bSeparatedAlpha )
+					bResA = LoadRGBBufferFromPNGFile(filenames_alphaAlt[i], &ExtTexInfo.pHiresTextureAlphaAlts[i], width, height);
 			}
 			//CODE MODIFICATION
 		}
@@ -1850,11 +1810,8 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &ExtTexInfo.pHiresTextureRGB, width, height, 32);
 
 			// CODE MODIFICATION
-			//if(count >= 1)
-			{
-				for (int i = 0; i < count; i++) {
-					bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height, 32);
-				}
+			for (int i = 0; i < ExtTexInfo.count; i++) {
+				bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height, 32);
 			}
 			// /CODE MODIFICATION
 		} else
@@ -1868,11 +1825,8 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &ExtTexInfo.pHiresTextureRGB, width, height, 32);
 
 			// CODE MODIFICATION
-			//if(count >= 1)
-			{
-				for (int i = 0; i < count; i++) {
-					bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height, 32);
-				}
+			for (int i = 0; i < ExtTexInfo.count; i++) {
+				bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height, 32);
 			}
 			// /CODE MODIFICATION
 		}
@@ -1880,7 +1834,6 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 	default:
 		return;
 	}
-
 	// remember dimensions
 	ExtTexInfo.width = width;
 	ExtTexInfo.height = height;
@@ -1891,7 +1844,6 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 		TRACE1("Cannot open %s", filename_rgb);
 		// free the memory that has been alocated for the texture
 		SAFE_DELETE(ExtTexInfo.pHiresTextureRGB);
-
 		// free the memory that has been alocated for any alt textures
 		SAFE_DELETE(ExtTexInfo.pHiresTextureRGBAlts);
 		return;

@@ -950,9 +950,9 @@ void PrepareTextures()
 					// CODE MODIFICATION
 					//pEntry->count = 0;
 					// no alternative textures
-					
+					//Ok seriously wtf here, count seems to become random numbers when it should just be 0.
 					if (pEntry->count == 0 || pEntry->pEnhancedTextureAlts == NULL)
-					{
+					{ 
 						pEntry->count = 0;
 						SAFE_DELETE(pEntry->pEnhancedTextureAlts);
 						CRender::g_pRender->SetCurrentTexture( tilenos[i], 

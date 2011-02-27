@@ -334,6 +334,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\lib\squish.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>
