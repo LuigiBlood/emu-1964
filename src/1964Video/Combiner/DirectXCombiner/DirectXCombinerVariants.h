@@ -20,8 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define _DIRECTX_COMBINER_VARIANTS_H_
 
 #include "DirectXCombiner.h"
-#include "..\OpenGLCombiner\OGLCombinerTNT2.h"
-#include "CNvTNTDirectXCombiner.h"
 
 typedef struct {
 	uint64  mux64;

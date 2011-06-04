@@ -48,7 +48,6 @@ void CDeviceBuilder::SelectDeviceType(SupportedDeviceType type)
 	case OGL_1_3_DEVICE:
 	case OGL_1_4_DEVICE:
 	case OGL_1_4_V2_DEVICE:
-	case OGL_TNT2_DEVICE:
 	case NVIDIA_OGL_DEVICE:
 	case OGL_FRAGMENT_PROGRAM:
 		CDeviceBuilder::m_deviceGeneralType = OGL_DEVICE;
@@ -87,7 +86,6 @@ CDeviceBuilder* CDeviceBuilder::CreateBuilder(SupportedDeviceType type)
 		case 	OGL_1_3_DEVICE:
 		case 	OGL_1_4_DEVICE:
 		case 	OGL_1_4_V2_DEVICE:
-		case 	OGL_TNT2_DEVICE:
 		case 	NVIDIA_OGL_DEVICE:
 		case OGL_FRAGMENT_PROGRAM:
 			m_pInstance = new OGLDeviceBuilder();
@@ -264,11 +262,6 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
 					m_pColorCombiner = new COGLColorCombinerNvidia(pRender);
 					TRACE0("Nvidia OGL Combiner is created");
 				}
-				else if( pcontext->IsExtensionSupported("GL_NV_texture_env_combine4") )
-				{
-					m_pColorCombiner = new COGLColorCombinerTNT2(pRender);
-					TRACE0("OGL TNT2 Combiner is created");
-				}
 				else if( pcontext->IsExtensionSupported("GL_EXT_texture_env_combine") ||
 						 pcontext->IsExtensionSupported("GL_ARB_texture_env_combine") )
 				{
@@ -315,10 +308,6 @@ CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
 				case OGL_1_4_V2_DEVICE:
 					m_pColorCombiner = new COGLColorCombiner4v2(pRender);
 					TRACE0("OGL 1.4 Combiner Version 2 is created");
-					break;
-				case OGL_TNT2_DEVICE:
-					m_pColorCombiner = new COGLColorCombinerTNT2(pRender);
-					TRACE0("OGL TNT2 Combiner is created");
 					break;
 				case NVIDIA_OGL_DEVICE:
 					m_pColorCombiner = new COGLColorCombinerNvidia(pRender);
@@ -416,14 +405,6 @@ CColorCombiner * DirectXDeviceBuilder::CreateColorCombiner(CRender *pRender)
 			{
 				type = DX_PIXEL_SHADER;
 			}
-			else if( strstr(buf, "tnt") != NULL || strstr(buf, "geforce256") != NULL )
-			{
-				type = DX_2_STAGES;
-			}
-			else if( strstr(buf, "geforce2") != NULL && strstr(buf,"ti") == NULL )
-			{
-				type = DX_2_STAGES;
-			}
 			else
 			{
 				bool m_bCapsTxtOpAdd = (g_D3DDeviceCaps.TextureOpCaps & D3DTEXOPCAPS_ADD)!=0;
@@ -453,9 +434,6 @@ CColorCombiner * DirectXDeviceBuilder::CreateColorCombiner(CRender *pRender)
 			break;
 		case DX_HIGH_END:
 			m_pColorCombiner = new CDirectXColorCombiner(pRender);
-			break;
-		case DX_NVIDIA_TNT:
-			m_pColorCombiner = new CNvTNTDirectXCombiner(pRender);
 			break;
 		case DX_2_STAGES:
 			m_pColorCombiner = new CDirectXColorCombiner(pRender);

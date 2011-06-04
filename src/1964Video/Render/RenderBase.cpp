@@ -1619,7 +1619,7 @@ void ModifyVertexInfo(uint32 where, uint32 vertex, uint32 val)
 		}
 		break;
 	default:
-		RSP_RDP_NOIMPL("RSP_GBI1_ModifyVtx: Setting unk value: 0x%02x, 0x%08x", dwWhere, dwValue);
+	//	RSP_RDP_NOIMPL("RSP_GBI1_ModifyVtx: Setting unk value: 0x%02x, 0x%08x", dwWhere, dwValue);
 		break;
 	}
 	DEBUGGER_PAUSE_AND_DUMP(NEXT_VERTEX_CMD,{TRACE0("Paused at ModVertex Cmd");});
@@ -2266,30 +2266,21 @@ void UpdateCombinedMatrix()
 		if( options.enableHackForGames == HACK_REVERSE_XY_COOR )
 		{
 			gRSPworldProject = gRSPworldProject * reverseXY;
+			gRSPmodelViewTop = gRSPmodelViewTop * reverseXY;
 		}
 		if( options.enableHackForGames == HACK_REVERSE_Y_COOR )
 		{
 			gRSPworldProject = gRSPworldProject * reverseY;
+			gRSPmodelViewTop = gRSPmodelViewTop * reverseY;
 		}
 
 		if( status.isSSEEnabled )
 		{
 			D3DXMatrixTranspose(&gRSPworldProjectTransported, &gRSPworldProject);
+			D3DXMatrixTranspose(&gRSPmodelViewTopTranspose, &gRSPmodelViewTop);
 		}
 
 		gRSP.bCombinedMatrixIsUpdated = false;
 	}
-
-	//if( gRSP.bWorldMatrixIsUpdated || gRSP.bLightIsUpdated )
-	//{
-	//	// Update lights with transported world matrix
-	//	for( unsigned int l=0; l<gRSPnumLights; l++)
-	//	{
-	//		D3DXVec3TransformCoord(&gRSPlights[l].td, &gRSPlights[l].od, &gRSPmodelViewTopTranspose);
-	//		D3DXVec3Normalize(&gRSPlights[l].td,&gRSPlights[l].td);
-	//	}
-
-	//	gRSP.bWorldMatrixIsUpdated = false;
-	//	gRSP.bLightIsUpdated = false;
-	//}
 }
+

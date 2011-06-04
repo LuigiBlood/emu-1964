@@ -39,9 +39,7 @@ class D3DRender : public CRender
 	friend class CDirectXPixelShaderCombiner;
 	friend class CDirectXColorCombinerLowEnd;
 	friend class CDirectXColorCombinerHighEnd;
-	friend class CDirectXColorCombinerNVidiaTNT;
 	friend class CDirectXSemiPixelShaderCombiner;
-	friend class CNvTNTDirectXCombiner;
 	friend class CDirectXBlender;
 	
 protected:

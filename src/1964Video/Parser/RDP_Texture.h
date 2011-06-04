@@ -960,7 +960,8 @@ void PrepareTextures()
 						pEntry->ti.WidthToLoad, pEntry->ti.HeightToLoad, pEntry);
 					}
 					// there are some alternative textures
-					else {
+					else 
+					{
 						clock_t nowClock = clock();
 						long now = nowClock * 1000 / CLOCKS_PER_SEC; // now in milliseconds
 
@@ -970,8 +971,10 @@ void PrepareTextures()
 					    // if the period is over
 
 						// synchronized texture
-						if (pEntry->synchronized) {
-							if ((now - synchronizedLastModified) > pEntry->period) {
+						if (pEntry->synchronized)
+						{
+							if ((now - synchronizedLastModified) > pEntry->period)
+							{
 								if (pEntry->shuffle) 
 									synchronizedCurrentAltTexIndex = rand() % (pEntry->count + 1);
 								else {
@@ -988,10 +991,12 @@ void PrepareTextures()
 						}	
 
 						// unsynchronized texture
-						if (!pEntry->synchronized && ((now - pEntry->lastModified) > pEntry->period)) {
+						if (!pEntry->synchronized && ((now - pEntry->lastModified) > pEntry->period)) 
+						{
 							if (pEntry->shuffle) 
 								pEntry->currentAltTexIndex = rand() % (pEntry->count + 1);
-							else {
+							else 
+							{
 								pEntry->currentAltTexIndex++;
 								if (pEntry->currentAltTexIndex > pEntry->count)
 									pEntry->currentAltTexIndex = 0;
@@ -1002,11 +1007,14 @@ void PrepareTextures()
 							//DebuggerAppendMsg("(unsync) PERIOD : %d / LAST MODIFIED : %d / INDEX : %d", pEntry->period, pEntry->lastModified, pEntry->currentAltTexIndex);
 						}	
 
-						if (pEntry->currentAltTexIndex == pEntry->count) {
+						if (pEntry->currentAltTexIndex == pEntry->count)
+						{
 							CRender::g_pRender->SetCurrentTexture( tilenos[i], 
 							(pEntry->pEnhancedTexture)?pEntry->pEnhancedTexture:pEntry->pTexture,
 							pEntry->ti.WidthToLoad, pEntry->ti.HeightToLoad, pEntry);
-						} else {
+						}
+						else 
+						{
 							CRender::g_pRender->SetCurrentTexture( tilenos[i], 
 							(pEntry->pEnhancedTextureAlts)?pEntry->pEnhancedTextureAlts[pEntry->currentAltTexIndex]:pEntry->pTexture,
 							pEntry->ti.WidthToLoad, pEntry->ti.HeightToLoad, pEntry);

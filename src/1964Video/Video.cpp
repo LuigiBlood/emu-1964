@@ -113,7 +113,7 @@ FUNC_TYPE(void) NAME_DEFINE(GetDllInfo) ( PLUGIN_INFO * PluginInfo )
 FUNC_TYPE(void) NAME_DEFINE(DllAbout) ( HWND hParent )
 {
 	char temp[300];
-	sprintf(temp,"%s %s (%s)\nDirectX 8\nOpenGL 1.1-1.4/ATI/Nvidia TNT/Geforce Extension\nBased on Rice's 6.1.1 beta 10 source code",project_name, FILE_VERSION,BUILD_NUMBER) ;
+	sprintf(temp,"%s %s (%s)\nDirectX 8\nOpenGL 1.1-1.4/ATI/Geforce Extension\nBased on Rice's 6.1.1 beta 10 source code",project_name, FILE_VERSION,BUILD_NUMBER) ;
 	MsgInfo(temp);
 }
 
