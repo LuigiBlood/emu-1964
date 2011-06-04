@@ -287,21 +287,6 @@ CDirectXColorCombiner::CDirectXColorCombiner(CRender *pRender)
 	strcpy(deviceStr, CGraphicsContext::g_pGraphicsContext->GetDeviceStr());
 	_strlwr(deviceStr);
 
-	// Check for Nvidia video cards
-	if( strstr(deviceStr, "tnt") != NULL )
-	{
-		//m_dwCapsMaxStages = 2;
-		//m_bCapsTxtOpMulAdd = false;
-		//m_bCapsTxtOpLerp = false;
-	}
-	else if( strstr(deviceStr, "geforce") != NULL && strstr(deviceStr,"ti") == NULL && strstr(deviceStr,"geforce3") == NULL )
-	{
-		// Geforce 2, Geforce 256, but not geforce 2/3/4 ti, Geforce 2 MX, Geforce 4 MX
-		//m_dwCapsMaxStages = 2;
-		//m_bCapsTxtOpMulAdd = false;
-		//m_bCapsTxtOpLerp = false;
-	}
-
 	m_supportedStages = m_dwCapsMaxStages;
 
 

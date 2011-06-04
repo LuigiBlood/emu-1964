@@ -1301,7 +1301,7 @@ void DecodedMux::LogConstantsWithShade(uint32 flag,CombineChannel channel, FILE 
 #endif
 
 
-void DecodedMux::To_AB_Add_CD_Format(void)	// Use by TNT,Geforce
+void DecodedMux::To_AB_Add_CD_Format(void)	// Use by TNT,Geforce //CHECKME
 {
 	// This function should be called after calling reformat 
 	// This function will not be called by default, can be called optionally

@@ -36,12 +36,6 @@ protected:
 	virtual void Simplify(void);
 };
 
-class COGLExtDecodedMuxTNT2 : public COGLExtDecodedMux
-{
-protected:
-	virtual void FurtherFormatForOGL2(void);
-	
-};
 
 #endif
 

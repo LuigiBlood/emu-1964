@@ -402,14 +402,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Combiner\CNvTNTCombiner.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Combiner\CNvTNTCombiner.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Combiner\Combiner.cpp"
 					>
 				</File>
@@ -444,14 +436,6 @@
 				<Filter
 					Name="DirectXCombiner"
 					>
-					<File
-						RelativePath=".\Combiner\DirectXCombiner\CNvTNTDirectXCombiner.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\DirectXCombiner\CNvTNTDirectXCombiner.h"
-						>
-					</File>
 					<File
 						RelativePath=".\Combiner\DirectXCombiner\DirectXBlender.cpp"
 						>
@@ -502,14 +486,6 @@
 					</File>
 					<File
 						RelativePath=".\Combiner\OpenGLCombiner\OGLCombinerNV.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLCombinerTNT2.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLCombinerTNT2.h"
 						>
 					</File>
 					<File

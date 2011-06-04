@@ -116,13 +116,10 @@
 
 #include "./Texture/OGLTexture/OGLTexture.h"
 #include "./Combiner/OpenGLCombiner/OGLDecodedMux.h"
-#include "./Combiner/CNvTNTCombiner.h"
-#include "./Combiner/DirectXCombiner/CNvTNTDirectXCombiner.h"
 
 #include "./Combiner/OpenGLCombiner/OGLCombiner.h"
 #include "./Combiner/OpenGLCombiner/OGLExtCombiner.h"
 #include "./Combiner/OpenGLCombiner/OGLCombinerNV.h"
-#include "./Combiner/OpenGLCombiner/OGLCombinerTNT2.h"
 #include "./Combiner/OpenGLCombiner/OGLFragmentShaders.h"
 
 #include "./Debugger/OGLDebug.h"

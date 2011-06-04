@@ -170,7 +170,6 @@ const RenderEngineSetting OpenGLRenderSettings[] =
 	"OpenGL 1.1 (Lowest)",		OGL_1_1_DEVICE,
 	"OpenGL 1.2/1.3",			OGL_1_2_DEVICE,
 	"OpenGL 1.4",				OGL_1_4_DEVICE,
-	"OpenGL for Nvidia TNT or better",		OGL_TNT2_DEVICE,
 	"OpenGL for Nvidia GeForce or better ",	NVIDIA_OGL_DEVICE,
 	"OpenGL Fragment Program Extension",	OGL_FRAGMENT_PROGRAM,
 };
@@ -206,7 +205,6 @@ BufferSettingInfo DirectXCombinerSettings[] =
 	"To Fit Your Video Card",			DX_BEST_FIT,			DX_BEST_FIT,
 	"For Low End Video Cards",			DX_LOW_END,				DX_LOW_END,
 	"For High End Video Cards",			DX_HIGH_END,			DX_HIGH_END,
-	"For NVidia TNT/TNT2/Geforce/GF2",	DX_NVIDIA_TNT,			DX_NVIDIA_TNT,
 	"Limited 2 stage combiner",			DX_2_STAGES,			DX_2_STAGES,
 	"Limited 3 stage combiner",			DX_3_STAGES,			DX_3_STAGES,
 	"Limited 4 stage combiner",			DX_4_STAGES,			DX_4_STAGES,
@@ -1220,12 +1218,11 @@ ToolTipMsg ttmsg[] = {
 		IDC_DX_COMBINER,
 			"Choose a color combiner to use with the render engine",
 			"The default [To Fit Your Video Card] should work just fine for you, or you can change:\n\n"
-			"For DirectX, you can use low end, mid end, high end or Nvidia TNT combiner.\n"
+			"For DirectX, you can use low end, mid end or high end.\n"
 			"- Low-end combiner is for video cards which can only do 1 combiner cycle or has only 1 texture unit."
 			" It is for old or low-end video cards, and most onboard ones\n"
 			"- High-end combiner is for video cards over mid-end ones, which can do LERP, MULTIPLYADD etc. "
 			"It is for Radeon, Geforce 2/3/4 ti (not GF2 MX, or GF4 MX)\n"
-			"- Nvidia TNT combiner is for TNT, TNT2, Geforce2 MX (not TI), Geforce 4 MX (not ti)\n"
 			"- Limited stage combiners: can be used in case that the maximum combiner stage number reported by the video card driver is wrong (from Nvidia drivers)\n"
 			"- Pixel shader: this is the best combiner if your video card supports it. In order to use it, your video card have "
 			"to support DirectX version 8.1 or up features."
@@ -1238,13 +1235,11 @@ ToolTipMsg ttmsg[] = {
 		IDC_OGL_COMBINER,
 			"Choose a color combiner to use with the render engine",
 			"The default [To Fit Your Video Card] should work just fine for you, or you can change:\n\n"
-			"For OpenGL, you can use Ogl 1.1, Ogl 1.2/1.3/1.4, Nvidia TNT, Nvidia Geforce Register combiner\n"
+			"For OpenGL, you can use Ogl 1.1, Ogl 1.2/1.3/1.4, Nvidia Geforce Register combiner\n"
 			"- Ogl 1.1, most video cards support this\n"
 			"- Ogl 1.2/1.3, for OGL version without Texture Crossbar support\n"
 			"- Ogl 1.4, for OGL version with Texture Crossbar support\n"
-			"- Nvidia TNT, is good for all Nvidia video cards from TNT\n"
-			"- Nvidia Register Combiner, is for all Nvidia video cards from Geforce 256. This combiner is "
-			"better than the Nvidia TNT one\n"
+			"- Nvidia Register Combiner, is for all Nvidia video cards from Geforce 256.\n"
 			"- OpenGL Fragment Program Extension, is for high-end video cards that support fragment programs (pixel shaders).\n"
 			
 	},
