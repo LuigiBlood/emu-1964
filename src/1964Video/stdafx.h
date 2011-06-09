@@ -91,11 +91,10 @@
 
 #include "./Combiner/CombinerDefs.h"
 #include "./Combiner/DecodedMux.h"
-#include "./Combiner/DirectXCombiner/DirectXDecodedMux.h"
 
 #include "./Combiner/blender.h"
 #include "./Combiner/DirectXCombiner/DirectXBlender.h"
-
+#include "./Combiner/OpenGLCombiner/OGLBlender.h"
 
 #include "./Combiner/combiner.h"
 #include "./Combiner/GeneralCombiner.h"
@@ -114,12 +113,8 @@
 #include "./Render/DirectX/D3DRender.h"
 
 #include "./Texture/OGLTexture/OGLTexture.h"
-#include "./Combiner/OpenGLCombiner/OGLDecodedMux.h"
 
 #include "./Combiner/OpenGLCombiner/OGLCombiner.h"
-#include "./Combiner/OpenGLCombiner/OGLExtCombiner.h"
-#include "./Combiner/OpenGLCombiner/OGLCombinerNV.h"
-#include "./Combiner/OpenGLCombiner/OGLFragmentShaders.h"
 
 #include "./Debugger/OGLDebug.h"
 #include "./Render/OpenGL/OGLRender.h"

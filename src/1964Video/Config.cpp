@@ -164,17 +164,6 @@ const SettingInfo openGLDepthBufferSettings[] =
 	"32-bit",	32,
 };
 
-const RenderEngineSetting OpenGLRenderSettings[] =
-{
-	"To Fit Your Video Card",	OGL_DEVICE,
-	"OpenGL 1.1 (Lowest)",		OGL_1_1_DEVICE,
-	"OpenGL 1.2/1.3",			OGL_1_2_DEVICE,
-	"OpenGL 1.4",				OGL_1_4_DEVICE,
-	"OpenGL for Nvidia GeForce or better ",	NVIDIA_OGL_DEVICE,
-	"OpenGL Fragment Program Extension",	OGL_FRAGMENT_PROGRAM,
-};
-
-
 /*
 *	Constants
 */
@@ -216,7 +205,6 @@ int numberOfDirectXRenderBufferSettings = sizeof(DirectXRenderBufferSettings)/si
 int numberOfDirectXDepthBufferSettings = sizeof(DirectXDepthBufferSetting)/sizeof(BufferSettingInfo);
 
 const int numberOfRenderEngineSettings = sizeof(RenderEngineSettings)/sizeof(RenderEngineSetting);
-const int numberOfOpenGLRenderEngineSettings = sizeof(OpenGLRenderSettings)/sizeof(RenderEngineSetting);
 
 void WriteConfiguration(void);
 void GenerateCurrentRomOptions();
@@ -399,9 +387,6 @@ void WriteConfiguration(void)
 
 	fprintf(f, "ColorQuality ");
 	fprintf(f, "%d\n", options.colorQuality);
-
-	fprintf(f, "OpenGLRenderSetting ");
-	fprintf(f, "%d\n", options.OpenglRenderSetting);
 
 	fprintf(f, "NormalAlphaBlender ");
 	fprintf(f, "%d\n", defaultRomOptions.bNormalBlender);
@@ -652,7 +637,6 @@ void ReadConfiguration(void)
 		options.colorQuality = TEXTURE_FMT_A8R8G8B8;
 		options.textureEnhancement = 0;
 		options.textureEnhancementControl = 0;
-		options.OpenglRenderSetting = OGL_DEVICE;
 		options.bSkipFrame = FALSE;
 		options.bDisplayTooltip = FALSE;
 		options.bHideAdvancedOptions = TRUE;
@@ -750,7 +734,6 @@ void ReadConfiguration(void)
 		options.DirectXMaxAnisotropy = ReadRegistryDwordVal("DirectXMaxAnisotropy");;
 		options.OpenglDepthBufferSetting = ReadRegistryDwordVal("OpenGLDepthBufferSetting");
 		options.colorQuality = ReadRegistryDwordVal("ColorQuality");
-		options.OpenglRenderSetting = ReadRegistryDwordVal("OpenGLRenderSetting");
 		defaultRomOptions.bFastTexCRC = ReadRegistryDwordVal("FastTextureLoading");
 		defaultRomOptions.bAccurateTextureMapping = ReadRegistryDwordVal("AccurateTextureMapping");
 		defaultRomOptions.bInN64Resolution = ReadRegistryDwordVal("InN64Resolution");
@@ -763,7 +746,7 @@ void ReadConfiguration(void)
 		if( render == DIRECTX_DEVICE )
 			CDeviceBuilder::SelectDeviceType( DIRECTX_DEVICE );
 		else
-			CDeviceBuilder::SelectDeviceType( (SupportedDeviceType)options.OpenglRenderSetting);
+			CDeviceBuilder::SelectDeviceType( OGL_DEVICE );
 	}
 
 	status.isSSEEnabled = status.isSSESupported && options.bEnableSSE;
@@ -1195,18 +1178,6 @@ ToolTipMsg ttmsg[] = {
 		IDC_RENDER_ENGINE_SELECTION,
 			"Render Engine",
 			"Select which render engine to use, DirectX or OpenGL.\n"
-	},
-	{ 
-		IDC_OGL_COMBINER,
-			"Choose a color combiner to use with the render engine",
-			"The default [To Fit Your Video Card] should work just fine for you, or you can change:\n\n"
-			"For OpenGL, you can use Ogl 1.1, Ogl 1.2/1.3/1.4, Nvidia Geforce Register combiner\n"
-			"- Ogl 1.1, most video cards support this\n"
-			"- Ogl 1.2/1.3, for OGL version without Texture Crossbar support\n"
-			"- Ogl 1.4, for OGL version with Texture Crossbar support\n"
-			"- Nvidia Register Combiner, is for all Nvidia video cards from Geforce 256.\n"
-			"- OpenGL Fragment Program Extension, is for high-end video cards that support fragment programs (pixel shaders).\n"
-			
 	},
 	{ 
 		IDC_DX_SWAP_EFFECT,
@@ -2678,7 +2649,7 @@ LRESULT APIENTRY OptionsDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
 			}
 			else
 			{
-				CDeviceBuilder::SelectDeviceType( (SupportedDeviceType)options.OpenglRenderSetting);
+				CDeviceBuilder::SelectDeviceType( OGL_DEVICE );
 			}
 
 			i = SendDlgItemMessage(hDlg, IDC_COLOR_QUALITY, CB_GETCURSEL, 0, 0);
@@ -3005,16 +2976,6 @@ LRESULT APIENTRY OpenGLDialogProc(HWND hDlg, unsigned message, LONG wParam, LONG
 		g_hwndDlg = hDlg;
 		EnumChildWndTooltip();
 
-		SendDlgItemMessage(hDlg, IDC_OGL_COMBINER, CB_RESETCONTENT, 0, 0);
-		for( i=0; i<numberOfOpenGLRenderEngineSettings; i++ )
-		{ 
-			SendDlgItemMessage(hDlg, IDC_OGL_COMBINER, CB_INSERTSTRING, i, (LPARAM) OpenGLRenderSettings[i].name);
-			if( options.OpenglRenderSetting == OpenGLRenderSettings[i].type )
-			{
-				SendDlgItemMessage(hDlg, IDC_OGL_COMBINER, CB_SETCURSEL, i, 0);
-			}
-		}
-
 		item = GetDlgItem(hDlg, IDC_SOFTWARE_CLIPPER );
 		EnableWindow(item, FALSE);
 
@@ -3028,8 +2989,6 @@ LRESULT APIENTRY OpenGLDialogProc(HWND hDlg, unsigned message, LONG wParam, LONG
 		if( status.bGameIsRunning )
 		{
 			item = GetDlgItem(hDlg, IDC_DEPTH_BUFFER );
-			EnableWindow(item, FALSE);
-			item = GetDlgItem(hDlg, IDC_OGL_COMBINER);
 			EnableWindow(item, FALSE);
 		}
 
@@ -3083,9 +3042,6 @@ LRESULT APIENTRY OpenGLDialogProc(HWND hDlg, unsigned message, LONG wParam, LONG
 		switch(LOWORD(wParam))
 		{
         case IDOK:
-
-			i = SendDlgItemMessage(hDlg, IDC_OGL_COMBINER, CB_GETCURSEL, 0, 0);
-			options.OpenglRenderSetting = OpenGLRenderSettings[i].type;
 			
 			i = SendDlgItemMessage(hDlg, IDC_DEPTH_BUFFER, CB_GETCURSEL, 0, 0);
 			options.OpenglDepthBufferSetting = openGLDepthBufferSettings[i].setting;

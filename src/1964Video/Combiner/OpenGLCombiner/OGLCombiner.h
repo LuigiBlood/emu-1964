@@ -23,7 +23,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 class OGLRender;
 
-class COGLColorCombiner : public CColorCombiner
+typedef struct {
+	uint32	dwMux0;
+	uint32	dwMux1;
+
+	bool	fogIsUsed;
+	GLuint	programID;
+} OGLShaderCombinerSaveType;
+
+class COGLFragmentShaderCombiner : public CColorCombiner
 {
 public:
 	bool Initialize(void);
@@ -36,34 +44,25 @@ protected:
 	void InitCombinerCycleFill(void);
 	void InitCombinerCycle12(void);
 
-	COGLColorCombiner(CRender *pRender);
-	~COGLColorCombiner();
+	COGLFragmentShaderCombiner(CRender *pRender);
+	~COGLFragmentShaderCombiner();
 	OGLRender *m_pOGLRender;
-	
-	bool	m_bSupportAdd;
-	bool	m_bSupportSubtract;
 
+	bool m_bFragmentProgramIsSupported;
+	std::vector<OGLShaderCombinerSaveType>		m_vCompiledShaders;
+	int m_maxTexUnits;
+	int	m_lastIndex;
+	uint32 m_dwLastMux0;
+	uint32 m_dwLastMux1;
 #ifdef _DEBUG
 	void DisplaySimpleMuxString(void);
 #endif
-
-};
-
-class COGLBlender : public CBlender
-{
-public:
-	void NormalAlphaBlender(void);
-	void DisableAlphaBlender(void);
-	void BlendFunc(uint32 srcFunc, uint32 desFunc);
-	void Enable();
-	void Disable();
-
-protected:
-	friend class OGLDeviceBuilder;
-	COGLBlender(CRender *pRender) : CBlender(pRender), m_pOGLRender((OGLRender*)pRender) {};
-	~COGLBlender() {};
-
-	OGLRender *m_pOGLRender;
+private:
+	virtual int ParseDecodedMux();
+	virtual void GenerateProgramStr();
+	int FindCompiledMux();
+	virtual void GenerateCombinerSetting(int index);
+	virtual void GenerateCombinerSettingConstants(int index);
 };
 
 

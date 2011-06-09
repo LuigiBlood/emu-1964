@@ -19,8 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _DIRECTX_COMBINER_H_
 #define _DIRECTX_COMBINER_H_
 
-#include "..\..\Utility\CSortedList.h"
-
 enum CycleSimplicity	//How simple is the mux
 {
 	CS_NOTUSED,				//2nd cycle is not used
@@ -192,9 +190,9 @@ protected:
 	
 	int FindCompiledShader(void);
 	int GeneratePixelShaderFromMux(void);
-	CSortedList<uint64,SetCombineInfo*> m_GeneratedMuxs;
 
 	std::vector<PixelShaderEntry> m_pixelShaderList;
+
 #ifdef _DEBUG
 	virtual void DisplaySimpleMuxString(void);
 #endif

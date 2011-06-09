@@ -318,47 +318,6 @@ void DecodedMuxForPixelShader::Simplify(void)
 	m_bTexel1IsUsed = isUsed(MUX_TEXEL1);
 }
 
-void DecodedMuxForSemiPixelShader::Reset(void)
-{
-	Decode(m_dwMux0, m_dwMux1);
-	splitType[0] = CM_FMT_TYPE_NOT_CHECKED;
-	splitType[1] = CM_FMT_TYPE_NOT_CHECKED;
-	splitType[2] = CM_FMT_TYPE_NOT_CHECKED;
-	splitType[3] = CM_FMT_TYPE_NOT_CHECKED;
-
-	Hack();
-
-	gRSP.bProcessDiffuseColor = false;
-	gRSP.bProcessSpecularColor = false;
-
-	CheckCombineInCycle1();
-	if( g_curRomInfo.bTexture1Hack )
-	{
-		ReplaceVal(MUX_TEXEL1,MUX_TEXEL0,2);
-		ReplaceVal(MUX_TEXEL1,MUX_TEXEL0,3);
-	}
-
-	m_bTexel0IsUsed = isUsed(MUX_TEXEL0);
-	m_bTexel1IsUsed = isUsed(MUX_TEXEL1);
-}
-
-void DecodedMuxForOGL14V2::Simplify(void)
-{
-	CheckCombineInCycle1();
-	if( g_curRomInfo.bTexture1Hack )
-	{
-		ReplaceVal(MUX_TEXEL1,MUX_TEXEL0,2);
-		ReplaceVal(MUX_TEXEL1,MUX_TEXEL0,3);
-	}
-	Reformat();
-
-	UseTextureForConstant();
-	Reformat();
-
-	m_bTexel0IsUsed = isUsed(MUX_TEXEL0);
-	m_bTexel1IsUsed = isUsed(MUX_TEXEL1);
-}
-
 void DecodedMux::Simplify(void)
 {
 	CheckCombineInCycle1();
@@ -1118,54 +1077,6 @@ void DecodedMux::UseTextureForConstant(void)
 }
 
 
-void DecodedMuxForOGL14V2::UseTextureForConstant(void)
-{
-	bool envused = isUsed(MUX_ENV);
-	bool lodused = isUsed(MUX_LODFRAC);
-	
-	int numofconst = 0;
-	if( envused ) numofconst++;
-	if( lodused ) numofconst++;
-
-	int numOftex = HowManyTextures();
-
-	if( numofconst > 0 && numOftex < 2 )
-	{
-		// We can use a texture for a constant
-		for( int i=0; i<2 && numofconst > 0 ; i++ )
-		{
-			if( isUsed(MUX_TEXEL0+i) )
-			{
-				continue;	// can not use this texture
-			}
-
-			if( envused )
-			{
-				ReplaceVal(MUX_ENV, MUX_TEXEL0+i);
-				m_ColorTextureFlag[i] = MUX_ENV;
-				numofconst--;
-				envused = false;
-				continue;
-			}
-
-			if( isUsed(MUX_LODFRAC) )
-			{
-				ReplaceVal(MUX_LODFRAC, MUX_TEXEL0+i);
-				m_ColorTextureFlag[i] = MUX_LODFRAC;
-				numofconst--;
-				continue;
-			}
-
-			if( isUsed(MUX_PRIMLODFRAC) )
-			{
-				ReplaceVal(MUX_PRIMLODFRAC, MUX_TEXEL0+i);
-				m_ColorTextureFlag[i] = MUX_PRIMLODFRAC;
-				numofconst--;
-				continue;
-			}
-		}
-	}
-}
 
 #ifdef _DEBUG
 extern const char *translatedCombTypes[];

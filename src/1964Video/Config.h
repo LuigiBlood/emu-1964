@@ -25,21 +25,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 typedef enum
 {
 	OGL_DEVICE,
-	OGL_1_1_DEVICE,
-	OGL_1_2_DEVICE,
-	OGL_1_3_DEVICE,
-	OGL_1_4_DEVICE,
-	OGL_1_4_V2_DEVICE,
-	NVIDIA_OGL_DEVICE,
 	OGL_FRAGMENT_PROGRAM,
 
 	DIRECTX_DEVICE,
 	DIRECTX_9_DEVICE,
-	DIRECTX_8_DEVICE,
-	DIRECTX_7_DEVICE,
-	DIRECTX_6_DEVICE,
-	DIRECTX_5_DEVICE,
-	XBOX_DIRECTX_DEVICE,
 } SupportedDeviceType;
 
 typedef struct
@@ -224,7 +213,6 @@ typedef struct {
 	int		DirectXDevice;
 
 	int		OpenglDepthBufferSetting;
-	int		OpenglRenderSetting;
 	uint32	colorQuality;
 
 	HACK_FOR_GAMES	enableHackForGames;
