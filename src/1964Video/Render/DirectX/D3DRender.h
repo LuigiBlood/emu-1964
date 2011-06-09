@@ -35,11 +35,7 @@ class D3DRender : public CRender
 {
 	friend class DirectXDeviceBuilder;
 	friend class CDeviceBuilder;
-	friend class CDirectXColorCombiner;
 	friend class CDirectXPixelShaderCombiner;
-	friend class CDirectXColorCombinerLowEnd;
-	friend class CDirectXColorCombinerHighEnd;
-	friend class CDirectXSemiPixelShaderCombiner;
 	friend class CDirectXBlender;
 	
 protected:
@@ -135,7 +131,6 @@ protected:
 	bool RenderLine3D();
 
 	// Combiner and blender functions
-	void SetBlendFactor(uint32 flag);
 
 	void D3DSetMinFilter(uint32 dwStage, uint32 filter);
 	void D3DSetMagFilter(uint32 dwStage, uint32 filter);

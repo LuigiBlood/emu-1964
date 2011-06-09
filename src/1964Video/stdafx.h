@@ -100,7 +100,6 @@
 #include "./Combiner/combiner.h"
 #include "./Combiner/GeneralCombiner.h"
 #include "./Combiner/DirectXCombiner/DirectXCombiner.h"
-#include "./Combiner/DirectXCombiner/DirectXCombinerVariants.h"
 
 #include "./Device/RenderTexture.h"
 #include "./Device/FrameBuffer.h"

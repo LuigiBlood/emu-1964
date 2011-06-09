@@ -160,70 +160,49 @@ public:
 	}
 };
 
+typedef struct {
+	uint64  mux64;
+	ID3DXBuffer* pVS;
+	uint32 dwShaderID;
+	char *pShaderText;
+	IDirect3DPixelShader9* pShader;
+} 
+
+PixelShaderEntry;
+
 class D3DRender;
 
-class CDirectXColorCombiner : public CColorCombiner, public CGeneralCombiner
+class CDirectXPixelShaderCombiner : public CColorCombiner, public CGeneralCombiner
 {
 public:
 	bool Initialize(void);
 	void InitCombinerBlenderForSimpleTextureDraw(uint32 tile=0);
-	void SetNumStages(uint32 dwMaxStage);
-	void SetStageLimit(int maxstage) 
-	{
-		m_dwGeneralMaxStages = m_supportedStages = m_dwCapsMaxStages = maxstage;
-	}
 
 protected:
 	friend class DirectXDeviceBuilder;
-	CDirectXColorCombiner(CRender *pRender);
-	~CDirectXColorCombiner();
+	CDirectXPixelShaderCombiner(CRender *pRender);
+	~CDirectXPixelShaderCombiner();
 
 	void DisableCombiner(void);
 	void InitCombinerCycleCopy(void);
 	void InitCombinerCycleFill(void);
 	void InitCombinerCycle12(void);
-	
-	virtual bool GenerateD3DCombineInfo(SetCombineInfo &cinfo);
-	virtual bool FindAndFillCombineMode(SetCombineInfo & sci);
-
-	uint32 GetD3DArgument(uint32 val);
 
 	D3DRender *m_pD3DRender;
 	
-	uint64  m_lastMux;
-	int		m_lastIndex;
-
-	
-	/*
-	 *	Texture ops flags
-	 */
-
-	bool m_bCapsTxtOpAdd;
-	bool m_bCapsTxtOpAddSmooth;
-	bool m_bCapsTxtOpBlendCurAlpha;
-	bool m_bCapsTxtOpBlendDifAlpha;
-	bool m_bCapsTxtOpBlendFacAlpha;
-	bool m_bCapsTxtOpBlendTxtAlpha;
-	bool m_bCapsTxtOpBlendTxtAlphaPm;
-	bool m_bCapsTxtOpLerp;
-	bool m_bCapsTxtOpModAlphaAddColor;
-	bool m_bCapsTxtOpModColorAddAlpha;
-	bool m_bCapsTxtOpModInvAlphaAddColor;
-	bool m_bCapsTxtOpModInvColorAddAlpha;
-	bool m_bCapsTxtOpMulAdd;
-	bool m_bCapsTxtOpPreMod;
-	bool m_bCapsTxtOpSub;
-
-	int  m_dwCapsMaxTxtWidth;
-	int  m_dwCapsMaxTxtHeight;
-
-	int  m_dwCapsMaxTxt;
-	int	 m_dwCapsMaxStages;
-
+	int FindCompiledShader(void);
+	int GeneratePixelShaderFromMux(void);
 	CSortedList<uint64,SetCombineInfo*> m_GeneratedMuxs;
 
+	std::vector<PixelShaderEntry> m_pixelShaderList;
+#ifdef _DEBUG
+	virtual void DisplaySimpleMuxString(void);
+#endif
+
+#define PIXELSHADERTEXTBUFSIZE	16000
+	char m_textBuf[PIXELSHADERTEXTBUFSIZE];
+
 protected:
-	void	DisplayBlendingStageInfo(void);
 	bool	IsTextureUsedInStage(CombineStage &stage);
 
 #ifdef _DEBUG
@@ -231,15 +210,6 @@ protected:
 #endif
 
 };
-
-class CDirectXColorCombinerLowEnd : public CDirectXColorCombiner
-{
-protected:
-	friend class DirectXDeviceBuilder;
-	CDirectXColorCombinerLowEnd(CRender *pRender);
-	bool GenerateD3DCombineInfo(SetCombineInfo & sci);
-};
-
 
 #endif
 

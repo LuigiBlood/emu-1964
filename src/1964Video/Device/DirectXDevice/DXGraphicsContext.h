@@ -102,9 +102,7 @@ struct D3DAdapterInfo
 
 extern BufferSettingInfo DirectXRenderBufferSettings[];
 extern BufferSettingInfo DirectXDepthBufferSetting[];
-extern BufferSettingInfo DirectXCombinerSettings[];
 extern int numberOfDirectXRenderBufferSettings;
-extern int numberOfDirectXCombinerSettings;
 extern int numberOfDirectXDepthBufferSettings;
 struct TxtrCacheEntry;
 
