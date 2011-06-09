@@ -385,77 +385,16 @@ CColorCombiner * DirectXDeviceBuilder::CreateColorCombiner(CRender *pRender)
 	if( m_pColorCombiner == NULL )
 	{
 		extern MYD3DCAPS g_D3DDeviceCaps;
-		int type = options.DirectXCombiner;
 		int m_dwCapsMaxStages=g_D3DDeviceCaps.MaxTextureBlendStages;
 		bool canUsePixelShader = g_D3DDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(1, 1);
 
-		if( (options.DirectXCombiner == DX_PIXEL_SHADER || options.DirectXCombiner == DX_SEMI_PIXEL_SHADER)
-			&& !canUsePixelShader )
+		if(!canUsePixelShader )
 		{
-			ErrorMsg("Video card does not support pixel shader, will use BEST_FIT");
-			options.DirectXCombiner = DX_BEST_FIT;
+			ErrorMsg("Video card does not support pixel shaders, Rice Video will not function properly");
 		}
-
-		if( options.DirectXCombiner == DX_BEST_FIT )
+		else
 		{
-			char buf[200];
-			strcpy(buf, CGraphicsContext::g_pGraphicsContext->GetDeviceStr());
-			_strlwr(buf);
-			if( canUsePixelShader )
-			{
-				type = DX_PIXEL_SHADER;
-			}
-			else
-			{
-				bool m_bCapsTxtOpAdd = (g_D3DDeviceCaps.TextureOpCaps & D3DTEXOPCAPS_ADD)!=0;
-				bool m_bCapsTxtOpLerp = (g_D3DDeviceCaps.TextureOpCaps & D3DTEXOPCAPS_LERP )!=0;
-				bool m_bCapsTxtOpSub = (g_D3DDeviceCaps.TextureOpCaps & D3DTEXOPCAPS_SUBTRACT )!=0;
-
-				int m_dwCapsMaxTxt=g_D3DDeviceCaps.MaxSimultaneousTextures;
-
-				if( m_dwCapsMaxTxt == 1 || m_dwCapsMaxStages == 1)
-				{
-					type = DX_LOW_END;
-				}
-				else
-				{
-					type = DX_HIGH_END;
-				}
-			}
-		}
-
-		switch( type )
-		{
-		case DX_BEST_FIT:
-			m_pColorCombiner = new CDirectXColorCombiner(pRender);
-			break;
-		case DX_LOW_END:
-			m_pColorCombiner = new CDirectXColorCombinerLowEnd(pRender);
-			break;
-		case DX_HIGH_END:
-			m_pColorCombiner = new CDirectXColorCombiner(pRender);
-			break;
-		case DX_2_STAGES:
-			m_pColorCombiner = new CDirectXColorCombiner(pRender);
-			((CDirectXColorCombiner*)m_pColorCombiner)->SetStageLimit(2);
-			TRACE0("Set max stages = 2");
-			break;
-		case DX_3_STAGES:
-			m_pColorCombiner = new CDirectXColorCombiner(pRender);
-			((CDirectXColorCombiner*)m_pColorCombiner)->SetStageLimit(3);
-			TRACE0("Set max stages = 3");
-			break;
-		case DX_4_STAGES:
-			m_pColorCombiner = new CDirectXColorCombiner(pRender);
-			((CDirectXColorCombiner*)m_pColorCombiner)->SetStageLimit(4);
-			TRACE0("Set max stages = 4");
-			break;
-		case DX_PIXEL_SHADER:
 			m_pColorCombiner = new CDirectXPixelShaderCombiner(pRender);
-			break;
-		case DX_SEMI_PIXEL_SHADER:
-			m_pColorCombiner = new CDirectXSemiPixelShaderCombiner(pRender);
-			break;
 		}
 	
 		SAFE_CHECK(m_pColorCombiner);

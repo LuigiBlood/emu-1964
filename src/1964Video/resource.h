@@ -73,7 +73,6 @@
 #define IDC_DROP_COMBINER               1064
 #define IDC_RENDER_ENGINE_SELECTION     1065
 #define IDC_FOG                         1066
-#define IDC_DX_COMBINER_SELECTION       1067
 #define IDC_DISABLE_COMBINER            1068
 #define IDC_SSE                         1069
 #define IDC_SOFTWARE_CLIPPER            1070
@@ -95,7 +94,6 @@
 #define IDC_SOFTWARE_TNL                1086
 #define IDC_EDIT_WIDTH                  1087
 #define IDC_OGL_COMBINER                1088
-#define IDC_DX_COMBINER                 1089
 #define IDC_DX_SWAP_EFFECT              1090
 #define IDC_COLOR_QUALITY               1091
 #define IDC_SLIDER_FSAA                 1092

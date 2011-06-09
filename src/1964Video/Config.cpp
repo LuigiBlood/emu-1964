@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "stdafx.h"
 #include "_BldNum.h"
 
-#define MAIN_KEY		"Software\\1964Video\\1964Video Plugin"
 #define INI_FILE		"1964Video.ini"
 #define CONFIG_FILE     "1964Video.cfg"
 char *project_name =	"1964Video N64 Video Plugin community version";
@@ -58,6 +57,7 @@ const int resolutions[][2] =
 	{1920, 1440},
 	{2048, 1536},
 };
+
 const int numberOfResolutions = sizeof(resolutions)/sizeof(int)/2;
 
 char *frameBufferWriteBackControlSettings[] =
@@ -200,18 +200,6 @@ BufferSettingInfo DirectXDepthBufferSetting[] =
 	"32-bit signed",			D3DFMT_D24S8,			D3DFMT_D24S8,
 };
 
-BufferSettingInfo DirectXCombinerSettings[] =
-{
-	"To Fit Your Video Card",			DX_BEST_FIT,			DX_BEST_FIT,
-	"For Low End Video Cards",			DX_LOW_END,				DX_LOW_END,
-	"For High End Video Cards",			DX_HIGH_END,			DX_HIGH_END,
-	"Limited 2 stage combiner",			DX_2_STAGES,			DX_2_STAGES,
-	"Limited 3 stage combiner",			DX_3_STAGES,			DX_3_STAGES,
-	"Limited 4 stage combiner",			DX_4_STAGES,			DX_4_STAGES,
-	"Pixel Shader",						DX_PIXEL_SHADER,		DX_PIXEL_SHADER,
-	"Semi-Pixel Shader",				DX_SEMI_PIXEL_SHADER,	DX_SEMI_PIXEL_SHADER,
-};
-
 const SettingInfo OnScreenDisplaySettings[] =
 {
 	"Display Nothing",							ONSCREEN_DISPLAY_NOTHING,
@@ -225,7 +213,6 @@ const SettingInfo OnScreenDisplaySettings[] =
 };
 
 int numberOfDirectXRenderBufferSettings = sizeof(DirectXRenderBufferSettings)/sizeof(BufferSettingInfo);
-int numberOfDirectXCombinerSettings = sizeof(DirectXCombinerSettings)/sizeof(BufferSettingInfo);
 int numberOfDirectXDepthBufferSettings = sizeof(DirectXDepthBufferSetting)/sizeof(BufferSettingInfo);
 
 const int numberOfRenderEngineSettings = sizeof(RenderEngineSettings)/sizeof(RenderEngineSetting);
@@ -476,9 +463,6 @@ void WriteConfiguration(void)
 	fprintf(f, "DirectXAnisotropyValue ");
 	fprintf(f, "%d\n", (uint32)options.DirectXAnisotropyValue);
 
-	fprintf(f, "DirectXCombiner ");
-	fprintf(f, "%d\n", (uint32)options.DirectXCombiner);
-
 	fprintf(f, "DirectXDevice ");
 	fprintf(f, "%d\n", (uint32)options.DirectXDevice);
 
@@ -674,7 +658,6 @@ void ReadConfiguration(void)
 		options.bHideAdvancedOptions = TRUE;
 		options.bDisplayOnscreenFPS = FALSE;
 		options.DirectXAntiAliasingValue = 0;
-		options.DirectXCombiner = DX_BEST_FIT;
 		options.DirectXDevice = 0;	// HAL device
 		options.DirectXAnisotropyValue = 0;
 		options.DirectXMaxFSAA = 16;
@@ -758,7 +741,6 @@ void ReadConfiguration(void)
 		options.bDumpTexturesToFiles = ReadRegistryDwordVal("DumpTexturesToFiles");
 		options.bDumpTexturesToFiles = FALSE;	// Never starting the plugin with this option on
 		defaultRomOptions.bFastTexCRC = ReadRegistryDwordVal("FastTextureLoading");
-		options.DirectXCombiner = ReadRegistryDwordVal("DirectXCombiner");
 		options.DirectXDevice = ReadRegistryDwordVal("DirectXDevice");
 		options.DirectXDepthBufferSetting = ReadRegistryDwordVal("DirectXDepthBufferSetting");
 		options.DirectXAntiAliasingValue = ReadRegistryDwordVal("DirectXAntiAliasingValue");;
@@ -1213,23 +1195,6 @@ ToolTipMsg ttmsg[] = {
 		IDC_RENDER_ENGINE_SELECTION,
 			"Render Engine",
 			"Select which render engine to use, DirectX or OpenGL.\n"
-	},
-	{ 
-		IDC_DX_COMBINER,
-			"Choose a color combiner to use with the render engine",
-			"The default [To Fit Your Video Card] should work just fine for you, or you can change:\n\n"
-			"For DirectX, you can use low end, mid end or high end.\n"
-			"- Low-end combiner is for video cards which can only do 1 combiner cycle or has only 1 texture unit."
-			" It is for old or low-end video cards, and most onboard ones\n"
-			"- High-end combiner is for video cards over mid-end ones, which can do LERP, MULTIPLYADD etc. "
-			"It is for Radeon, Geforce 2/3/4 ti (not GF2 MX, or GF4 MX)\n"
-			"- Limited stage combiners: can be used in case that the maximum combiner stage number reported by the video card driver is wrong (from Nvidia drivers)\n"
-			"- Pixel shader: this is the best combiner if your video card supports it. In order to use it, your video card have "
-			"to support DirectX version 8.1 or up features."
-			"- Semi-pixel shader: this combiner only uses pixel shader if needed, and uses regular DirectX combiner "
-			"settings for simpler N64 combiner modes. For video cards with slower pixel shader implementation, this combiner "
-			"will be faster than the pure pixel shader combiner."
-
 	},
 	{ 
 		IDC_OGL_COMBINER,
@@ -2785,14 +2750,6 @@ LRESULT APIENTRY DirectXDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
 				SendDlgItemMessage(hDlg, IDC_SHOW_FPS, CB_SETCURSEL, i, 0);
 		}
 
-		SendDlgItemMessage(hDlg, IDC_DX_COMBINER, CB_RESETCONTENT, 0, 0);
-		for( i=0; i<numberOfDirectXCombinerSettings; i++ )
-		{
-			SendDlgItemMessage(hDlg, IDC_DX_COMBINER, CB_INSERTSTRING, i, (LPARAM) (DirectXCombinerSettings[i].description));
-			if( options.DirectXCombiner == DirectXCombinerSettings[i].setting )
-				SendDlgItemMessage(hDlg, IDC_DX_COMBINER, CB_SETCURSEL, i, 0);
-		}
-
 		SendDlgItemMessage(hDlg, IDC_DX_SWAP_EFFECT, CB_RESETCONTENT, 0, 0);
 		SendDlgItemMessage(hDlg, IDC_DEPTH_BUFFER, CB_RESETCONTENT, 0, 0);
 		item = GetDlgItem(hDlg, IDC_SOFTWARE_TNL );
@@ -2821,8 +2778,6 @@ LRESULT APIENTRY DirectXDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
 			item = GetDlgItem(hDlg, IDC_DX_SWAP_EFFECT);
 			EnableWindow(item, FALSE);
 			item = GetDlgItem(hDlg, IDC_DEPTH_BUFFER );
-			EnableWindow(item, FALSE);
-			item = GetDlgItem(hDlg, IDC_DX_COMBINER);
 			EnableWindow(item, FALSE);
 			item = GetDlgItem(hDlg, IDC_SOFTWARE_TNL );
 			EnableWindow(item, FALSE);
@@ -3006,8 +2961,6 @@ LRESULT APIENTRY DirectXDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
 			options.RenderBufferSetting = SendDlgItemMessage(hDlg, IDC_DX_SWAP_EFFECT, CB_GETCURSEL, 0, 0);
 			options.DirectXDevice = SendDlgItemMessage(hDlg, IDC_DX_DEVICE, CB_GETCURSEL, 0, 0);
 
-			i = SendDlgItemMessage(hDlg, IDC_DX_COMBINER, CB_GETCURSEL, 0, 0);
-			options.DirectXCombiner = DirectXCombinerSettings[i].setting;
 			options.DirectXDepthBufferSetting = SendDlgItemMessage(hDlg, IDC_DEPTH_BUFFER, CB_GETCURSEL, 0, 0);
 
 			item = GetDlgItem(hDlg, IDC_SLIDER_FSAA);

@@ -177,7 +177,7 @@ bool D3DRender::InitDeviceObjects()
 		gD3DDevWrapper.SetTexture( i, NULL );
 	} 
 	
-	((CDirectXColorCombiner*)m_pColorCombiner)->Initialize();
+	((CDirectXPixelShaderCombiner*)m_pColorCombiner)->Initialize();
 	
 	status.curScissor = UNKNOWN_SCISSOR;
 

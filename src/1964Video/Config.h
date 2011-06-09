@@ -42,20 +42,6 @@ typedef enum
 	XBOX_DIRECTX_DEVICE,
 } SupportedDeviceType;
 
-enum DirectXCombinerType
-{
-	DX_DISABLE_COMBINER,
-	DX_BEST_FIT,
-	DX_LOW_END,
-	DX_HIGH_END,
-	DX_2_STAGES,
-	DX_3_STAGES,
-	DX_4_STAGES,
-	DX_PIXEL_SHADER,
-	DX_SEMI_PIXEL_SHADER,
-};
-
-
 typedef struct
 {
 	char *	name;
@@ -124,7 +110,6 @@ enum {
 	TEXTURE_LQ2X_ENHANCEMENT,
 	TEXTURE_LQ2XS_ENHANCEMENT,
 	TEXTURE_HQ4X_ENHANCEMENT,
-	TEXTURE_KEGA_ENHANCEMENT,
 	TEXTURE_SHARPEN_ENHANCEMENT,
 	TEXTURE_SHARPEN_MORE_ENHANCEMENT,
 	TEXTURE_EXTERNAL,
@@ -236,7 +221,6 @@ typedef struct {
 
 	uint32	DirectXMaxFSAA;
 	uint32	DirectXMaxAnisotropy;
-	int		DirectXCombiner;
 	int		DirectXDevice;
 
 	int		OpenglDepthBufferSetting;

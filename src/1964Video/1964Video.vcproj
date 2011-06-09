@@ -453,14 +453,6 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Combiner\DirectXCombiner\DirectXCombinerVariants.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\DirectXCombiner\DirectXCombinerVariants.h"
-						>
-					</File>
-					<File
 						RelativePath=".\Combiner\DirectXCombiner\DirectXDecodedMux.cpp"
 						>
 					</File>
