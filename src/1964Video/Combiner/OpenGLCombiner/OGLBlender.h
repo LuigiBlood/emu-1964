@@ -16,26 +16,29 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "../DecodedMux.h"
+#ifndef _OGL_BLENDER_H_
+#define _OGL_BLENDER_H_
 
-#ifndef _OGL_DECODEDMUX_H_
-#define _OGL_DECODEDMUX_H_
+class OGLRender;
 
-class COGLDecodedMux : public DecodedMux
+
+
+class COGLBlender : public CBlender
 {
-protected:
-	virtual void Simplify(void);
-	virtual void Reformat(void);
-	
-};
+public:
+	void NormalAlphaBlender(void);
+	void DisableAlphaBlender(void);
+	void BlendFunc(uint32 srcFunc, uint32 desFunc);
+	void Enable();
+	void Disable();
 
-class COGLExtDecodedMux : public COGLDecodedMux
-{
 protected:
-	virtual void FurtherFormatForOGL2(void);
-	virtual void Simplify(void);
-};
+	friend class OGLDeviceBuilder;
+	COGLBlender(CRender *pRender);
+	~COGLBlender() {};
 
+	OGLRender *m_pOGLRender;
+};
 
 #endif
 

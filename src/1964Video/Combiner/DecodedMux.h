@@ -204,34 +204,6 @@ public:
 	void SplitComplexStages() {};
 };
 
-class DecodedMuxForSemiPixelShader : public DecodedMux
-{
-public:
-	void Reset(void);
-};
-
-class DecodedMuxForOGL14V2 : public DecodedMuxForPixelShader
-{
-public:
-	virtual void Simplify(void);
-	void UseTextureForConstant(void);
-};
-
-typedef struct 
-{
-	bool bFurtherFormatForOGL2;
-	bool bUseShadeForConstants;
-	bool bUseTextureForConstants;
-	bool bUseMoreThan2TextureForConstants;
-	bool bReformatToAB_CD;
-	bool bAllowHack;
-	bool bAllowComplimentary;
-	bool bCheckCombineInCycle1;
-	bool bSetLODFracTo0;
-	bool bMergeShadeWithConstants;
-	bool bSplitComplexStage;
-	bool bReformatAgainWithTwoTexels;
-}MuxConverterOptions;
 
 #endif
 

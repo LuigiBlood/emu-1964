@@ -452,56 +452,24 @@
 						RelativePath=".\Combiner\DirectXCombiner\DirectXCombiner.h"
 						>
 					</File>
-					<File
-						RelativePath=".\Combiner\DirectXCombiner\DirectXDecodedMux.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\DirectXCombiner\DirectXDecodedMux.h"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="OpenGLCombiner"
 					>
+					<File
+						RelativePath=".\Combiner\OpenGLCombiner\OGLBlender.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Combiner\OpenGLCombiner\OGLBlender.h"
+						>
+					</File>
 					<File
 						RelativePath=".\Combiner\OpenGLCombiner\OGLCombiner.cpp"
 						>
 					</File>
 					<File
 						RelativePath=".\Combiner\OpenGLCombiner\OGLCombiner.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLCombinerNV.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLCombinerNV.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLDecodedMux.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLDecodedMux.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLExtCombiner.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLExtCombiner.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLFragmentShaders.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLFragmentShaders.h"
 						>
 					</File>
 				</Filter>
@@ -675,70 +643,6 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Parser"
-				>
-				<File
-					RelativePath=".\Parser\RDP_Texture.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_GBI0.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_GBI1.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_GBI2.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_GBI2_ext.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_GBI_Others.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_GBI_Sprite2D.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_Parser.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_Parser.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_S2DEX.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_S2DEX.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_Turbo3D.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\Timing.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\ucode.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\UcodeDefs.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="Utility"
 				>
 				<File
@@ -877,6 +781,70 @@
 					Name="HiresTexture"
 					>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="Parser"
+				>
+				<File
+					RelativePath=".\Parser\RDP_Texture.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\RSP_GBI0.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\RSP_GBI1.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\RSP_GBI2.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\RSP_GBI2_ext.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\RSP_GBI_Others.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\RSP_GBI_Sprite2D.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\RSP_Parser.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\RSP_Parser.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\RSP_S2DEX.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\RSP_S2DEX.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\RSP_Turbo3D.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\Timing.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\ucode.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parser\UcodeDefs.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<File
