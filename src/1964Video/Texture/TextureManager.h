@@ -131,7 +131,7 @@ typedef struct TxtrCacheEntry
 		SAFE_DELETE(pEnhancedTexture);
 
 		// CODE MODIFICATION
-		for (int i = 0 ; i < count ; i++)
+		for (int i = 0 ; i < iAltCount ; i++)
 		{
 			SAFE_DELETE(pEnhancedTextureAlts[i]);
 			SAFE_DELETE(pEnhancedTextureAlts);
@@ -158,12 +158,13 @@ typedef struct TxtrCacheEntry
 
 	// CODE MODIFICATION
 	CTexture	**pEnhancedTextureAlts;
-	int count;
-	bool shuffle;
-	int period;
-	bool synchronized;
-	int currentAltTexIndex;
-	long lastModified;
+	int iAltCount;
+	bool bAltShuffle;
+	int iAltperiod;
+	bool bAltSynchronized;
+	bool bAltTex;
+	int iCurrentAltTexIndex;
+	long lAltLastModified;
 	// /CODE MODIFICATION
 
 	uint32		dwEnhancementFlag;

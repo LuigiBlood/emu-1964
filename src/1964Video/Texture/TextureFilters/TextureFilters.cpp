@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <fstream>
 #include <iostream>
 #include "TextureFilters.h"
-//#include "Main_ScanLineTv.h"
 #include "../../lib/BMGDll.h"
 
 void EnhanceTexture(TxtrCacheEntry *pEntry)
@@ -34,7 +33,6 @@ void EnhanceTexture(TxtrCacheEntry *pEntry)
 	else if( options.textureEnhancement == TEXTURE_NO_ENHANCEMENT ) 
 	{
 		//Texture enhancement has being turned off
-
 		//Delete any allocated memory for the enhanced texture
 		SAFE_DELETE(pEntry->pEnhancedTexture);
 		//Set the enhancement flag so the texture wont be processed again
@@ -61,7 +59,7 @@ void EnhanceTexture(TxtrCacheEntry *pEntry)
 	uint32 realheight = srcInfo.dwHeight;
 	uint32 nWidth = srcInfo.dwCreatedWidth;
 	uint32 nHeight = srcInfo.dwCreatedHeight;
-		bool bPixelSize4 = (pEntry->pTexture->GetPixelSize() == 4);
+	bool bPixelSize4 = (pEntry->pTexture->GetPixelSize() == 4);
 
 	//Sharpen option is enabled, sharpen the texture
 	if( options.textureEnhancement == TEXTURE_SHARPEN_ENHANCEMENT || options.textureEnhancement == TEXTURE_SHARPEN_MORE_ENHANCEMENT )
@@ -78,53 +76,27 @@ void EnhanceTexture(TxtrCacheEntry *pEntry)
 
 	pEntry->dwEnhancementFlag = options.textureEnhancement;
 
-	//Only use small textures is enabled
-	if( options.bSmallTextureOnly )
-	{	
-		//Check the size of the texture and make sure it isnt greater then 256
-		if( nWidth + nHeight > 256 )
-		{
-			//End the draw update
-			pEntry->pTexture->EndUpdate(&srcInfo);
-			//Delete any allocated memory for the enhanced texture
-			SAFE_DELETE(pEntry->pEnhancedTexture);
-			//Set the enhancement flag so the texture wont be processed again
-			pEntry->dwEnhancementFlag = TEXTURE_NO_ENHANCEMENT;
-			return;
-		}
+	// Don't enhance for large textures
+	if( nWidth + nHeight > 1024/2 || 
+	  ( options.bSmallTextureOnly && nWidth + nHeight > 256))
+	{
+		//End the draw update
+		pEntry->pTexture->EndUpdate(&srcInfo);
+		//Delete any data allocated for the enhanced texture
+		SAFE_DELETE(pEntry->pEnhancedTexture);
+		//Set the enhancement flag so the texture wont be processed again
+		pEntry->dwEnhancementFlag = TEXTURE_NO_ENHANCEMENT;
+		return;
 	}
-
 
 	CTexture* pSurfaceHandler = NULL;
 	if( options.textureEnhancement == TEXTURE_HQ4X_ENHANCEMENT )
 	{
-		// Don't enhance for large textures
-		if( nWidth + nHeight > 1024/4 )
-		{
-			//End the draw update
-			pEntry->pTexture->EndUpdate(&srcInfo);
-			//Delete any data allocated for the enhanced texture
-			SAFE_DELETE(pEntry->pEnhancedTexture);
-			//Set the enhancement flag so the texture wont be processed again
-			pEntry->dwEnhancementFlag = TEXTURE_NO_ENHANCEMENT;
-			return;
-		}
 		//Create the surface for the texture
 		pSurfaceHandler = CDeviceBuilder::GetBuilder()->CreateTexture(nWidth*4, nHeight*4);
 	}
 	else
 	{
-		// Don't enhance for large textures
-		if( nWidth + nHeight > 1024/2 )
-		{
-			//End the draw update
-			pEntry->pTexture->EndUpdate(&srcInfo);
-			//Delete any data allocated for the enhanced texture
-			SAFE_DELETE(pEntry->pEnhancedTexture);
-			//Set the enhancement flag so the texture wont be processed again
-			pEntry->dwEnhancementFlag = TEXTURE_NO_ENHANCEMENT;
-			return;
-		}
 		//Create the surface for the texture
 		pSurfaceHandler = CDeviceBuilder::GetBuilder()->CreateTexture(nWidth*2, nHeight*2);
 	}
@@ -171,7 +143,7 @@ void EnhanceTexture(TxtrCacheEntry *pEntry)
 				}
 				else
 				{
-					SmoothFilter((uint32*)destInfo.lpSurface, realwidth<<1, realheight<<1, nWidth<<1, options.textureEnhancementControl, bPixelSize4);
+					SmoothFilter((uint32*)destInfo.lpSurface, realwidth<<2, realheight<<2, nWidth<<2, options.textureEnhancementControl, bPixelSize4);
 				}
 			}
 
@@ -293,6 +265,9 @@ void MirrorTexture(uint32 dwTile, TxtrCacheEntry *pEntry)
 	}
 }
 
+/****
+ All code bellow, CLEAN ME
+****/
 enum TextureType
 {
 	NO_TEXTURE,
@@ -314,7 +289,7 @@ typedef struct {
 	char RGBNameTail[23];
 	char AlphaNameTail[23];
 	TextureType type;
-	bool		bSeparatedAlpha;
+	bool bSeparatedAlpha;
 	int scaleShift;
 	// cached texture
 	unsigned char	*pHiresTextureRGB;
@@ -323,10 +298,11 @@ typedef struct {
 	// CODE MODIFICATION
 	unsigned char	**pHiresTextureRGBAlts;
 	unsigned char	**pHiresTextureAlphaAlts;
-	bool shuffle;
-	int count;
-	int period;
-	bool synchronized;
+	bool bAltShuffle;
+	int iAltCount;
+	int iAltPeriod;
+	bool bAltSynchronized;
+	bool bAltTex;
 	// /CODE MODIFICATION
 } ExtTxtrInfo;
 
@@ -358,7 +334,8 @@ extern char * right(char * src, int nchars);
 void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo> &infos, bool extraCheck, bool bRecursive, bool bCacheTextures = false, bool bMainFolder = true)
 {
 	// check if folder actually exists
-	if( PathIsDirectory(foldername) == FALSE )	return;
+	if( PathIsDirectory(foldername) == FALSE )
+		return;
 
 	// the path of the texture
 	char			texturefilename[_MAX_PATH];
@@ -406,6 +383,10 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 
 	do
 	{
+		// the array is empty, break the current operation
+		if( libaa.cFileName == NULL )
+			break;
+
 		// the current file is a hidden one
 		if( libaa.cFileName[0] == '.' )
 			// these files we don't need
@@ -454,11 +435,11 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 		// init texture type var
 		TextureType type = NO_TEXTURE;
 		// init alpha flag
-		bool		bSeparatedAlpha = false;
+		bool bSeparatedAlpha = false;
 
 		// detect the texture type by it's extention
 		// microdev: this is not the smartest way. Should be done by header analysis if possible
-		if( _stricmp(libaa.cFileName+(strlen(libaa.cFileName)-7), "_ci.bmp")==0)
+		if( _stricmp(right(libaa.cFileName,7), "_ci.bmp") == 0 )
 		{
 			// indentify type
 			if( imgInfo.Format == D3DFMT_P8 )
@@ -469,7 +450,7 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 				continue;
 		}
 		// detect the texture type by it's extention
-		else if( _stricmp(libaa.cFileName+(strlen(libaa.cFileName)-13), "_ciByRGBA.png")==0)
+		else if( _stricmp(right(libaa.cFileName,13), "_ciByRGBA.png") == 0)
 		{
 			// indentify type
 			if( imgInfo.Format == D3DFMT_A8R8G8B8 )
@@ -480,7 +461,7 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 				continue;
 		}
 		// detect the texture type by it's extention
-		else if( _stricmp(libaa.cFileName+(strlen(libaa.cFileName)-16), "_allciByRGBA.png")==0)
+		else if( _stricmp(right(libaa.cFileName,16), "_allciByRGBA.png") == 0)
 		{
 			// indentify type
 			if( imgInfo.Format == D3DFMT_A8R8G8B8 )
@@ -491,7 +472,7 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 				continue;
 		}
 		// detect the texture type by it's extention
-		else if( _stricmp(libaa.cFileName+(strlen(libaa.cFileName)-8), "_rgb.png")==0)
+		else if( _stricmp(right(libaa.cFileName,8), "_rgb.png") == 0)
 		{
 			// indentify type
 			if( imgInfo.Format != D3DFMT_X8R8G8B8 )
@@ -522,18 +503,18 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 					TRACE1("RGB and alpha texture size mismatch: %s", filename2);
 					continue;
 				}
+
+				
 				// check if we've got a texture with separated alpha channel
 				if( imgInfo.Format == D3DFMT_X8R8G8B8 )
-				{
-					// yes, indicate it
-					bSeparatedAlpha = true;
-				}
+					// Indicate that the file has a sperated alpha channel
+					bSeparatedAlpha = true; 
 			}
 		}
 		// detect the texture type by it's extention
-		else if( _stricmp(libaa.cFileName+(strlen(libaa.cFileName)-8), "_all.png")==0)
+		else if( _stricmp(right(libaa.cFileName,8), "_all.png") == 0)
 		{
-			// check if texture is of expected type 
+			//Check if texture is of expected type
 			if( imgInfo.Format != D3DFMT_A8R8G8B8 )
 				// nope, continue with next file
 				continue;
@@ -759,8 +740,11 @@ void FindAllDumpedTextures(void)
 {
 	char	foldername[256];
 	GetPluginDir(foldername);
-	if(foldername[strlen(foldername) - 1] != '\\') strcat(foldername, "\\");
+
+	if(foldername[strlen(foldername) - 1] != '\\') 
+		strcat(foldername, "\\");
 	strcat(foldername,"texture_dump\\");
+
 	CheckAndCreateFolder(foldername);
 
 	strcat(foldername,g_curRomInfo.szGameName);
@@ -808,7 +792,8 @@ void FindAllHiResTextures(char* WIPFolderName = NULL)
 	// get the path of the plugin directory
 	GetPluginDir(foldername);
 	// assure that a backslash exists at the end (should be handled by GetPluginDir())
-	if(foldername[strlen(foldername) - 1] != '\\') strcat(foldername, "\\");
+	if(foldername[strlen(foldername) - 1] != '\\') 
+		strcat(foldername, "\\");
 	// add the relative path to the hires folder
 	strcat(foldername,"hires_texture\\");
 	// it does not exist? => create it
@@ -818,10 +803,12 @@ void FindAllHiResTextures(char* WIPFolderName = NULL)
 	// HOOK IN: PACK SELECT
 	strcat(foldername,g_curRomInfo.szGameName);
 	strcat(foldername,"\\");
-	if(WIPFolderName == NULL){
+	if(WIPFolderName == NULL)
+	{
 		// trunkate the current list with hires texture infos
 		gHiresTxtrInfos.clear();
-	} else
+	} 
+	else
 	{
 		strcat(foldername,WIPFolderName);
 		strcat(foldername,"\\");	
@@ -845,9 +832,10 @@ void CloseHiresTextures(void)
 	{
 		if( gHiresTxtrInfos[i].foldername )
 			delete [] gHiresTxtrInfos[i].foldername;
-			// don't forget to also free memory of cached textures
-			delete [] gHiresTxtrInfos[i].pHiresTextureRGB;
-			delete [] gHiresTxtrInfos[i].pHiresTextureAlpha;
+
+		// don't forget to also free memory of cached textures
+		delete [] gHiresTxtrInfos[i].pHiresTextureRGB;
+		delete [] gHiresTxtrInfos[i].pHiresTextureAlpha;
 	}
 
 	gHiresTxtrInfos.clear();
@@ -871,7 +859,8 @@ void CloseExternalTextures(void)
 	// this condition has been added to avoid reloading the game each time a savestate has been loaded
 	// The trick is quite simple: it is checked if the internal rom name has changed
 	// If it has changed, a new game has been started - then hires has to be reloaded otherwise not
-	if((currentRomName == NULL) || (strcmp(g_curRomInfo.szGameName, currentRomName) != 0)){
+	if((currentRomName == NULL) || (strcmp(g_curRomInfo.szGameName, currentRomName) != 0))
+	{
 		strcpy(currentRomName, g_curRomInfo.szGameName);
 		CloseHiresTextures();
 		CloseTextureDump();
@@ -924,8 +913,6 @@ void InitHiresTextures(bool bWIPFolder)
 		{
 			// just update the textures found in the WIP folder
 			FindAllHiResTextures(WIP_FOLDER);
-			
-
 		}
 	}
 }
@@ -993,7 +980,8 @@ void InitExternalTextures(void)
 	// this condition has been added to avoid reloading the game each time a savestate has been loaded
 	// The trick is quite simple: it is checked if the internal rom name has changed
 	// If it has changed, a new game has been started - then hires has to be reloaded otherwise not
-	if((currentRomName == NULL) || (strcmp(g_curRomInfo.szGameName, currentRomName) != 0)){
+	if((currentRomName == NULL) || (strcmp(g_curRomInfo.szGameName, currentRomName) != 0))
+	{
 		// ok, rom name has changed ==> remember it
 		strcpy(currentRomName, g_curRomInfo.szGameName);
 		// remove all hires & dump textures from cache
@@ -1003,8 +991,11 @@ void InitExternalTextures(void)
 		// prepare list of already dumped textures (for avoiding to redump them). Available hires textures will
 		// also be excluded from dumping
 		InitTextureDump();
-	} else
+	} 
+	else
+	{
 		InitHiresTextures(true);
+	}
 }
 
 
@@ -1089,9 +1080,11 @@ int CheckTextureInfos( CSortedList<uint64,ExtTxtrInfo> &infos, TxtrCacheEntry &e
 		indexb = infos.find(crc64b);	// For CI or PNG with pal CRC
 
 	// did not found the ext. text.
-	if( indexa >= infosize )	indexa = -1;
+	if( indexa >= infosize )	
+		indexa = -1;
 	// did not found the ext. text. w/ sep. alpha channel
-	if( indexb >= infosize )	indexb = -1;
+	if( indexb >= infosize )	
+		indexb = -1;
 
 	int scaleShift = -1;
 
@@ -1110,7 +1103,8 @@ int CheckTextureInfos( CSortedList<uint64,ExtTxtrInfo> &infos, TxtrCacheEntry &e
 		return -1;
 
 	// texture has no separate alpha channel, try to find it in the ext. text. list
-	if( indexa >= 0 )	scaleShift = FindScaleFactor(infos[indexa], entry);
+	if( indexa >= 0 )	
+		scaleShift = FindScaleFactor(infos[indexa], entry);
 	// ok. the scale factor is supported. A valid replacement has been found
 	// this is a texture without ext. alpha channel
 	if( scaleShift >= 0 )
@@ -1214,8 +1208,12 @@ void DumpCachedTexture( TxtrCacheEntry &entry )
 bool LoadRGBBufferFromPNGFile(char *filename, unsigned char **pbuf, int &width, int &height, int bits_per_pixel = 24 )
 {
 	struct BMGImageStruct img;
+	memset(&img, 0, sizeof(BMGImageStruct));
 	if( !PathFileExists(filename) )
+	{
+		TRACE1("File at '%s' doesn't exist in LoadRGBBufferFromPNGFile!", filename)
 		return false;
+	}
 
 	// The following 2 lines fix the crashing in debug mode
 	img.bits = NULL;
@@ -1226,13 +1224,16 @@ bool LoadRGBBufferFromPNGFile(char *filename, unsigned char **pbuf, int &width, 
 	{
 		*pbuf = NULL;
 
+		*pbuf = new unsigned char[img.width*img.height*bits_per_pixel/8];
+
+		if( *pbuf == NULL )
+		{
+			TRACE3("new[] returned NULL for image width=%i height=%i bpp=%i", img.width, img.height, bits_per_pixel);
+			return false;
+		}
 		if( img.bits_per_pixel == bits_per_pixel )
 		{
-			*pbuf = new unsigned char[img.width*img.height*bits_per_pixel/8];
-			if( *pbuf )
-			{
-				memcpy(*pbuf, img.bits, img.width*img.height*bits_per_pixel/8);
-			}
+			memcpy(*pbuf, img.bits, img.width*img.height*bits_per_pixel/8);
 		}
 		else if (img.bits_per_pixel == 24 && bits_per_pixel == 32)
         {
@@ -1287,6 +1288,7 @@ bool LoadRGBBufferFromPNGFile(char *filename, unsigned char **pbuf, int &width, 
 		}
         else
         {
+			TRACE3("PNG file '%s' is %i bpp but texture is %i bpp.", filename, img.bits_per_pixel, bits_per_pixel);
             delete [] *pbuf;
             *pbuf = NULL;
         }
@@ -1295,13 +1297,11 @@ bool LoadRGBBufferFromPNGFile(char *filename, unsigned char **pbuf, int &width, 
 		height = img.height;
 		FreeBMGImage(&img);
 
-		if( *pbuf )
-			return true;
-		else
-			return false;
+		return true;
 	}
 	else
 	{
+		TRACE1("ReadPNG() returned error for '%s' in LoadRGBBufferFromPNGFile!", filename);
 		*pbuf = NULL;
 		return false;
 	}
@@ -1311,18 +1311,21 @@ bool LoadRGBABufferFromColorIndexedFile(char *filename, TxtrCacheEntry &entry, u
 {
 	BITMAPFILEHEADER fileHeader;
 	BITMAPINFOHEADER infoHeader;
-	HANDLE hBitmapFile;
 
-	uint32 res;
-	hBitmapFile = CreateFile( filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
-	if( hBitmapFile != INVALID_HANDLE_VALUE )
+	FILE *f;
+	f = fopen(filename, "rb");
+	if(f != NULL)
 	{
-		ReadFile( hBitmapFile, &fileHeader, sizeof( BITMAPFILEHEADER ), (DWORD*)&res, NULL );
-		ReadFile( hBitmapFile, &infoHeader, sizeof( BITMAPINFOHEADER ), (DWORD*)&res, NULL );
+        if (fread(&fileHeader, sizeof(BITMAPFILEHEADER), 1, f) != 1 ||
+            fread(&infoHeader, sizeof(BITMAPINFOHEADER), 1, f) != 1)
+        {
+            TRACE1("Couldn't read BMP headers in file '%s'", filename);
+            return false;
+        }
 
 		if( infoHeader.biBitCount != 4 && infoHeader.biBitCount != 8 )
 		{
-			CloseHandle( hBitmapFile );
+			fclose(f);
 			TRACE1("Unsupported BMP file format: %s", filename);
 			*pbuf = NULL;
 			return false;
@@ -1330,7 +1333,12 @@ bool LoadRGBABufferFromColorIndexedFile(char *filename, TxtrCacheEntry &entry, u
 
 		int tablesize = infoHeader.biBitCount == 4 ? 16 : 256;
 		uint32 *pTable = new uint32[tablesize];
-		ReadFile( hBitmapFile, pTable, tablesize*4, (DWORD*)&res, NULL );
+        if (fread(pTable, tablesize*4, 1, f) != 1)
+        {
+            TRACE1("Couldn't read BMP palette in file '%s'", filename);
+            delete [] pTable;
+            return false;
+        }
 
 		// Create the pallette table
 		uint16 * pPal = (uint16 *)entry.ti.PalAddress;
@@ -1357,8 +1365,10 @@ bool LoadRGBABufferFromColorIndexedFile(char *filename, TxtrCacheEntry &entry, u
 			BYTE *colorIdxBuf = new BYTE[infoHeader.biSizeImage];
 			if( colorIdxBuf )
 			{
-				ReadFile( hBitmapFile, colorIdxBuf, infoHeader.biSizeImage, (DWORD*)&res, NULL );
-				CloseHandle( hBitmapFile );
+                if (fread(colorIdxBuf, infoHeader.biSizeImage, 1, f) != 1)
+                {
+                    TRACE1("Couldn't read BMP image data in file '%s'", filename);
+                }				
 
 				width = infoHeader.biWidth;
 				height = infoHeader.biHeight;
@@ -1366,7 +1376,6 @@ bool LoadRGBABufferFromColorIndexedFile(char *filename, TxtrCacheEntry &entry, u
 				// Converting pallette texture to RGBA texture
 				int idx = 0;
 				uint32 *pbuf2 = (uint32*) *pbuf;
-				int bufSizePerLine = (((((width << entry.ti.Size) + 1 ) >> 1)+3) >> 2)*4;	// pad to 32bit boundary
 
 				for( int i=height-1; i>=0; i--)
 				{
@@ -1415,7 +1424,7 @@ bool LoadRGBABufferFromColorIndexedFile(char *filename, TxtrCacheEntry &entry, u
 		}
 		else
 		{
-			CloseHandle( hBitmapFile );
+			fclose(f);
 			delete [] pTable;
 			return false;
 		}
@@ -1459,7 +1468,6 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 		entry.bExternalTxtrChecked = true;
 		return;
 	}
-	
 	 
 	// if caching has been disabled, the texture data
 	// has to be loaded from file system first
@@ -1468,19 +1476,16 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 
 	if( !gHiresTxtrInfos[idx].pHiresTextureRGB )
 	{
-		//TRACE1("Cannot get data for RGB texture");
+		TRACE1("RGBBuffer creation failed for file '%s'.", filename_rgb);
 		return;
 	}
 	// check if the alpha channel has been loaded if the texture has a separate alpha channel
 	else if( gHiresTxtrInfos[idx].bSeparatedAlpha && !gHiresTxtrInfos[idx].pHiresTextureAlpha )
 	{
-		//TRACE1("Cannot get data for alpha channel");
+		TRACE1("Alpha buffer creation failed for file '%s'.", filename_a);
 		return;
 	}
 
-	//int scalex = gHiresTxtrInfos[idx].width / (int)entry.ti.WidthToCreate;
-	//int scaley = gHiresTxtrInfos[idx].height / (int)entry.ti.HeightToCreate;
-	//int scale = scalex > scaley ? scalex : scaley; // set scale to maximum(scalex,scaley)
 	int scale = 1<<gHiresTxtrInfos[idx].scaleShift;
 
 	entry.pEnhancedTexture = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scale, entry.ti.HeightToCreate*scale);
@@ -1564,20 +1569,20 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 	{
 		TRACE0("Cannot create a new texture");
 	}
-
 	// CODE MODIFICATION
-	if (gHiresTxtrInfos[idx].count > 0)
+	if (gHiresTxtrInfos[idx].bAltTex)
 	{
-		entry.count = gHiresTxtrInfos[idx].count;
-		entry.shuffle = gHiresTxtrInfos[idx].shuffle;
-		entry.period = gHiresTxtrInfos[idx].period;
-		entry.synchronized = gHiresTxtrInfos[idx].synchronized;
-		entry.currentAltTexIndex = 0;
-		entry.lastModified = 0;
+		entry.iAltCount = gHiresTxtrInfos[idx].iAltCount;
+		entry.bAltShuffle = gHiresTxtrInfos[idx].bAltShuffle;
+		entry.iAltperiod = gHiresTxtrInfos[idx].iAltPeriod;
+		entry.bAltSynchronized = gHiresTxtrInfos[idx].bAltSynchronized;
+		entry.bAltTex = gHiresTxtrInfos[idx].bAltTex;
+		entry.iCurrentAltTexIndex = 0;
+		entry.lAltLastModified = 0;
 
 		//DebuggerAppendMsg("Enhancing %d textures ", count);
-		entry.pEnhancedTextureAlts = new CTexture*[entry.count];
-		for (int i = 0; i < entry.count; i++) {
+		entry.pEnhancedTextureAlts = new CTexture*[entry.iAltCount];
+		for (int i = 0; i < entry.iAltCount; i++) {
 			//DebuggerAppendMsg("Enhancing texture %d ", i);
 			entry.pEnhancedTextureAlts[i] = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scale, entry.ti.HeightToCreate*scale);
 			DrawInfo info2;
@@ -1662,8 +1667,10 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 			}
 		}
 	}
-	// /CODE MODIFICATION
+	if(entry.iAltCount != 0)
+		entry.iAltCount = gHiresTxtrInfos[idx].iAltCount;
 
+	// /CODE MODIFICATION
 	// if caching has been disabled, remove
 	// cached texture from memory
 	if(!options.bCacheHiResTextures)
@@ -1679,16 +1686,25 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 
 
 // CODE MODIFICATION
-void lookForAlternatives( ExtTxtrInfo &ExtTexInfo, int* count, bool* shuffle, int* period, bool* synchronized) {
+bool lookForAlternatives( ExtTxtrInfo &ExtTexInfo, int* count, bool* shuffle, int* period, bool* synchronized) {
 	char infoFileName[1024];
 	strcpy(infoFileName, ExtTexInfo.foldername);
 	sprintf(infoFileName+strlen(infoFileName), "%s#%08X#%d#%d", g_curRomInfo.szGameName, ExtTexInfo.crc32, ExtTexInfo.fmt, ExtTexInfo.siz);
 	strcat(infoFileName, "_infos.txt");
 
-	*count = ReadRegistryDwordValFromFile("Count", infoFileName);
-	*shuffle = ReadRegistryDwordValFromFile("Shuffle", infoFileName);
-	*period = ReadRegistryDwordValFromFile("Period", infoFileName);
-	*synchronized = ReadRegistryDwordValFromFile("Synchronized", infoFileName);
+	//If the file exists, lets grab the settings from the file
+	if( PathFileExists(infoFileName) )
+	{
+		*count = ReadRegistryDwordValFromFile("Count", infoFileName);
+		*shuffle = ReadRegistryDwordValFromFile("Shuffle", infoFileName);
+		*period = ReadRegistryDwordValFromFile("Period", infoFileName);
+		*synchronized = ReadRegistryDwordValFromFile("Synchronized", infoFileName);
+		return true;
+	}
+	//If we got here then the file doesnt exist, lets return false
+	return false;
+
+	
 }
 // /CODE MODIFICATION
 
@@ -1729,14 +1745,17 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 
 	// CODE MODIFICATION
 
+	// the boolean to check wether 
+	ExtTexInfo.bAltTex = false;
+
 	// the counter for the amount of alternate textures that are available
-	ExtTexInfo.count = 0;
+	ExtTexInfo.iAltCount = 0;
 	// the boolean to check if the alterante textures should be in a random order
-	ExtTexInfo.shuffle = false;
+	ExtTexInfo.bAltShuffle = false;
 	// the time between each alternate texture
-	ExtTexInfo.period = 0;
+	ExtTexInfo.iAltPeriod = 0;
 	// wether the texture is synchronized with another animated texture so they change at the same time
-	ExtTexInfo.synchronized = false;
+	ExtTexInfo.bAltSynchronized = false;
 	// Init the pointer to the alternate RGB textures data
 	ExtTexInfo.pHiresTextureRGBAlts = NULL;
 	// Init the pointer to the alternate alpha channel data
@@ -1745,25 +1764,26 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 	bool lookForAlt = true;
 
 	//Look for any alterante textures to be used as an animation
-	if (lookForAlt)
-		lookForAlternatives(ExtTexInfo, &ExtTexInfo.count, &ExtTexInfo.shuffle, &ExtTexInfo.period, &ExtTexInfo.synchronized);
+	ExtTexInfo.bAltTex = lookForAlternatives(ExtTexInfo, &ExtTexInfo.iAltCount, &ExtTexInfo.bAltShuffle, &ExtTexInfo.iAltPeriod, &ExtTexInfo.bAltSynchronized);
 
 	//DebuggerAppendMsg("resultat parsing %d , %d, %d", ExtTexInfo.count, ExtTexInfo.shuffle, ExtTexInfo.period);
 
-	char** filenames_rgbAlt = new char*[ExtTexInfo.count];
-	char** filenames_alphaAlt = new char*[ExtTexInfo.count];
+	char** filenames_rgbAlt = new char*[ExtTexInfo.iAltCount];
+	char** filenames_alphaAlt = new char*[ExtTexInfo.iAltCount];
 
-	if (ExtTexInfo.count > 0) {
-		ExtTexInfo.pHiresTextureRGBAlts = new unsigned char*[ExtTexInfo.count];
-		ExtTexInfo.pHiresTextureAlphaAlts = new unsigned char*[ExtTexInfo.count];
+	if (ExtTexInfo.bAltTex) 
+	{
+		ExtTexInfo.pHiresTextureRGBAlts = new unsigned char*[ExtTexInfo.iAltCount];
+		ExtTexInfo.pHiresTextureAlphaAlts = new unsigned char*[ExtTexInfo.iAltCount];
 
-		for (int i = 0; i < ExtTexInfo.count; i++)
+		for (int i = 0; i < ExtTexInfo.iAltCount; i++)
 			filenames_rgbAlt[i] = new char[256];
 
-		for (int i = 0; i < ExtTexInfo.count; i++)
+		for (int i = 0; i < ExtTexInfo.iAltCount; i++)
 			filenames_alphaAlt[i] = new char[256];
 
-		for (int i = 0; i < ExtTexInfo.count; i++) {
+		for (int i = 0; i < ExtTexInfo.iAltCount; i++) 
+		{
 			strcpy(filenames_rgbAlt[i], ExtTexInfo.foldername);
 			sprintf(filenames_rgbAlt[i]+strlen(filenames_rgbAlt[i]), "%s#%08X#%d#%d_alt%d", g_curRomInfo.szGameName, ExtTexInfo.crc32, ExtTexInfo.fmt, ExtTexInfo.siz, i);
 			strcpy(filenames_alphaAlt[i],filenames_rgbAlt[i]);
@@ -1789,44 +1809,59 @@ void CacheHiresTexture( ExtTxtrInfo &ExtTexInfo )
 		{
 			// load the RGB texture to pHiresTextureRGB and set its proportions to the vars width and height  
 			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &ExtTexInfo.pHiresTextureRGB, width, height);
-			// is loading was successful and if there is a separat alpha channel
+			// if loading was successful and if there is a separate alpha channel
 			if( bResRGBA && ExtTexInfo.bSeparatedAlpha )
 				// load the alpha channel as well
 				bResA = LoadRGBBufferFromPNGFile(filename_alpha, &ExtTexInfo.pHiresTextureAlpha, width, height);
 
 			// CODE MODIFICATION
-			for (int i = 0; i < ExtTexInfo.count; i++) {
-				bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height);
-				if( bResRGBA && ExtTexInfo.bSeparatedAlpha )
-					bResA = LoadRGBBufferFromPNGFile(filenames_alphaAlt[i], &ExtTexInfo.pHiresTextureAlphaAlts[i], width, height);
+			if(ExtTexInfo.bAltTex)
+			{
+				for (int i = 0; i < ExtTexInfo.iAltCount; i++) 
+				{
+					bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height);
+					if( bResRGBA && ExtTexInfo.bSeparatedAlpha )
+						bResA = LoadRGBBufferFromPNGFile(filenames_alphaAlt[i], &ExtTexInfo.pHiresTextureAlphaAlts[i], width, height);
+				}
 			}
 			//CODE MODIFICATION
 		}
 		break;
 	case RGBA_PNG_FOR_CI:
 	case RGBA_PNG_FOR_ALL_CI:
-		if( bCI ) {
+		if( bCI ) 
+		{
 			// load the CI texture with 32bit/pixel
 			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &ExtTexInfo.pHiresTextureRGB, width, height, 32);
 
 			// CODE MODIFICATION
-			for (int i = 0; i < ExtTexInfo.count; i++) {
-				bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height, 32);
+			if(ExtTexInfo.bAltTex)
+			{
+				for (int i = 0; i < ExtTexInfo.iAltCount; i++)
+				{
+					bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height, 32);
+				}
 			}
 			// /CODE MODIFICATION
-		} else
+		}
+		else
 			return;
 		break;
 	case RGB_WITH_ALPHA_TOGETHER_PNG:
 		if( bCI ) 
 			return;
-		else {
+		else 
+		{
 			// load the RGB texture with alpha channel
 			bResRGBA = LoadRGBBufferFromPNGFile(filename_rgb, &ExtTexInfo.pHiresTextureRGB, width, height, 32);
 
 			// CODE MODIFICATION
-			for (int i = 0; i < ExtTexInfo.count; i++) {
-				bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height, 32);
+			if(ExtTexInfo.bAltTex)
+			{
+				for (int i = 0; i < ExtTexInfo.iAltCount; i++) 
+				{
+					bResRGBA = LoadRGBBufferFromPNGFile(filenames_rgbAlt[i], &ExtTexInfo.pHiresTextureRGBAlts[i], width, height, 32);
+				}
 			}
 			// /CODE MODIFICATION
 		}

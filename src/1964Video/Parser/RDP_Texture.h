@@ -947,67 +947,62 @@ void PrepareTextures()
 						pEntry->ti.WidthToLoad, pEntry->ti.HeightToLoad, pEntry);*/
 
 
-					// CODE MODIFICATION
-					//pEntry->count = 0;
-					// no alternative textures
-					//Ok seriously wtf here, count seems to become random numbers when it should just be 0.
-					if (pEntry->count == 0 || pEntry->pEnhancedTextureAlts == NULL)
+					// CODE MODIFICATION CLEAN ME
+					// If there is no alt textures then create the texture normally
+					if (!pEntry->bAltTex || pEntry->pEnhancedTextureAlts == NULL)
 					{ 
-						pEntry->count = 0;
+						pEntry->iAltCount = 0;
 						SAFE_DELETE(pEntry->pEnhancedTextureAlts);
 						CRender::g_pRender->SetCurrentTexture( tilenos[i], 
 						(pEntry->pEnhancedTexture)?pEntry->pEnhancedTexture:pEntry->pTexture,
 						pEntry->ti.WidthToLoad, pEntry->ti.HeightToLoad, pEntry);
 					}
-					// there are some alternative textures
 					else 
 					{
 						clock_t nowClock = clock();
-						long now = nowClock * 1000 / CLOCKS_PER_SEC; // now in milliseconds
 
-						if (pEntry->shuffle && (pEntry->lastModified == 0))
-							srand (now);
+						if (pEntry->bAltShuffle && (pEntry->lAltLastModified == 0))
+							srand (nowClock);
 						
 					    // if the period is over
-
 						// synchronized texture
-						if (pEntry->synchronized)
+						if (pEntry->bAltSynchronized)
 						{
-							if ((now - synchronizedLastModified) > pEntry->period)
+							if ((nowClock - synchronizedLastModified) > pEntry->iAltperiod)
 							{
-								if (pEntry->shuffle) 
-									synchronizedCurrentAltTexIndex = rand() % (pEntry->count + 1);
+								if (pEntry->bAltShuffle) 
+									synchronizedCurrentAltTexIndex = rand() % (pEntry->iAltCount + 1);
 								else {
 									synchronizedCurrentAltTexIndex++;
-									if (synchronizedCurrentAltTexIndex > pEntry->count)
+									if (synchronizedCurrentAltTexIndex > pEntry->iAltCount)
 										synchronizedCurrentAltTexIndex = 0;
 								}
 
-								synchronizedLastModified = now;
-								//DebuggerAppendMsg("(sync) PERIOD : %d / LAST MODIFIED : %d / INDEX : %d", pEntry->period, pEntry->lastModified, pEntry->currentAltTexIndex);
+								synchronizedLastModified = nowClock;
+								//DebuggerAppendMsg("(sync) PERIOD : %d / LAST MODIFIED : %d / INDEX : %d", pEntry->iAltperiod, pEntry->lAltLastModified, pEntry->iCurrentAltTexIndex);
 							}
 
-							pEntry->currentAltTexIndex = synchronizedCurrentAltTexIndex;
+							pEntry->iCurrentAltTexIndex = synchronizedCurrentAltTexIndex;
 						}	
 
 						// unsynchronized texture
-						if (!pEntry->synchronized && ((now - pEntry->lastModified) > pEntry->period)) 
+						if (!pEntry->bAltSynchronized && ((nowClock - pEntry->lAltLastModified) > pEntry->iAltperiod)) 
 						{
-							if (pEntry->shuffle) 
-								pEntry->currentAltTexIndex = rand() % (pEntry->count + 1);
+							if (pEntry->bAltShuffle) 
+								pEntry->iCurrentAltTexIndex = rand() % (pEntry->iAltCount + 1);
 							else 
 							{
-								pEntry->currentAltTexIndex++;
-								if (pEntry->currentAltTexIndex > pEntry->count)
-									pEntry->currentAltTexIndex = 0;
+								pEntry->iCurrentAltTexIndex++;
+								if (pEntry->iCurrentAltTexIndex > pEntry->iAltCount)
+									pEntry->iCurrentAltTexIndex = 0;
 							}
 
-							pEntry->lastModified = now;
+							pEntry->lAltLastModified = nowClock;
 
-							//DebuggerAppendMsg("(unsync) PERIOD : %d / LAST MODIFIED : %d / INDEX : %d", pEntry->period, pEntry->lastModified, pEntry->currentAltTexIndex);
+							//DebuggerAppendMsg("(unsync) PERIOD : %d / LAST MODIFIED : %d / INDEX : %d", pEntry->iAltperiod, pEntry->lAltLastModified, pEntry->iCurrentAltTexIndex);
 						}	
 
-						if (pEntry->currentAltTexIndex == pEntry->count)
+						if (pEntry->iCurrentAltTexIndex == pEntry->iAltCount)
 						{
 							CRender::g_pRender->SetCurrentTexture( tilenos[i], 
 							(pEntry->pEnhancedTexture)?pEntry->pEnhancedTexture:pEntry->pTexture,
@@ -1016,7 +1011,7 @@ void PrepareTextures()
 						else 
 						{
 							CRender::g_pRender->SetCurrentTexture( tilenos[i], 
-							(pEntry->pEnhancedTextureAlts)?pEntry->pEnhancedTextureAlts[pEntry->currentAltTexIndex]:pEntry->pTexture,
+							(pEntry->pEnhancedTextureAlts)?pEntry->pEnhancedTextureAlts[pEntry->iCurrentAltTexIndex]:pEntry->pTexture,
 							pEntry->ti.WidthToLoad, pEntry->ti.HeightToLoad, pEntry);
 						}
 					}

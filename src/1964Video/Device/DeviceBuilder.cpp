@@ -69,12 +69,12 @@ CDeviceBuilder* CDeviceBuilder::CreateBuilder(SupportedDeviceType type)
 	{
 		switch( type )
 		{
-		case 	OGL_DEVICE:
+		case OGL_DEVICE:
 		case OGL_FRAGMENT_PROGRAM:
 			m_pInstance = new OGLDeviceBuilder();
 			break;
-		case 	DIRECTX_DEVICE:
-		case 	DIRECTX_9_DEVICE:
+		case DIRECTX_DEVICE:
+		case DIRECTX_9_DEVICE:
 			m_pInstance = new DirectXDeviceBuilder();
 			break;
 		default:
@@ -294,10 +294,12 @@ CColorCombiner * DirectXDeviceBuilder::CreateColorCombiner(CRender *pRender)
 
 		if(!canUsePixelShader)
 		{
+			//The user doesnt support pixel shaders, show a error message
 			ErrorMsg("Video card does not support pixel shaders, Rice Video will not function properly");
 		}
 		else
 		{
+			//The user supports pixel shaders, create the combiner
 			m_pColorCombiner = new CDirectXPixelShaderCombiner(pRender);
 		}
 	

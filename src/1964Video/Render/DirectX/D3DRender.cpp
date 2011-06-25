@@ -120,12 +120,8 @@ bool D3DRender::InitDeviceObjects()
 	float density = 1.0f;
 	gD3DDevWrapper.SetRenderState(D3DRS_FOGDENSITY,   *(uint32 *)(&density));
 	gD3DDevWrapper.SetRenderState(D3DRS_RANGEFOGENABLE, TRUE);
-//#ifdef _XBOX
-	//CHECK ME HERE
+
 	gD3DDevWrapper.SetRenderState( D3DRS_FOGTABLEMODE, D3DFOG_NONE );
-//#else
-//	gD3DDevWrapper.SetRenderState( D3DRS_FOGTABLEMODE, D3DFOG_LINEAR );
-//#endif
 
 	// Dafault is ZBuffer disabled
 	gD3DDevWrapper.SetRenderState(D3DRS_ZENABLE, m_dwrsZEnable );
@@ -237,7 +233,7 @@ void ApplyZBias(uint32 bias)
 }
 void D3DRender::SetZBias(int bias)
 {
-	//if (m_dwZBias != bias)
+	if (m_dwZBias != bias)
 	{
 		DEBUGGER_IF_DUMP(pauseAtNext, TRACE1("Set zbias = %d", bias));
 

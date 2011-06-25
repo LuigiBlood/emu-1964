@@ -23,8 +23,11 @@ CDirectXTexture::CDirectXTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage u
 {
 	MYLPDIRECT3DTEXTURE pTxt;
 
-	if (dwWidth < 1)	dwWidth = 1;
-	if (dwHeight < 1)	dwHeight = 1;
+	if (dwWidth < 1)	
+		dwWidth = 1;
+
+	if (dwHeight < 1)
+		dwHeight = 1;
 
 	if (dwWidth*dwHeight > 256*256 && usage == AS_NORMAL )
 		TRACE2("Large texture: width (%d) , height (%d)", dwWidth, dwHeight);
