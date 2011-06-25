@@ -830,10 +830,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Parser\RSP_Turbo3D.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Parser\Timing.h"
 					>
 				</File>

@@ -48,7 +48,6 @@ protected:
 	~COGLFragmentShaderCombiner();
 	OGLRender *m_pOGLRender;
 
-	bool m_bFragmentProgramIsSupported;
 	std::vector<OGLShaderCombinerSaveType>		m_vCompiledShaders;
 	int m_maxTexUnits;
 	int	m_lastIndex;

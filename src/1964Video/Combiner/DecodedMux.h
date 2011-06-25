@@ -110,8 +110,6 @@ public:
 	void CheckCombineInCycle1(void);
 	virtual void Simplify(void);
 	virtual void Reformat(bool do_complement = true);
-	virtual void To_AB_Add_CD_Format(void);	// Use by TNT,Geforce
-	virtual void To_AB_Add_C_Format(void);	// Use by ATI Radeon
 	
 	virtual void MergeShadeWithConstants(void);
 	virtual void MergeShadeWithConstantsInChannel(CombineChannel channel);

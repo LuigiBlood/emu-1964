@@ -33,7 +33,7 @@ CRender * CRender::GetRender(void)
 {
 	if( CRender::g_pRender == NULL )
 	{
-		ErrorMsg("g_pRender is NULL");
+		ErrorMsg("Failed to get render, g_pRender is NULL");
 		exit(0);
 	}
 	else
@@ -183,7 +183,7 @@ void CRender::SetWorldView(const Matrix & mat, bool bPush, bool bReplace)
 			// Load projection matrix
 			gRSP.modelviewMtxs[gRSP.modelViewMtxTop] = mat;
 		}
-		else			// Multiply projection matrix
+		else // Multiply projection matrix
 		{
 			gRSP.modelviewMtxs[gRSP.modelViewMtxTop] = mat * gRSP.modelviewMtxs[gRSP.modelViewMtxTop-1];
 		}

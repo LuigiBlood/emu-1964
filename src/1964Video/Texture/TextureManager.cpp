@@ -283,16 +283,16 @@ void CTextureManager::RecycleTexture(TxtrCacheEntry *pEntry)
 		SAFE_DELETE(pEntry->pEnhancedTexture);
 
 		// CODE MODIFICATION
-		for (int i = 0 ; i < pEntry->count ; i++)
+		for (int i = 0 ; i < pEntry->iAltCount ; i++)
 			SAFE_DELETE(pEntry->pEnhancedTextureAlts[i]);
 		SAFE_DELETE(pEntry->pEnhancedTextureAlts);
 
-		pEntry->count = 0;
-		pEntry->shuffle = false;
-		pEntry->period = 0;
-		pEntry->synchronized = false;
-		pEntry->currentAltTexIndex = 0;
-		pEntry->lastModified = 0;
+		pEntry->iAltCount = 0;
+		pEntry->bAltShuffle = false;
+		pEntry->iAltperiod = 0;
+		pEntry->bAltSynchronized = false;
+		pEntry->iCurrentAltTexIndex = 0;
+		pEntry->lAltLastModified = 0;
 		// /CODE MODIFCATION
 
 		m_pHead = pEntry;
@@ -317,8 +317,10 @@ TxtrCacheEntry * CTextureManager::ReviveTexture( uint32 width, uint32 height )
 			pCurr->ti.HeightToCreate == height)
 		{
 			// Remove from list
-			if (pPrev != NULL) pPrev->pNext        = pCurr->pNext;
-			else			   m_pHead = pCurr->pNext;
+			if (pPrev != NULL)
+				pPrev->pNext = pCurr->pNext;
+			else			   
+				m_pHead = pCurr->pNext;
 			
 			return pCurr;
 		}
@@ -415,7 +417,7 @@ TxtrCacheEntry * CTextureManager::GetTxtrCacheEntry(TxtrInfo * pti)
 		{
 			MakeTextureYoungest(pEntry);
 			return pEntry;
-	}
+		}
 	}
 
 	return NULL;

@@ -25,7 +25,6 @@ COGLFragmentShaderCombiner::COGLFragmentShaderCombiner(CRender *pRender) :
 	m_pOGLRender((OGLRender*)pRender)
 {
 	m_pDecodedMux = new DecodedMuxForPixelShader;
-	m_bFragmentProgramIsSupported = false;
 	m_pDecodedMux->m_maxConstants = 0;
 	m_pDecodedMux->m_maxTextures = 1;
 }
