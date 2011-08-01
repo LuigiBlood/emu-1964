@@ -418,7 +418,7 @@ BOOL CALLBACK ControllerTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 					switch( i )
 					{
 					case TAB_CONTROLS:
-						if( IsDlgButtonChecked( hDlg, IDC_XINPUT_ENABLER ))	// added to show the xinput controller config tab --tecnicors
+						if( pcController->fXInput)	// added to show the xinput controller config tab --tecnicors
 							hTabControl = CreateDialog ( g_hResourceDLL, MAKEINTRESOURCE( IDD_XCONTROLS ), hDlg, XControlsTabProc );
 						else
 							hTabControl = CreateDialog( g_hResourceDLL, MAKEINTRESOURCE( IDD_CONTROLS ), hDlg, ControlsTabProc );
@@ -523,9 +523,10 @@ BOOL CALLBACK ControllerTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 				return TRUE;
 				
 			case IDC_XINPUT_ENABLER:	// change to xinput config --tecnicors
+				pcController->fXInput = ( IsDlgButtonChecked( hDlg, LOWORD(wParam) ) == BST_CHECKED );
 				if( hTabControl )
 						DestroyWindow( hTabControl );
-				if( IsDlgButtonChecked( hDlg, IDC_XINPUT_ENABLER ))
+				if( pcController->fXInput )
 					hTabControl = CreateDialog ( g_hResourceDLL, MAKEINTRESOURCE( IDD_XCONTROLS ), hDlg, XControlsTabProc );
 				else
 					hTabControl = CreateDialog( g_hResourceDLL, MAKEINTRESOURCE( IDD_CONTROLS ), hDlg, ControlsTabProc );
@@ -553,6 +554,29 @@ BOOL CALLBACK ControllerTabProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 	case WM_USER_UPDATE:
 		// for this dialog
 		CheckDlgButton( hDlg, IDC_PLUGGED, pcController->fPlugged ? BST_CHECKED : BST_UNCHECKED );
+		CheckDlgButton( hDlg, IDC_XINPUT_ENABLER, pcController->fXInput ? BST_CHECKED : BST_UNCHECKED );
+
+		if( hTabControl )
+				DestroyWindow( hTabControl );
+		if( pcController->fXInput )
+			hTabControl = CreateDialog ( g_hResourceDLL, MAKEINTRESOURCE( IDD_XCONTROLS ), hDlg, XControlsTabProc );
+		else
+			hTabControl = CreateDialog( g_hResourceDLL, MAKEINTRESOURCE( IDD_CONTROLS ), hDlg, ControlsTabProc );
+		{
+			hDlgItem = GetDlgItem( hDlg, IDC_CONTROLLERTAB );
+
+			RECT rectWindow,
+				rectTab, rectMain; // need to know the position of the calling tab window relative to its parent
+
+			GetWindowRect( hDlg, &rectMain );
+			GetWindowRect( hDlgItem, &rectTab );
+
+			GetClientRect( hDlgItem, &rectWindow );
+			TabCtrl_AdjustRect( hDlgItem, FALSE, &rectWindow );
+
+			MoveWindow( hTabControl, rectWindow.left + (rectTab.left - rectMain.left), rectWindow.top + (rectTab.top - rectMain.top), rectWindow.right - rectWindow.left, rectWindow.bottom - rectWindow.top, FALSE );
+			ShowWindow( hTabControl, SW_SHOW );
+		}
 
 		// call child-dialog(s) to update their content as well
 		if( hTabControl )

@@ -241,7 +241,6 @@ bool ProcessKey( DWORD dwKey, DWORD dwSection, LPCSTR pszLine, LPTSTR pszFFDevic
 		if (dwSection == CHK_LASTBROWSERDIR)
 			CHAR_TO_TCHAR(g_aszLastBrowse[BF_SHORTCUTS], pszLine, MAX_PATH);
 		break;
-
 	case CHK_PLUGGED:
 		if (pController)
 			pController->fPlugged = atoi(pszLine);
@@ -1470,6 +1469,7 @@ void DumpControllerSettings(FILE * fFile, int i, bool bIsINI)
 	char szANSIBuf[DEFAULT_BUFFER];
 
 	fprintf(fFile, STRING_INI_PLUGGED "=%u\n", g_ivConfig->Controllers[i].fPlugged);
+	fprintf(fFile, STRING_INI_XINPUT "=%u\n", g_ivConfig->Controllers[i].fXInput);
 	fprintf(fFile, STRING_INI_RAWDATA "=%u\n", g_ivConfig->Controllers[i].fRawData);
 	fprintf(fFile, STRING_INI_PAKTYPE "=%u\n", g_ivConfig->Controllers[i].PakType);
 	fprintf(fFile, STRING_INI_REALN64RANGE "=%u\n", g_ivConfig->Controllers[i].fRealN64Range);

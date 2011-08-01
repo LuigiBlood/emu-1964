@@ -339,7 +339,7 @@ BYTE ReadControllerPak( const int iControl, LPBYTE Command )
 			else
 				ZeroMemory( Data, 32 );
 			
-			if( g_pcControllers[iControl].xiController.bConnected )	// xinput controller rumble --tecnicors
+			if( g_pcControllers[iControl].xiController.bConnected && g_pcControllers[iControl].fXInput )	// xinput controller rumble --tecnicors
 				VibrateXInputController( g_pcControllers[iControl].xiController.nControl, 0, 0);
 			else if (g_apFFDevice[iControl])
 				g_apFFDevice[iControl]->Acquire();
@@ -496,7 +496,7 @@ BYTE WriteControllerPak( const int iControl, LPBYTE Command )
 	case PAK_RUMBLE:
 		if( dwAddress == PAK_IO_RUMBLE )
 		{
-			if( g_pcControllers[iControl].xiController.bConnected )	// xinput controller rumble --tecnicors
+			if( g_pcControllers[iControl].xiController.bConnected  && g_pcControllers[iControl].fXInput )	// xinput controller rumble --tecnicors
 			{
 				if( *Data )
 					VibrateXInputController( g_pcControllers[iControl].xiController.nControl );

@@ -387,7 +387,7 @@ EXPORT void CALL InitiateControllers (CONTROL_INFO ControlInfo)
 	for( int i = 3; i >= 0; i-- )
 	{
 		DebugWriteA("Controller %d: ", i+1);
-		if( g_pcControllers[i].xiController.bConnected )	// if xinput connected, we don't need other config --tecnicors
+		if( g_pcControllers[i].xiController.bConnected && g_pcControllers[i].fXInput)	// if xinput connected, we don't need other config --tecnicors
 			continue;
 
 		if( g_pcControllers[i].fPlugged )
@@ -534,7 +534,7 @@ EXPORT void CALL GetKeys(int Control, BUTTONS * Keys )
 				GetDeviceDatas();
 				CheckShortcuts();
 			}
-			if( g_pcControllers[Control].xiController.bConnected )	// reads the xinput controller keys, if connected --tecnicors
+			if( g_pcControllers[Control].xiController.bConnected && g_pcControllers[Control].fXInput )	// reads the xinput controller keys, if connected --tecnicors
 				GetXInputControllerKeys( &g_pcControllers[Control].xiController, &Keys->Value );
 			else
 				GetNControllerInput( Control, &Keys->Value );
@@ -672,7 +672,7 @@ EXPORT void CALL ReadController( int Control, BYTE * Command )
 				GetDeviceDatas();
 				CheckShortcuts();
 			}
-			if( g_pcControllers[Control].xiController.bConnected )	// reads xinput controller kesy, if connected --tecnicors
+			if( g_pcControllers[Control].xiController.bConnected && g_pcControllers[Control].fXInput )	// reads xinput controller kesy, if connected --tecnicors
 				GetXInputControllerKeys( &g_pcControllers[Control].xiController, (LPDWORD)&Command[3] );
 			else
 				GetNControllerInput( Control, (DWORD*)&Command[3] );
