@@ -131,14 +131,14 @@ inline void FillN64ButtonComboBox( HWND hDlg, int ComboBox )
 	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "L" ));
 	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "R" ));
 	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "Start" ));
-	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "CUp" ));
-	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "CLeft" ));
-	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "CDown" ));
-	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "CRight" ));
-	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "DUp" ));
-	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "DLeft" ));
-	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "DDown" ));
-	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "DRight" ));
+	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "C-Up" ));
+	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "C-Left" ));
+	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "C-Down" ));
+	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "C-Right" ));
+	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "D-Up" ));
+	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "D-Left" ));
+	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "D-Down" ));
+	SendDlgItemMessage( hDlg, ComboBox, CB_ADDSTRING, 0, ( LPARAM )_T( "D-Right" ));
 	SendDlgItemMessage( hDlg, ComboBox, CB_SETCURSEL, 0, ( LPARAM )0 );
 }
 
