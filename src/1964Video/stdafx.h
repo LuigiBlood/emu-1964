@@ -63,8 +63,6 @@
 #include "glext.h"
 #include "glh_extension_ati.h"
 #include "wglext.h"
-#include "wgl_extention_ATI.h"
-#include "gl_extention_ATI.h"
 
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(p)  { if(p) { delete (p);     (p)=NULL; } }// Microdev check me.
@@ -124,8 +122,6 @@
 #include "resource.h"
 
 #include "./Utility/icolor.h"
-
-#include "./Utility/CSortedList.h"
 #include "./Utility/CritSect.h"
 #include "./Parser/Timing.h"
 

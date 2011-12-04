@@ -279,16 +279,16 @@ void RDP_GFX_DumpVtxInfoDKR(uint32 dwAddr, uint32 dwV0, uint32 dwN)
 #endif // _DEBUG
 }
 
-void DLParser_Set_Addr_Ucode6(Gfx *gfx)
+void DLParser_Set_Addr_DKR(Gfx *gfx)
 {
 	gRSP.dwDKRMatrixAddr = (gfx->words.w0)&0x00FFFFFF;
-	gRSP.dwDKRVtxAddr = (gfx->words.w1)&0x00FFFFFF;
+	gRSP.dwDKRVtxAddr = RSPSegmentAddr((gfx->words.w1)&0x00FFFFFF);
 	gRSP.DKRVtxCount=0;
 }
 
 void RSP_Vtx_WRUS(Gfx *gfx)
 {
-	uint32 dwAddr = RSPSegmentAddr(gfx->words.w1);
+	uint32 dwAddr = gfx->words.w1 + gRSP.dwDKRVtxAddr;
 	//uint32 dwLength = (gfx->words.w0)&0xFFFF;
 
 	uint32 dwV0		 = ((gfx->words.w0 >>16 ) & 0xff) / 5;
@@ -808,18 +808,18 @@ void RSP_Tri4_Conker(Gfx *gfx)
 	do {
 		LOG_UCODE("    Conker Tri4: 0x%08x 0x%08x", w0, w1);
 		uint32 idx[12];
-		idx[0] = (w1   )&0x1F;
-		idx[1] = (w1>> 5)&0x1F;
-		idx[2] = (w1>>10)&0x1F;
-		idx[3] = (w1>>15)&0x1F;
-		idx[4] = (w1>>20)&0x1F;
-		idx[5] = (w1>>25)&0x1F;
+		idx[0] = (w1      )&0x1F;
+		idx[1] = (w1 >>  5)&0x1F;
+		idx[2] = (w1 >> 10)&0x1F;
+		idx[3] = (w1 >> 15)&0x1F;
+		idx[4] = (w1 >> 20)&0x1F;
+		idx[5] = (w1 >> 25)&0x1F;
 
 		idx[6] = (w0    )&0x1F;
-		idx[7] = (w0>> 5)&0x1F;
-		idx[8] = (w0>>10)&0x1F;
+		idx[7] = (w0 >> 5)&0x1F;
+		idx[8] = (w0 >> 10)&0x1F;
 
-		idx[ 9] = (((w0>>15)&0x7)<<2)|(w1>>30);
+		idx[ 9] = ((((w0 >> 15)&0x7)<<2)|(w1>>30));
 		idx[10] = (w0>>18)&0x1F;
 		idx[11] = (w0>>23)&0x1F;
 
@@ -931,9 +931,6 @@ void RSP_MoveMem_Conker(Gfx *gfx)
 extern void ProcessVertexDataConker(uint32 dwAddr, uint32 dwV0, uint32 dwNum);
 void RSP_Vtx_Conker(Gfx *gfx)
 {
-	
-	
-
 	uint32 dwAddr = RSPSegmentAddr((gfx->words.w1));
 	uint32 dwVEnd    = (((gfx->words.w0)   )&0xFFF)/2;
 	uint32 dwN      = (((gfx->words.w0)>>12)&0xFFF);
@@ -945,6 +942,7 @@ void RSP_Vtx_Conker(Gfx *gfx)
 	status.dwNumVertices += dwN;
 	DisplayVertexInfo(dwAddr, dwV0, dwN);
 }
+
 void RSP_Quad_Conker (Gfx *gfx)
 {
 	if ((gfx->words.w0 & 0x00FFFFFF) == 0x2F)
@@ -1028,9 +1026,6 @@ void ProcessVertexData_Rogue_Squadron(uint32 dwXYZAddr, uint32 dwColorAddr, uint
 
 void DLParser_RS_Color_Buffer(Gfx *gfx)
 {
-	
-	
-
 	uint32 dwPC = gDlistStack[gDlistStackPointer].pc-8;
 	uint32 dwAddr = RSPSegmentAddr((gfx->words.w1));
 
@@ -1056,15 +1051,11 @@ void DLParser_RS_Color_Buffer(Gfx *gfx)
 #endif
 
 	ProcessVertexData_Rogue_Squadron(Rogue_Squadron_Vtx_XYZ_Addr, Rogue_Squadron_Vtx_Color_Addr, Rogue_Squadron_Vtx_XYZ_Cmd, Rogue_Squadron_Vtx_Color_Cmd);
-
 }
 
 
 void DLParser_RS_Vtx_Buffer(Gfx *gfx)
 {
-	
-	
-
 	uint32 dwPC = gDlistStack[gDlistStackPointer].pc-8;
 	uint32 dwAddr = RSPSegmentAddr((gfx->words.w1));
 	if( dwAddr > g_dwRamSize )
@@ -1101,9 +1092,6 @@ void DLParser_RS_Block(Gfx *gfx)
 
 void DLParser_RS_MoveMem(Gfx *gfx)
 {
-	
-	
-
 	uint32 dwPC = gDlistStack[gDlistStackPointer].pc;
 	uint32 cmd1 = ((dwPC)&0x00FFFFFF)|0x80000000;
 	RSP_GBI1_MoveMem(gfx);
@@ -1143,15 +1131,11 @@ void DLParser_RS_0xbe(Gfx *gfx)
 		DebuggerAppendMsg("\t0x%08x 0x%08x", (gfx->words.w0), (gfx->words.w1));
 		DebuggerAppendMsg("\t0x%08x 0x%08x", dwCmd2, dwCmd3);
 	});
-
 }
 
 
 void DLParser_Ucode8_EndDL(Gfx *gfx)
 {
-	
-	
-
 	uint32 dwPC = gDlistStack[gDlistStackPointer].pc-8;
 	RDP_GFX_PopDL();
 	DEBUGGER_PAUSE_AND_DUMP(NEXT_DLIST, DebuggerAppendMsg("PC=%08X: EndDL, return to %08X\n\n", dwPC, gDlistStack[gDlistStackPointer].pc));
@@ -1159,9 +1143,6 @@ void DLParser_Ucode8_EndDL(Gfx *gfx)
 
 void DLParser_Ucode8_DL(Gfx *gfx)	// DL Function Call
 {
-
-	
-
 	uint32 dwPC = gDlistStack[gDlistStackPointer].pc-8;
 
 	uint32 dwAddr = RSPSegmentAddr((gfx->words.w1));
@@ -1522,9 +1503,6 @@ void DLParser_Ucode8_0xb5(Gfx *gfx)
 
 void DLParser_Ucode8_0xbc(Gfx *gfx)
 {
-	
-	
-
 	if( ((gfx->words.w0)&0xFFF) == 0x58C )
 	{
 		DLParser_Ucode8_DL(gfx);
@@ -1538,9 +1516,6 @@ void DLParser_Ucode8_0xbc(Gfx *gfx)
 
 void DLParser_Ucode8_0xbd(Gfx *gfx)
 {
-	
-	
-
 	/*
 	00359A68: BD000000, DB5B0077 - RSP_POPMTX
 	00359A70: C8C0A000, 00240024 - RDP_TriFill
@@ -1573,9 +1548,6 @@ void DLParser_Ucode8_0xbd(Gfx *gfx)
 
 void DLParser_Ucode8_0xbf(Gfx *gfx)
 {
-	
-	
-
 	if( ((gfx->words.w0)&0xFF) == 0x02 )
 		DLParser_Unknown_Skip3(gfx);
 	else

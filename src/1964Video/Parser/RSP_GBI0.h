@@ -432,6 +432,13 @@ void RSP_GBI1_Texture(Gfx *gfx)
 {
 	SP_Timing(RSP_GBI1_Texture);
 
+	bool bEnable = gfx->texture.enable_gbi0;
+
+	CRender::g_pRender->SetTextureEnable( bEnable );
+
+	//Since the texture isnt enabled, lets stop it from calculating texture scales
+	if(!bEnable) return;
+
 	float fTextureScaleS = (float)(gfx->texture.scaleS) / (65536.0f * 32.0f);
 	float fTextureScaleT = (float)(gfx->texture.scaleT) / (65536.0f * 32.0f);
 
@@ -471,7 +478,7 @@ void RSP_GBI1_Texture(Gfx *gfx)
 		if( fTextureScaleT == 0 )	fTextureScaleT = 1.0f/32.0f;
 	}
 
-	CRender::g_pRender->SetTextureEnableAndScale(gfx->texture.tile, gfx->texture.enable_gbi0, fTextureScaleS, fTextureScaleT);
+	CRender::g_pRender->SetTextureScale(gfx->texture.tile, fTextureScaleS, fTextureScaleT);
 
 	// What happens if these are 0? Interpret as 1.0f?
 

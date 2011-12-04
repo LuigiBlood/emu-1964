@@ -599,7 +599,6 @@ void FindAllTexturesFromFolder(char *foldername, CSortedList<uint64,ExtTxtrInfo>
 				// create a new entry
 				ExtTxtrInfo *newinfo;
 				// if WIP folder check is active, and a texture already exists,
-
 				if(foundIdx >= 0 && type == infos[foundIdx].type && bWIPFolder)
 				{
 					// modify the existing entry
@@ -1093,10 +1092,12 @@ int CheckTextureInfos( CSortedList<uint64,ExtTxtrInfo> &infos, TxtrCacheEntry &e
 	{
 		// determine the factor for scaling
 		scaleShift = FindScaleFactor(infos[indexb], entry);
+
 		// ok. the scale factor is supported. A valid replacement has been found
 		if( scaleShift >= 0 )
 			return indexb;
 	}
+
 	// if texture is 4bit, should be dumped and there is no match in the list of external textures
 	if( bForDump && bCI && indexb < 0)
 		// than return that there is no replacement & therefore texture can be dumped (microdev: not sure about that...)
@@ -1486,7 +1487,7 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 		return;
 	}
 
-	int scale = 1<<gHiresTxtrInfos[idx].scaleShift;
+	int scale = 1 <<gHiresTxtrInfos[idx].scaleShift;
 
 	entry.pEnhancedTexture = CDeviceBuilder::GetBuilder()->CreateTexture(entry.ti.WidthToCreate*scale, entry.ti.HeightToCreate*scale);
 	DrawInfo info;

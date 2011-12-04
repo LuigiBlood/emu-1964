@@ -284,13 +284,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // an immediate word will be stored.
 //
 //
-#define RSP_MOVE_WORD_MATRIX		0x00	// NOTE: also used by movemem 
+#define RSP_MOVE_WORD_MATRIX	0x00	// NOTE: also used by movemem 
 #define RSP_MOVE_WORD_NUMLIGHT	0x02
 #define RSP_MOVE_WORD_CLIP		0x04
 #define RSP_MOVE_WORD_SEGMENT	0x06
 #define RSP_MOVE_WORD_FOG		0x08
 #define RSP_MOVE_WORD_LIGHTCOL	0x0a
-#define	RSP_MOVE_WORD_POINTS		0x0c
+#define	RSP_MOVE_WORD_POINTS	0x0c
 #define	RSP_MOVE_WORD_PERSPNORM	0x0e
 
 //

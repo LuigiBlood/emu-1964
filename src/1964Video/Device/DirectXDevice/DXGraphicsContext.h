@@ -186,7 +186,6 @@ protected:
 
 	HFONT				m_hFont;
 	ID3DXFont*			m_pID3DFont;
-	bool				m_bFontIsCreated;
 };
 
 #define MAX_RENDER_STATE					152

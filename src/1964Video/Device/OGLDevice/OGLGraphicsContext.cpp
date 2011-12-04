@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "../../glh_genext.h"
 
 const char * ( WINAPI *wglGetExtensionsStringARB)(HDC)		= NULL;
+
 PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT				= NULL;
 PFNWGLCREATEBUFFERREGIONARBPROC wglCreateBufferRegionARB	= NULL;
 PFNWGLDELETEBUFFERREGIONARBPROC wglDeleteBufferRegionARB	= NULL;
@@ -258,35 +259,6 @@ void COGLGraphicsContext::InitState(void)
 	
 	glDepthRange(-1, 1);
 }
-
-PFNGLGENFRAGMENTSHADERSATIPROC        glGenFragmentShadersATI;
-PFNGLBINDFRAGMENTSHADERATIPROC        glBindFragmentShaderATI;
-PFNGLDELETEFRAGMENTSHADERATIPROC      glDeleteFragmentShaderATI;
-PFNGLBEGINFRAGMENTSHADERATIPROC       glBeginFragmentShaderATI;
-PFNGLENDFRAGMENTSHADERATIPROC         glEndFragmentShaderATI;
-PFNGLPASSTEXCOORDATIPROC              glPassTexCoordATI;
-PFNGLSAMPLEMAPATIPROC                 glSampleMapATI;
-PFNGLCOLORFRAGMENTOP1ATIPROC          glColorFragmentOp1ATI;
-PFNGLCOLORFRAGMENTOP2ATIPROC          glColorFragmentOp2ATI;
-PFNGLCOLORFRAGMENTOP3ATIPROC          glColorFragmentOp3ATI;
-PFNGLALPHAFRAGMENTOP1ATIPROC          glAlphaFragmentOp1ATI;
-PFNGLALPHAFRAGMENTOP2ATIPROC          glAlphaFragmentOp2ATI;
-PFNGLALPHAFRAGMENTOP3ATIPROC          glAlphaFragmentOp3ATI;
-PFNGLSETFRAGMENTSHADERCONSTANTATIPROC glSetFragmentShaderConstantATI;
-
-PFNGLNEWOBJECTBUFFERATIPROC         glNewObjectBufferATI;
-PFNGLISOBJECTBUFFERATIPROC          glIsObjectBufferATI;
-PFNGLUPDATEOBJECTBUFFERATIPROC      glUpdateObjectBufferATI;
-PFNGLGETOBJECTBUFFERFVATIPROC       glGetObjectBufferfvATI;
-PFNGLGETOBJECTBUFFERIVATIPROC       glGetObjectBufferivATI;
-PFNGLFREEOBJECTBUFFERATIPROC        glFreeObjectBufferATI;
-PFNGLARRAYOBJECTATIPROC             glArrayObjectATI;
-PFNGLGETARRAYOBJECTFVATIPROC        glGetArrayObjectfvATI;
-PFNGLGETARRAYOBJECTIVATIPROC        glGetArrayObjectivATI;
-PFNGLVARIANTARRAYOBJECTATIPROC      glVariantArrayObjectATI;
-PFNGLGETVARIANTARRAYOBJECTFVATIPROC glGetVariantArrayObjectfvATI;
-PFNGLGETVARIANTARRAYOBJECTIVATIPROC glGetVariantArrayObjectivATI;
-
 PFNGLPROGRAMSTRINGARBPROC glProgramStringARB = NULL;
 PFNGLBINDPROGRAMARBPROC glBindProgramARB = NULL;
 PFNGLDELETEPROGRAMSARBPROC glDeleteProgramsARB = NULL;
@@ -307,128 +279,6 @@ PFNGLGETPROGRAMLOCALPARAMETERFVARBPROC glGetProgramLocalParameterfvARB = NULL;;
 PFNGLGETPROGRAMIVARBPROC glGetProgramivARB = NULL;;
 PFNGLGETPROGRAMSTRINGARBPROC glGetProgramStringARB = NULL;;
 PFNGLISPROGRAMARBPROC glIsProgramARB = NULL;
-
-void COGLGraphicsContext::InitOGLExtension_ATI(void)
-{
-	#define SAFE_GET_PROC( func, type, fail)   func = (type) wglGetProcAddress( #func);   fail &= (func != NULL);
-
-	if (IsExtensionSupported("GL_ATI_fragment_shader"))
-	{
-		glGenFragmentShadersATI        = (PFNGLGENFRAGMENTSHADERSATIPROC) wglGetProcAddress("glGenFragmentShadersATI");
-		glBindFragmentShaderATI        = (PFNGLBINDFRAGMENTSHADERATIPROC) wglGetProcAddress("glBindFragmentShaderATI");
-		glDeleteFragmentShaderATI      = (PFNGLDELETEFRAGMENTSHADERATIPROC) wglGetProcAddress("glDeleteFragmentShaderATI");
-		glBeginFragmentShaderATI       = (PFNGLBEGINFRAGMENTSHADERATIPROC) wglGetProcAddress("glBeginFragmentShaderATI");
-		glEndFragmentShaderATI         = (PFNGLENDFRAGMENTSHADERATIPROC) wglGetProcAddress("glEndFragmentShaderATI");
-		glPassTexCoordATI              = (PFNGLPASSTEXCOORDATIPROC) wglGetProcAddress("glPassTexCoordATI");
-		glSampleMapATI                 = (PFNGLSAMPLEMAPATIPROC) wglGetProcAddress("glSampleMapATI");
-		glColorFragmentOp1ATI          = (PFNGLCOLORFRAGMENTOP1ATIPROC) wglGetProcAddress("glColorFragmentOp1ATI");
-		glColorFragmentOp2ATI          = (PFNGLCOLORFRAGMENTOP2ATIPROC) wglGetProcAddress("glColorFragmentOp2ATI");
-		glColorFragmentOp3ATI          = (PFNGLCOLORFRAGMENTOP3ATIPROC) wglGetProcAddress("glColorFragmentOp3ATI");
-		glAlphaFragmentOp1ATI          = (PFNGLALPHAFRAGMENTOP1ATIPROC) wglGetProcAddress("glAlphaFragmentOp1ATI");
-		glAlphaFragmentOp2ATI          = (PFNGLALPHAFRAGMENTOP2ATIPROC) wglGetProcAddress("glAlphaFragmentOp2ATI");
-		glAlphaFragmentOp3ATI          = (PFNGLALPHAFRAGMENTOP3ATIPROC) wglGetProcAddress("glAlphaFragmentOp3ATI");
-		glSetFragmentShaderConstantATI = (PFNGLSETFRAGMENTSHADERCONSTANTATIPROC) wglGetProcAddress("glSetFragmentShaderConstantATI");
-
-		if (glGenFragmentShadersATI == NULL)
-		{
-			ErrorMsg("Can't init glGenFragmentShadersATI");
-		}
-
-		if (glBindFragmentShaderATI == NULL)
-		{
-			ErrorMsg ("Can't init glBindFragmentShaderATI");
-		}
-
-		if (glDeleteFragmentShaderATI == NULL)
-		{
-			ErrorMsg ("Can't init glDeleteFragmentShaderATI");
-		}
-
-		if (glBeginFragmentShaderATI == NULL)
-		{
-			ErrorMsg ("Can't init glBeginFragmentShaderATI");
-		}
-
-		if (glEndFragmentShaderATI == NULL)
-		{
-			ErrorMsg ("Can't init glEndFragmentShaderATI");
-		}
-
-		if (glPassTexCoordATI == NULL)
-		{
-			ErrorMsg ("Can't init glPassTexCoordATI");
-		}
-
-		if (glColorFragmentOp1ATI == NULL)
-		{
-			ErrorMsg ("Can't init glColorFragmentOp1ATI");
-		}
-
-		if (glColorFragmentOp2ATI == NULL)
-		{
-			ErrorMsg ("Can't init glColorFragmentOp2ATI");
-		}
-
-		if (glColorFragmentOp3ATI == NULL)
-		{
-			ErrorMsg ("Can't init glColorFragmentOp3ATI");
-		}
-
-		if (glAlphaFragmentOp1ATI == NULL)
-		{
-			ErrorMsg ("Can't init glAlphaFragmentOp1ATI");
-		}
-
-		if (glAlphaFragmentOp2ATI == NULL)
-		{
-			ErrorMsg ("Can't init glAlphaFragmentOp2ATI");
-		}
-
-		if (glAlphaFragmentOp2ATI == NULL)
-		{
-			ErrorMsg ("Can't init glAlphaFragmentOp2ATI");
-		}
-
-		if (glAlphaFragmentOp3ATI == NULL)
-		{
-			ErrorMsg ("Can't init glAlphaFragmentOp3ATI");
-		}
-
-		if (glSetFragmentShaderConstantATI == NULL)
-		{
-			ErrorMsg ("Can't init glSetFragmentShaderConstantATI");
-		}
-	}
-	
-	if (IsExtensionSupported("GL_ARB_fragment_program"))
-	{
-		int ret = TRUE;
-
-		SAFE_GET_PROC( glProgramStringARB, PFNGLPROGRAMSTRINGARBPROC, ret);
-		SAFE_GET_PROC( glBindProgramARB, PFNGLBINDPROGRAMARBPROC, ret);
-		SAFE_GET_PROC( glDeleteProgramsARB, PFNGLDELETEPROGRAMSARBPROC, ret);
-		SAFE_GET_PROC( glGenProgramsARB, PFNGLGENPROGRAMSARBPROC, ret);
-		SAFE_GET_PROC( glProgramEnvParameter4dARB, PFNGLPROGRAMENVPARAMETER4DARBPROC, ret);
-		SAFE_GET_PROC( glProgramEnvParameter4dvARB, PFNGLPROGRAMENVPARAMETER4DVARBPROC, ret);
-		SAFE_GET_PROC( glProgramEnvParameter4fARB, PFNGLPROGRAMENVPARAMETER4FARBPROC, ret);
-		SAFE_GET_PROC( glProgramEnvParameter4fvARB, PFNGLPROGRAMENVPARAMETER4FVARBPROC, ret);
-		SAFE_GET_PROC( glProgramLocalParameter4dARB, PFNGLPROGRAMLOCALPARAMETER4DARBPROC, ret);
-		SAFE_GET_PROC( glProgramLocalParameter4dvARB, PFNGLPROGRAMLOCALPARAMETER4DVARBPROC, ret);
-		SAFE_GET_PROC( glProgramLocalParameter4fARB, PFNGLPROGRAMLOCALPARAMETER4FARBPROC, ret);
-		SAFE_GET_PROC( glProgramLocalParameter4fvARB, PFNGLPROGRAMLOCALPARAMETER4FVARBPROC, ret);
-		SAFE_GET_PROC( glGetProgramEnvParameterdvARB, PFNGLGETPROGRAMENVPARAMETERDVARBPROC, ret);
-		SAFE_GET_PROC( glGetProgramEnvParameterfvARB, PFNGLGETPROGRAMENVPARAMETERFVARBPROC, ret);
-		SAFE_GET_PROC( glGetProgramLocalParameterdvARB, PFNGLGETPROGRAMLOCALPARAMETERDVARBPROC, ret);
-		SAFE_GET_PROC( glGetProgramLocalParameterfvARB, PFNGLGETPROGRAMLOCALPARAMETERFVARBPROC, ret);
-		SAFE_GET_PROC( glGetProgramivARB, PFNGLGETPROGRAMIVARBPROC, ret);
-		SAFE_GET_PROC( glGetProgramStringARB, PFNGLGETPROGRAMSTRINGARBPROC, ret);
-		SAFE_GET_PROC( glIsProgramARB, PFNGLISPROGRAMARBPROC, ret);
-	}
-	else
-	{
-		//ErrorMsg("No fragment shader support!");
-	}
-}
 
 
 void COGLGraphicsContext::InitOGLExtension(void)
@@ -470,8 +320,6 @@ void COGLGraphicsContext::InitOGLExtension(void)
 	glh_init_extension("GL_EXT_blend_subtract");
 	glh_init_extension("GL_NV_texture_env_combine4");
 	glh_init_extension("GL_EXT_copy_texture");
-
-	InitOGLExtension_ATI();
 }
 
 bool COGLGraphicsContext::IsExtensionSupported(const char* pExtName)
