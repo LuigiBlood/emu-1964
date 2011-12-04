@@ -7,8 +7,6 @@
 **  ATI EXTENSIONS
 */
 
-
-
 /*
 ** GL_ARB_fragment_program
 **

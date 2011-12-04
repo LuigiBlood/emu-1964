@@ -48,7 +48,7 @@ UcodeFunc(RSP_Quad3d_ShadowOfEmpire);
 
 UcodeFunc(RSP_GBI0_Tri4);
 UcodeFunc(RSP_DMA_Tri_DKR);
-UcodeFunc(DLParser_Set_Addr_Ucode6);
+UcodeFunc(DLParser_Set_Addr_DKR);
 UcodeFunc(RSP_MoveWord_DKR);
 
 UcodeFunc(RSP_Vtx_PD);
@@ -942,7 +942,7 @@ UcodeMap ucodeMap6 =
 	RSP_RDP_Nothing,	RSP_GBI0_Tri4,			RSP_GBI1_RDPHalf_Cont,		RSP_GBI1_RDPHalf_2,
 	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D,		RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
 	RSP_GBI1_EndDL,		RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,		RSP_GBI1_Texture,
-	RSP_MoveWord_DKR,	RSP_GBI1_PopMtx,		RSP_GBI1_CullDL,			DLParser_Set_Addr_Ucode6,
+	RSP_MoveWord_DKR,	RSP_GBI1_PopMtx,		RSP_GBI1_CullDL,			DLParser_Set_Addr_DKR,
 	//c0
 	RSP_GBI1_Noop,	 RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing, 
@@ -1290,7 +1290,7 @@ UcodeMap ucodeMap11 =
 	RSP_RDP_Nothing,	RSP_GBI0_Tri4,			RSP_GBI1_RDPHalf_Cont,		RSP_GBI1_RDPHalf_2,
 	RSP_GBI1_RDPHalf_1, RSP_GBI1_Line3D,		RSP_GBI1_ClearGeometryMode, RSP_GBI1_SetGeometryMode,
 	RSP_GBI1_EndDL,		RSP_GBI1_SetOtherModeL, RSP_GBI1_SetOtherModeH,		RSP_GBI1_Texture,
-	RSP_MoveWord_DKR,	RSP_GBI1_PopMtx,		RSP_GBI1_CullDL,			DLParser_Set_Addr_Ucode6,//<<uc5_dma_offsets
+	RSP_MoveWord_DKR,	RSP_GBI1_PopMtx,		RSP_GBI1_CullDL,			DLParser_Set_Addr_DKR,//<<uc5_dma_offsets
 	//c0
 	RSP_GBI1_Noop,	 RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing, 
 	RSP_RDP_Nothing, RSP_RDP_Nothing, RSP_RDP_Nothing,  RSP_RDP_Nothing, 

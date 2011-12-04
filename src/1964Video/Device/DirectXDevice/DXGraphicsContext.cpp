@@ -17,7 +17,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include "stdafx.h"
-
+#include <WinGDI.h>
 
 MYLPDIRECT3DDEVICE g_pD3DDev = NULL;
 CD3DDevWrapper    gD3DDevWrapper;
@@ -81,7 +81,6 @@ CDXGraphicsContext::CDXGraphicsContext() :
 	m_pD3D(NULL),
 	m_hFont(NULL),
 	m_pID3DFont(NULL),
-	m_bFontIsCreated(false),
 	m_dwAdapter(0),			// Default Adapter
 	m_dwCreateFlags(0),
 	m_dwMinDepthBits(16),
@@ -1505,7 +1504,6 @@ VOID CDXGraphicsContext::CleanUp()
         CleanDeviceObjects();
 		
 		SAFE_RELEASE(m_pID3DFont);
-		m_bFontIsCreated = false;
 		SAFE_RELEASE(m_pd3dDevice);
 		SAFE_RELEASE(m_pD3D);
     }
@@ -1548,10 +1546,6 @@ void CDXGraphicsContext::Pause( bool bPause )
     dwAppPausedCount += ( bPause ? +1 : -1 );
     m_bReady          = ( dwAppPausedCount ? false : true );
 }
-
-
-
-
 
 //-----------------------------------------------------------------------------
 // Name: InitDeviceObjects()
@@ -1629,24 +1623,8 @@ void CDXGraphicsContext::SaveSurfaceToFile(char *filenametosave, MYLPDIRECT3DSUR
 	delete dsttxtr;
 }
 
-
-bool CDXGraphicsContext::CreateFontObjects()
-{
-	//Rewrite for DirectX9
-#if DIRECTX_VERSION == 8
-	m_hFont = (HFONT)GetStockObject(SYSTEM_FONT);
-	D3DXCreateFont(m_pd3dDevice, m_hFont, &m_pID3DFont);
-	m_bFontIsCreated = true;
-#endif
-	return true;
-}
-
-#include <WinGDI.h>
 bool CDXGraphicsContext::DrawText(char *str, RECT &rect, int alignment)
 {
-	if( !m_bFontIsCreated )
-		CreateFontObjects();
-
 	if( m_hFont && m_pID3DFont )
 	{
 		CRender::GetRender()->m_pColorCombiner->DisableCombiner();
@@ -1760,25 +1738,22 @@ HRESULT CD3DDevWrapper::SetViewport(MYD3DVIEWPORT* pViewport)
 {
 	if( m_pD3DDev != NULL )
 	{
-		{
-			if( pViewport->Width <= 0 )	pViewport->Width = 1;
-			if( pViewport->Height <= 0 )	pViewport->Height = 1;
+		if( pViewport->Width <= 0 )	pViewport->Width = 1;
+		if( pViewport->Height <= 0 )	pViewport->Height = 1;
 
-			m_savedViewport.X		= pViewport->X;
-			m_savedViewport.Y		= pViewport->Y;
-			m_savedViewport.Width	= pViewport->Width;
-			m_savedViewport.Height	= pViewport->Height;
-			m_savedViewport.MinZ	= pViewport->MinZ;
-			m_savedViewport.MaxZ	= pViewport->MaxZ;
-			
-			
-			try
-			{
-				return m_pD3DDev->SetViewport(pViewport);
-			}
-			catch(...)
-			{
-			}
+		m_savedViewport.X		= pViewport->X;
+		m_savedViewport.Y		= pViewport->Y;
+		m_savedViewport.Width	= pViewport->Width;
+		m_savedViewport.Height	= pViewport->Height;
+		m_savedViewport.MinZ	= pViewport->MinZ;
+		m_savedViewport.MaxZ	= pViewport->MaxZ;
+	
+		try
+		{
+			return m_pD3DDev->SetViewport(pViewport);
+		}
+		catch(...)
+		{
 		}
 	}
 

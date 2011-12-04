@@ -81,7 +81,8 @@ public:
 	virtual void ApplyScissorWithClipRatio(bool force=false) {}
 	virtual void CaptureScreen(char *folder) {}
 
-	void SetTextureEnableAndScale(int dwTile, bool enable, float fScaleX, float fScaleY);
+	void SetTextureEnable(bool bEnable);
+	void SetTextureScale(int dwTile, float fScaleX, float fScaleY);
 	
 	virtual void SetFogEnable(bool bEnable) 
 	{ 

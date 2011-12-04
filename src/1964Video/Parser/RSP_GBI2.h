@@ -464,6 +464,13 @@ void RSP_GBI2_Texture(Gfx *gfx)
 {
 	SP_Timing(RSP_GBI1_Texture);
 
+	bool bEnable = gfx->texture.enable_gbi2;
+
+	CRender::g_pRender->SetTextureEnable( bEnable );
+
+	//Since the texture isnt enabled lets stop it from computing the rest
+	if(!bEnable) return;
+
 	float fTextureScaleS = (float)(gfx->texture.scaleS) / (65536.0f * 32.0f);
 	float fTextureScaleT = (float)(gfx->texture.scaleT) / (65536.0f * 32.0f);
 
@@ -483,8 +490,6 @@ void RSP_GBI2_Texture(Gfx *gfx)
 	{
 		fTextureScaleT = 1/64.0f;
 	}
-
-	CRender::g_pRender->SetTextureEnableAndScale(gfx->texture.tile, gfx->texture.enable_gbi2, fTextureScaleS, fTextureScaleT);
 
 	/*
 	if( g_curRomInfo.bTextureScaleHack )
@@ -512,7 +517,7 @@ void RSP_GBI2_Texture(Gfx *gfx)
 	}
 	*/
 
-	CRender::g_pRender->SetTextureEnableAndScale(gfx->texture.tile, gfx->texture.enable_gbi2, fTextureScaleS, fTextureScaleT);
+	CRender::g_pRender->SetTextureScale(gfx->texture.tile, fTextureScaleS, fTextureScaleT);
 
 	LOG_TEXTURE(
 	{

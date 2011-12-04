@@ -310,10 +310,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gl_extention_ATI.h"
-				>
-			</File>
-			<File
 				RelativePath=".\glext.h"
 				>
 			</File>
@@ -334,10 +330,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\lib\squish.h"
-				>
-			</File>
-			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>
@@ -347,10 +339,6 @@
 			</File>
 			<File
 				RelativePath=".\typedefs.h"
-				>
-			</File>
-			<File
-				RelativePath=".\wgl_extention_ATI.h"
 				>
 			</File>
 			<File

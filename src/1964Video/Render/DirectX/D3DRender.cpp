@@ -231,6 +231,7 @@ void ApplyZBias(uint32 bias)
 	gD3DDevWrapper.SetRenderState(D3DRS_DEPTHBIAS,*(DWORD*)(&f1));
 	gD3DDevWrapper.SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *(DWORD*)(&f2));
 }
+
 void D3DRender::SetZBias(int bias)
 {
 	if (m_dwZBias != bias)
@@ -608,8 +609,6 @@ void D3DRender::SetFogEnable(bool bEnable)
 	{
 		g_pD3DDev->Clear(1, NULL, D3DCLEAR_ZBUFFER, 0xFF000000, 1.0, 0);
 	}
-
-
 
 	gRSP.bFogEnabled = bEnable&&options.bEnableFog;
 	//DEBUGGER_IF_DUMP(pauseAtNext,{DebuggerAppendMsg("Set Fog %s", bEnable?"enable":"disable");});

@@ -20,9 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // Some new GBI2 extension ucodes
 void RSP_GBI2_DL_Count(Gfx *gfx)
 {
-	
-	
-
 	SP_Timing(DP_Minimal);
 	DP_Timing(DP_Minimal);
 
