@@ -31,7 +31,6 @@ long		__cdecl ReadZippedRomHeader(	char		*RomPath, INI_ENTRY	*ini_entry);
 
 BOOL		ReadZippedRomData(char *RomPath);
 BOOL		ByteSwap(uint32 Size, uint8 *Image);
-int			LoadGNUDistConditions(char *ConditionsBuf);
 void		FileIO_WriteMemPak(int pak_no);
 void		FileIO_LoadMemPak(int pak_no);
 void		FileIO_WriteEEprom(void);

@@ -396,9 +396,6 @@ void ReadConfiguration( void)
     if (guioptions.display_profiler_status && guioptions.display_detail_status)
             guioptions.display_detail_status = 0;
 
-	guioptions.show_critical_msg_window =
-		REGISTRY_ReadDWORD( "DisplayCriticalMessageWindow", FALSE);
-
 	strcpy( guioptions.language, REGISTRY_ReadSTRING("Language", "english"));
 	guioptions.display_romlist = REGISTRY_ReadDWORD( "DisplayRomList", TRUE);
 	guioptions.display_boxart = REGISTRY_ReadDWORD( "Displayboxart", FALSE);

@@ -668,47 +668,6 @@ _LABELEXIT: ;
 
 /*
  =======================================================================================================================
-    Load GNU Redistribution Conditions from file
- =======================================================================================================================
- */
-int LoadGNUDistConditions(char *ConditionsBuf)
-{
-	/*~~~~~~~~~~~~~~~~~~~~~~~~*/
-	long	filesize;
-	FILE	*fp;
-	char	temp_path[MAX_PATH];	/* used for storing application path */
-	/*~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-	_getcwd(temp_path, MAX_PATH);
-	strcat(temp_path, "\\dist.txt");
-
-	if((fp = fopen(temp_path, "rb")) == NULL)
-	{
-		sprintf(ConditionsBuf, "Error: %s not found.", temp_path);
-		return(0);
-	}
-
-	rewind(fp);
-	fseek(fp, 0, SEEK_END);
-	filesize = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
-	if(fp != NULL)
-	{
-		fread(ConditionsBuf, sizeof(uint8), 11201, fp);
-		ConditionsBuf[11201] = '\0';
-	}
-	else
-	{
-		sprintf(ConditionsBuf, "Error getting fp");
-		return(0);
-	}
-
-	fclose(fp);
-	return(1);
-}
-
-/*
- =======================================================================================================================
     Analyze String //
  =======================================================================================================================
  */

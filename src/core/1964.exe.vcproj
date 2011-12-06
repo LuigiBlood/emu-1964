@@ -47,7 +47,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Oa"
 				Optimization="4"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
@@ -74,6 +73,7 @@
 				BrowseInformationFile="../obj/core/Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
 				CallingConvention="1"
 				CompileAs="2"
@@ -108,7 +108,6 @@
 				SwapRunFromNet="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				OptimizeForWindows98="2"
 				SetChecksum="false"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -426,7 +425,6 @@
 				SwapRunFromNet="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				OptimizeForWindows98="2"
 				SetChecksum="false"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
