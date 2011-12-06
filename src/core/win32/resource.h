@@ -5,7 +5,6 @@
 #define IDS_WARRANTY_SEC11              1
 #define IDOK2                           2
 #define IDS_WARRANTY_SEC12              2
-#define ID_CLEAR_MESSAGE                2
 #define IDS_DEFAULT_PLUGIN_PATH         3
 #define IDS_DEFAULT_ROM_PATH            4
 #define IDS_DEFAULT_SAVE_PATH           5
@@ -48,8 +47,6 @@
 #define ID_DEBUGGER_SHOWCODELIST        117
 #define ID_DEBUGGER_OPEN                118
 #define ID_DEBUGGER_CLOSE               119
-#define ID_ABOUT_WARRANTY               121
-#define ID_REDISTRIBUTE                 122
 #define ID_RUNTO                        123
 #define ID_OPTIONS_VIDMODE              124
 #define IDM_VIDEO_MODE                  126
@@ -269,22 +266,6 @@
 #define ID_Menu                         353
 #define ID_Menu354                      354
 #define ID_POPUPMENU_CHANGEROMDIRECTORY 355
-#define ID_FILE_ROMDIRECTORY9           357
-#define ID_FILE_ROMDIRECTORY10          358
-#define ID_FILE_ROMDIRECTORY11          359
-#define ID_FILE_ROMDIRECTORY12          360
-#define ID_FILE_ROMDIRECTORY13          361
-#define ID_FILE_ROMDIRECTORY14          362
-#define ID_FILE_ROMDIRECTORY15          363
-#define ID_FILE_ROMDIRECTORY16          364
-#define ID_FILE_RECENTGAMES_GAME9       365
-#define ID_FILE_RECENTGAMES_GAME10      366
-#define ID_FILE_RECENTGAMES_GAME11      367
-#define ID_FILE_RECENTGAMES_GAME12      368
-#define ID_FILE_RECENTGAMES_GAME13      369
-#define ID_FILE_RECENTGAMES_GAME14      370
-#define ID_FILE_RECENTGAMES_GAME15      371
-#define ID_FILE_RECENTGAMES_GAME16      372
 #define ID_FILE_ROMDIRECTORY8           373
 #define ID_FILE_RECENTGAMES_GAME8       374
 #define IDB_GREEN_CHEAT                 376
@@ -796,7 +777,6 @@
 #define IDC_VEC278                      1478
 #define IDC_MANUAL_COMPARE              1478
 #define IDC_TAB1                        1479
-#define IDC_CRITICAL_MESSAGE_TEXTBOX    1480
 #define IDC_VEC281                      1481
 #define IDC_VEC282                      1482
 #define IDC_VEC283                      1483
@@ -806,7 +786,6 @@
 #define IDC_CHEAT_NOTE2                 1484
 #define IDC_VEC285                      1485
 #define IDC_VEC286                      1486
-#define IDC_DOWNLOAD_PLUGINS            1486
 #define IDC_VEC287                      1487
 #define IDC_VEC288                      1488
 #define IDC_VEC291                      1491
@@ -870,7 +849,6 @@
 #define IDC_STATIC_TEXT4                1527
 #define IDC_VEC328                      1528
 #define IDC_STATIC_TEXT5                1528
-#define IDC_EDIT0                       1529
 #define IDC_STATIC_TEXT6                1529
 #define IDC_DIRECTX                     1530
 #define IDC_STATIC_BOX_TITLE            1530
@@ -922,7 +900,7 @@
 #define IDC_SPIN_BOXART_X_SPACING       1573
 #define IDC_SPIN_BOXART_Y_SPACING       1574
 #define IDC_ICON_Y_SPACING_STR          1575
-#define ID_LAGNESS_7					1576
+#define ID_LAGNESS_7                    1576
 #define IDC_STATIC                      -1
 
 // Next default values for new objects

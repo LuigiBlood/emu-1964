@@ -116,14 +116,6 @@ MenuStatus	recent_game_menus[MAX_RECENT_GAME_LIST] =
 	{ID_FILE_RECENTGAMES_GAME6,		TRUE},
 	{ID_FILE_RECENTGAMES_GAME7,		TRUE},
 	{ID_FILE_RECENTGAMES_GAME8,		TRUE},
-	{ID_FILE_RECENTGAMES_GAME9,		TRUE},
-	{ID_FILE_RECENTGAMES_GAME10,	TRUE},
-	{ID_FILE_RECENTGAMES_GAME11,	TRUE},
-	{ID_FILE_RECENTGAMES_GAME12,	TRUE},
-	{ID_FILE_RECENTGAMES_GAME13,	TRUE},
-	{ID_FILE_RECENTGAMES_GAME14,	TRUE},
-	{ID_FILE_RECENTGAMES_GAME15,	TRUE},
-	{ID_FILE_RECENTGAMES_GAME16,	TRUE},
 };
 MenuStatus	recent_rom_directory_menus[MAX_RECENT_ROM_DIR] =
 {
@@ -135,28 +127,10 @@ MenuStatus	recent_rom_directory_menus[MAX_RECENT_ROM_DIR] =
 	{ID_FILE_ROMDIRECTORY6,		TRUE},
 	{ID_FILE_ROMDIRECTORY7,		TRUE},
 	{ID_FILE_ROMDIRECTORY8,		TRUE},
-	{ID_FILE_ROMDIRECTORY9,		TRUE},
-	{ID_FILE_ROMDIRECTORY10,	TRUE},
-	{ID_FILE_ROMDIRECTORY11,	TRUE},
-	{ID_FILE_ROMDIRECTORY12,	TRUE},
-	{ID_FILE_ROMDIRECTORY13,	TRUE},
-	{ID_FILE_ROMDIRECTORY14,	TRUE},
-	{ID_FILE_ROMDIRECTORY15,	TRUE},
-	{ID_FILE_ROMDIRECTORY16,	TRUE},
 };
 
 extern BOOL newSecond;
 extern HANDLE hwndLV;
-
-
-void TellMe()
-{
-			static int k=0;
-			char opstr[0xff];
-			sprintf(opstr, "Hello: %d", ++k);
-			SetStatusBarText(0, opstr);
-
-}
 
 void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
@@ -168,15 +142,7 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 		{
 			if( !emustatus.Emu_Is_Paused) 
 			{
-				if( GetVersion() < 0x80000000) 
-				{ /* Windows NT */
-					vips = (float)(viCountPerSecond);
-				} 
-				else 
-				{
-					vips = (float)(viCountPerSecond);
-				}
-
+				vips = (float)(viCountPerSecond);
 
                 if (emuoptions.AutoCF)
                     sprintf(generalmessage, "AutoCF=%2d", CounterFactor);
@@ -469,7 +435,6 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	gui.hStatusBar = NULL;			/* Window Handle of the status bar */
 	gui.hToolBar = NULL;			/* Window Handle of the toolbar */
 	gui.hClientWindow = NULL;		/* Window handle of the client child window */
-	gui.hCriticalMsgWnd = NULL;		/* handle to critical message window */
 	gui.hMenu1964main = NULL;
 	gui.hMenuRomListPopup = NULL;
 
@@ -608,16 +573,6 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	SetFocus(gui.hwnd1964main);
 	RomListLoadCurrentPosFromRegistry();
 
-
-	if(guioptions.show_critical_msg_window)
-	{
-		if(gui.hCriticalMsgWnd == NULL)
-		{
-			gui.hCriticalMsgWnd = CreateDialog(gui.hInst, "CRITICAL_MESSAGE", NULL, (DLGPROC) CriticalMessageDialog);
-			SetActiveWindow(gui.hwnd1964main);
-		}
-	}
-
 	guistatus.block_menu = FALSE;	/* allow menu commands */
     SetCounterFactor(defaultoptions.Counter_Factor);
     Set_Ready_Message();
@@ -748,7 +703,6 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		else
 		{
-			DWORD ThreadID;
 			emustatus.Emu_Is_Paused = 1;
 			ResumeEmulator(DO_NOTHING_AFTER_PAUSE);
 		}
@@ -823,38 +777,6 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (!guistatus.IsFullScreen)
 			ChangeToRecentDirectory(7);
 		break;
-	case ID_FILE_ROMDIRECTORY9:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(8);
-		break;
-	case ID_FILE_ROMDIRECTORY10:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(9);
-		break;
-	case ID_FILE_ROMDIRECTORY11:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(10);
-		break;
-	case ID_FILE_ROMDIRECTORY12:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(11);
-		break;
-	case ID_FILE_ROMDIRECTORY13:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(12);
-		break;
-	case ID_FILE_ROMDIRECTORY14:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(13);
-		break;
-	case ID_FILE_ROMDIRECTORY15:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(14);
-		break;
-	case ID_FILE_ROMDIRECTORY16:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(15);
-		break;
 	case ID_FILE_RECENTGAMES_GAME1:
 		OpenRecentGame(0);
 		break;
@@ -878,31 +800,7 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case ID_FILE_RECENTGAMES_GAME8:
 		OpenRecentGame(7);
-		break;
-	case ID_FILE_RECENTGAMES_GAME9:
-		OpenRecentGame(8);
-		break;
-	case ID_FILE_RECENTGAMES_GAME10:
-		OpenRecentGame(9);
-		break;
-	case ID_FILE_RECENTGAMES_GAME11:
-		OpenRecentGame(10);
-		break;
-	case ID_FILE_RECENTGAMES_GAME12:
-		OpenRecentGame(11);
-		break;
-	case ID_FILE_RECENTGAMES_GAME13:
-		OpenRecentGame(12);
-		break;
-	case ID_FILE_RECENTGAMES_GAME14:
-		OpenRecentGame(13);
-		break;
-	case ID_FILE_RECENTGAMES_GAME15:
-		OpenRecentGame(14);
-		break;
-	case ID_FILE_RECENTGAMES_GAME16:
-		OpenRecentGame(15);
-		break;		
+		break;	
 	case ID_FILE_CHEAT:
 		if (!guistatus.IsFullScreen)
 			if(emustatus.Emu_Is_Running)
@@ -1161,7 +1059,7 @@ MF_UNCHECKED :
 	case ID_CHECKWEB:
 	case ID_BUTTON_HOME_PAGE:
 		if (!guistatus.IsFullScreen)
-			ShellExecute(gui.hwnd1964main, "open", "http://1964emu.emulation64.com", NULL, NULL, SW_SHOWNORMAL);
+			ShellExecute(gui.hwnd1964main, "open", "http://code.google.com/p/emu-1964", NULL, NULL, SW_SHOWNORMAL);
 		break;
 	case ID_HELP_HELP:
 	case ID_BUTTON_HELP:
@@ -1182,19 +1080,6 @@ MF_UNCHECKED :
 		break;
 	case ID_HELP_FINDER:
 		DisplayError("Help contents");
-		break;
-	case ID_ABOUT_WARRANTY:
-		if (!guistatus.IsFullScreen) {
-			LoadString(gui.hInst, IDS_WARRANTY_SEC11, (LPSTR)Scratch1, 700);
-			LoadString(gui.hInst, IDS_WARRANTY_SEC12, (LPSTR)Scratch2, 700);
-			MessageBox(gui.hwnd1964main, (LPSTR)Scratch1, "NO WARRANTY", MB_OK);
-			MessageBox(gui.hwnd1964main, (LPSTR)Scratch2, "NO WARRANTY", MB_OK);
-		}
-		break;
-
-	case ID_REDISTRIBUTE:
-		if (!guistatus.IsFullScreen)
-			DialogBox(gui.hInst, "REDISTRIB_DIALOG", hWnd, (DLGPROC) ConditionsDialog);
 		break;
 
 	case ID_OPCODEDEBUGGER:
@@ -1537,7 +1422,6 @@ long FAR PASCAL MainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	break;
 
 	case WM_NOTIFY:
-
 		//switch (((LPNMHDR) lParam)->code) 
 		if( ((LPNMHDR) lParam)->code == TTN_GETDISPINFO ) 
 		{ 
@@ -1635,7 +1519,6 @@ long FAR PASCAL MainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case SC_SIZE:
 		case SC_MAXIMIZE:
 		case SC_KEYMENU:
-
 			if (guistatus.IsFullScreen)
 				return 1;
 		default:
@@ -2649,9 +2532,6 @@ void OptionsDialog_OnInit(HWND hDlg)
 	SendDlgItemMessage(	hDlg, IDC_ENABLE_GAME_LIST,	BM_SETCHECK,
 		guioptions.show_recent_game_list ? BST_CHECKED : BST_UNCHECKED, 0);
 
-	SendDlgItemMessage(	hDlg, IDC_OPTION_ERROR_WINDOW, BM_SETCHECK,
-		guioptions.show_critical_msg_window ? BST_CHECKED : BST_UNCHECKED, 0);
-
 	SendDlgItemMessage( hDlg, IDC_ENABLE_DETAIL_STATUS,	BM_SETCHECK,
 		guioptions.display_detail_status ? BST_CHECKED : BST_UNCHECKED,	0);
 
@@ -2833,29 +2713,6 @@ void OptionsDialog_OnApply(HWND hDlg)
 			RegenerateRecentGameMenus();
 		else
 			DeleteRecentGameMenus();
-	}
-
-	if(	guioptions.show_critical_msg_window 
-		!= ( SendDlgItemMessage( hDlg, IDC_OPTION_ERROR_WINDOW, BM_GETCHECK, 0, 0)
-		     == BST_CHECKED))
-	{
-		guioptions.show_critical_msg_window ^= 1;
-		REGISTRY_WriteDWORD( "DisplayCriticalMessageWindow",
-			guioptions.show_critical_msg_window);
-		if(guioptions.show_critical_msg_window)	{
-			if(gui.hCriticalMsgWnd == NULL)	{
-				gui.hCriticalMsgWnd = CreateDialog(
-					gui.hInst,
-					"CRITICAL_MESSAGE",
-					NULL,
-					(DLGPROC) CriticalMessageDialog);
-				SetActiveWindow(gui.hwnd1964main);
-			}
-		}
-		else if( gui.hCriticalMsgWnd != NULL) {
-			DestroyWindow(gui.hCriticalMsgWnd);
-			gui.hCriticalMsgWnd = NULL;
-		}
 	}
 	
     if (!guioptions.display_profiler_status && !guioptions.display_detail_status)
@@ -3181,8 +3038,6 @@ void ResetWindowSizeAsRemembered(void)
 	);
 }
 
-extern char critical_msg_buffer[32 * 1024]; /* 32KB */
-
 /*
  =======================================================================================================================
  =======================================================================================================================
@@ -3191,7 +3046,6 @@ void PrepareBeforePlay(int IsFullScreen)
 {
 	int i;
 	if (IsFullScreen == 0 && !emustatus.Emu_Is_Resetting )	RememberWindowSize();
-	critical_msg_buffer[0] = '\0';					/* clear the critical message buffer */
 
 	REGISTRY_WriteDWORD("1964RunningStatus", TRUE);
 	REGISTRY_WriteDWORD("ScreenSaverStatus", WindowScreenSaverStatus);
@@ -3234,7 +3088,7 @@ void PrepareBeforePlay(int IsFullScreen)
 		EnableMenuItem(gui.hMenu1964main, cfmenulist[i], MF_ENABLED);
 	}
 
-	for( i=0; i<16; i++ )
+	for( i=0; i<8; i++ )
 	{
 		EnableMenuItem(gui.hMenu1964main, recent_game_menus[i].id, MF_GRAYED);
 		EnableMenuItem(gui.hMenu1964main, recent_rom_directory_menus[i].id,  MF_GRAYED);

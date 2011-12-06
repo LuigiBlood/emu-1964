@@ -90,7 +90,6 @@ extern int			REGISTRY_WriteDebug();
 void				StateSetNumber(int number);
 void				Exit1964(void);
 void				GetPluginDir(char *Directory);
-extern int			LoadGNUDistConditions(char *ConditionsBuf);
 extern void         CreateOptionsDialog(int nStartPage);
 LRESULT APIENTRY	ConditionsDialog(HWND hDlg, unsigned message, WORD wParam, LONG lParam);
 LRESULT APIENTRY	CheatAndHackDialog(HWND hDlg, unsigned message, WORD wParam, LONG lParam);
@@ -117,7 +116,6 @@ struct EMU1964GUI
 	HWND		hToolBar;				/* Window Handle of the toolbar */
 	HWND		hReBar;					/* Window Handle of the rebar */
 	HWND		hClientWindow;			/* Window handle of the client child window */
-	HWND		hCriticalMsgWnd;		/* handle to critical message window */
 	HMENU		hMenu1964main;
 	HMENU		hMenuRomListPopup;
 
@@ -148,7 +146,6 @@ struct GUIOPTIONS
 	BOOL	show_recent_game_list;
 	BOOL	display_detail_status;
 	BOOL	display_profiler_status;
-	BOOL	show_critical_msg_window;
 	BOOL	display_romlist;
 	BOOL	display_boxart;
 	int		boxart_image_width;

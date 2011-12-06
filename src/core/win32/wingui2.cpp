@@ -57,41 +57,6 @@ PluginDLLInfo *AllPluginDLLInfos=NULL;
 int	PluginDLLCounts[4];
 int TotalPluginDLLCount=0;
 
-// Plugins that we wish users will have in their plugin folder
-PluginDLLInfo DesiredPluginDLLInfos[] = 
-{
-	{	{0},	"Rice's Daedalus 5.2.0",						PLUGIN_TYPE_GFX,	-1},
-	{	{0},	"Rice's Daedalus 4.6.0",						PLUGIN_TYPE_GFX,	-1},
-	{	{0},	"Glide64 v0.5",									PLUGIN_TYPE_GFX,	-1},
-	{	{0},	"glN64 v0.4",									PLUGIN_TYPE_GFX,	-1},
-	{	{0},	"Jabo's Direct3D6 1.5",							PLUGIN_TYPE_GFX,	-1},
-	{	{0},	"Jabo's Direct3D7 1.4",							PLUGIN_TYPE_GFX,	-1},
-	{	{0},	"TR64 OpenGL v0.8.3",							PLUGIN_TYPE_GFX,	-1},
-	{	{0},	"1964 OpenGL Graphics build 4.5.0",				PLUGIN_TYPE_GFX,	-1},
-	{	{0},	"1964Video",				PLUGIN_TYPE_GFX,	-1},
-
-	{	{0},	"schibo's Audio Plugin 1.2 based on UltraHLE",	PLUGIN_TYPE_AUDIO,	-1},
-	{	{0},	"Azimer's Audio v0.13b",						PLUGIN_TYPE_AUDIO,	-1},
-	{	{0},	"Azimer's Audio v0.30 (Old Driver)",			PLUGIN_TYPE_AUDIO,	-1},
-	{	{0},	"Azimer's Audio v0.30 (Driver Rev 2.2)",		PLUGIN_TYPE_AUDIO,	-1},
-	{	{0},	"Azimer's Audio v0.40 Beta 2",					PLUGIN_TYPE_AUDIO,	-1},
-	{	{0},	"Azimer's HLE Audio v0.55.1 Alpha",				PLUGIN_TYPE_AUDIO,	-1},
-	{	{0},	"Basic Audio Plugin 2.0 for 1964",				PLUGIN_TYPE_AUDIO,	-1},
-	{	{0},	"Jabo's DirectSound 1.5",						PLUGIN_TYPE_AUDIO,	-1},
-	{	{0},	"No Audio Plugin 2.0 for 1964",					PLUGIN_TYPE_AUDIO,	-1},
-	{	{0},	"No Sound",										PLUGIN_TYPE_AUDIO,	-1},
-
-	{	{0},	"Basic Keyboard Plugin",						PLUGIN_TYPE_CONTROLLER,	-1},
-	{	{0},	"Jabo's DirectInput7 1.5",						PLUGIN_TYPE_CONTROLLER,	-1},
-	{	{0},	"NooTe_DI By NooTe version 0.4.2 build 17",		PLUGIN_TYPE_CONTROLLER,	-1},
-	{	{0},	"N-Rage`s Direct-Input8 1.61",					PLUGIN_TYPE_CONTROLLER,	-1},
-	{	{0},	"N-Rage`s Direct-Input8 V2 1.80a",				PLUGIN_TYPE_CONTROLLER,	-1},
-	{	{0},	"1964Input",									PLUGIN_TYPE_CONTROLLER,	-1},
-
-	{	{0},	"Hacktarux hle rsp plugin",						PLUGIN_TYPE_RSP,	-1},
-	{	{0},	"RSP emulation Plugin",							PLUGIN_TYPE_RSP,	-1},
-};
-
 /************************************************************************/
 /* Search the plugin folder, fill all DLL info into the array           */
 /************************************************************************/
@@ -105,7 +70,6 @@ void PopulateAllPluginInfos(int maxNo)
 	char			StartPath[_MAX_PATH];
 	char			SearchPath[_MAX_PATH];
 	BOOL			KeepLooping=TRUE;
-	int				i,j;
 
 	if( AllPluginDLLInfos != NULL )
 	{
@@ -166,23 +130,6 @@ void PopulateAllPluginInfos(int maxNo)
 
 		KeepLooping = FindNextFile(FindFirst, &libaa);
 	}
-
-	for( j=0; j<sizeof(DesiredPluginDLLInfos)/sizeof(PluginDLLInfo); j++ )
-	{
-		for(i=0; i<TotalPluginDLLCount;i++)
-		{
-			if( strnicmp(DesiredPluginDLLInfos[j].info, AllPluginDLLInfos[i].info, strlen(AllPluginDLLInfos[i].info)) == 0 )
-			{
-				strcpy(DesiredPluginDLLInfos[j].filename, AllPluginDLLInfos[i].filename);
-				break;
-			}
-		}
-
-		if( i==TotalPluginDLLCount )
-		{
-			DesiredPluginDLLInfos[j].filename[0] = 0;
-		}
-	}
 }
 
 const PluginDLLInfo *GetPluginDLLInfo(int index, int type)
@@ -200,21 +147,6 @@ const PluginDLLInfo *GetPluginDLLInfo(int index, int type)
 			if( index<0 )
 			{
 				return &AllPluginDLLInfos[i];
-			}
-		}
-	}
-
-	if( !guioptions.displayDefaultPlugins )
-	{
-		for( i=0; i<sizeof(DesiredPluginDLLInfos)/sizeof(PluginDLLInfo); i++ )
-		{
-			if( DesiredPluginDLLInfos[i].type == type && DesiredPluginDLLInfos[i].filename[0] == 0 )
-			{
-				index--;
-				if( index<0 )
-				{
-					return &DesiredPluginDLLInfos[i];
-				}
 			}
 		}
 	}
@@ -385,45 +317,6 @@ void Set_1964_Directory(void)
 	}
 }
 
-char	critical_msg_buffer[32 * 1024]; /* 32KB */
-
-/*
- =======================================================================================================================
- =======================================================================================================================
- */
-void __cdecl DisplayCriticalMessage(char *Message, ...)
-{
-	if(guioptions.show_critical_msg_window)
-	{
-		/*~~~~~~~~~~~~~*/
-		char	Msg[400];
-		va_list ap;
-		char crlf[3];
-		/*~~~~~~~~~~~~~*/
-
-		va_start(ap, Message);
-		vsprintf(Msg, Message, ap);
-		va_end(ap);
-
-		crlf[0] = 13;
-		crlf[1] = 10;
-		crlf[2] = '\0';
-		if(strlen(critical_msg_buffer) + strlen(Msg) + 2 < 32 * 1024)
-		{
-			strcat(critical_msg_buffer, Msg);
-			strcat(critical_msg_buffer, crlf);
-			SendDlgItemMessage
-			(
-				gui.hCriticalMsgWnd,
-				IDC_CRITICAL_MESSAGE_TEXTBOX,
-				WM_SETTEXT,
-				0,
-				(LPARAM) critical_msg_buffer
-			);
-		}
-	}
-}
-
 /*
  =======================================================================================================================
  =======================================================================================================================
@@ -589,41 +482,11 @@ void UpdateCIC(void)
 	Init_VI_Counter(game_country_tvsystem);
 }
 
-/*
- =======================================================================================================================
- =======================================================================================================================
- */
-LRESULT APIENTRY CriticalMessageDialog(HWND hDlg, unsigned message, WORD wParam, LONG lParam)
-{
-	switch(message)
-	{
-	case WM_INITDIALOG:
-		TranslateDialag(hDlg, "CRITICAL_MESSAGE");
-		return(TRUE);
-	case WM_COMMAND:
-		if(wParam == IDOK)
-		{
-			guioptions.show_critical_msg_window = 0;
-			EndDialog(hDlg, TRUE);
-			gui.hCriticalMsgWnd = NULL;
-			SetActiveWindow(gui.hwnd1964main);
-			return(TRUE);
-		}
-		else if(wParam == ID_CLEAR_MESSAGE)
-		{
-			SendDlgItemMessage(hDlg, IDC_CRITICAL_MESSAGE_TEXTBOX, WM_SETTEXT, 0, (LPARAM) "");
-			critical_msg_buffer[0] = '\0';	/* clear the critical message buffer */
-		}
-		break;
-	}
-
-	return(FALSE);
-}
-
 /************************************************************************/
 /* Before play, load ROM specified plugins                              */
 /************************************************************************/
 LPDIRECTSOUND lpds;
+//Cleanme
 void LoadROMSpecificPlugins()
 {
 	char	AudioPath[_MAX_PATH];					/* _MAX_PATH = 260 */
@@ -879,6 +742,7 @@ void ReloadDefaultPlugins()
     type = 0 Load all plugins type = 1 Load video plugin type = 2 Load audio plugin type = 3 Load input plugin
  =======================================================================================================================
  */
+//CLEANME
 BOOL LoadPlugins(int type)
 {
 	char	AudioPath[_MAX_PATH];					/* _MAX_PATH = 260 */
@@ -1187,7 +1051,6 @@ void FillPluginComboList(HWND hDlg, DWORD id, int type, char* current, BOOL useD
 {
 	int n=0;
 	int index;
-
 	if( !useDefaultPlugin )
 	{
 		index = SendDlgItemMessage(hDlg, id, CB_ADDSTRING, 0, (LPARAM) TranslateStringByString("Use system default setting"));
@@ -1213,22 +1076,6 @@ void FillPluginComboList(HWND hDlg, DWORD id, int type, char* current, BOOL useD
 			index = SendDlgItemMessage(hDlg, id, CB_ADDSTRING, 0, (LPARAM) AllPluginDLLInfos[n].info);
 			if(_stricmp(AllPluginDLLInfos[n].filename, current) == 0)
 				SendDlgItemMessage(hDlg, id, CB_SETCURSEL, (WPARAM) index, (LPARAM) 0);
-		}
-	}
-
-	if( !useDefaultPlugin )
-	{
-		int num = sizeof(DesiredPluginDLLInfos)/sizeof(PluginDLLInfo);
-		for( n=0; n<num; n++ )
-		{
-			if( DesiredPluginDLLInfos[n].type == type && DesiredPluginDLLInfos[n].filename[0] == 0 )
-			{
-				// User does not have this plugin in his folder
-				sprintf(generalmessage,"%s (%s)", DesiredPluginDLLInfos[n].info, TranslateStringByString("not available"));
-				index = SendDlgItemMessage(hDlg, id, CB_ADDSTRING, 0, (LPARAM) generalmessage);
-				if(_stricmp(DesiredPluginDLLInfos[n].info, current) == 0)
-					SendDlgItemMessage(hDlg, id, CB_SETCURSEL, (WPARAM) index, (LPARAM) 0);
-			}
 		}
 	}
 }
@@ -1439,11 +1286,8 @@ LRESULT APIENTRY PluginsDialog(HWND hDlg, unsigned message, WORD wParam, LONG lP
 				{
 					FreeLibrary(hinstLib);
 					EndDialog(hDlg, TRUE);
-
 					StorePluginSetting();
-
 					REGISTRY_WriteDWORD( "DisplayDefaultPlugins", guioptions.displayDefaultPlugins);
-
 					return(TRUE);
 				}
 
@@ -1452,18 +1296,6 @@ LRESULT APIENTRY PluginsDialog(HWND hDlg, unsigned message, WORD wParam, LONG lP
 					EndDialog(hDlg, TRUE);
 					return(TRUE);
 				}
-
-			case IDC_DOWNLOAD_PLUGINS:
-				ShellExecute
-				(
-					gui.hwnd1964main,
-					"open",
-					"http://1964emu.emulation64.com/plugins.htm",
-					NULL,
-					NULL,
-					SW_MAXIMIZE
-				);
-				break;
 
 			case IDC_RSP_ABOUT:
 				RSP_Under_Selecting_DllAbout(hDlg);
@@ -1491,10 +1323,8 @@ LRESULT APIENTRY PluginsDialog(HWND hDlg, unsigned message, WORD wParam, LONG lP
 				StorePluginSetting();
 				guioptions.displayDefaultPlugins = FALSE;
 				REGISTRY_WriteDWORD( "DisplayDefaultPlugins", guioptions.displayDefaultPlugins);
-				
 				//SendMessage(hDlg, WM_INITDIALOG, wParam, lParam);
 				OnInitPluginsDialogPerRom(hDlg);
-				
 				break;
 			}
 
@@ -1730,18 +1560,6 @@ LRESULT APIENTRY PluginsDialogForROMSpecifiedPlugins(HWND hDlg, unsigned message
 					return(TRUE);
 				}
 
-			case IDC_DOWNLOAD_PLUGINS:
-				ShellExecute
-					(
-					gui.hwnd1964main,
-					"open",
-					"http://1964emu.emulation64.com/plugins.htm",
-					NULL,
-					NULL,
-					SW_MAXIMIZE
-					);
-				break;
-
 			case IDC_DEFAULT_PLUGIN_RADIO:
 				StoreROMSpecifiedPluginSetting(hDlg);
 				guioptions.displayDefaultPlugins = TRUE;
@@ -1772,38 +1590,6 @@ void GetPluginDir(char *Directory)
 
 /*
  =======================================================================================================================
-    Redistribution Conditions Window
- =======================================================================================================================
- */
-LRESULT APIENTRY ConditionsDialog(HWND hDlg, unsigned message, WORD wParam, LONG lParam)
-{
-	/*~~~~~~~~~~~~~~~~~~~~~~*/
-	char	Conditions[11201];
-	/*~~~~~~~~~~~~~~~~~~~~~~*/
-
-	switch(message)
-	{
-	case WM_INITDIALOG:
-		TranslateDialag(hDlg, "REDISTRIB_DIALOG");
-		/* LoadString(gui.hInst, IDS_REDIST0, temp_buf, 4096); */
-		LoadGNUDistConditions(Conditions);
-		SetDlgItemText(hDlg, IDC_EDIT0, Conditions);
-		return(TRUE);
-
-	case WM_COMMAND:
-		if(wParam == IDOK || wParam == IDCANCEL)
-		{
-			EndDialog(hDlg, TRUE);
-			return(TRUE);
-		}
-		break;
-	}
-
-	return(FALSE);
-}
-
-/*
- =======================================================================================================================
  =======================================================================================================================
  */
 extern char SSEReason[0xff];
@@ -1823,7 +1609,6 @@ LRESULT APIENTRY About(HWND hDlg, unsigned message, WORD wParam, LONG lParam)
         
         return(TRUE);
 
-	
     //Propertysheet handling
 	case WM_NOTIFY:
 		{
@@ -1843,9 +1628,7 @@ LRESULT APIENTRY About(HWND hDlg, unsigned message, WORD wParam, LONG lParam)
 			}
 		}
         return(TRUE);
-    
-
-    
+  
     case WM_COMMAND:
         if(wParam == IDOK || wParam == IDCANCEL)
             { 
@@ -2045,8 +1828,6 @@ LangMapEntry langMapEntries[] =
 	{86,	ID_ONLINE_HELP,	"Online Help",	0,	0},
 	{87,	ID_HELP_HELP,	"Help Manual",	"F1",	0},
 	{88,	ID_CHECKWEB,		"&1964 Home Page",			0,	0},
-	{89,	ID_REDISTRIBUTE,	"GPL Information...",	0,	0},
-	{90,	ID_ABOUT_WARRANTY,	"About Warranty...",	0,	0},
 	{91,	ID_ABOUT,			"&About 1964...",				0,	0},
 	{92,	ID_POPUP_LOADPLAYINWINDOWMODE,	"Load && Play in Window",	0,	0},
 	{95,	ID_POPUP_LOADPLAYINFULLSCREEN,	"Load && Play in Full Screen",	0,	0},
@@ -2125,7 +1906,7 @@ void CheckLanguages()
 	HANDLE			FindFirst;
 	char			SearchPath[_MAX_PATH];
 	char			fullpath[MAX_PATH];
-	HMENU			language_submenu = GetSubMenu(file_submenu, 3);
+	HMENU			language_submenu = GetSubMenu(file_submenu, 2);
 
 
 	sprintf(SearchPath, "%slanguage\\", directories.main_directory);
@@ -2193,11 +1974,9 @@ char *DialogNameList[] = {
 	"ABOUTBOX",
 	"CHEAT_HACK",
 	"COL_SELECT",
-	"CRITICAL_MESSAGE",
 	"FOLDERS",
 	"OPTIONS",
 	"FLUGINS",
-	"REDISTRIB_DIALOG",
 	"ROM_INFO",
 	"ROM_OPTIONS",
 	"UNAVAILABLE",
@@ -2240,15 +2019,6 @@ DlgLangMapEntry ColSelectDialogItems[]=
 	{IDC_STATIC_GROUP2,0,0},
 };
 
-
-DlgLangMapEntry CriticalMessageDialogItems[]=
-{
-	{IDOK,0,0},
-	{ID_CLEAR_MESSAGE,0,0},
-};
-
-
-
 DlgLangMapEntry FolderDialogItems[]=
 {
 	{IDC_STATIC_GROUP1,0,0},
@@ -2283,7 +2053,6 @@ DlgLangMapEntry PluginsDialogItems[]=
 	{IDC_AUD_ABOUT,0,0},
 	{IDC_DI_ABOUT,0,0},
 	{IDC_RSP_ABOUT,0,0},
-	{IDC_DOWNLOAD_PLUGINS,0,0},
 	{IDC_STATIC_GROUP_AUDIO,0,0},
 	{IDC_STATIC_GROUP_VIDEO,0,0},
 	{IDC_STATIC_GROUP_RSP,0,0},
@@ -2344,7 +2113,6 @@ DlgLangMapEntry *DlgLangMapEntryGroups[]=
 	AboutBoxDialogItems,
 	CheatHackDialogItems,
 	ColSelectDialogItems,
-	CriticalMessageDialogItems,
 	FolderDialogItems,
 	OptionsDialogItems,
 	PluginsDialogItems,
@@ -2359,7 +2127,6 @@ const int DlgLangMapEntryCounts[] =
 	sizeof(AboutBoxDialogItems)/sizeof(DlgLangMapEntry),
 	sizeof(CheatHackDialogItems)/sizeof(DlgLangMapEntry),
 	sizeof(ColSelectDialogItems)/sizeof(DlgLangMapEntry),
-	sizeof(CriticalMessageDialogItems)/sizeof(DlgLangMapEntry),
 	sizeof(FolderDialogItems)/sizeof(DlgLangMapEntry),
 	sizeof(OptionsDialogItems)/sizeof(DlgLangMapEntry),
 	sizeof(PluginsDialogItems)/sizeof(DlgLangMapEntry),
@@ -2368,8 +2135,6 @@ const int DlgLangMapEntryCounts[] =
 	sizeof(ROMOptionsDialogItems)/sizeof(DlgLangMapEntry),
 	sizeof(UnavailableDialogItems)/sizeof(DlgLangMapEntry),
 };
-
-
 
 StringMapEntry StringMapEntries[] = {
 	{0,0,0, "Cheat Codes"},
@@ -2870,9 +2635,7 @@ void TranslateMenu(HMENU hMenu, HWND mainHWND)
 	submenu = GetSubMenu(hMenu,5) ;
 	SetMenuTranslatedString(submenu,0,ID_HELP_HELP);
 	SetMenuTranslatedString(submenu,1,ID_ONLINE_HELP);
-	SetMenuTranslatedString(submenu,2,ID_CHECKWEB);
-	//SetMenuTranslatedString(submenu,4,ID_REDISTRIBUTE);
-	SetMenuTranslatedString(submenu,4,ID_ABOUT_WARRANTY);
+	SetMenuTranslatedString(submenu,2,ID_CHECKWEB);;
 	SetMenuTranslatedString(submenu,5,ID_ABOUT);
 
 	DrawMenuBar(mainHWND);
