@@ -21,13 +21,8 @@
  * authors: email: schibo@emulation64.com, rice1964@yahoo.com
  */
 
-#include <windows.h>
-#include <mmsystem.h>
-#include <dsound.h>
 #include "../stdafx.h"
 #include "DLL_Rsp.h"
-#include <mbstring.h>
-
 
 /*
  =======================================================================================================================
@@ -45,13 +40,6 @@ void SwitchLanguage(int id, BOOL refreshRomList);
 /************************************************************************/
 /*                                                                      */
 /************************************************************************/
-
-//typedef struct {
-//	char	filename[MAX_PATH];
-//	char	info[MAX_PATH];
-//	int		type;
-//	int		version;
-//} PluginDLLInfo;
 
 PluginDLLInfo *AllPluginDLLInfos=NULL;
 int	PluginDLLCounts[4];
@@ -72,9 +60,7 @@ void PopulateAllPluginInfos(int maxNo)
 	BOOL			KeepLooping=TRUE;
 
 	if( AllPluginDLLInfos != NULL )
-	{
 		return;
-	}
 
 	AllPluginDLLInfos = (PluginDLLInfo*)VirtualAlloc(NULL, MAX_PLUGIN_DLL*sizeof(PluginDLLInfo), MEM_COMMIT, PAGE_READWRITE);
 	TotalPluginDLLCount=0;
@@ -87,12 +73,9 @@ void PopulateAllPluginInfos(int maxNo)
 	strcat(SearchPath, "*.dll");
 
 	FindFirst = FindFirstFile(SearchPath, &libaa);
-	if(FindFirst == INVALID_HANDLE_VALUE)
-	{
-		return ;
-	}
 
-	KeepLooping=TRUE;
+	if(FindFirst == INVALID_HANDLE_VALUE)
+		return;
 
 	while(KeepLooping)
 	{
@@ -106,6 +89,7 @@ void PopulateAllPluginInfos(int maxNo)
 
 			if( GetDllInfo )
 			{
+				//CHECKME
 				__try
 				{
 					memset(&Plugin_Info,0,sizeof(Plugin_Info));
@@ -115,7 +99,6 @@ void PopulateAllPluginInfos(int maxNo)
 					AllPluginDLLInfos[TotalPluginDLLCount].version = Plugin_Info.Version;
 					AllPluginDLLInfos[TotalPluginDLLCount].type = Plugin_Info.Type;
 					PluginDLLCounts[Plugin_Info.Type-1]++;
-
 					TotalPluginDLLCount++;
 				}
 				__except(NULL, EXCEPTION_EXECUTE_HANDLER)
@@ -283,7 +266,7 @@ void InitPluginData(void)
 	Audio_Info.__DMEM = (BYTE*) &SP_DMEM;
 	Audio_Info.__IMEM = (BYTE*) &SP_IMEM;
 	Audio_Info.__MI_INTR_REG = (DWORD*)&MI_INTR_REG_R;
-	Audio_Info.__AI_DRAM_ADDR_REG = (DWORD*)&AI_DRAM_ADDR_REG;;
+	Audio_Info.__AI_DRAM_ADDR_REG = (DWORD*)&AI_DRAM_ADDR_REG;
 	Audio_Info.__AI_LEN_REG = (DWORD*)&AI_LEN_REG;
 	Audio_Info.__AI_CONTROL_REG = (DWORD*)&AI_CONTROL_REG;
 	Audio_Info.__AI_STATUS_REG = (DWORD*)&AI_STATUS_REG;
@@ -342,10 +325,6 @@ void __cdecl DisplayError(char *format, ...)
 	va_start(ap, formatTranslated);
 	vsprintf(Msg, formatTranslated, ap);
 	va_end(ap);
-
-	//DisplayCriticalMessage(Msg);
-	//MessageBox(0, Msg, "Error",MB_OK);
-	//return;
 
 	if( emustatus.Emu_Is_Running )
 	{
@@ -485,227 +464,14 @@ void UpdateCIC(void)
 /************************************************************************/
 /* Before play, load ROM specified plugins                              */
 /************************************************************************/
-LPDIRECTSOUND lpds;
 //Cleanme
 void LoadROMSpecificPlugins()
 {
-	char	AudioPath[_MAX_PATH];					/* _MAX_PATH = 260 */
-	char	VideoPath[_MAX_PATH];
-	char	InputPath[_MAX_PATH];
-	char	StartPath[_MAX_PATH];
-	BOOL	result=TRUE;
-	char	errormsg[500];
-	static int		Audio = 0;
-
-	errormsg[0]=0;
-
-	GetPluginDir(StartPath);
-
-	if( strcmp(currentromoptions.rspPluginName,emustatus.lastRSPPluginLoaded) != 0 )
-	{
-		if(strcmp(emustatus.lastRSPPluginLoaded, "") != 0 )
-		{
-			CloseRSPPlugin();
-			rsp_plugin_is_loaded = FALSE;
-			emuoptions.UsingRspPlugin = FALSE;
-		}
-
-
-		TRACE1("Loading RSP plugin: %s", currentromoptions.rspPluginName);
-		strcpy(emustatus.lastRSPPluginLoaded, currentromoptions.rspPluginName);
-
-		if( currentromoptions.rspPluginName[0] != 0 )
-		{
-			/* Set RSP plugin path */
-			strcpy(InputPath, StartPath);
-
-			strcpy(generalmessage,TranslateStringByString("Loading RSP Plugin:"));
-			strcat(generalmessage, currentromoptions.rspPluginName);
-			SetStatusBarText(0, generalmessage);
-			TRACE0(generalmessage);
-			strcat(InputPath, currentromoptions.rspPluginName);
-
-			/* Load RSP plugin DLL */
-			if(LoadRSPPlugin(InputPath) == FALSE)
-			{
-				// Cannot load ROM specified RSP plugin, we then use the system default RSP plugin
-				CloseRSPPlugin();
-				LoadPlugins(LOAD_RSP_PLUGIN);	
-			}
-			else
-			{
-				rsp_plugin_is_loaded = TRUE;
-				emuoptions.UsingRspPlugin = TRUE;
-				EnableMenuItem(gui.hMenu1964main, ID_RSP_CONFIG, MF_ENABLED);
-				SetStatusBarText(0, TranslateStringByString("Init RSP Plugin ..."));
-				InitializeRSP();
-			}
-		}
-		else
-		{
-			emuoptions.UsingRspPlugin = FALSE;
-			rsp_plugin_is_loaded = FALSE;
-			EnableMenuItem(gui.hMenu1964main, ID_RSP_CONFIG, MF_GRAYED);
-		}
-	}
-
-	if( strcmp(currentromoptions.videoPluginName,emustatus.lastVideoPluginLoaded) != 0 )
-	{
-		TRACE1("Loading video plugin: %s", currentromoptions.videoPluginName);
-		CloseVideoPlugin();	// Close the current video plugin
-
-		strcpy(emustatus.lastVideoPluginLoaded, currentromoptions.videoPluginName);
-
-		strcpy(generalmessage,TranslateStringByString("Loading Video Plugin:"));
-		strcat(generalmessage, currentromoptions.videoPluginName);
-		SetStatusBarText(0, generalmessage);
-		TRACE0(generalmessage);
-
-		/* Set Video plugin path */
-		strcpy(VideoPath, StartPath);
-		strcat(VideoPath, currentromoptions.videoPluginName);
-
-		/* Load Video plugin */
-		if(LoadVideoPlugin(VideoPath) == FALSE)
-		{
-			LoadPlugins(LOAD_VIDEO_PLUGIN);	
-		}
-		else
-		{
-			strcpy(generalmessage, currentromoptions.videoPluginName);
-			_strlwr(generalmessage);					/* convert to lower case */
-			if(strstr(generalmessage, "gl") > 0) 
-			{		/* Check if the plugin is opengl plugin */
-				guioptions.ok_to_pause_at_menu = FALSE; /* We should not pause game by menu if using opengl plugin */
-			}
-			else if( strstr(generalmessage, "debug") > 0 || strstr(generalmessage, "dbg") > 0 )
-			{
-				guioptions.ok_to_pause_at_menu = FALSE;
-			}
-			else
-			{
-#ifdef _DEBUG
-				guioptions.ok_to_pause_at_menu = FALSE;
-#else
-				guioptions.ok_to_pause_at_menu = TRUE;	/* if using D3D or other plugins, we can do it. */
-#endif
-			}
-
-			SetStatusBarText(0, TranslateStringByString("Init Video Plugin ..."));
-			InitPluginData();
-			VIDEO_InitiateGFX(Gfx_Info);
-			MoveWindow
-				(
-				gui.hwnd1964main,
-				guistatus.window_position.left,
-				guistatus.window_position.top+2,
-				guistatus.clientwidth,
-				guistatus.clientheight,
-				TRUE
-				);
-			if(guistatus.WindowIsMaximized) 
-				ShowWindow(gui.hwnd1964main, SW_SHOWMAXIMIZED);
-		}
-	}
-
-	if( strcmp(currentromoptions.inputPluginName,emustatus.lastInputPluginLoaded) != 0 )
-	{
-		CloseControllerPlugin();
-
-		strcpy(emustatus.lastInputPluginLoaded, currentromoptions.inputPluginName);
-		TRACE1("Loading Input plugin: %s", currentromoptions.inputPluginName);
-
-		strcpy(generalmessage,TranslateStringByString("Loading Input Plugin:"));
-		strcat(generalmessage, currentromoptions.inputPluginName);
-		SetStatusBarText(0, generalmessage);
-		TRACE0(generalmessage);
-
-		/* Set Input plugin path */
-		strcpy(InputPath, StartPath);
-		strcat(InputPath, currentromoptions.inputPluginName);
-
-		/* Load Input plugin DLL */
-		if(LoadControllerPlugin(InputPath) == FALSE) 
-		{
-			LoadPlugins(LOAD_INPUT_PLUGIN);	
-		}
-		else
-		{
-			SetStatusBarText(0, TranslateStringByString("Init Input Plugin ..."));
-			CONTROLLER_InitiateControllers(gui.hwnd1964main, Controls);
-		}
-	}
-
-    if( strcmp(currentromoptions.audioPluginName,emustatus.lastAudioPluginLoaded) != 0 )
-	{
-		CloseAudioPlugin();
-		strcpy(emustatus.lastAudioPluginLoaded, currentromoptions.audioPluginName);
-		TRACE1("Loading Audio plugin: %s", currentromoptions.audioPluginName);
-
-		strcpy(generalmessage,TranslateStringByString("Loading Audio Plugin:"));
-		strcat(generalmessage, currentromoptions.audioPluginName);
-		SetStatusBarText(0, generalmessage);
-		TRACE0(generalmessage);
-
-		/* Set path for the Audio plugin */
-		strcpy(AudioPath, StartPath);
-		strcat(AudioPath, currentromoptions.audioPluginName);
-
-		Audio_Is_Initialized = 0;
-		Audio = 0;
-		if(LoadAudioPlugin(AudioPath) == FALSE)
-		{
-			LoadPlugins(LOAD_AUDIO_PLUGIN);	
-		}
-		else
-		{
-			Audio = 1;
-			if( _AUDIO_Initialize != NULL) 
-			{
-				if( AUDIO_Initialize( Audio_Info) == TRUE) 
-				{
-					Audio = 1;
-					Audio_Is_Initialized = 1;
-				} 
-				else
-				{
-					Audio = 0;
-					Audio_Is_Initialized = 0;
-				}
-			}
-
-			if ( Audio_Is_Initialized )
-			{
-				HRESULT hr;
-
-				__try {
-					if ( FAILED( hr = DirectSoundCreate( NULL, &lpds, NULL ) ) ) 
-					{
-						Audio = 0;
-					}
-					if ( lpds) 
-					{
-						IDirectSound_Release(lpds);
-					}
-				}
-				__except( NULL, EXCEPTION_EXECUTE_HANDLER) 
-				{
-					Audio = 0;
-					__try 
-					{
-						if( lpds)
-							IDirectSound_Release(lpds);
-					} __except( NULL, EXCEPTION_EXECUTE_HANDLER){}
-				}
-			}
-
-			if(Audio == 0)
-			{
-				CloseAudioPlugin();
-				LoadPlugins(LOAD_AUDIO_PLUGIN);	
-			}		
-		}
-	}
+	LoadPlugins(LOAD_RSP_PLUGIN);	
+	LoadPlugins(LOAD_VIDEO_PLUGIN);	
+	LoadPlugins(LOAD_INPUT_PLUGIN);	
+	LoadPlugins(LOAD_AUDIO_PLUGIN);	
+		
 }
 
 /************************************************************************/
@@ -751,38 +517,62 @@ BOOL LoadPlugins(int type)
 	char	StartPath[_MAX_PATH];
 	BOOL	result=TRUE;
 	char	errormsg[500];
-	static int		Audio = 0;
 
+	char	RSPPlugin[40];
+	char	AudioPlugin[40];
+	char	VideoPlugin[40];
+	char	InputPlugin[40];
 	errormsg[0]=0;
 
 	GetPluginDir(StartPath);
 
-	if( type == LOAD_ALL_PLUGIN || type == LOAD_RSP_PLUGIN )
+	if(strcmp(currentromoptions.rspPluginName, "") == 0)
+		strcpy(RSPPlugin, gRegSettings.RSPPlugin);
+	else
+		strcpy(RSPPlugin, currentromoptions.rspPluginName);
+
+	if(strcmp(currentromoptions.videoPluginName, "") == 0)
+		strcpy(VideoPlugin, gRegSettings.VideoPlugin);
+	else
+		strcpy(VideoPlugin, currentromoptions.videoPluginName);
+
+	if(strcmp(currentromoptions.audioPluginName, "") == 0)
+		strcpy(AudioPlugin, gRegSettings.AudioPlugin);
+	else
+		strcpy(AudioPlugin, currentromoptions.audioPluginName);
+
+	if(strcmp(currentromoptions.inputPluginName, "") == 0)
+		strcpy(InputPlugin, gRegSettings.InputPlugin);
+	else
+		strcpy(InputPlugin, currentromoptions.inputPluginName);
+
+	if(( type == LOAD_ALL_PLUGIN || type == LOAD_RSP_PLUGIN ) &&
+	   ( strcmp(RSPPlugin, emustatus.lastRSPPluginLoaded) != 0))
 	{
-		SetStatusBarText(0, TranslateStringByString("Loading RSP Plugin:"));
+		//Check if there was a previous plugin loaded
+		if(strcmp(emustatus.lastRSPPluginLoaded, "") != 0 )
+		{
+			CloseRSPPlugin();
+			rsp_plugin_is_loaded = FALSE;
+			emuoptions.UsingRspPlugin = FALSE;
+		}
 
 		/* Set RSP plugin path */
 		strcpy(InputPath, StartPath);
-		
-		if(strcmp(gRegSettings.RSPPlugin, "") == 0 || strcmp(gRegSettings.RSPPlugin, "none") == 0 )
+		SetStatusBarText(0, TranslateStringByString("Loading RSP Plugin:"));
+
+		if(strcmp(RSPPlugin, "") == 0 || strcmp(RSPPlugin, "none") == 0 )
 		{
-			emuoptions.UsingRspPlugin = FALSE;
-			rsp_plugin_is_loaded = FALSE;
 			EnableMenuItem(gui.hMenu1964main, ID_RSP_CONFIG, MF_GRAYED);
 			memset(emustatus.lastRSPPluginLoaded,0,sizeof(emustatus.lastRSPPluginLoaded));
 		}
 		else 
 		{
-			strcat(InputPath, gRegSettings.RSPPlugin);
-
+			strcat(InputPath, RSPPlugin);
 			/* Load RSP plugin DLL */
 			if(LoadRSPPlugin(InputPath) == FALSE)
 			{
 				CloseRSPPlugin();
-				strcpy(gRegSettings.RSPPlugin,"");
-				REGISTRY_WriteStringByIndex( IDS_KEY_RSP_PLUGIN, gRegSettings.RSPPlugin);
-				rsp_plugin_is_loaded = FALSE;
-				emuoptions.UsingRspPlugin = FALSE;
 				EnableMenuItem(gui.hMenu1964main, ID_RSP_CONFIG, MF_GRAYED);
 				result = FALSE;
 				strcat(errormsg,"Failed to load RSP plugin\n");
@@ -801,87 +591,50 @@ BOOL LoadPlugins(int type)
 
 	}
 
-	if(type == LOAD_ALL_PLUGIN || type == LOAD_VIDEO_PLUGIN)
+	if((type == LOAD_ALL_PLUGIN || type == LOAD_VIDEO_PLUGIN) &&
+	   ( strcmp(VideoPlugin, emustatus.lastVideoPluginLoaded) != 0))
 	{
-		strcpy(VideoPath, StartPath);
 		SetStatusBarText(0, TranslateStringByString("Loading Video Plugin:"));
+		CloseVideoPlugin(); //Close the currently loaded video plugin
 
 		/* Set Video plugin path */
-		if(strcmp(gRegSettings.VideoPlugin, "") == 0) 
-		{
-			strcpy(gRegSettings.VideoPlugin, "1964Video.dll");
-			strcat(VideoPath, gRegSettings.VideoPlugin);
-			REGISTRY_WriteStringByIndex( IDS_KEY_VIDEO_PLUGIN, gRegSettings.VideoPlugin);
-		} 
-		else 
-		{
-			strcat(VideoPath, gRegSettings.VideoPlugin);
-		}
+		strcpy(VideoPath, StartPath);
+		strcat(VideoPath, VideoPlugin);
 
 		/* Load Video plugin */
 		if(LoadVideoPlugin(VideoPath) == FALSE)
 		{
-			DisplayError("Cannot load video plugin, check the file path or the plugin directory setting");
-			//strcpy(gRegSettings.VideoPlugin, "");
-			strcpy(gRegSettings.VideoPlugin, "1964Video.dll");
-			REGISTRY_WriteStringByIndex( IDS_KEY_VIDEO_PLUGIN, gRegSettings.VideoPlugin);
-			CloseVideoPlugin();
+			//Plugin was unable to be loaded, notify the user about this
 			result = FALSE;
-			strcat(errormsg,"Failed to load video plugin:");
+			strcat(errormsg,"Failed to load video plugin:\n");
 			strcat(errormsg, VideoPath);
 			strcat(errormsg,"\n");
 			memset(emustatus.lastVideoPluginLoaded,0,sizeof(emustatus.lastVideoPluginLoaded));
 		}
 		else
 		{
-			strcpy(generalmessage, gRegSettings.VideoPlugin);
-			strcpy(emustatus.lastVideoPluginLoaded, gRegSettings.VideoPlugin);
+			strcpy(generalmessage, VideoPlugin);
+			strcpy(emustatus.lastVideoPluginLoaded, VideoPlugin);
 			_strlwr(generalmessage);					/* convert to lower case */
-			if(strstr(generalmessage, "gl") > 0) 
-			{		/* Check if the plugin is opengl plugin */
-				guioptions.ok_to_pause_at_menu = FALSE; /* We should not pause game by menu if using opengl plugin */
-			}
-			else if( strstr(generalmessage, "debug") > 0 || strstr(generalmessage, "dbg") > 0 )
-			{
-				guioptions.ok_to_pause_at_menu = FALSE;
-			}
-			else
-			{
-#ifdef _DEBUG
-				guioptions.ok_to_pause_at_menu = FALSE;
-#else
-				guioptions.ok_to_pause_at_menu = TRUE;	/* if using D3D or other plugins, we can do it. */
-#endif
-			}
 		}
 
 	}
 
-	if(type == LOAD_ALL_PLUGIN || type == LOAD_INPUT_PLUGIN)
+	if((type == LOAD_ALL_PLUGIN || type == LOAD_INPUT_PLUGIN) &&
+	   ( strcmp(InputPlugin, emustatus.lastInputPluginLoaded) != 0))
 	{
+		CloseControllerPlugin(); //Close the current input plugin
 		SetStatusBarText(0, TranslateStringByString("Loading Input Plugin:"));
 
 		/* Set Input plugin path */
 		strcpy(InputPath, StartPath);
-		if(strcmp(gRegSettings.InputPlugin, "") == 0) 
-		{
-			strcpy(gRegSettings.InputPlugin, "1964Input.dll");
-			strcat(InputPath, gRegSettings.InputPlugin);
-			REGISTRY_WriteStringByIndex( IDS_KEY_INPUT_PLUGIN, gRegSettings.InputPlugin);
-		} 
-		else 
-		{
-			strcat(InputPath, gRegSettings.InputPlugin);
-		}
+		strcat(InputPath, InputPlugin);
 
 		/* Load Input plugin DLL */
 		if(LoadControllerPlugin(InputPath) == FALSE) 
 		{
-			//strcpy(gRegSettings.InputPlugin, "");
-			strcpy(gRegSettings.InputPlugin, "1964Input.dll");
-			REGISTRY_WriteStringByIndex( IDS_KEY_INPUT_PLUGIN, gRegSettings.InputPlugin);
 			result = FALSE;
-			strcat(errormsg,"Failed to load input plugin:");
+			strcat(errormsg,"Failed to load input plugin:\n");
 			strcat(errormsg, InputPath);
 			strcat(errormsg,"\n");
 			memset(emustatus.lastInputPluginLoaded,0,sizeof(emustatus.lastInputPluginLoaded));
@@ -899,36 +652,26 @@ BOOL LoadPlugins(int type)
 
 	}
 
-	if((type == LOAD_ALL_PLUGIN) || (type == LOAD_AUDIO_PLUGIN))
+	if((type == LOAD_ALL_PLUGIN) || (type == LOAD_AUDIO_PLUGIN)&&
+	   ( strcmp(AudioPlugin, emustatus.lastAudioPluginLoaded) != 0))
 	{
+		CloseAudioPlugin();
 		SetStatusBarText(0, TranslateStringByString("Loading Audio Plugin:"));
 
 		/* Set path for the Audio plugin */
 		strcpy(AudioPath, StartPath);
-		if(strcmp(gRegSettings.AudioPlugin, "") == 0) 
-		{
-			strcpy(gRegSettings.AudioPlugin, "1964Aud.dll");
-			strcat(AudioPath, gRegSettings.AudioPlugin);
-			REGISTRY_WriteStringByIndex( IDS_KEY_AUDIO_PLUGIN, gRegSettings.AudioPlugin);
-		}
-		else
-		{
-			strcat(AudioPath, gRegSettings.AudioPlugin);
-		}
+		strcat(AudioPath, AudioPlugin);
 
 		Audio_Is_Initialized = 0;
+
 		if(LoadAudioPlugin(AudioPath) == TRUE)
 		{
-			Audio = 1;
-			strcpy(emustatus.lastAudioPluginLoaded, gRegSettings.AudioPlugin);
+			strcpy(emustatus.lastAudioPluginLoaded, AudioPlugin);
 		}
 		else
 		{
-			Audio = 0;
-			strcpy(gRegSettings.AudioPlugin, "1964Aud.dll");
-			REGISTRY_WriteStringByIndex( IDS_KEY_AUDIO_PLUGIN, gRegSettings.AudioPlugin);
 			result = FALSE;
-			strcat(errormsg,"Failed to load audio plugin:");
+			strcat(errormsg,"Failed to load audio plugin:\n");
 			strcat(errormsg, AudioPath);
 			strcat(errormsg,"\n");
 		}
@@ -937,54 +680,16 @@ BOOL LoadPlugins(int type)
 		{
 			if( AUDIO_Initialize( Audio_Info) == TRUE) 
 			{
-				Audio = 1;
 				Audio_Is_Initialized = 1;
 			} 
 			else
 			{
-				Audio = 0;
 				Audio_Is_Initialized = 0;
+				CloseAudioPlugin();
+				memset(emustatus.lastAudioPluginLoaded,0,sizeof(emustatus.lastAudioPluginLoaded));
 			}
 		}
 
-		if ( Audio_Is_Initialized )
-		{
-			HRESULT hr;
-
-			__try {
-				    if ( FAILED( hr = DirectSoundCreate( NULL, &lpds, NULL ) ) ) 
-					{
-						Audio = 0;
-					}
-				    if ( lpds) 
-					{
-						IDirectSound_Release(lpds);
-					}
-				}
-			__except( NULL, EXCEPTION_EXECUTE_HANDLER) 
-			{
-				Audio = 0;
-				__try 
-				{
-					if( lpds)
-						IDirectSound_Release(lpds);
-				} 
-				__except( NULL, EXCEPTION_EXECUTE_HANDLER){}
-			}
-		}
-
-		if(Audio == 0)
-		{
-			//DisplayError("Cannot load audio plugin, check the file path or the plugin directory setting");
-			CloseAudioPlugin();
-			memset(emustatus.lastAudioPluginLoaded,0,sizeof(emustatus.lastAudioPluginLoaded));
-			//strcpy(gRegSettings.AudioPlugin, "");
-			//strcpy(AudioPath, StartPath);
-			//strcpy(gRegSettings.AudioPlugin, "No Audio 1964.dll");
-			//strcat(AudioPath, gRegSettings.AudioPlugin);
-			//REGISTRY_WriteStringByIndex( IDS_KEY_AUDIO_PLUGIN, gRegSettings.AudioPlugin);
-			//LoadAudioPlugin(AudioPath);
-		}
 	}
 
 	if(type == LOAD_ALL_PLUGIN )//|| type == LOAD_VIDEO_PLUGIN)
@@ -1002,13 +707,14 @@ BOOL LoadPlugins(int type)
 			guistatus.clientheight,
 			TRUE
 		);
+
 		if(guistatus.WindowIsMaximized) 
 			ShowWindow(gui.hwnd1964main, SW_SHOWMAXIMIZED);
 
 		ShowWindow(gui.hwnd1964main, SW_SHOW);
 
 		NewRomList_ListViewChangeWindowRect();
-		DockStatusBar();
+		InitStatusBarParts();
 	}
 	else if( type == LOAD_VIDEO_PLUGIN )
 	{
@@ -1019,12 +725,7 @@ BOOL LoadPlugins(int type)
 
 	Set_Ready_Message();
 
-	//if (Audio == 0)
-	//{
-	//	SetStatusBarText(1, "dsound fail");
-	//}
-
-	if( result == FALSE )
+	if(!result)
 	{
 		MessageBox(0,errormsg,"Error", MB_OK);
 	}
@@ -1088,7 +789,7 @@ void StorePluginSetting(void)
 		CloseVideoPlugin();
 		LoadPlugins(LOAD_VIDEO_PLUGIN);
 		NewRomList_ListViewChangeWindowRect();
-		DockStatusBar();
+		InitStatusBarParts();
 		REGISTRY_WriteStringByIndex( IDS_KEY_VIDEO_PLUGIN, gRegSettings.VideoPlugin);
 	}
 
@@ -1117,6 +818,7 @@ void StorePluginSetting(void)
 		REGISTRY_WriteStringByIndex( IDS_KEY_RSP_PLUGIN, gRegSettings.RSPPlugin);
 	}
 
+	//CHECKME
 	if( strlen(temp_rsp_plugin) < 5 )
 	{
 		emuoptions.UsingRspPlugin = FALSE;
@@ -1144,6 +846,7 @@ void OnInitPluginsDialog(HWND hDlg)
 	SendDlgItemMessage(hDlg, IDC_COMBO_RSP, CB_RESETCONTENT, 0, 0);
 	
 	tempHandle = GetDlgItem(hDlg,IDC_RSP_ABOUT);
+
 	if( _RSPDllAbout )
 		EnableWindow(tempHandle,TRUE);
 	else
@@ -1327,7 +1030,7 @@ LRESULT APIENTRY PluginsDialog(HWND hDlg, unsigned message, WORD wParam, LONG lP
 				OnInitPluginsDialogPerRom(hDlg);
 				break;
 			}
-
+		//CLEANME
 		case CBN_SELCHANGE:
 			switch(LOWORD(wParam))
 			{
@@ -1542,13 +1245,10 @@ LRESULT APIENTRY PluginsDialogForROMSpecifiedPlugins(HWND hDlg, unsigned message
 			case IDOK:
 				{
 					StoreROMSpecifiedPluginSetting(hDlg);
-
 					EndDialog(hDlg, TRUE);
 					REGISTRY_WriteDWORD( "DisplayDefaultPlugins", guioptions.displayDefaultPlugins);
-
 					return(TRUE);
 				}
-
 			case IDCANCEL:
 				{
 					if( AllPluginDLLInfos ) 
@@ -1559,15 +1259,11 @@ LRESULT APIENTRY PluginsDialogForROMSpecifiedPlugins(HWND hDlg, unsigned message
 					EndDialog(hDlg, TRUE);
 					return(TRUE);
 				}
-
 			case IDC_DEFAULT_PLUGIN_RADIO:
 				StoreROMSpecifiedPluginSetting(hDlg);
 				guioptions.displayDefaultPlugins = TRUE;
 				REGISTRY_WriteDWORD( "DisplayDefaultPlugins", guioptions.displayDefaultPlugins);
-
-				//SendMessage(hDlg, WM_INITDIALOG, wParam, lParam);
 				OnInitPluginsDialog(hDlg);
-				
 				break;
 			}
 		}
@@ -1711,7 +1407,6 @@ void GetCmdLineParameter(CmdLineParameterType arg, char *buf)
 	 }
 	*ptr2 = 0;
 }
-
 
 /************************************************************************/
 /* Multiple language support date structures                            */
@@ -1940,7 +1635,7 @@ void CheckLanguages()
 				strcpy(languageFileNames[guioptions.totalLanguages], libaa.cFileName);
 
 				strcpy(generalmessage, libaa.cFileName);
-				generalmessage[strlen(generalmessage)-4]=0;;
+				generalmessage[strlen(generalmessage)-4]=0;
 				AppendMenu
 					(
 					language_submenu,
@@ -2061,12 +1756,6 @@ DlgLangMapEntry PluginsDialogItems[]=
 	{IDC_ROM_PLUGIN_RADIO,0,0},
 };
 
-DlgLangMapEntry RedistribDialogItems[]=
-{
-	{IDOK,0,0},
-};
-
-
 DlgLangMapEntry ROMInfoDialogItems[]=
 {
 	{IDC_STATIC_TXT1,0,0},
@@ -2074,7 +1763,6 @@ DlgLangMapEntry ROMInfoDialogItems[]=
 	{IDC_STATIC_TXT6,0,0},
 	{IDC_STATIC_TXT2,0,0},
 };
-
 
 DlgLangMapEntry ROMOptionsDialogItems[]=
 {
@@ -2116,7 +1804,6 @@ DlgLangMapEntry *DlgLangMapEntryGroups[]=
 	FolderDialogItems,
 	OptionsDialogItems,
 	PluginsDialogItems,
-	RedistribDialogItems,
 	ROMInfoDialogItems,
 	ROMOptionsDialogItems,
 	UnavailableDialogItems,
@@ -2130,7 +1817,6 @@ const int DlgLangMapEntryCounts[] =
 	sizeof(FolderDialogItems)/sizeof(DlgLangMapEntry),
 	sizeof(OptionsDialogItems)/sizeof(DlgLangMapEntry),
 	sizeof(PluginsDialogItems)/sizeof(DlgLangMapEntry),
-	sizeof(RedistribDialogItems)/sizeof(DlgLangMapEntry),
 	sizeof(ROMInfoDialogItems)/sizeof(DlgLangMapEntry),
 	sizeof(ROMOptionsDialogItems)/sizeof(DlgLangMapEntry),
 	sizeof(UnavailableDialogItems)/sizeof(DlgLangMapEntry),
@@ -2311,6 +1997,7 @@ char* ConvertSpecialCharacters(char *str)
 	return str;
 }
 
+//CLEANME / FIXME
 BOOL LoadLanguageIntoMemory(char *filename)
 {
 	/************************************************************************/
@@ -2541,7 +2228,6 @@ void TranslateMenu(HMENU hMenu, HWND mainHWND)
 
 	SetMenuTranslatedString(submenu,3,LANGUAGE_MENU);
 	subsubmenu = GetSubMenu(submenu,3) ;
-	//SetMenuTranslatedString(subsubmenu,0,ID_LANGUAGE_ENGLISH);
 
 	SetMenuTranslatedString(submenu,5,SAVESTATE_MENU);
 	subsubmenu = GetSubMenu(submenu,5) ;
@@ -2635,7 +2321,7 @@ void TranslateMenu(HMENU hMenu, HWND mainHWND)
 	submenu = GetSubMenu(hMenu,5) ;
 	SetMenuTranslatedString(submenu,0,ID_HELP_HELP);
 	SetMenuTranslatedString(submenu,1,ID_ONLINE_HELP);
-	SetMenuTranslatedString(submenu,2,ID_CHECKWEB);;
+	SetMenuTranslatedString(submenu,2,ID_CHECKWEB);
 	SetMenuTranslatedString(submenu,5,ID_ABOUT);
 
 	DrawMenuBar(mainHWND);

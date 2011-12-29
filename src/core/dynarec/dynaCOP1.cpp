@@ -2368,7 +2368,7 @@ void cop1_cvtw_d(OP_PARAMS)
 {
     cop1_with_exception(PASS_PARAMS);    
     
-    compilerstatus.cp0Counter += DEFAULT_ROUNDING_STEP;;
+    compilerstatus.cp0Counter += DEFAULT_ROUNDING_STEP;
     _SAFTY_COP1_(r4300i_COP1_cvtw_d)
 
     INTERPRET_NOFLUSH(r4300i_COP1_cvtw_d);
@@ -2383,7 +2383,7 @@ void cop1_cvtl_d(OP_PARAMS)
 {
     cop1_with_exception(PASS_PARAMS);    
     
-    compilerstatus.cp0Counter += DEFAULT_ROUNDING_STEP;;
+    compilerstatus.cp0Counter += DEFAULT_ROUNDING_STEP;
     _SAFTY_COP1_(r4300i_COP1_cvtl_d)
 
     INTERPRET_NOFLUSH(r4300i_COP1_cvtl_d);

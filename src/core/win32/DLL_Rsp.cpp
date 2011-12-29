@@ -33,8 +33,8 @@ static void __cdecl DebuggerMsgCallBack(char *msg)
 static void (__cdecl *_SetDebuggerCallBack)(void (_cdecl *DbgCallBackFun)(char *msg)) = NULL;
 #endif
 
-uint16		RSPVersion = 0;;
-DWORD		RspTaskValue = 0;;
+uint16		RSPVersion = 0;
+DWORD		RspTaskValue = 0;
 HINSTANCE	hRSPHandle = NULL;
 BOOL		rsp_plugin_is_loaded = FALSE;
 

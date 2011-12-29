@@ -671,7 +671,7 @@ HandleExceptions(0x80000180);
 /*
  =======================================================================================================================
     define CHECKING_ADDR_ALIGNMENT(addr, mask, opcode, exception) if( addr & mask )
-    {Trigger_Address_Error_Exception(addr, opcode, exception);return;;}
+    {Trigger_Address_Error_Exception(addr, opcode, exception);return;}
  =======================================================================================================================
  */
 #define CHECKING_ADDR_ALIGNMENT(addr, mask, opcode, exception) \

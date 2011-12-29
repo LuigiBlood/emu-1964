@@ -57,8 +57,7 @@
 #include "FrameBuffer.h"
 #include "zlib/unzip.h"
 #include "Registers.h"
+
 #define stricmp _stricmp
 #define strnicmp _strnicmp
 extern N64::CRegisters r;
-
-

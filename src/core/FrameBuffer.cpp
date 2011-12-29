@@ -116,7 +116,7 @@ void SetVIScales()
 		}
 	}
 
-	g_FrmBufWidth = (uint32)(fViWidth/4)*4;;
+	g_FrmBufWidth = (uint32)(fViWidth/4)*4;
 	g_FrmBufHeight = (uint32)(fViHeight/4)*4;
 }
 

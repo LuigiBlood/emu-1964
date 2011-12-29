@@ -24,11 +24,9 @@ struct GUISTATUS	guistatus;
 int					ActiveApp;
 
 /* the legal stuff */
-unsigned char	MainDisclaimer[320];
 unsigned char	Scratch0[700];
 unsigned char	Scratch1[700];
 unsigned char	Scratch2[700];
-unsigned char	DistConditions[800];	/* GNU Redistribution Conditions */
 
 
 unsigned int		cfmenulist[8] = {
@@ -52,7 +50,7 @@ int					game_country_tvsystem = 0;
 int					Audio_Is_Initialized = 0;
 int					timer;
 int					StateFileNumber = 0;
-extern BOOL			Is_Reading_Rom_File;;
+extern BOOL			Is_Reading_Rom_File;
 extern BOOL			To_Stop_Reading_Rom_File;
 extern BOOL			opcode_debugger_memory_is_allocated;
 extern HINSTANCE	hinstControllerPlugin;
@@ -98,7 +96,6 @@ void					ResetSpeedLimit();
 void					RomListSaveCurrentPosToRegistry(void);
 void					RomListLoadCurrentPosFromRegistry(void);
 void					ReloadDefaultPlugins();
-void					LoadROMSpecificPlugins();
 void					ProcessToolTips(LPARAM lParam);
 BOOL					LinkBoxArtImageByDialog(void);
 
@@ -106,6 +103,7 @@ typedef struct {
 	UINT	id;
 	BOOL	visible;	// is the menu visiable or deleted from the menu bar
 }MenuStatus;
+
 MenuStatus	recent_game_menus[MAX_RECENT_GAME_LIST] =
 {
 	{ID_FILE_RECENTGAMES_GAME1,		TRUE},
@@ -138,94 +136,88 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 
 	if( Rom_Loaded) 
 	{
-		if( emustatus.Emu_Is_Running) 
+		if( !emustatus.Emu_Is_Paused || emustatus.Emu_Is_Running) 
 		{
-			if( !emustatus.Emu_Is_Paused) 
+			vips = (float)(viCountPerSecond);
+
+            if (emuoptions.AutoCF)
+                sprintf(generalmessage, "AutoCF=%2d", CounterFactor);
+            else
+                sprintf(generalmessage, "CF=%2d", CounterFactor);
+
+            SetStatusBarText(2, generalmessage);
+            
+			if( vips >= 100.0) 
 			{
-				vips = (float)(viCountPerSecond);
+				if( emuoptions.AutoFrameSkip && emustatus.viframeskip )
+					sprintf(generalmessage, "%3d Skip", (int) vips); //lower case "vi/s" looks like a bug.
+				else
+					sprintf(generalmessage, "%3d VI/s", (int) vips);
+			} 
+			else 
+			{
+				if( emuoptions.AutoFrameSkip && emustatus.viframeskip )
+					sprintf(generalmessage, " %2d Skip", (int) vips); //lower case "vi/s" looks like a bug.
+				else
+					sprintf(generalmessage, " %2d VI/s", (int) vips);
+			}
 
-                if (emuoptions.AutoCF)
-                    sprintf(generalmessage, "AutoCF=%2d", CounterFactor);
-                else
-                    sprintf(generalmessage, "CF=%2d", CounterFactor);
+			viCountPerSecond = 0;
+			QueryPerformanceCounter(&LastSecondTime);
 
-                SetStatusBarText(2, generalmessage);
+			if( guistatus.IsFullScreen == FALSE) 
+			{
+				SetStatusBarText(1, generalmessage);
 
-                
-				if( vips >= 100.0) 
+				if( guioptions.display_profiler_status || emuoptions.AutoFrameSkip ) 
 				{
-					if( emuoptions.AutoFrameSkip && emustatus.viframeskip )
-						sprintf(generalmessage, "%3d Skip", (int) vips); //lower case "vi/s" looks like a bug.
-					else
-						sprintf(generalmessage, "%3d VI/s", (int) vips);
+					format_profiler_result_msg(generalmessage);
+					reset_profiler();
+				}
+				if( guioptions.display_profiler_status ) 
+				{
+					SetStatusBarText(0, generalmessage);
 				} 
-				else 
+				else if(guioptions.display_detail_status) 
 				{
-					if( emuoptions.AutoFrameSkip && emustatus.viframeskip )
-						sprintf(generalmessage, " %2d Skip", (int) vips); //lower case "vi/s" looks like a bug.
-					else
-						sprintf(generalmessage, " %2d VI/s", (int) vips);
-				}
-
-				viCountPerSecond = 0;
-				QueryPerformanceCounter(&LastSecondTime);
-
-				if( guistatus.IsFullScreen == FALSE) 
-				{
-					SetStatusBarText(1, generalmessage);
-
-					if( guioptions.display_profiler_status || emuoptions.AutoFrameSkip ) 
-					{
-						format_profiler_result_msg(generalmessage);
-						reset_profiler();
-					}
-
-					if( guioptions.display_profiler_status ) 
-					{
-						SetStatusBarText(0, generalmessage);
-					} 
-					else if(guioptions.display_detail_status) 
-					{
-						sprintf
-							(
-							generalmessage,
-							"PC=%08x, DList=%d, AList=%d, PI=%d, Cont=%d",
-							gHWS_pc,
-							emustatus.DListCount,
-							emustatus.AListCount,
-							emustatus.PIDMACount,
-							emustatus.ControllerReadCount
-							);
-						SetStatusBarText(0, generalmessage);
-					}
-				}
-
-				/* Apply the hack codes */
-				if(emuoptions.auto_apply_cheat_code)
-				{
-#ifndef CHEATCODE_LOCK_MEMORY
-					CodeList_ApplyAllCode(INGAME);
-#endif
+					sprintf
+						(
+						generalmessage,
+						"PC=%08x, DList=%d, AList=%d, PI=%d, Cont=%d",
+						gHWS_pc,
+						emustatus.DListCount,
+						emustatus.AListCount,
+						emustatus.PIDMACount,
+						emustatus.ControllerReadCount
+						);
+					SetStatusBarText(0, generalmessage);
 				}
 			}
-		}
 
-		{
-			// Using the TimerProc to make sure GUI thread won't get lost 
-			MSG msg;
-			if(PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
+			/* Apply the hack codes */
+			if(emuoptions.auto_apply_cheat_code)
 			{
-				if(GetMessage(&msg, NULL, 0, 0))
+#ifndef CHEATCODE_LOCK_MEMORY
+				CodeList_ApplyAllCode(INGAME);
+#endif
+			}
+		}
+
+		// Using the TimerProc to make sure GUI thread won't get lost 
+		MSG msg;
+		if(PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
+		{
+			if(GetMessage(&msg, NULL, 0, 0))
+			{
+				if(!TranslateAccelerator(gui.hwnd1964main, gui.hAccTable, &msg))
 				{
-					if(!TranslateAccelerator(gui.hwnd1964main, gui.hAccTable, &msg))
-					{
-						TranslateMessage(&msg);
-						DispatchMessage(&msg);
-                        Sleep(10);
-					}
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+                    Sleep(10);
 				}
 			}
 		}
+
 	}
 }
 
@@ -249,7 +241,6 @@ void CreateOptionsDialog(int nStartPage)
     {
         Result = 0;
     }
-
 
 	if (Result)
     {
@@ -344,6 +335,7 @@ void CreateOptionsDialog(int nStartPage)
         psp[PSH_ROM_INFORMATION].pszTemplate = "UNAVAILABLE";
         psp[PSH_ROM_INFORMATION].pfnDlgProc = (DLGPROC) UnavailableProc;
     }
+
 	psp[PSH_ROM_INFORMATION].dwSize = sizeof(PROPSHEETPAGE);
 	psp[PSH_ROM_INFORMATION].dwFlags = PSP_USETITLE;
 	psp[PSH_ROM_INFORMATION].hInstance = gui.hInst;
@@ -369,8 +361,6 @@ void CreateOptionsDialog(int nStartPage)
 	psp[PSH_ABOUT].pszTitle = TranslateStringByString("About 1964");
 	psp[PSH_ABOUT].lParam = 0;
 
-
-
 	psh.dwSize = sizeof(PROPSHEETHEADER);
 	psh.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW| PSH_USEICONID ;
 	psh.hwndParent = gui.hwnd1964main;
@@ -383,7 +373,6 @@ void CreateOptionsDialog(int nStartPage)
 
 	{
 	HWND hCOP2Vecswnd;
-	
 	hCOP2Vecswnd = (HWND) PropertySheet(&psh);
 	}
 }
@@ -402,17 +391,14 @@ BOOL WindowMsgLoop()
 
 	if(PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
 	{
-		if(PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
+		if(GetMessage(&msg, NULL, 0, 0))
 		{
-			if(GetMessage(&msg, NULL, 0, 0))
+			if(!TranslateAccelerator(gui.hwnd1964main, gui.hAccTable, &msg))
 			{
-				if(!TranslateAccelerator(gui.hwnd1964main, gui.hAccTable, &msg))
-				{
-					TranslateMessage(&msg);
-					DispatchMessage(&msg);
-				}
-				return TRUE;
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
 			}
+			return TRUE;
 		}
 	}
 	
@@ -427,9 +413,8 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	BOOL needchooseromdirectory;
 
 	if(hPrevInstance) return FALSE;
-	SaveCmdLineParameter(lpszCmdLine);
 
-	gui.szBaseWindowTitle = "1964 1.0";
+	gui.szBaseWindowTitle = "1964 1.2";
 	gui.hwnd1964main = NULL;		/* handle to main window */
 	gui.hwndRomList = NULL;			/* Handle to the rom list child window */
 	gui.hStatusBar = NULL;			/* Window Handle of the status bar */
@@ -448,14 +433,6 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	emustatus.Emu_Keep_Running = FALSE;
 	emustatus.processing_exception = FALSE;
 
-	if( REGISTRY_ReadDWORD("1964RunningStatus", FALSE) == TRUE )
-	{
-		// 1964 was started, but never stopped correctly, (crashed)
-		BOOL screenSaverLastStatus = REGISTRY_ReadDWORD("ScreenSaverStatus", TRUE);
-		SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, screenSaverLastStatus, 0, 0);
-	//	MessageBox(NULL,"1964 didn't exit correctly the last time, screen saver status is restored.",
-	//		"Warning", MB_OK);
-	}
 	SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &WindowScreenSaverStatus, 0); 
 	
 	memset(emustatus.lastVideoPluginLoaded,0,sizeof(emustatus.lastVideoPluginLoaded));
@@ -467,10 +444,12 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	memset(languageFileNames,0,sizeof(languageFileNames));
 
 	StopEmulatorEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
+
 	if (StopEmulatorEvent == NULL)
 	{ 
 		DisplayError( "Error creating StopEmulatorEvent events");
 	} 
+
 	ResumeEmulatorEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
 	AudioThreadStopEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
 	AudioThreadEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
@@ -481,14 +460,11 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 		DisplayError( "Error creating ResumeEmulatorEvent events");
 	} 
 
-
 #ifdef _DEBUG
 	init_debug_options();
 #endif
 
 	gui.hInst = hInstance;
-	LoadString(hInstance, IDS_MAINDISCLAIMER, (LPSTR)MainDisclaimer, sizeof(MainDisclaimer));
-
 	Set_1964_Directory();
 
 	gui.hwnd1964main = InitWin98UI(hInstance, nCmdShow);
@@ -503,18 +479,9 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	CheckLanguages();
 
 	gui.hStatusBar = CreateStatusWindow(WS_CHILD | WS_VISIBLE | WS_OVERLAPPED, gui.staturbar_field.field_1, gui.hwnd1964main, 0x1122);
-	{
-		/*~~~~~~~~~~~~*/
-		RECT	rc, src;
-		/*~~~~~~~~~~~~*/
-
-		GetWindowRect(gui.hwnd1964main, &rc);
-		GetWindowRect(gui.hStatusBar, &src);
-		DockStatusBar();
-	}
 
 	SetupToolBar();
-	DockStatusBar();
+	InitStatusBarParts();
 
 	InitVirtualMemory();
 	InitPluginData();
@@ -522,13 +489,11 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	SetStatusBarText(0, TranslateStringByString("Load Rom Setting from ROM_Properties.ini"));
 	FileIO_Load1964Ini();
 
-	SetWindowText(gui.hwnd1964main, gui.szBaseWindowTitle);
 	emustatus.cpucore = defaultoptions.Emulator;
 
 	SetStatusBarText(3, defaultoptions.RDRAM_Size == RDRAMSIZE_4MB ? "4MB" : "8MB");
 	SetStatusBarText(4, "D");
 	SetStatusBarText(2, "CF=3");
-
 
 	gui.hwndRomList = NewRomList_CreateListViewControl(gui.hwnd1964main);	/* this must be before the video plugin init */
 
@@ -545,31 +510,24 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	timer = SetTimer(gui.hwnd1964main, 1, 1000, TimerProc);
 
 	needchooseromdirectory = FALSE;
-	if( StartGameByCommandLine() )
+	NeedFreshromListAfterStop = FALSE;
+
+	if (guioptions.display_romlist)
 	{
-		pluginInitResult = TRUE;
-	}
-	else
-	{
-		NeedFreshromListAfterStop = FALSE;
-		if (guioptions.display_romlist)
+		if( strlen(directories.rom_directory_to_use) > 4 && PathFileExists(directories.rom_directory_to_use) )
 		{
-			if( strlen(directories.rom_directory_to_use) > 4 && PathFileExists(directories.rom_directory_to_use) )
-			{
-				NewRomList_ListViewChangeWindowRect();
+			NewRomList_ListViewChangeWindowRect();
 
-				SetStatusBarText(0, TranslateStringByString("Looking for ROM files in the ROM directory and Generating List"));
-				RomListReadDirectory(directories.rom_directory_to_use,TRUE);
-			}
-			else
-			{
-				needchooseromdirectory = TRUE;
-			}
+			SetStatusBarText(0, TranslateStringByString("Looking for ROM files in the ROM directory and Generating List"));
+			RomListReadDirectory(directories.rom_directory_to_use,TRUE);
 		}
-
-		//SetStatusBarText(0, "Loading plugins");
-		pluginInitResult = LoadPlugins(LOAD_ALL_PLUGIN);
+		else
+		{
+			needchooseromdirectory = TRUE;
+		}
 	}
+
+	pluginInitResult = LoadPlugins(LOAD_ALL_PLUGIN);
 	SetFocus(gui.hwnd1964main);
 	RomListLoadCurrentPosFromRegistry();
 
@@ -579,8 +537,6 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	RomListLoadCurrentPosFromRegistry();
 	SetFocus(gui.hwnd1964main);
 
-    //DisplayError("Note: This is a debug build of 1964. Be sure to disable these messageboxes for release by disabling the DisplayError() function.");
-   
 	if( needchooseromdirectory )
 	{
 		ChangeDirectory();
@@ -588,7 +544,7 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 
 	if( pluginInitResult == FALSE )
 	{
-		SendMessage(gui.hwnd1964main,WM_COMMAND, IDM_PLUGINS, 0);
+		SendMessage(gui.hwnd1964main, WM_COMMAND, IDM_PLUGINS, 0);
 	}
 
 
@@ -686,13 +642,16 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case ID_BUTTON_STOP:
 		CloseROM();
 		break;
+
 	case ID_ROM_START:
 	case ID_BUTTON_RESET:
-		if (!emustatus.Emu_Is_Running) return;
+		if (!emustatus.Emu_Is_Running) 
+			return;
 		emustatus.Emu_Is_Resetting = 1;
 		Play(emuoptions.auto_full_screen);
 		emustatus.Emu_Is_Resetting = FALSE;
 		break;
+
 	case ID_ROM_PAUSE:
 		ChangeButtonState(ID_BUTTON_PAUSE);
 		PlayButtonState = ChangeButtonState(ID_BUTTON_PLAY);
@@ -736,14 +695,11 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case ID_PREFERENCE_OPTIONS:
 		if (!guistatus.IsFullScreen)
 			CreateOptionsDialog(PSH_WINDOW);
-
 		break;
 	case ID_CHANGEDIRECTORY:
 	case ID_POPUPMENU_CHANGEROMDIRECTORY:
 		if (!guistatus.IsFullScreen)
-		{
 			ChangeDirectory();
-		}
 		break;
 	case ID_FILE_ROMDIRECTORY1:
 		if (!guistatus.IsFullScreen)
@@ -814,35 +770,35 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				CreateOptionsDialog(PSH_CHEAT_CODES);
 			}
 			break;
+
 	case ID_ABOUT:
 		if (!guistatus.IsFullScreen)
 			CreateOptionsDialog(PSH_ABOUT);
 		break;
+
 	case ID_CHEATS_APPLY:
 		CodeList_ApplyAllCode(GSBUTTON);
 		break;
+
 	case ID_EMULATION_AUTOFRAMESKIP:
 	case ID_BUTTON_FRAMESKIP:
-
-
 		//User clicked menu? If so, make the corresponding button the right setting.            
 		if ((LOWORD(wParam)) == ID_EMULATION_AUTOFRAMESKIP)
 			CheckButton(ID_BUTTON_FRAMESKIP,
 			emuoptions.AutoFrameSkip ? 
-FALSE : 
-		TRUE);
-
+			FALSE : 
+			TRUE);
 
 		CheckMenuItem( gui.hMenu1964main, 
 			ID_EMULATION_AUTOFRAMESKIP, 
 			emuoptions.AutoFrameSkip ? 
-MF_UNCHECKED : 
-		MF_CHECKED);
-
+			MF_UNCHECKED : 
+			MF_CHECKED);
 
 		emuoptions.AutoFrameSkip^=1;
 		REGISTRY_WriteAutoFrameSkip();
 		break;
+
 	case ID_BUTTON_SYNC_SPEED:
 	case ID_CPU_AUDIOSYNC:
 		//User clicked menu? If so, make the corresponding button the right setting.            
@@ -855,8 +811,6 @@ MF_UNCHECKED :
 
 	case ID_EMULATION_AUTOCFTIMING:
 	case ID_BUTTON_AUTO_CF:
-
-
 		//User clicked menu? If so, make the corresponding button the right setting.            
 		if ((LOWORD(wParam)) == ID_EMULATION_AUTOCFTIMING)
 			CheckButton(ID_BUTTON_AUTO_CF, emuoptions.AutoCF ? FALSE : TRUE);
@@ -876,20 +830,13 @@ MF_UNCHECKED :
 	case ID_VIDEO_CONFIG:
 		if (!guistatus.IsFullScreen)
 		{
-			if(emustatus.Emu_Is_Running)
+			if( strcmp(gRegSettings.VideoPlugin,emustatus.lastVideoPluginLoaded) != 0 
+				&& !emustatus.Emu_Is_Running )
 			{
-				VIDEO_DllConfig(hWnd);
+				LoadPlugins(LOAD_VIDEO_PLUGIN);
 			}
-			else
-			{
-				if( strcmp(gRegSettings.VideoPlugin,emustatus.lastVideoPluginLoaded) != 0 )
-				{
-					LoadPlugins(LOAD_VIDEO_PLUGIN);
-				}
-				VIDEO_DllConfig(hWnd);
-			}
-
-			DockStatusBar();
+			VIDEO_DllConfig(hWnd);
+			InitStatusBarParts();
 		}
 		break;
 	case ID_AUD_CONFIG:
@@ -914,31 +861,23 @@ MF_UNCHECKED :
 	case ID_DI_CONFIG:
 		if (!guistatus.IsFullScreen)
 		{
-			if(emustatus.Emu_Is_Running)
-				CONTROLLER_DllConfig(hWnd);
-			else
+			if( strcmp(gRegSettings.InputPlugin,emustatus.lastInputPluginLoaded) != 0 
+				&& !emustatus.Emu_Is_Running)
 			{
-				if( strcmp(gRegSettings.InputPlugin,emustatus.lastInputPluginLoaded) != 0 )
-				{
-					LoadPlugins(LOAD_INPUT_PLUGIN);
-				}
-				CONTROLLER_DllConfig(hWnd);
+				LoadPlugins(LOAD_INPUT_PLUGIN);
 			}
+			CONTROLLER_DllConfig(hWnd);
 		}
 		break;
 	case ID_RSP_CONFIG:
 		if (!guistatus.IsFullScreen)
 		{
-			if(emustatus.Emu_Is_Running)
-				RSPDllConfig(hWnd);
-			else
+			if( strcmp(gRegSettings.RSPPlugin,emustatus.lastRSPPluginLoaded) != 0 
+				&& !emustatus.Emu_Is_Running )
 			{
-				if( strcmp(gRegSettings.RSPPlugin,emustatus.lastRSPPluginLoaded) != 0 )
-				{
-					LoadPlugins(LOAD_RSP_PLUGIN);
-				}
-				RSPDllConfig(hWnd);
+				LoadPlugins(LOAD_RSP_PLUGIN);
 			}
+			RSPDllConfig(hWnd);
 		}
 		break;
 	case ID_INTERPRETER:
@@ -1037,12 +976,9 @@ MF_UNCHECKED :
 		break;
 	case ID_BUTTON_FULL_SCREEN:
 	case IDM_FULLSCREEN:
-
-		if(emustatus.Emu_Is_Running) {
-			if(PauseEmulator())	{
-				VIDEO_ChangeWindow(guistatus.IsFullScreen);
-				ResumeEmulator(DO_NOTHING_AFTER_PAUSE);
-			}
+		if(emustatus.Emu_Is_Running && PauseEmulator()) {
+			VIDEO_ChangeWindow(guistatus.IsFullScreen);
+			ResumeEmulator(DO_NOTHING_AFTER_PAUSE);
 		}
 		break;
 	case ID_PLUGINS_SCREENSHOTS:
@@ -1179,16 +1115,13 @@ MF_UNCHECKED :
 
 void OnWindowSize(WPARAM wParam)
 {
+	//abcdefgh
 	RECT rcStatusBar;
 	RECT rcRomList;
 	RECT rcToolBar;
 
 	if(gui.hToolBar != NULL) {
-		RECT rcMainWnd;
-
 		GetClientRect(gui.hToolBar, &rcToolBar);
-		GetWindowRect(gui.hwnd1964main, &rcMainWnd);
-		SendMessage(gui.hReBar, WM_SIZE, 0, 0); //This will resize it, but there's bad flicker.
 	}
 
 	GetWindowRect(gui.hStatusBar, &rcStatusBar);
@@ -1201,18 +1134,17 @@ void OnWindowSize(WPARAM wParam)
 		}
 		rcRomList.bottom -= (rcStatusBar.bottom - rcStatusBar.top);
 		SetWindowPos(gui.hwndRomList, HWND_BOTTOM, 0, rcRomList.top, rcRomList.right, rcRomList.bottom, 0);
-		UpdateWindow(gui.hwndRomList);
 	}
 
-	DockStatusBar();
+	InitStatusBarParts();
 
 	if(wParam == SIZE_MAXIMIZED && !guistatus.window_is_maximized) {
 		guistatus.window_is_maximized = TRUE;
-		DockStatusBar();
+		InitStatusBarParts();
 	} else if( wParam == SIZE_MINIMIZED && !guistatus.window_is_minimized) {
 		guistatus.window_is_minimized = TRUE;
 	} else if( guistatus.window_is_maximized || guistatus.window_is_minimized) {
-		DockStatusBar();
+		InitStatusBarParts();
 	}
 
 	REGISTRY_WriteDWORD( "1964WindowIsMaximized", guistatus.WindowIsMaximized);
@@ -1220,7 +1152,7 @@ void OnWindowSize(WPARAM wParam)
 
 void ProcessKeyboardInput(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	BOOL				ctrlkey;
+	BOOL ctrlkey;
 	/* Disable Alt Key for menus in full screen */
      BYTE keymap[256];
 
@@ -1236,8 +1168,10 @@ void ProcessKeyboardInput(UINT message, WPARAM wParam, LPARAM lParam)
         keymap [(lParam & 0x1000000) ? VK_RMENU:VK_LMENU] &= ~0x80;
         SetKeyboardState (keymap);
     }
+
 	if (wParam == VK_F5)
 		SaveState();
+
 	if (wParam == VK_F7)
 		LoadState();
 
@@ -1249,7 +1183,6 @@ void ProcessKeyboardInput(UINT message, WPARAM wParam, LPARAM lParam)
 	ctrlkey = GetKeyState(VK_CONTROL) & 0xFF000000;
 	switch(wParam)
 	{
-
 	case VK_ESCAPE:
     case VK_F4:
 		if (guistatus.IsFullScreen)
@@ -1289,7 +1222,7 @@ void ProcessKeyboardInput(UINT message, WPARAM wParam, LPARAM lParam)
 	}
 }
 
-int			MenuCausedPause = FALSE;
+int MenuCausedPause = FALSE;
 
 /*
  =======================================================================================================================
@@ -1303,70 +1236,25 @@ long FAR PASCAL MainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	switch(message)
 	{
-		/*
-	case WM_ACTIVATE:
-		switch(LOWORD(wParam))
-		{
-		case WA_ACTIVE:
-		case WA_CLICKACTIVE:
-			if( emustatus.Emu_Is_Running && emustatus.Emu_Is_Paused  && gamepausebyinactive )
-			{
-				Resume();
-				gamepausebyinactive = FALSE;
-			}
-		break;
-		
-		case WA_INACTIVE:
-			if( guioptions.pause_at_inactive && emustatus.Emu_Is_Running && emustatus.Emu_Is_Paused == FALSE )
-			{
-				PauseEmulator();
-				gamepausebyinactive = TRUE;
-			}
-		break;
-		}
-		break;
-		*/
-		/*
-	case WM_ACTIVATEAPP:
-		if( wParam == TRUE )
-		{
-			if( emustatus.Emu_Is_Running && emustatus.Emu_Is_Paused  && gamepausebyinactive )
-			{
-				Resume();
-				gamepausebyinactive = FALSE;
-			}
-		}
-		else
-		{
-			if( guioptions.pause_at_inactive && emustatus.Emu_Is_Running && emustatus.Emu_Is_Paused == FALSE )
-			{
-				PauseEmulator();
-				gamepausebyinactive = TRUE;
-			}
-		}
-		break;
-		*/
-
 	case WM_KILLFOCUS:
-		//if( guioptions.pause_at_inactive && emustatus.Emu_Is_Running && emustatus.Emu_Is_Paused == FALSE )
-		//{
-		//	PauseEmulator();
-		//	gamepausebyinactive = TRUE;
-		//}
+	//	if( guioptions.pause_at_inactive && emustatus.Emu_Is_Running && emustatus.Emu_Is_Paused == FALSE )
+	//	{
+	//		PauseEmulator();
+	//		gamepausebyinactive = TRUE;
+	//	}
 		break;
 	case WM_PAINT:
 		BeginPaint(hWnd, &ps);
 		EndPaint(hWnd, &ps);
 	break;
-
 	case WM_SETFOCUS:
 		if( emustatus.Emu_Is_Running )
 		{
-			//if( emustatus.Emu_Is_Paused  && gamepausebyinactive )
-			//{
-			//	Resume();
-			//	gamepausebyinactive = FALSE;
-			//}
+	//		if( emustatus.Emu_Is_Paused  && gamepausebyinactive )
+	//		{
+	//			Resume();
+	//			gamepausebyinactive = FALSE;
+	//		}
 		}
 		else
 		{
@@ -1381,7 +1269,6 @@ long FAR PASCAL MainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
         SetForegroundWindow(hWnd);
         break;
 
-    
 	case WM_MOVE:
 	{
 		int xPos, yPos;
@@ -1399,16 +1286,14 @@ long FAR PASCAL MainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	
 	case WM_EXITSIZEMOVE:
 	{
-		int xPos, yPos;
-
-		xPos = (int) (short) LOWORD(lParam);		/* horizontal position */
-		yPos = (int) (short) HIWORD(lParam);		/* vertical position */
-
 		REGISTRY_WriteSizeMove();
 	}
 	break;
 		
 	case WM_SIZE:
+		//abcdefgh
+		DefFrameProc(hWnd, gui.hStatusBar, message, wParam, lParam);
+		DefFrameProc(hWnd, gui.hReBar, message, wParam, lParam);
 		OnWindowSize(wParam);
 	break;
 
@@ -1427,7 +1312,6 @@ long FAR PASCAL MainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		{ 
 			//Tooltips slow down emulation a LOT!
 			ProcessToolTips(lParam);
-			//CreateTT(NULL);
 			break;
 		}
 		else if(((LPNMHDR) lParam)->hwndFrom == gui.hwndRomList)
@@ -1452,60 +1336,8 @@ long FAR PASCAL MainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		ProcessMenuCommand(hWnd, message, wParam, lParam);
 	break;
 
-	case WM_INITMENUPOPUP:
-		if (MenuCausedPause)
-		{
-			if(guioptions.ok_to_pause_at_menu)
-			if(emustatus.Emu_Is_Running && !emustatus.Emu_Is_Paused )
-			{
-				PauseEmulator();
-			}
-			emustatus.Emu_Is_Paused = 1;
-		}
-	break;
-	case WM_ENTERMENULOOP:
-	// To pause game when user enters the menu bar
-	{
-		if (emustatus.Emu_Is_Running && !emustatus.Emu_Is_Paused)
-			MenuCausedPause = 1;
-	}
-	break;
-
-	case WM_EXITMENULOOP:
-		/* To resume game when user leaves the menu bar */
-
-		if(guioptions.ok_to_pause_at_menu && MenuCausedPause)
-		{
-			ResumeEmulator(DO_NOTHING_AFTER_PAUSE);
-			MenuCausedPause = 0;
-		}
-	break;
-
 	case WM_CLOSE:
 		Exit1964();
-	break;
-
-	case WM_POWERBROADCAST:
-		switch( wParam )
-		{
-#ifndef PBT_APMQUERYSUSPEND
-#define PBT_APMQUERYSUSPEND 0x0000
-#endif
-		case PBT_APMQUERYSUSPEND:
-			// At this point, the app should save any data for open
-			// network connections, files, etc., and prepare to go into
-			// a suspended mode.
-			return TRUE;
-			
-#ifndef PBT_APMRESUMESUSPEND
-#define PBT_APMRESUMESUSPEND 0x0007
-#endif
-		case PBT_APMRESUMESUSPEND:
-			// At this point, the app should recover any data, network
-			// connections, files, etc., and resume running from when
-			// the app was suspended.
-			return TRUE;
-		}
 	break;
 
 	case WM_SYSCOMMAND:
@@ -1581,7 +1413,6 @@ void Kill(void)
 	StopEmulator();
 	CPUThreadHandle = NULL;
 }
-
 /*
  =======================================================================================================================
  =======================================================================================================================
@@ -1604,10 +1435,10 @@ void __cdecl Play(BOOL WithFullScreen)
             Sleep(1000); //Fix for Reset: if user holds down F2 long time it works, and does not crash.
 		}
 
-
 		PrepareBeforePlay(guistatus.IsFullScreen);
 
-		if( !emustatus.Emu_Is_Resetting )	LoadROMSpecificPlugins();
+		if( !emustatus.Emu_Is_Resetting )	
+			LoadROMSpecificPlugins();
 
 		core = currentromoptions.Emulator;
 		if(core == DYNACOMPILER)
@@ -1641,14 +1472,12 @@ void __cdecl Play(BOOL WithFullScreen)
 		}
 
 		if (emustatus.Emu_Is_Resetting == 0)
-			DockStatusBar();
+			InitStatusBarParts();
 
 		r4300i_Reset();
 
 		emustatus.Emu_Keep_Running = TRUE;
 		emustatus.processing_exception = FALSE;
-
-
 
 		AUDIO_Initialize(Audio_Info);
 
@@ -1789,16 +1618,10 @@ void CloseROM(void)
 
 		EnableMenuItem(gui.hMenu1964main, ID_ROM_PAUSE, MF_GRAYED);
 
-		/* EnableMenuItem(gui.hMenu1964main, ID_ROM_STOP, MF_GRAYED); */
 		EnableMenuItem(gui.hMenu1964main, ID_CLOSEROM, MF_GRAYED);
 		SetWindowText(gui.hwnd1964main, gui.szBaseWindowTitle);
 	}
 
-
-	/*
-	 * else
-	 * DisplayError("Please load a ROM first.");
-	 */
 }
 
 /*
@@ -1811,13 +1634,6 @@ void OpenROM(void)
 	{
 		CloseROM();
 	}
-
-	//EnableButton(ID_BUTTON_OPEN_ROM, FALSE);
-	//EnableMenuItem(gui.hMenu1964main, ID_OPENROM, MF_GRAYED);
-	//EnableButton(ID_BUTTON_SETUP_PLUGINS, FALSE);
-	//EnableMenuItem(gui.hMenu1964main, IDM_PLUGINS, MF_GRAYED);
-
-
 	if(WinLoadRom() == TRUE)	/* If the user opened a rom, */
 	{
 		EnableMenuItem(gui.hMenu1964main, ID_ROM_START, MF_ENABLED);
@@ -1998,7 +1814,8 @@ BOOL StartGameByCommandLine()
  */
 void OpenRecentGame(int id)
 {
-	if(emustatus.Emu_Is_Running) return;
+	if(emustatus.Emu_Is_Running) 
+		return;
 
 	if(id >= 0 && id < MAX_RECENT_GAME_LIST )
 	{
@@ -2043,40 +1860,32 @@ extern BYTE __cdecl GetButtonState( int	nID );
 
 void SaveState(void)
 {
-	if(Rom_Loaded)
+	if(Rom_Loaded && emustatus.Emu_Is_Running)
+	{ 
+        //Please don't change this, It's needed because menu pauses interfere with other Pauses.
+        if ( !(GetButtonState(ID_BUTTON_PAUSE)&TBSTATE_CHECKED))
+		{
+            emustatus.Emu_Is_Paused = 0;
+            PauseEmulator();
+        }
+
+		sprintf(generalmessage, "%s - %s %d", gui.szWindowTitle, TranslateStringByString("Saving State"), StateFileNumber);
+		SetStatusBarText(0, generalmessage);
+
+		FileIO_gzSaveState();
+         
+        if ( !(GetButtonState(ID_BUTTON_PAUSE)&TBSTATE_CHECKED))
+        {
+            emustatus.Emu_Is_Paused = 1;
+			ResumeEmulator(DO_NOTHING_AFTER_PAUSE);
+		}
+	}
+	else
 	{
-		if(emustatus.Emu_Is_Running)
-		{
-            
-            //Please don't change this, It's needed because menu pauses interfere with other Pauses.
-            if ( !(GetButtonState(ID_BUTTON_PAUSE)&TBSTATE_CHECKED))
-			{
-                emustatus.Emu_Is_Paused = 0;
-                PauseEmulator();
-            }
+		sprintf(generalmessage, "%s - %s %d", gui.szWindowTitle, TranslateStringByString("Saving State"), StateFileNumber);
+		SetStatusBarText(0, generalmessage);
 
-			sprintf(generalmessage, "%s - %s %d", gui.szWindowTitle, TranslateStringByString("Saving State"), StateFileNumber);
-			SetStatusBarText(0, generalmessage);
-
-			FileIO_gzSaveState();
-            
-            
-            if ( !(GetButtonState(ID_BUTTON_PAUSE)&TBSTATE_CHECKED))
-            {
-                emustatus.Emu_Is_Paused = 1;
-				ResumeEmulator(DO_NOTHING_AFTER_PAUSE);
-			}
-
-            
-
-		}
-		else
-		{
-			sprintf(generalmessage, "%s - %s %d", gui.szWindowTitle, TranslateStringByString("Saving State"), StateFileNumber);
-			SetStatusBarText(0, generalmessage);
-
-			FileIO_gzSaveState();
-		}
+		FileIO_gzSaveState();
 	}
     Set_Ready_Message();
 }
@@ -2261,10 +2070,10 @@ void LoadStateByNumber(WPARAM wparam)
  =======================================================================================================================
  =======================================================================================================================
  */
+//CHECKME
 void SaveStateByDialog(int format)
 {
-	if(!Rom_Loaded) return;
-	if(!PauseEmulator())
+	if(!Rom_Loaded || !PauseEmulator()) 
 		return;
 	else
 	{
@@ -2278,11 +2087,11 @@ void SaveStateByDialog(int format)
 		memset(&szFileTitle, 0, sizeof(szFileTitle));
 		memset(szPath, 0, _MAX_PATH);
 
-
 		strcpy(szPath, directories.save_directory_to_use);
 
 		ofn.lStructSize = sizeof(OPENFILENAME);
 		ofn.hwndOwner = gui.hwnd1964main;
+
 		if(format == SAVE_STATE_1964_FORMAT)
 		{
 			sprintf(filter, "1964 %s (*.sav?)%c*.SAV?%c%s (*.*)%c*.*%c%c", TranslateStringByString("State File"), 0, 0, TranslateStringByString("All Files"), 0, 0, 0);
@@ -2290,9 +2099,10 @@ void SaveStateByDialog(int format)
 		}
 		else
 		{
-			sprintf(filter, "Project 64 %s (*.pj?)%c*.PJ;*.PJ?%c%s (*.*)%c*.*%c%c", TranslateStringByString("State File"), 0, 0, TranslateStringByString("All Files"), 0, 0, 0);
+			sprintf(filter, "Project 64 %s (*.pj?)%c*.PJ?%c%s (*.*)%c*.*%c%c", TranslateStringByString("State File"), 0, 0, TranslateStringByString("All Files"), 0, 0, 0);
 			ofn.lpstrFilter = filter;
 		}
+
 		ofn.lpstrCustomFilter = NULL;
 		ofn.nMaxCustFilter = 0;
 		ofn.nFilterIndex = 1;
@@ -2307,20 +2117,21 @@ void SaveStateByDialog(int format)
 
 		if(GetSaveFileName((LPOPENFILENAME) & ofn))
 		{
-			char			drive[_MAX_DRIVE], dir[_MAX_DIR];
-			char			filename[_MAX_FNAME], ext[_MAX_EXT];
+			char drive[_MAX_DRIVE], dir[_MAX_DIR];
+			char filename[_MAX_FNAME], ext[_MAX_EXT];
 			_splitpath(szFileName, drive, dir, filename, ext);
 			_strlwr(ext);	/* Convert file extension to lower case */
 
 			if(format == SAVE_STATE_1964_FORMAT)
 			{
-				if( strcpy(ext,".sav") != 0 )
+				if( strcmp (ext,".sav") != 0)
 					strcat(szFileName, ".sav");
 				FileIO_gzSaveStateFile_099(szFileName);
+
 			}
 			else
 			{
-				if( strcpy(ext,".pj") != 0 )
+				if( strcmp(ext,".pj") != 0 )
 					strcat(szFileName, ".pj");
 				FileIO_ExportPJ64State(szFileName);
 			}
@@ -2340,8 +2151,7 @@ void SaveStateByDialog(int format)
  */
 void LoadStateByDialog(int format)
 {
-	if(!Rom_Loaded) return;
-	if(!PauseEmulator())
+	if(!Rom_Loaded || !PauseEmulator())
 		return;
 	else
 	{
@@ -2361,6 +2171,7 @@ void LoadStateByDialog(int format)
 
 		ofn.lStructSize = sizeof(OPENFILENAME);
 		ofn.hwndOwner = gui.hwnd1964main;
+
 		if(format == SAVE_STATE_1964_FORMAT)
 		{
 			sprintf(filter, "1964 %s (*.sav?)%c*.SAV?%c%s (*.*)%c*.*%c%c", TranslateStringByString("State File"), 0, 0, TranslateStringByString("All Files"), 0, 0, 0);
@@ -2520,9 +2331,6 @@ void OptionsDialog_OnInit(HWND hDlg)
 	SendDlgItemMessage( hDlg, IDC_OPTION_AUTOFULLSCREEN, BM_SETCHECK,
 		emuoptions.auto_full_screen ? BST_CHECKED : BST_UNCHECKED, 0);
 
-	SendDlgItemMessage(	hDlg, IDC_DEFAULTOPTIOS_PAUSEONMENU, BM_SETCHECK,
-		guioptions.pause_at_menu ? BST_CHECKED : BST_UNCHECKED, 0);
-
 	SendDlgItemMessage(	hDlg, IDC_DEFAULTOPTIONS_PAUSEWHENINACTIVE,	BM_SETCHECK,
 		guioptions.pause_at_inactive ? BST_CHECKED : BST_UNCHECKED,	0);
 
@@ -2541,26 +2349,6 @@ void OptionsDialog_OnInit(HWND hDlg)
     SendDlgItemMessage(	hDlg, IDC_NONE, BM_SETCHECK,
         (!guioptions.display_profiler_status && !guioptions.display_detail_status) ? BST_CHECKED : BST_UNCHECKED, 0);
 
-	switch(guioptions.noOfRecentFolders)
-	{
-	case 4:
-		CheckRadioButton(hDlg,IDC_NO_OF_FOLDERS_4,IDC_NO_OF_FOLDERS_16,IDC_NO_OF_FOLDERS_4);
-		break;
-	case 16:
-		CheckRadioButton(hDlg,IDC_NO_OF_FOLDERS_4,IDC_NO_OF_FOLDERS_16,IDC_NO_OF_FOLDERS_16);
-		break;
-	default:
-		CheckRadioButton(hDlg,IDC_NO_OF_FOLDERS_4,IDC_NO_OF_FOLDERS_16,IDC_NO_OF_FOLDERS_8);
-	}
-
-	switch(guioptions.noOfRecentROMs)
-	{
-	case 16:
-		CheckRadioButton(hDlg,IDC_NO_OF_ROMS_8,IDC_NO_OF_ROMS_16,IDC_NO_OF_ROMS_16);
-		break;
-	default:
-		CheckRadioButton(hDlg,IDC_NO_OF_ROMS_8,IDC_NO_OF_ROMS_16,IDC_NO_OF_ROMS_8);
-	}
 }
 
 void FoldersDialog_OnInit(HWND hDlg)
@@ -2652,14 +2440,6 @@ void OptionsDialog_OnApply(HWND hDlg)
 		REGISTRY_WriteDWORD( "AutoFullScreen", emuoptions.auto_full_screen);
 	}
 
-	if( guioptions.pause_at_menu
-		!= ( SendDlgItemMessage( hDlg, IDC_DEFAULTOPTIOS_PAUSEONMENU, BM_GETCHECK, 0, 0)
-			 == BST_CHECKED))
-	{
-		guioptions.pause_at_menu ^= 1;
-		REGISTRY_WriteDWORD( "PauseAtMenu", guioptions.pause_at_menu);
-	}
-
 	if( guioptions.pause_at_inactive
 		!= ( SendDlgItemMessage( hDlg, IDC_DEFAULTOPTIONS_PAUSEWHENINACTIVE, BM_GETCHECK, 0, 0) == BST_CHECKED))
 	{
@@ -2719,44 +2499,6 @@ void OptionsDialog_OnApply(HWND hDlg)
     {
         Set_Ready_Message();
     }
-
-	{
-		int oldval = guioptions.noOfRecentFolders;
-		if( IsDlgButtonChecked(hDlg,IDC_NO_OF_FOLDERS_4) == BST_CHECKED )
-		{
-			guioptions.noOfRecentFolders = 4;
-		}
-		else if( IsDlgButtonChecked(hDlg,IDC_NO_OF_FOLDERS_16) == BST_CHECKED )
-		{
-			guioptions.noOfRecentFolders = 16;
-		}
-		else
-		{
-			guioptions.noOfRecentFolders = 8;
-		}
-
-		if( oldval != guioptions.noOfRecentFolders )
-		{
-			REGISTRY_WriteDWORD("NoRomDirectoryListMenu", guioptions.noOfRecentFolders);
-		}
-	}
-
-	{
-		int oldval = guioptions.noOfRecentROMs;
-		if( IsDlgButtonChecked(hDlg,IDC_NO_OF_ROMS_16) == BST_CHECKED )
-		{
-			guioptions.noOfRecentROMs = 16;
-		}
-		else
-		{
-			guioptions.noOfRecentROMs = 8;
-		}
-
-		if( oldval != guioptions.noOfRecentROMs )
-		{
-			REGISTRY_WriteDWORD("NoGameListMenu", guioptions.noOfRecentROMs);
-		}
-	}
 }
 
 LRESULT APIENTRY FoldersProc(HWND hDlg, unsigned message, WORD wParam, LONG lParam)
@@ -2879,9 +2621,6 @@ LRESULT APIENTRY UnavailableProc(HWND hDlg, unsigned message, WORD wParam, LONG 
 	return(FALSE);
 }
 
-
-
-
 LRESULT APIENTRY OptionsDialog(HWND hDlg, unsigned message, WORD wParam, LONG lParam)
 {
 	switch(message)
@@ -2912,8 +2651,6 @@ LRESULT APIENTRY OptionsDialog(HWND hDlg, unsigned message, WORD wParam, LONG lP
 		}
         return(TRUE);
 
-
-
 	case WM_COMMAND:
 		switch(wParam)
 		{
@@ -2928,7 +2665,6 @@ LRESULT APIENTRY OptionsDialog(HWND hDlg, unsigned message, WORD wParam, LONG lP
 			return(TRUE);
 		}
 	}
-
 	return(FALSE);
 }
 
@@ -2940,39 +2676,38 @@ void SetCounterFactor(int factor)
 {
 	int k;
 
-
     for (k=0; k<8; k++)
         CheckMenuItem(gui.hMenu1964main, cfmenulist[k], MF_UNCHECKED);
 
     if (!emuoptions.AutoCF)
     {
 
-    CheckMenuItem(gui.hMenu1964main, cfmenulist[factor - 1], MF_CHECKED);
+		CheckMenuItem(gui.hMenu1964main, cfmenulist[factor - 1], MF_CHECKED);
 
-	if(CounterFactor != factor)
-	{
-		if(emustatus.Emu_Is_Running)
+		if(CounterFactor != factor)
 		{
-			if(PauseEmulator())
+			if(emustatus.Emu_Is_Running)
 			{
-				CounterFactor = factor;
-				ResumeEmulator(REFRESH_DYNA_AFTER_PAUSE);	/* Need to init emu */
+				if(PauseEmulator())
+				{
+					CounterFactor = factor;
+					ResumeEmulator(REFRESH_DYNA_AFTER_PAUSE);	/* Need to init emu */
+				}
 			}
+
+			CounterFactor = factor;
+
+			if (emuoptions.AutoCF)
+			{
+				sprintf(generalmessage, "AutoCF=%2d", factor);
+			}
+			else
+			{
+				sprintf(generalmessage, "CF=%d", factor);
+			}
+			SetStatusBarText(2, generalmessage);
 		}
-
-		CounterFactor = factor;
-
-		if (emuoptions.AutoCF)
-        {
-            sprintf(generalmessage, "AutoCF=%2d", factor);
-        }
-        else
-        {
-		sprintf(generalmessage, "CF=%d", factor);
-        }
-		SetStatusBarText(2, generalmessage);
 	}
-}
 }
 
 /*
@@ -3049,6 +2784,7 @@ void PrepareBeforePlay(int IsFullScreen)
 
 	REGISTRY_WriteDWORD("1964RunningStatus", TRUE);
 	REGISTRY_WriteDWORD("ScreenSaverStatus", WindowScreenSaverStatus);
+
 	// Disable screen saver
 	SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, FALSE, 0, 0); 
 
@@ -3108,6 +2844,7 @@ void PrepareBeforePlay(int IsFullScreen)
 	GenerateCurrentRomOptions();
 	init_whole_mem_func_array();					/* Needed here. The tlb function pointers change. */
 	ResetRdramSize(currentromoptions.RDRAM_Size);
+
 	if(strcpy(current_cheatcode_rom_internal_name, currentromoptions.Game_Name) != 0)
 		CodeList_ReadCode(currentromoptions.Game_Name,cheatfilename);
 
@@ -3269,7 +3006,7 @@ void AfterStop(void)
 
 	/* refresh the rom list, just to prevent user has changed resolution */
 	NewRomList_ListViewChangeWindowRect();
-	DockStatusBar();
+	InitStatusBarParts();
 	RomListUseSavedPos();
 
 	/* Reset some of the default options */
@@ -3307,48 +3044,6 @@ void AfterStop(void)
     SetFocus(gui.hwndRomList);
 	if(rlstatus.romlist_count > 0) 
 		RomListSelectRom(rlstatus.selected_rom_index);
-}
-
-/*
- =======================================================================================================================
-    Move the status bar to the bottom of the main window.
- =======================================================================================================================
- */
-void DockStatusBar(void)
-{
-	/*~~~~~~~~~~~~~~~~~~~~*/
-	RECT	rc, rcstatusbar;
-	RECT	rcToolBar;
-	/*~~~~~~~~~~~~~~~~~~~~*/
-
-	if(gui.hStatusBar == NULL) return;
-	GetClientRect(gui.hwnd1964main, &rc);
-	GetWindowRect(gui.hStatusBar, &rcstatusbar);
-	GetWindowRect(gui.hToolBar, &rcToolBar);
-	MoveWindow
-	(
-		gui.hStatusBar,
-		0,
-		rc.bottom - (rcstatusbar.bottom - rcstatusbar.top + 1),
-		rcstatusbar.right - rcstatusbar.left + 1,
-		rcstatusbar.bottom - rcstatusbar.top + 1,
-		TRUE
-	);
-	MoveWindow
-	(
-		gui.hToolBar,
-		0,
-		0,
-		rcToolBar.right - rcToolBar.left + 1,
-		rcToolBar.bottom - rcToolBar.top + 1,
-		TRUE
-	);
-
-//	ShowWindow(gui.hStatusBar, SW_HIDE);
-	ShowWindow(gui.hToolBar, SW_SHOW);
-	ShowWindow(gui.hStatusBar, SW_SHOW);
-
-	InitStatusBarParts();
 }
 
 /*
@@ -3519,7 +3214,7 @@ void __cdecl RefreshRecentGameMenus(char *newgamefilename)
 			i = MAX_RECENT_GAME_LIST-1;	/* if not found */
 		}
 
-		if( recent_game_menus[i].visible == FALSE && i<guioptions.noOfRecentROMs )
+		if( recent_game_menus[i].visible == FALSE && i< 8 )
 		{
 			HMENU file_submenu = GetSubMenu(gui.hMenu1964main, 0);
 			HMENU recentgame_submenu = GetSubMenu(file_submenu, 11);
@@ -3576,7 +3271,7 @@ void RefreshRecentRomDirectoryMenus(char *newromdirectory)
 	if(i == MAX_RECENT_ROM_DIR) 
 		i = MAX_RECENT_ROM_DIR - 1; /* if not found */
 
-	if( recent_rom_directory_menus[i].visible == FALSE && i<guioptions.noOfRecentFolders )
+	if( recent_rom_directory_menus[i].visible == FALSE && i< 8)
 	{
 		HMENU file_submenu = GetSubMenu(gui.hMenu1964main, 0);
 		HMENU recentfolder_submenu = GetSubMenu(file_submenu, 10);
@@ -3671,11 +3366,6 @@ void RegenerateStateSelectorMenus(void)
 			"Load State\tF7"
 		);
 	}
-//	else
-//	{
-//		AppendMenu(CPU_submenu, MF_POPUP, (UINT) state_save_submenu, "Save State\tF5");
-//		AppendMenu(CPU_submenu, MF_POPUP, (UINT) state_load_submenu, "Load State\tF7");
-//	}
 }
 
 int Separator = 0;
@@ -3702,7 +3392,7 @@ void SetupAdvancedMenus(void)
 		else
 		{
 			EnableMenuItem(gui.hMenu1964main, recent_rom_directory_menus[i].id,MF_ENABLED);
-			if( i >= guioptions.noOfRecentFolders )
+			if( i >= 8 )
 			{
 				DeleteMenu(gui.hMenu1964main, recent_rom_directory_menus[i].id, MF_BYCOMMAND);
 				recent_rom_directory_menus[i].visible=FALSE;
@@ -3722,7 +3412,7 @@ void SetupAdvancedMenus(void)
 		else
 		{
 			EnableMenuItem(gui.hMenu1964main, recent_game_menus[i].id,MF_ENABLED);
-			if( i >= guioptions.noOfRecentROMs )
+			if( i >= 8 )
 			{
 				DeleteMenu(gui.hMenu1964main, recent_game_menus[i].id, MF_BYCOMMAND);
 				recent_game_menus[i].visible=FALSE;
@@ -3745,21 +3435,13 @@ void CaptureScreenToFile(void)
 {
 	if(emustatus.Emu_Is_Running)
 	{
-		if(GfxPluginVersion != 0x0103)
-		{
-			if( guistatus.IsFullScreen == FALSE )
-				DisplayError("Current video plugin does not support screen capture");
-		}
-		else
-		{
-			/*~~~~~~~~~~~~~~~~~~~~~~~~~*/
-			char	directory[_MAX_PATH];
-			/*~~~~~~~~~~~~~~~~~~~~~~~~~*/
+		/*~~~~~~~~~~~~~~~~~~~~~~~~~*/
+		char	directory[_MAX_PATH];
+		/*~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-			strcpy(directory, directories.main_directory);
-			strcat(directory, "Screens\\");
-			VIDEO_CaptureScreen(directory);
-		}
+		strcpy(directory, directories.main_directory);
+		strcat(directory, "Screens\\");
+		VIDEO_CaptureScreen(directory);
 	}
 }
 
@@ -4154,7 +3836,7 @@ void OnFreshRomList(BOOL reload)
 	{
 		RomListSaveCurrentPosToRegistry();
 		NewRomList_ListViewChangeWindowRect();
-		DockStatusBar();
+		InitStatusBarParts();
 		if( reload )
 		{
 			ClearRomList();

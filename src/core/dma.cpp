@@ -170,7 +170,7 @@ void DMA_PI_MemCopy_From_DRAM_To_Cart(void)
 
 	PIDMASourceAddress = (PI_DRAM_ADDR_REG & 0x00FFFFFF) | 0x80000000;
 	PIDMATargetAddress = (PI_CART_ADDR_REG & 0x1FFFFFFF) | 0x80000000;
-	PIDMACurrentPosition = 0;;
+	PIDMACurrentPosition = 0;
 	PIDMALength = (PI_RD_LEN_REG & 0x00FFFFFF) + 1;
 
 	DEBUG_PI_DMA_MACRO(
@@ -340,7 +340,7 @@ void DMA_PI_MemCopy_From_Cart_To_DRAM(void)
 		return;
 	}
 
-	PIDMACurrentPosition = 0;;
+	PIDMACurrentPosition = 0;
 	PIDMALength = len;
 
 	/*
@@ -360,7 +360,7 @@ void DMA_PI_MemCopy_From_Cart_To_DRAM(void)
 		{
 			/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 			register uint32 addr = PIDMATargetAddress;
-			register int	i = -(__int32) PIDMALength;;
+			register int	i = -(__int32) PIDMALength;
 			/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 			/* Align to DWORD boundary */
@@ -556,7 +556,7 @@ void DMA_MemCopy_DRAM_To_SP(int WasCalledByRSP)
 		0x80000000;
 
 		/* SPDMATargetAddress = sp_mem_addr_reg; */
-		SPDMACurrentPosition = 0;;
+		SPDMACurrentPosition = 0;
 
 		SP_DMA_BUSY_REG = 1;
 		SP_STATUS_REG |= SP_STATUS_DMA_BUSY;
@@ -672,7 +672,7 @@ void DMA_MemCopy_SP_to_DRAM(int WasCalledByRSP)
 		SPDMASourceAddress = SP_MEM_ADDR_REG;
 		SPDMATargetAddress = SP_DRAM_ADDR_REG & 0x00FFFFFF |
 		0x80000000;
-		SPDMACurrentPosition = 0;;
+		SPDMACurrentPosition = 0;
 
 		SP_DMA_BUSY_REG = 1;
 		SP_STATUS_REG |= SP_STATUS_DMA_BUSY;

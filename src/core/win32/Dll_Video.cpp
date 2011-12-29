@@ -408,7 +408,7 @@ void VIDEO_ChangeWindow(int window)
 		ShowWindow(gui.hStatusBar, SW_SHOW);
 		ShowWindow((HWND)gui.hMenu1964main, TRUE);
 		ShowCursor(TRUE);
-		DockStatusBar();
+		InitStatusBarParts();
 	}
 }
 

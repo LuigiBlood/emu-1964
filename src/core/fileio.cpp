@@ -22,7 +22,7 @@
  * authors: email: schibo@emulation64.com, rice1964@yahoo.com
  */
 #include "stdafx.h"
-BOOL	Is_Reading_Rom_File = FALSE;;
+BOOL	Is_Reading_Rom_File = FALSE;
 BOOL	To_Stop_Reading_Rom_File = FALSE;
 
 #define CURRENT_SAVE_STATE_VERSION		(0x19640099)
@@ -386,7 +386,7 @@ BOOL ReadRomData(char *rompath)
 		InitMemoryLookupTables();
 		InitTLB();
 
-		Is_Reading_Rom_File = TRUE;;
+		Is_Reading_Rom_File = TRUE;
 		To_Stop_Reading_Rom_File = FALSE;
 
 		for(i = 0; i < gROMLength && To_Stop_Reading_Rom_File == FALSE; i += 65536)
@@ -498,7 +498,7 @@ BOOL ReadZippedRomData(char *rompath)
 							InitMemoryLookupTables();
 							InitTLB();
 
-							Is_Reading_Rom_File = TRUE;;
+							Is_Reading_Rom_File = TRUE;
 							To_Stop_Reading_Rom_File = FALSE;
 
 							sprintf(generalmessage, "%s [%s] ", TranslateStringByString("Loading"), szFileName);

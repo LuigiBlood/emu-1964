@@ -280,20 +280,6 @@ void ReadConfiguration( void)
 						   IDS_KEY_USE_DEFAULT_STATE_SAVE_PATH, 
 						   0);
 
-	/*
-	if( !FileIO_CheckAndCreateFolder(directories.state_save_directory_to_use) )
-	{
-		if( strcmp(directories.state_save_directory_to_use, default_state_save_directory) != 0 )
-		{
-			strcpy(directories.state_save_directory_to_use, default_state_save_directory);
-			if( !FileIO_CheckAndCreateFolder(directories.state_save_directory_to_use) )
-			{
-				DisplayError("Can not create save directory: %s, please check it manually", default_state_save_directory);
-			}
-		}
-	}
-	*/
-
 	GetCmdLineParameter(CMDLINE_ROM_DIR, directories.rom_directory_to_use);
 	if( strlen( directories.rom_directory_to_use) == 0)
 		REGISTRY_GetDirectory( directories.rom_directory_to_use,
@@ -304,10 +290,8 @@ void ReadConfiguration( void)
 						   IDS_KEY_ROM_PATH,
 						   IDS_KEY_USE_LAST_USED_ROM_PATH,
 						   1);
-
-	//REGISTRY_ReadSTRING("LastROMDirectory",directories.last_rom_directory);
 	strcpy(directories.last_rom_directory,REGISTRY_ReadSTRING("LastROMDirectory",user_set_rom_directory));
-	//REGISTRY_ReadSTRING("RomDirectory",directories.last_rom_directory);
+
 	strcpy(directories.rom_directory_to_use, guioptions.use_last_rom_directory?
 		directories.last_rom_directory:user_set_rom_directory);
 
@@ -358,20 +342,11 @@ void ReadConfiguration( void)
 		REGISTRY_ReadDWORD( "PauseWhenInactive", TRUE);
 	guioptions.pause_at_inactive = FALSE;	// This feature is disabled
 
-	guioptions.pause_at_menu =
-		REGISTRY_ReadDWORD( "PauseAtMenu", TRUE);
-
 	guioptions.show_recent_rom_directory_list =
 		REGISTRY_ReadDWORD( "RomDirectoryListMenu", TRUE);
 
 	guioptions.show_recent_game_list =
 		REGISTRY_ReadDWORD( "GameListMenu", TRUE);
-
-	guioptions.noOfRecentFolders =
-		REGISTRY_ReadDWORD( "NoRomDirectoryListMenu", 8);
-
-	guioptions.noOfRecentROMs =
-		REGISTRY_ReadDWORD( "NoGameListMenu", 8);
 
 	guioptions.boxart_image_width =
 		REGISTRY_ReadDWORD( "BoxartImageWidth", 256);
