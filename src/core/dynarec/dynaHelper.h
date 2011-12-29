@@ -237,8 +237,8 @@ void DisplayPC(void)
 	if(pc != gHWS_pc) 
 	{
 		TRACE1("PC=%08X", gHWS_pc);
-		pc = gHWS_pc;
 	}
+		pc = gHWS_pc;
 
 	/* DisplayError("PC=%08X", gHWS_pc); */
 }

@@ -42,12 +42,11 @@ extern void rsp_run_with_trace();
 //BOOL ucodeDetected=FALSE;
 char gameName[40];
 HANDLE hMutex;
-int SyncSpeed=1;
+int SyncSpeed=0;
 int ReverseStereo=0;
 HANDLE handleAudioThread=NULL;
 DWORD dwAudioThreadId;
 int audioIsPlaying = FALSE;
-
 
 DWORD Frequency, Dacrate = 0, Snd1Len, SpaceLeft, SndBuffer[3], Playing;
 AUDIO_INFO AudioInfo;

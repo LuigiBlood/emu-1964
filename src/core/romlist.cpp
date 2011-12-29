@@ -52,8 +52,6 @@ const int numberOfRomListColumns = sizeof(romListColumns)/sizeof(ColumnType);
 ColumnID GetColumnIDByName(char *name);
 ColumnID GetColumnIDByPos(int pos);
 void InsertColumnsIntoTreeView(HWND hwndTV);
-BOOL ColumnMoveUp(HTREEITEM selected);
-BOOL ColumnMoveDown(HTREEITEM selected);
 
 void TranslateRomPopupMenu(HMENU hMenu);
 void TranslateColumnPopupMenu1(HMENU hMenu);
@@ -66,6 +64,7 @@ void TranslatePopupMenu3(HMENU hMenu);
  =======================================================================================================================
  */
 extern BOOL WindowMsgLoop ();
+
 BOOL __cdecl RomListReadDirectory(const char *spath, BOOL usecached)
 {
 	char			romfilename[_MAX_PATH];
@@ -414,7 +413,6 @@ void __cdecl RomListOpenRom(int index, BOOL RunThisRom)
 			EnableButton(ID_BUTTON_ROM_PROPERTIES, TRUE);
 			EnableMenuItem(gui.hMenu1964main, ID_FILE_CHEAT, MF_ENABLED);
 
-
 			if( RunThisRom)
 			{
 				Play(emuoptions.auto_full_screen); /* autoplay */
@@ -439,7 +437,6 @@ void __cdecl RomListSelectRom( int index )
 	if(index >= 0 && index < rlstatus.romlist_count)
 	{
 		rlstatus.selected_rom_index = index;
-		//ListView_SetSelectionMark(gui.hwndRomList, index);
 		ListView_SetHotItem(gui.hwndRomList, index);
 		ListView_SetItemState(gui.hwndRomList, index, LVIS_FOCUSED|LVIS_SELECTED, LVIS_FOCUSED|LVIS_SELECTED);
 		ListView_SetSelectionMark(gui.hwndRomList, index);
@@ -471,7 +468,6 @@ void __cdecl RomList_UpdateNameAndComments(int index)
     	lvi.stateMask = 0;
     	lvi.pszText = LPSTR_TEXTCALLBACK;	/* app. maintains text */
         lvi.iImage = iSmallIcon;
-        
 
 		RomListSelectRom(index);
 
@@ -940,7 +936,7 @@ LRESULT APIENTRY RomListDialog(HWND hDlg, unsigned message, WORD wParam, LONG lP
 				}
 
 				GetDlgItemText(hDlg, IDC_ROMOPTION_COMMENTS, romlist[rlstatus.selected_rom_index]->pinientry->Comments, 79);
-				GetDlgItemText(hDlg, IDC_ROMOPTION_ALTTITLE, romlist[rlstatus.selected_rom_index]->pinientry->Alt_Title, 50);
+				GetDlgItemText(hDlg, IDC_ROMOPTION_ALTTITLE, romlist[rlstatus.selected_rom_index]->pinientry->Alt_Title, 79);
 
 
 				RomList_UpdateNameAndComments(rlstatus.selected_rom_index);
@@ -1016,22 +1012,6 @@ void  __cdecl RomListSelectLoadedRomEntry(void)
 ROMLIST_ENTRY * __cdecl RomListSelectedEntry(void)
 {
 	return romlist[rlstatus.selected_rom_index];
-}
-
-/*
- =======================================================================================================================
-    DupString - allocates a copy of a string. ?    lpsz - address of the null-terminated string to copy.
- =======================================================================================================================
- */
-LPSTR DupString(LPSTR lpsz)
-{
-	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-	int		cb = lstrlen(lpsz) + 1;
-	LPSTR	lpszNew = (LPSTR)LocalAlloc(LMEM_FIXED, cb);
-	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-	if(lpszNew != NULL) CopyMemory(lpszNew, lpsz, cb);
-	return lpszNew;
 }
 
 #define C_COLUMNS	6
@@ -1463,7 +1443,7 @@ void __cdecl EnableButton( int	nID,
 void  __cdecl SetupToolBar()
 {
 		TBADDBITMAP tbab;
-         TBBUTTON tbb[16];
+        TBBUTTON tbb[16];
 
       	gui.hToolBar = CreateWindowEx
 		(	
@@ -1508,7 +1488,7 @@ void  __cdecl SetupToolBar()
 		 tbb[3].iBitmap = 5;
          tbb[3].fsState = TBSTATE_ENABLED;
          tbb[3].fsStyle = TBSTYLE_CHECKGROUP;
-         tbb[3].idCommand = ID_BUTTON_PAUSE;
+         tbb[3].idCommand = ID_BUTTON_PAUSE; 
 
 		 tbb[4].iBitmap = 6;
          tbb[4].fsState = TBSTATE_ENABLED;
@@ -1547,6 +1527,7 @@ void  __cdecl SetupToolBar()
 
 		 tbb[12].iBitmap = 11;
          tbb[12].fsState = TBSTATE_ENABLED;
+
          //AutoFameskip is set before this function is called.
          if (emuoptions.SyncVI)
              tbb[12].fsState|= TBSTATE_CHECKED;
@@ -1556,6 +1537,7 @@ void  __cdecl SetupToolBar()
          
 		 tbb[13].iBitmap = 12;
          tbb[13].fsState = TBSTATE_ENABLED;
+
          //AutoFameskip is set before this function is called.
          if (emuoptions.AutoCF)
              tbb[13].fsState|= TBSTATE_CHECKED;
@@ -1646,7 +1628,6 @@ HWND __cdecl NewRomList_CreateListViewControl( HWND hwndParent )
 		DisplayError("Error to create listview");
 		return NULL;
 	}
-
 
 	if( rlstatus.hLargeBitmaps != NULL && 
 		(rlstatus.iconWidth != guioptions.boxart_image_width || rlstatus.iconHeight != guioptions.boxart_image_height ||
@@ -1899,13 +1880,8 @@ void __cdecl NewRomList_Sort()
 						needswap = TRUE;
 					}
 				}
-
 				break;
-
-
             }
-
-
 
             if(rlstatus.romlist_sort_method >= NUM_SORT_METHODS)
 			{
@@ -2638,69 +2614,6 @@ void InsertColumnsIntoTreeView(HWND hwndTV)
 		romListColumns[i].treeViewID = TreeView_InsertItem(hwndTV, &insItem);
 	}
 }
-
-BOOL ColumnMoveUp(HTREEITEM selected)
-{
-	int i;
-	int idx = -1;
-	for( i=0; i<numberOfRomListColumns; i++ )
-	{
-		if(romListColumns[i].treeViewID == selected)
-		{
-			idx = i;
-			break;
-		}
-	}
-
-	if( idx == -1 || romListColumns[idx].colPos <= 1 )
-	{
-		return FALSE;
-	}
-
-	for( i=0; i<numberOfRomListColumns; i++ )
-	{
-		if(romListColumns[i].colPos == romListColumns[idx].colPos-1 )
-		{
-			romListColumns[i].colPos++;
-			romListColumns[idx].colPos--;
-			return TRUE;
-		}
-	}
-
-	return FALSE;
-}
-
-BOOL ColumnMoveDown(HTREEITEM selected)
-{
-	int i;
-	int idx = -1;
-	for( i=0; i<numberOfRomListColumns; i++ )
-	{
-		if(romListColumns[i].treeViewID == selected)
-		{
-			idx = i;
-			break;
-		}
-	}
-
-	if( idx == -1 || romListColumns[idx].colPos == numberOfRomListColumns-1 )
-	{
-		return FALSE;
-	}
-
-	for( i=0; i<numberOfRomListColumns; i++ )
-	{
-		if(romListColumns[i].colPos == romListColumns[idx].colPos+1 )
-		{
-			romListColumns[i].colPos--;
-			romListColumns[idx].colPos++;
-			return TRUE;
-		}
-	}
-
-	return FALSE;
-}
-
 
 BOOL LinkBoxArtImageByDialog(void)
 {

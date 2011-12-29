@@ -1060,105 +1060,105 @@
 					>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Dynarec"
-			>
-			<File
-				RelativePath=".\dynarec\Analyze.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\dynarec\dynaCOP1.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\dynarec\dynaCPU.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\dynarec\dynaLog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\dynarec\OpcodeDebugger.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\dynarec\regcache.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\dynarec\regcache_sse_fpu.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\dynarec\RegcacheNew.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\dynarec\x86.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\dynarec\xmm.cpp"
-				>
-			</File>
 			<Filter
-				Name="headers"
+				Name="Dynarec"
 				>
 				<File
-					RelativePath=".\compiler.h"
+					RelativePath=".\dynarec\Analyze.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\COPYRIGHT.txt"
+					RelativePath=".\dynarec\dynaCOP1.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\dynaRec\dynaBranch.h"
+					RelativePath=".\dynarec\dynaCPU.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\dynaRec\dynaCOP1.h"
+					RelativePath=".\dynarec\dynaLog.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\dynaRec\dynaCPU.h"
+					RelativePath=".\dynarec\OpcodeDebugger.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\dynaRec\dynaHelper.h"
+					RelativePath=".\dynarec\regcache.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\dynaRec\dynaLog.h"
+					RelativePath=".\dynarec\regcache_sse_fpu.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\dynaRec\dynaRec.h"
+					RelativePath=".\dynarec\RegcacheNew.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\hle.h"
+					RelativePath=".\dynarec\x86.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\dynaRec\opcodeDebugger.h"
+					RelativePath=".\dynarec\xmm.cpp"
 					>
 				</File>
-				<File
-					RelativePath=".\dynaRec\regcache.h"
+				<Filter
+					Name="headers"
 					>
-				</File>
-				<File
-					RelativePath=".\dynaRec\x86.h"
-					>
-				</File>
-				<File
-					RelativePath=".\dynaRec\xmm.h"
-					>
-				</File>
+					<File
+						RelativePath=".\compiler.h"
+						>
+					</File>
+					<File
+						RelativePath=".\COPYRIGHT.txt"
+						>
+					</File>
+					<File
+						RelativePath=".\dynaRec\dynaBranch.h"
+						>
+					</File>
+					<File
+						RelativePath=".\dynaRec\dynaCOP1.h"
+						>
+					</File>
+					<File
+						RelativePath=".\dynaRec\dynaCPU.h"
+						>
+					</File>
+					<File
+						RelativePath=".\dynaRec\dynaHelper.h"
+						>
+					</File>
+					<File
+						RelativePath=".\dynaRec\dynaLog.h"
+						>
+					</File>
+					<File
+						RelativePath=".\dynaRec\dynaRec.h"
+						>
+					</File>
+					<File
+						RelativePath=".\hle.h"
+						>
+					</File>
+					<File
+						RelativePath=".\dynaRec\opcodeDebugger.h"
+						>
+					</File>
+					<File
+						RelativePath=".\dynaRec\regcache.h"
+						>
+					</File>
+					<File
+						RelativePath=".\dynaRec\x86.h"
+						>
+					</File>
+					<File
+						RelativePath=".\dynaRec\xmm.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<File

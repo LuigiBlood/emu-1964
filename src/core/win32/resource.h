@@ -3,7 +3,6 @@
 // Used by wingui.rc
 //
 #define IDS_WARRANTY_SEC11              1
-#define IDOK2                           2
 #define IDS_WARRANTY_SEC12              2
 #define IDS_DEFAULT_PLUGIN_PATH         3
 #define IDS_DEFAULT_ROM_PATH            4
@@ -26,13 +25,7 @@
 #define IDS_KEY_USE_DEFAULT_STATE_SAVE_PATH 20
 #define IDS_DEFAULT_STATE_SAVE_PATH     21
 #define IDS_CHEAT_NOTE                  22
-#define IDM_NEW                         100
-#define IDM_OPENROM                     101
 #define IDI_ICON2                       101
-#define IDM_SAVE                        102
-#define IDM_SAVEAS                      103
-#define IDM_PRINT                       104
-#define IDM_EXIT                        105
 #define ID_EXIT                         105
 #define IDM_ABOUT                       106
 #define ID_ABOUT                        106
@@ -52,13 +45,8 @@
 #define IDM_VIDEO_MODE                  126
 #define ID_CONFIGURE_VIDEO              127
 #define ID_HELP_FINDER                  128
-#define IDM_320_240                     129
 #define IDS_KEY_RSP_PLUGIN              129
-#define IDM_640_480                     130
 #define IDS_DEFAULT_RSP_PLUGIN          130
-#define IDM_800_600                     131
-#define IDM_1024_768                    132
-#define IDM_1280_1024                   133
 #define IDM_PLUGINS                     134
 #define ID_CHECKWEB                     135
 #define ID_AUD_CONFIG                   140
@@ -70,17 +58,13 @@
 #define ID_DISABLESOUND                 145
 #define IDB_HELP                        146
 #define ID_INTERPRETER                  147
-#define IDB_PROPERTY                    147
 #define ID_STATICCOMPILER               148
 #define ID_DYNAMICCOMPILER              149
-#define IDB_ROM_OPEN                    149
 #define ID_CLOSEROM                     150
 #define IDB_AUDIO                       152
-#define IDM_1600_1200                   153
 #define IDB_INPUT                       153
 #define IDM_FULLSCREEN                  154
 #define IDB_VIDEO                       154
-#define IDM_1920_1440                   155
 #define ID_DEBUGTLB                     156
 #define ID_DEBUGAUDIOTASK               157
 #define ID_DEBUGSPTASK                  158
@@ -88,7 +72,6 @@
 #define IDR_TOOLBAR1                    159
 #define ID_DEBUGIOSI                    160
 #define ID_DEBUGIOSP                    161
-#define IDB_BACKGROUND                  161
 #define ID_DEBUGIOVI                    162
 #define ID_DEBUGIOAI                    163
 #define ID_DEBUGIORI                    164
@@ -109,7 +92,6 @@
 #define ID_DEBUGIO                      178
 #define ID_INTERRUPTDEBUGGING           180
 #define ID_DEBUGVIINTERRUPTS            181
-#define IDB_BITMAP1                     181
 #define ID_DEBUGPIINTERRUPTS            182
 #define ID_DEBUGAIINTERRUPTS            183
 #define ID_DEBUGSIINTERRUPTS            184
@@ -117,28 +99,19 @@
 #define ID_DEBUGCPUCOUNTER              186
 #define ID_DEBUG_SRAM                   187
 #define ID_DEBUGDYNA                    194
-#define ID_LAGNESS_6                    195
 #define ID_DEBUGDYNAEXECUTION           196
 #define ID_4KEEPROM                     197
 #define ID_DYNALOG                      198
 #define ID_FILE_ROMINFO                 199
-#define IDM_UNDO                        200
 #define ID_CHANGEDIRECTORY              200
-#define IDM_CUT                         201
 #define ID_LOADSTATE                    201
-#define IDM_COPY                        202
 #define ID_SAVESTATE                    202
-#define IDM_PASTE                       203
 #define ID_SAVE_STATE_1                 203
 #define IDM_CLEAR                       204
-#define ID_LAGNESS_8                    204
 #define IDB_RSP                         206
-#define IDI_ICON1                       208
 #define IDI_PLAYABLE                    208
 #define IDI_ALMOST_PLAYABLE             209
-#define IDI_NOT_PLAYABLE1               210
 #define IDI_NOT_PLAYABLE                210
-#define IDI_NOT_PLAYABLE2               211
 #define IDI_UNKNOWN                     211
 #define ID_SAVE_STATE_9                 213
 #define IDB_N64LOGO                     213
@@ -254,22 +227,15 @@
 #define ID_BUTTON_SETUP_PLUGINS         338
 #define ID_BUTTON_RESET                 339
 #define ID_BUTTON_HELP                  340
-#define ID_BUTTON341                    341
-#define ID_BUTTON_INTERNAL_             341
 #define ID_BUTTON_FRAMESKIP             341
 #define ID_EMULATION_AUTOFRAMESKIP      343
 #define ID_BUTTON_SYNC_SPEED            346
-#define ID_BUTTON346                    346
-#define ID_BUTTON347                    347
 #define ID_BUTTON_AUTO_CF               348
 #define ID_EMULATION_AUTOCFTIMING       349
-#define ID_Menu                         353
-#define ID_Menu354                      354
 #define ID_POPUPMENU_CHANGEROMDIRECTORY 355
 #define ID_FILE_ROMDIRECTORY8           373
 #define ID_FILE_RECENTGAMES_GAME8       374
 #define IDB_GREEN_CHEAT                 376
-#define ID_ACCELERATOR377               377
 #define ID_INC_SPEED_LIMIT              378
 #define ID_DEC_SPEED_LIMIT              379
 #define ID_RESET_SPEED_LIMIT            381
@@ -279,14 +245,11 @@
 #define ID_VARIABLESPEEDLIMITS_RESTORECORRECTSPEED 386
 #define ID_FILE_LANGUAGE                392
 #define ID_LANGUAGE_ENGLISH             393
-#define ID_LANGUAGE_LANGUAGE1           394
-#define ID_LANGUAGE_LANGUAGE2           395
 #define ID_POPUPMENU_PLUGINSETTING      396
 #define ID_POPUPMENU_ROMINFORMATION     397
 #define ID_HELP_HELP                    398
 #define ID_POPUPMENU_ASSIGNBOXARTIMAGE  399
 #define ID_HEADERPOPUP3_SHOWBOXART      400
-#define IDC_EDIT                        401
 #define ID_HEADERPOPUP3_SHOWROMLIST     401
 #define ID_HEADERPOPUP3_D               402
 #define ID_BOXARTIMAGE_INCREASEXSPACING 405
@@ -719,7 +682,6 @@
 #define IDC_VEC256                      1456
 #define IDC_DEFAULTOPTIONS_SAVEDIRECTORY 1456
 #define IDC_VEC257                      1457
-#define IDC_DEFAULTOPTIOS_PAUSEONMENU   1457
 #define IDC_VEC258                      1458
 #define IDC_DEFAULTOPTIONS_PAUSEWHENINACTIVE 1458
 #define IDC_DEFAULTOPTIONS_AUTORUN      1459
@@ -827,13 +789,8 @@
 #define IDC_VEC315                      1515
 #define IDC_VEC316                      1516
 #define IDC_VEC317                      1517
-#define IDC_NO_OF_FOLDERS_4             1517
 #define IDC_VEC318                      1518
-#define IDC_NO_OF_FOLDERS_8             1518
-#define IDC_NO_OF_FOLDERS_16            1519
-#define IDC_NO_OF_ROMS_8                1520
 #define IDC_VEC321                      1521
-#define IDC_NO_OF_ROMS_16               1521
 #define IDC_VEC322                      1522
 #define IDC_IS_SSE_SUPPORTED            1522
 #define IDC_VEC323                      1523
@@ -900,15 +857,14 @@
 #define IDC_SPIN_BOXART_X_SPACING       1573
 #define IDC_SPIN_BOXART_Y_SPACING       1574
 #define IDC_ICON_Y_SPACING_STR          1575
-#define ID_LAGNESS_7                    1576
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        216
-#define _APS_NEXT_COMMAND_VALUE         416
+#define _APS_NEXT_RESOURCE_VALUE        220
+#define _APS_NEXT_COMMAND_VALUE         417
 #define _APS_NEXT_CONTROL_VALUE         1576
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

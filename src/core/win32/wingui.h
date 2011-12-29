@@ -97,13 +97,9 @@ LRESULT APIENTRY	CriticalMessageDialog(HWND hDlg, unsigned message, WORD wParam,
 
 #define MAXFILENAME 256					/* maximum length of file pathname */
 
-/* the legal stuff */
-extern unsigned char	MainDisclaimer[];
 extern unsigned char	Scratch0[];
 extern unsigned char	Scratch1[];
 extern  unsigned char	Scratch2[];
-extern unsigned char	DistConditions[];	/* GNU Redistribution Conditions */
-
 
 struct EMU1964GUI
 {
@@ -136,8 +132,6 @@ extern struct EMU1964GUI	gui;
 struct GUIOPTIONS
 {
 	BOOL	pause_at_inactive;
-	BOOL	pause_at_menu;
-	BOOL	ok_to_pause_at_menu;
 	BOOL	use_default_save_directory;
 	BOOL	use_default_state_save_directory;
 	BOOL	use_default_plugin_directory;
@@ -153,8 +147,6 @@ struct GUIOPTIONS
 	int		boxart_image_x_spacing;
 	int		boxart_image_y_spacing;
 	BOOL	displayDefaultPlugins;		// To display default plugins or to display ROM specified plugins in the plugin dialog box
-	int		noOfRecentFolders;
-	int		noOfRecentROMs;
 	char	language[80];
 	int		totalLanguages;
 	int		currentLanguageID;
@@ -175,7 +167,6 @@ struct GUISTATUS
 };
 extern struct GUISTATUS guistatus;
 
-extern void DockStatusBar(void);
 extern void InitStatusBarParts(void);
 extern void	__cdecl		SetStatusBarText(int, char * );
 
@@ -204,6 +195,7 @@ enum { LOAD_ALL_PLUGIN, LOAD_VIDEO_PLUGIN, LOAD_AUDIO_PLUGIN, LOAD_INPUT_PLUGIN,
 
 void FreePlugins(void);
 BOOL LoadPlugins(int type);
+void LoadROMSpecificPlugins();
 
 enum { SAVE_STATE_1964_FORMAT, SAVE_STATE_PJ64_FORMAT};
 
