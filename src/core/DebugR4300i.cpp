@@ -2082,6 +2082,24 @@ void debug_r4300i_COP1_sqrt_d(uint32 Instruction)
  =======================================================================================================================
  =======================================================================================================================
  */
+void debug_r4300i_COP1_sub_s(uint32 Instruction)
+{
+	//DBGPRINT_FD_FS_FT("SUB.S   ");
+};
+
+/*
+ =======================================================================================================================
+ =======================================================================================================================
+ */
+void debug_r4300i_COP1_sub_d(uint32 Instruction)
+{
+	//DBGPRINT_FD_FS_FT("SUB.D   ");
+};
+
+/*
+ =======================================================================================================================
+ =======================================================================================================================
+ */
 void debug_r4300i_COP1_truncl(uint32 Instruction)
 {
 	DBGPRINT_FPR64BIT_FS_FD("TRUNC.L.fmt ");
@@ -2441,6 +2459,7 @@ void (*DebugCOP1BCInstruction[4]) (uint32 Instruction) =
 void (*DebugCOP1SInstruction[64]) (uint32 Instruction) =
 {
 	debug_r4300i_COP1_add_s,
+	debug_r4300i_COP1_sub_s,
 	debug_r4300i_COP1_mul_s,
 	debug_r4300i_COP1_div_s,
 	debug_r4300i_COP1_sqrt_s,
@@ -2508,6 +2527,7 @@ void (*DebugCOP1SInstruction[64]) (uint32 Instruction) =
 void (*DebugCOP1DInstruction[64]) (uint32 Instruction) =
 {
 	debug_r4300i_COP1_add_d,
+	debug_r4300i_COP1_sub_d,
 	debug_r4300i_COP1_mul_d,
 	debug_r4300i_COP1_div_d,
 	debug_r4300i_COP1_sqrt_d,

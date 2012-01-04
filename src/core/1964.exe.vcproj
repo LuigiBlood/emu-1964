@@ -95,7 +95,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="opengl32.lib ddraw.lib zlib\zlibwapi.lib comctl32.lib dsound.lib kernel32.lib shell32.lib shlwapi.lib uxtheme.lib"
+				AdditionalDependencies="opengl32.lib zlib\zlibwapi.lib comctl32.lib dsound.lib kernel32.lib shell32.lib shlwapi.lib uxtheme.lib"
 				OutputFile="..\bin\$(ConfigurationName)\1964.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -1202,31 +1202,6 @@
 		</File>
 		<File
 			RelativePath=".\Core.h"
-			>
-		</File>
-		<File
-			RelativePath=".\InterpretedOpcodes.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					CallingConvention="1"
-					CompileAs="2"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					CompileAs="2"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath=".\InterpretedOpcodes.h"
 			>
 		</File>
 		<File

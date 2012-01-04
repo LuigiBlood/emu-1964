@@ -23,7 +23,6 @@
 #include "cheatcode.h"
 #include "romlist.h"
 #include "float.h"
-#include "InterpretedOpcodes.h"
 
 #ifdef _DEBUG
 #include "win32/windebug.h"
@@ -36,7 +35,7 @@ extern uint32		SetException_Interrupt(uint32 pc);
 BOOL __cdecl		DisplayError_AskIfContinue(char *Message, ...);
 
 void				CloseEmulator(void);
-void				RunTheInterpreter(void);
+inline void				RunTheInterpreter(void);
 void				RunTheRegCacheWithoutOpcodeDebugger(void);
 static void			RunTheRegCacheNoCheck(void);
 HANDLE				CPUThreadHandle = NULL;
@@ -751,12 +750,16 @@ void PauseEmulating(void)
 N64::CRegisters r;
 void RunTheInterpreter(void)
 {
-	register uint32 Instruction;
-	N64::CInterpretedOpcodes* interpreter = new N64::CInterpretedOpcodes;
+	unsigned __int32 opcode_;
+
+	uint32 Instruction;
 
 _DoOtherTask:
 	Instruction = FetchInstruction();	/* Fetch instruction at PC */
-	interpreter->executeFunction(_OPCODE_, r, Instruction);
+
+	opcode_ = _OPCODE_;
+	CPU_instruction[opcode_](Instruction);
+
 	gHWS_GPR(0) = 0;
 	INTERPRETER_DEBUG_INSTRUCTION(Instruction);
 
@@ -777,10 +780,14 @@ _DoOtherTask:
 		{
 		case 0:		gHWS_pc += 4; break;
 		case 1:		gHWS_pc += 4; CPUdelay = 2; break;
-		default:	gHWS_pc = CPUdelayPC; CPUdelay = 0; if(!emustatus.Emu_Keep_Running) goto out; break;
+		default:	gHWS_pc = CPUdelayPC; CPUdelay = 0;break;
 		}
 
-		if(r.r_.countdown_counter <= 0) Trigger_Timer_Event();
+		if(r.r_.countdown_counter <= 0) 
+		{
+			Trigger_Timer_Event();
+			if(!emustatus.Emu_Keep_Running) goto out; 
+		}
 	}
 
 	r.r_.countdown_counter -= VICounterFactors[CounterFactor];
@@ -789,8 +796,7 @@ _DoOtherTask:
 out:
 	if(Is_CPU_Doing_Other_Tasks() || CPUdelay != 0) goto _DoOtherTask;
 
-	if (interpreter)
-		delete interpreter;
+	//if (interpreter) delete interpreter;
 }
 
 /*
