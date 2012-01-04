@@ -1447,7 +1447,7 @@ void RefreshAllCheatCodeMemoryMaps(void)
 void InitCheatCodeEngineMemoryLock(void)
 {
 	TRACE0("Start Cheat Code Memory Lock");
-	RefreshAllCheatCodeMemoryMafaps();
+	RefreshAllCheatCodeMemoryMaps();
 }
 
 void CloseCheatCodeEngineMemoryLock(void)
