@@ -15,7 +15,7 @@
 
 #include "../stdafx.h"
 
-//#define SAFE_LOADSTORE_FPU 1
+#define SAFE_LOADSTORE_FPU 1
 
 x86regtyp xFS[1], xFT[1], xFD[1];
 void SSE_FlushAllRegisters(int);
