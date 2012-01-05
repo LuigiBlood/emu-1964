@@ -15,10 +15,10 @@
 // authors: email: schibo@emulation64.com, rice1964@yahoo.com
 
 //#define DEBUG_REGCACHE
-//#define SAFE_32_TO_64 1
-//#define SAFE_64_TO_32 1
-//#define SAFE_FLUSHING 1
-//#define SAFE_PUSHPOP 1
+#define SAFE_32_TO_64 1
+#define SAFE_64_TO_32 1
+#define SAFE_FLUSHING 1
+#define SAFE_PUSHPOP 1
 
 
 

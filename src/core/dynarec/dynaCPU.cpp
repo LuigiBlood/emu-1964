@@ -17,15 +17,15 @@
 #include "../stdafx.h"
 
 
-//#define SAFE_IMM 1
+#define SAFE_IMM 1
 //#define NO_CONSTS 1
 //#define SAFE_SLT 1
-//#define SAFE_GATES 1
-//#define SAFE_MATH 1
-//#define SAFE_LOADSTORE 1
-//#define SAFE_SHIFTS 1
-//#define SAFE_DOUBLE_SHIFTS2 1
-//#define SAFE_DOUBLE_IMM 1
+#define SAFE_GATES 1
+#define SAFE_MATH 1
+#define SAFE_LOADSTORE 1
+#define SAFE_SHIFTS 1
+#define SAFE_DOUBLE_SHIFTS2 1
+#define SAFE_DOUBLE_IMM 1
 
 #define SAFE_DOUBLE_SHIFTS 1
 #define SAFE_DOUBLE_MATH 1
