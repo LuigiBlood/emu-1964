@@ -413,6 +413,7 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	BOOL needchooseromdirectory;
 
 	if(hPrevInstance) return FALSE;
+	SaveCmdLineParameter(lpszCmdLine);
 
 	gui.szBaseWindowTitle = "1964 1.2";
 	gui.hwnd1964main = NULL;		/* handle to main window */
@@ -432,6 +433,7 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	emustatus.Emu_Is_Paused = FALSE;
 	emustatus.Emu_Keep_Running = FALSE;
 	emustatus.processing_exception = FALSE;
+
 
 	SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &WindowScreenSaverStatus, 0); 
 	
@@ -510,24 +512,30 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	timer = SetTimer(gui.hwnd1964main, 1, 1000, TimerProc);
 
 	needchooseromdirectory = FALSE;
-	NeedFreshromListAfterStop = FALSE;
-
-	if (guioptions.display_romlist)
+	if( StartGameByCommandLine() )
 	{
-		if( strlen(directories.rom_directory_to_use) > 4 && PathFileExists(directories.rom_directory_to_use) )
-		{
-			NewRomList_ListViewChangeWindowRect();
-
-			SetStatusBarText(0, TranslateStringByString("Looking for ROM files in the ROM directory and Generating List"));
-			RomListReadDirectory(directories.rom_directory_to_use,TRUE);
-		}
-		else
-		{
-			needchooseromdirectory = TRUE;
-		}
+		pluginInitResult = TRUE;
 	}
+	else
+	{
+		NeedFreshromListAfterStop = FALSE;
+		if (guioptions.display_romlist)
+		{
+			if( strlen(directories.rom_directory_to_use) > 4 && PathFileExists(directories.rom_directory_to_use) )
+			{
+				NewRomList_ListViewChangeWindowRect();
 
-	pluginInitResult = LoadPlugins(LOAD_ALL_PLUGIN);
+				SetStatusBarText(0, TranslateStringByString("Looking for ROM files in the ROM directory and Generating List"));
+				RomListReadDirectory(directories.rom_directory_to_use,TRUE);
+			}
+			else
+			{
+				needchooseromdirectory = TRUE;
+			}
+		}
+
+		pluginInitResult = LoadPlugins(LOAD_ALL_PLUGIN);
+	}
 	SetFocus(gui.hwnd1964main);
 	RomListLoadCurrentPosFromRegistry();
 
@@ -556,7 +564,7 @@ _HOPPITY:
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-            Sleep(10);
+            //Sleep(10);
 		}
 	}
 	else
@@ -1169,12 +1177,6 @@ void ProcessKeyboardInput(UINT message, WPARAM wParam, LPARAM lParam)
         SetKeyboardState (keymap);
     }
 
-	if (wParam == VK_F5)
-		SaveState();
-
-	if (wParam == VK_F7)
-		LoadState();
-
     if (message == WM_SYSKEYUP && wParam == VK_MENU) {
         /* ignore ALT key up event to stop it activating the menus */
 		return;
@@ -1183,6 +1185,14 @@ void ProcessKeyboardInput(UINT message, WPARAM wParam, LPARAM lParam)
 	ctrlkey = GetKeyState(VK_CONTROL) & 0xFF000000;
 	switch(wParam)
 	{
+	case VK_F5:
+		SaveState();
+		break;
+
+	case VK_F7:
+		LoadState();
+		break;
+
 	case VK_ESCAPE:
     case VK_F4:
 		if (guistatus.IsFullScreen)
@@ -1222,8 +1232,6 @@ void ProcessKeyboardInput(UINT message, WPARAM wParam, LPARAM lParam)
 	}
 }
 
-int MenuCausedPause = FALSE;
-
 /*
  =======================================================================================================================
  =======================================================================================================================
@@ -1246,15 +1254,16 @@ long FAR PASCAL MainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	case WM_PAINT:
 		BeginPaint(hWnd, &ps);
 		EndPaint(hWnd, &ps);
+		return 0;
 	break;
 	case WM_SETFOCUS:
 		if( emustatus.Emu_Is_Running )
 		{
-	//		if( emustatus.Emu_Is_Paused  && gamepausebyinactive )
-	//		{
-	//			Resume();
-	//			gamepausebyinactive = FALSE;
-	//		}
+			//if( emustatus.Emu_Is_Paused  && gamepausebyinactive )
+			//{
+			//	Resume();
+			//	gamepausebyinactive = FALSE;
+			//}
 		}
 		else
 		{
@@ -1497,7 +1506,6 @@ void __cdecl Play(BOOL WithFullScreen)
 
 
 		sprintf(generalmessage, "%s - %s", gui.szWindowTitle, TranslateStringByString("Running"));
-		SetWindowText(gui.hwnd1964main, generalmessage);
 
 		if(WithFullScreen && (emustatus.Emu_Is_Resetting == 0))
 		{
@@ -1619,7 +1627,6 @@ void CloseROM(void)
 		EnableMenuItem(gui.hMenu1964main, ID_ROM_PAUSE, MF_GRAYED);
 
 		EnableMenuItem(gui.hMenu1964main, ID_CLOSEROM, MF_GRAYED);
-		SetWindowText(gui.hwnd1964main, gui.szBaseWindowTitle);
 	}
 
 }
@@ -1743,14 +1750,12 @@ BOOL __cdecl WinLoadRomStep2(char *szFileName)
 	
 	memcpy(&HeaderDllPass[0], &gMemoryState.ROM_Image[0], 0x40);
 	EnableMenuItem(gui.hMenu1964main, ID_CLOSEROM, MF_ENABLED);
-	SetWindowText(gui.hwnd1964main, gui.szWindowTitle);
 	
 	Rom_Loaded = TRUE;
 	gHWS_pc = 0xA4000040;	/* We do it in r4300i_inithardware */
 	
 	UpdateCIC();
 	sprintf(generalmessage, "%s - %s", gui.szWindowTitle, TranslateStringByString("Loaded"));
-	SetWindowText(gui.hwnd1964main, generalmessage);
 	Set_Ready_Message();
 	
 	EnableMenuItem(gui.hMenu1964main, ID_ROM_PAUSE, MF_GRAYED);
@@ -3029,7 +3034,6 @@ void AfterStop(void)
 	SetStatusBarText(3, defaultoptions.RDRAM_Size == RDRAMSIZE_4MB ? "4MB" : "8MB");
 
 	sprintf(generalmessage, "%s - %s", gui.szWindowTitle, TranslateStringByString("Stopped"));
-	SetWindowText(gui.hwnd1964main, generalmessage);
 	
 	Set_Ready_Message();
 	SetStatusBarText(1, " 0 VI/s");

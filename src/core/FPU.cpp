@@ -311,7 +311,8 @@ void r4300i_COP1_bc1f(uint32 Instruction)
         
     if((((uint32) cCON31 & 0x00800000)) == 0)
 	{
-		R4300I_SPEEDHACK DELAY_SET
+		//R4300I_SPEEDHACK
+		DELAY_SET
 	}
 	else
 	{
@@ -329,7 +330,8 @@ void r4300i_COP1_bc1t(uint32 Instruction)
     
     if((((uint32) cCON31 & 0x00800000)) != 0)
 	{
-		R4300I_SPEEDHACK DELAY_SET
+		//R4300I_SPEEDHACK 
+		DELAY_SET
 	}
 	else
 	{
@@ -347,7 +349,8 @@ void r4300i_COP1_bc1fl(uint32 Instruction)
     
     if((((uint32) cCON31 & 0x00800000)) == 0)
 	{
-		R4300I_SPEEDHACK DELAY_SET
+		//R4300I_SPEEDHACK 
+		DELAY_SET
 	}
 	else
 	{
@@ -366,7 +369,8 @@ void r4300i_COP1_bc1tl(uint32 Instruction)
         
     cCON31 & 0x00800000)) != 0)
 	{
-		R4300I_SPEEDHACK DELAY_SET
+		//R4300I_SPEEDHACK
+		DELAY_SET
 	}
 	else
 	{

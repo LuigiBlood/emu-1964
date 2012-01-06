@@ -146,7 +146,6 @@ void StopAudio(void)
  =======================================================================================================================
     Called by GUI thread to pause emulating ? =======================================================================================================================
  */
-extern int MenuCausedPause;
 BOOL WindowMsgLoop();
 BOOL PauseEmulator(void)
 {
@@ -174,13 +173,6 @@ BOOL PauseEmulator(void)
 		//emustatus.Emu_Keep_Running = FALSE;
 		//emustatus.reason_to_stop = EMUPAUSE;
 		Sleep(50);
-	}
-
-	if (!MenuCausedPause)
-	{
-		sprintf(generalmessage, "%s - %s", gui.szWindowTitle, TranslateStringByString("Paused"));
-		SetStatusBarText(0, generalmessage);
-		SetWindowText(gui.hwnd1964main, generalmessage);
 	}
 
 	if( !(Audio_Is_Initialized == 1 && CoreDoingAIUpdate == 0 ) )
@@ -780,13 +772,13 @@ _DoOtherTask:
 		{
 		case 0:		gHWS_pc += 4; break;
 		case 1:		gHWS_pc += 4; CPUdelay = 2; break;
-		default:	gHWS_pc = CPUdelayPC; CPUdelay = 0;break;
+		default:	gHWS_pc = CPUdelayPC; CPUdelay = 0;  break;
 		}
 
-		if(r.r_.countdown_counter <= 0) 
+		if(r.r_.countdown_counter <= 0)
 		{
 			Trigger_Timer_Event();
-			if(!emustatus.Emu_Keep_Running) goto out; 
+			if(!emustatus.Emu_Keep_Running) goto out;
 		}
 	}
 
