@@ -88,8 +88,8 @@ extern unsigned __int32 max_vi_count;
 extern unsigned __int32 vi_count_per_line;
 extern unsigned __int32 vi_field_number;
 
-#define NTSC_VI_MAGIC_NUMBER	625000
-#define PAL_VI_MAGIC_NUMBER		777809				/* 750000 //777809 */
+#define NTSC_VI_MAGIC_NUMBER	(625000)
+#define PAL_VI_MAGIC_NUMBER		(777809)			/* 750000 //777809 */
 
 void					Init_VI_Counter(int tv_type);
 void					Set_VI_Counter_By_VSYNC(void);
