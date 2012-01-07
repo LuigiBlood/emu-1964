@@ -93,10 +93,6 @@ extern unsigned __int32 vi_field_number;
 
 void					Init_VI_Counter(int tv_type);
 void					Set_VI_Counter_By_VSYNC(void);
-extern int				VICounterFactors[9];
-extern int				CounterFactors[9];
-extern int				CounterFactor;
-extern int              AutoCounterFactor;
 
 void					Count_Down(unsigned __int32 count);
 unsigned __int32		Get_COUNT_Register(void);

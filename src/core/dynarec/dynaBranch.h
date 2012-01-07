@@ -509,10 +509,7 @@ void InterruptsSafe(uint32 JumpType, uint32 targetpc, uint32 DoLink, uint32 Link
     //int     InjectStubAddrToParam;
 
     //viCounter is used if not using AutoCF
-	if (emuoptions.AutoCF)
-		viCounter = compilerstatus.cp0Counter;
-	else
-		viCounter = compilerstatus.cp0Counter * VICounterFactors[CounterFactor];
+	viCounter = compilerstatus.cp0Counter;
 
 
     compilerstatus.KEEP_RECOMPILING = FALSE;
@@ -536,17 +533,7 @@ void InterruptsSafe(uint32 JumpType, uint32 targetpc, uint32 DoLink, uint32 Link
 	 	TLB_TRANSLATE_PC(targetpc);
     }
 
-    if (emuoptions.AutoCF)
-    {
-        MOV_MemoryToReg(Reg_EAX, ModRM_disp32, (uint32)&AutoCounterFactor);
-        MOV_ImmToReg(Reg_ECX, viCounter);
-        IMUL_EAXWithReg(Reg_ECX);
-        MOV_MemoryToReg(Reg_EDX, ModRM_disp32, (uint32)&r.r_.countdown_counter);
-        SUB_Reg1OfReg2(Reg_EAX, Reg_EDX);
-        MOV_RegToMemory(1, Reg_EDX, ModRM_disp32, (uint32)&r.r_.countdown_counter);
-        
-    }
-    else
+ 
     {
         MOV_MemoryToReg(Reg_EAX, ModRM_disp32, (uint32)&r.r_.countdown_counter);
         SUB_ImmFromReg(1, Reg_EAX, viCounter, 0);
@@ -567,10 +554,7 @@ void InterruptsNewTest(uint32 JumpType, uint32 targetpc, uint32 DoLink, uint32 L
     int     InjectStubAddrToParam;
 
     //viCounter is used if not using AutoCF
-	if (emuoptions.AutoCF)
-		viCounter = compilerstatus.cp0Counter;
-	else
-		viCounter = compilerstatus.cp0Counter * VICounterFactors[CounterFactor];
+	viCounter = compilerstatus.cp0Counter;
 
     compilerstatus.KEEP_RECOMPILING = FALSE;
 
@@ -584,18 +568,7 @@ void InterruptsNewTest(uint32 JumpType, uint32 targetpc, uint32 DoLink, uint32 L
 			MOV_ImmToMemory(1, ModRM_disp8_EBP, 4 + ((((31-1) - 16)) << 3), (_s32) (((__int32) LinkVal) >> 31));
 	}
 
-    if (emuoptions.AutoCF)
-    {
-        MOV_MemoryToReg(Reg_EAX, ModRM_disp32, (uint32)&AutoCounterFactor);
-        MOV_ImmToReg(Reg_ECX, viCounter);
-        IMUL_EAXWithReg(Reg_ECX);
-        MOV_MemoryToReg(Reg_EDX, ModRM_disp32, (uint32)&r.r_.countdown_counter);
-        SUB_Reg1OfReg2(Reg_EAX, Reg_EDX);
-        MOV_RegToMemory(1, Reg_EDX, ModRM_disp32, (uint32)&r.r_.countdown_counter);
-        MOV_Reg2ToReg1(Reg_EAX, Reg_EDX);
-        
-    }
-    else
+   
     {
         MOV_MemoryToReg(Reg_EAX, ModRM_disp32, (uint32)&r.r_.countdown_counter);
         SUB_ImmFromReg(1, Reg_EAX, viCounter, 0);

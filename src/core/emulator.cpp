@@ -209,7 +209,6 @@ void ResumeEmulator(int action_after_pause)
 
 	sprintf(generalmessage, "%s - %s", gui.szWindowTitle, TranslateStringByString("Running"));
 	SetStatusBarText(0, generalmessage);
-	SetWindowText(gui.hwnd1964main, generalmessage);
 	SetEvent( ResumeEmulatorEvent );
 	QueryPerformanceCounter(&LastSecondTime);
 }
@@ -440,8 +439,6 @@ void N64_Boot(void)
 	uint32	bootaddr = (*(uint32 *) (gMS_ROM_Image + 8) & 0x007FFFFF) + 0x80000000;
     static int remember_debug_opcode = 0;
 
-   
-	SetCounterFactor(CounterFactor);
 	emustatus.Emu_Is_Running = TRUE;
 	IsBooting = TRUE;
 
@@ -782,7 +779,7 @@ _DoOtherTask:
 		}
 	}
 
-	r.r_.countdown_counter -= VICounterFactors[CounterFactor];
+	r.r_.countdown_counter--;
 	goto _DoOtherTask;
 
 out:
@@ -1048,7 +1045,7 @@ void InterpreterStepCPU(void)
 		) CPUNeedToCheckException = FALSE;
 
        
-        r.r_.countdown_counter -= VICounterFactors[CounterFactor];
+        r.r_.countdown_counter--;
 	    if(r.r_.countdown_counter <= 0)
             Trigger_Timer_Event();
 	    if(Is_CPU_Doing_Other_Tasks())
@@ -1062,7 +1059,7 @@ void InterpreterStepCPU(void)
 
             gHWS_pc += 4; 
 
-            r.r_.countdown_counter -= VICounterFactors[CounterFactor];
+            r.r_.countdown_counter--;
 	        if(r.r_.countdown_counter <= 0)
                 Trigger_Timer_Event();
             if(Is_CPU_Doing_Other_Tasks())
@@ -1074,14 +1071,14 @@ void InterpreterStepCPU(void)
             CPUdelay = 2; 
 
             //no delay slot interrupt processing. Risky.
-            r.r_.countdown_counter -= VICounterFactors[CounterFactor];
+            r.r_.countdown_counter--;
             break;
 		default:
 
             gHWS_pc = CPUdelayPC; 
             CPUdelay = 0; 
 
-	        r.r_.countdown_counter -= VICounterFactors[CounterFactor];
+	        r.r_.countdown_counter--;
 	        if(r.r_.countdown_counter <= 0)
                 Trigger_Timer_Event();
             if(Is_CPU_Doing_Other_Tasks())

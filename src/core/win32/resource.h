@@ -261,6 +261,14 @@
 #define ID_POPUPMENU_REMOVEBOXARTIMAGELINK 411
 #define ID_HEADERPOPUP3_REFRESH         413
 #define ID_DEBUGFRAMEBUFFERREAD         415
+#define ID_OVERCLOCK_100MHZ             416
+#define ID_OVERCLOCK_200MHZ             417
+#define ID_OVERCLOCK_300MHZ             418
+#define ID_OVERCLOCK_400MHZ             419
+#define ID_OVERCLOCK_500MHZ             420
+#define ID_OVERCLOCK_600MHZ             421
+#define ID_OVERCLOCK_50MHZ              422
+#define ID_OVERCLOCK_25MHZ              423
 #define IDC_CPUR0                       1000
 #define IDC_GPR1                        1001
 #define IDC_GPR2                        1002
@@ -863,8 +871,8 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        220
-#define _APS_NEXT_COMMAND_VALUE         417
+#define _APS_NEXT_RESOURCE_VALUE        216
+#define _APS_NEXT_COMMAND_VALUE         424
 #define _APS_NEXT_CONTROL_VALUE         1576
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

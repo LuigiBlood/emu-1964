@@ -1127,5 +1127,5 @@ void DynDoDMASegment(void)
  */
 void DMAIncreaseTimer(uint32 val)
 {
-	Count_Down(val * VICounterFactors[CounterFactor] / 2);	/* assume each pclock will transfer 4 bytes */
+	Count_Down(val / 2);	/* assume each pclock will transfer 4 bytes */
 }

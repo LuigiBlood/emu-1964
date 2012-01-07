@@ -28,6 +28,7 @@ unsigned char	Scratch0[700];
 unsigned char	Scratch1[700];
 unsigned char	Scratch2[700];
 
+extern float DOUBLE_COUNT;
 
 unsigned int		cfmenulist[8] = {
 	ID_CF_CF1,	ID_CF_CF2,	ID_CF_CF3,	ID_CF_CF4,
@@ -99,6 +100,8 @@ void					ReloadDefaultPlugins();
 void					ProcessToolTips(LPARAM lParam);
 BOOL					LinkBoxArtImageByDialog(void);
 
+void SetOCOptions(void);
+
 typedef struct {
 	UINT	id;
 	BOOL	visible;	// is the menu visiable or deleted from the menu bar
@@ -140,27 +143,22 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 		{
 			vips = (float)(viCountPerSecond);
 
-            if (emuoptions.AutoCF)
-                sprintf(generalmessage, "AutoCF=%2d", CounterFactor);
-            else
-                sprintf(generalmessage, "CF=%2d", CounterFactor);
+			sprintf(generalmessage, "CF=1");
 
             SetStatusBarText(2, generalmessage);
-            
-			if( vips >= 100.0) 
+
+			static int lasttime=0;
+			static int lastdls=0;
+
+			if(GetTickCount()-lasttime>1000)
 			{
-				if( emuoptions.AutoFrameSkip && emustatus.viframeskip )
-					sprintf(generalmessage, "%3d Skip", (int) vips); //lower case "vi/s" looks like a bug.
-				else
-					sprintf(generalmessage, "%3d VI/s", (int) vips);
-			} 
-			else 
-			{
-				if( emuoptions.AutoFrameSkip && emustatus.viframeskip )
-					sprintf(generalmessage, " %2d Skip", (int) vips); //lower case "vi/s" looks like a bug.
-				else
-					sprintf(generalmessage, " %2d VI/s", (int) vips);
+				vips = emustatus.DListCount-lastdls;
+				lastdls=emustatus.DListCount;
+				lasttime=GetTickCount();
 			}
+			//extern WindowSettingStruct windowSetting;
+			sprintf(generalmessage, " %d REAL FPS", (int) vips);
+							
 
 			viCountPerSecond = 0;
 			QueryPerformanceCounter(&LastSecondTime);
@@ -174,6 +172,7 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 					format_profiler_result_msg(generalmessage);
 					reset_profiler();
 				}
+
 				if( guioptions.display_profiler_status ) 
 				{
 					SetStatusBarText(0, generalmessage);
@@ -213,7 +212,7 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 				{
 					TranslateMessage(&msg);
 					DispatchMessage(&msg);
-                    Sleep(10);
+                    //Sleep(10);
 				}
 			}
 		}
@@ -434,6 +433,7 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	emustatus.Emu_Keep_Running = FALSE;
 	emustatus.processing_exception = FALSE;
 
+	DWORD dwTempOC=REGISTRY_ReadDWORD("OCSpeed",100);	
 
 	SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &WindowScreenSaverStatus, 0); 
 	
@@ -495,7 +495,8 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 
 	SetStatusBarText(3, defaultoptions.RDRAM_Size == RDRAMSIZE_4MB ? "4MB" : "8MB");
 	SetStatusBarText(4, "D");
-	SetStatusBarText(2, "CF=3");
+	SetStatusBarText(2, "CF=1");
+
 
 	gui.hwndRomList = NewRomList_CreateListViewControl(gui.hwnd1964main);	/* this must be before the video plugin init */
 
@@ -540,10 +541,10 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	RomListLoadCurrentPosFromRegistry();
 
 	guistatus.block_menu = FALSE;	/* allow menu commands */
-    SetCounterFactor(defaultoptions.Counter_Factor);
     Set_Ready_Message();
 	RomListLoadCurrentPosFromRegistry();
 	SetFocus(gui.hwnd1964main);
+	SetOCOptions();
 
 	if( needchooseromdirectory )
 	{
@@ -573,6 +574,34 @@ _HOPPITY:
 	}
 
 	goto _HOPPITY;
+}
+
+void SetOCOptions(void)
+{
+	char szTitle[64];
+	sprintf(szTitle,"1964 [%dMHz] v2.0",(int)(DOUBLE_COUNT*100));
+	SetWindowText(gui.hwnd1964main,szTitle);
+	
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_25MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_50MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_100MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_200MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_300MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_400MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_500MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_600MHZ, MF_UNCHECKED);
+
+	if(DOUBLE_COUNT==0.25f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_25MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==0.5f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_50MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==1.0f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_100MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==2.0f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_200MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==3.0f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_300MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==4.0f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_400MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==5.0f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_500MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==6.0f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_600MHZ, MF_CHECKED);
+
+	REGISTRY_WriteDWORD("OCSpeed",(DWORD)(DOUBLE_COUNT*100));	
+
 }
 
 /*
@@ -646,6 +675,15 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
+		case ID_OVERCLOCK_25MHZ: DOUBLE_COUNT=0.25f; SetOCOptions();break;
+		case ID_OVERCLOCK_50MHZ: DOUBLE_COUNT=0.5f; SetOCOptions();break;
+		case ID_OVERCLOCK_100MHZ: DOUBLE_COUNT=1.0f; SetOCOptions();break;
+		case ID_OVERCLOCK_200MHZ: DOUBLE_COUNT=2.0f; SetOCOptions();break;
+		case ID_OVERCLOCK_300MHZ: DOUBLE_COUNT=3.0f; SetOCOptions();break;
+		case ID_OVERCLOCK_400MHZ: DOUBLE_COUNT=4.0f; SetOCOptions();break;
+		case ID_OVERCLOCK_500MHZ: DOUBLE_COUNT=5.0f; SetOCOptions();break;
+		case ID_OVERCLOCK_600MHZ: DOUBLE_COUNT=6.0f; SetOCOptions();break;
+
 	case ID_ROM_STOP:
 	case ID_BUTTON_STOP:
 		CloseROM();
@@ -829,9 +867,6 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		DynaBufferOverrun(); //Make the dna Refresh. (This should happen pretty quickly,  
 		//when the compiler is used again.
-
-		SetCounterFactor(currentromoptions.Counter_Factor);
-
 		break;
 
 
@@ -2673,47 +2708,6 @@ LRESULT APIENTRY OptionsDialog(HWND hDlg, unsigned message, WORD wParam, LONG lP
 	return(FALSE);
 }
 
-/*
- =======================================================================================================================
- =======================================================================================================================
- */
-void SetCounterFactor(int factor)
-{
-	int k;
-
-    for (k=0; k<8; k++)
-        CheckMenuItem(gui.hMenu1964main, cfmenulist[k], MF_UNCHECKED);
-
-    if (!emuoptions.AutoCF)
-    {
-
-		CheckMenuItem(gui.hMenu1964main, cfmenulist[factor - 1], MF_CHECKED);
-
-		if(CounterFactor != factor)
-		{
-			if(emustatus.Emu_Is_Running)
-			{
-				if(PauseEmulator())
-				{
-					CounterFactor = factor;
-					ResumeEmulator(REFRESH_DYNA_AFTER_PAUSE);	/* Need to init emu */
-				}
-			}
-
-			CounterFactor = factor;
-
-			if (emuoptions.AutoCF)
-			{
-				sprintf(generalmessage, "AutoCF=%2d", factor);
-			}
-			else
-			{
-				sprintf(generalmessage, "CF=%d", factor);
-			}
-			SetStatusBarText(2, generalmessage);
-		}
-	}
-}
 
 /*
  =======================================================================================================================
@@ -2853,7 +2847,6 @@ void PrepareBeforePlay(int IsFullScreen)
 	if(strcpy(current_cheatcode_rom_internal_name, currentromoptions.Game_Name) != 0)
 		CodeList_ReadCode(currentromoptions.Game_Name,cheatfilename);
 
-	CounterFactor = currentromoptions.Counter_Factor;
 	
     if (emuoptions.AutoCF)
     {
@@ -2933,8 +2926,8 @@ void PrepareBeforePlay(int IsFullScreen)
 		{
 			InitFrameBufferProtection();
 		}
-		CheckMenuItem(gui.hMenu1964main, cfmenulist[CounterFactor - 1], MF_UNCHECKED);
-		CheckMenuItem(gui.hMenu1964main, cfmenulist[CounterFactor - 1], MF_CHECKED);
+		CheckMenuItem(gui.hMenu1964main, cfmenulist[0], MF_UNCHECKED);
+		CheckMenuItem(gui.hMenu1964main, cfmenulist[0], MF_CHECKED);
 		SetStatusBarText(2, generalmessage);
 		CheckMenuItem(gui.hMenu1964main, codecheckmenulist[emustatus.CodeCheckMethod - 1], MF_UNCHECKED);
 		CheckMenuItem(gui.hMenu1964main, codecheckmenulist[emustatus.CodeCheckMethod - 1], MF_CHECKED);
@@ -3025,7 +3018,6 @@ void AfterStop(void)
 		0
 	);
 	SetStatusBarText(4, emustatus.cpucore == DYNACOMPILER ? "D" : "I");
-	SetCounterFactor(defaultoptions.Counter_Factor);
 	SetCodeCheckMethod(defaultoptions.Code_Check);
 
 	/* Flash the status bar */
@@ -3078,7 +3070,7 @@ void InitStatusBarParts(void)
 		sizes[3] = sizes[4] - 15;
 		sizes[2] = sizes[3] - 30;
 		sizes[1] = sizes[2] - 75; //CF
-		sizes[0] = sizes[1] - 60;
+		sizes[0] = sizes[1] - 80;
 
 		SendMessage(gui.hStatusBar, SB_SETPARTS, 5, (LPARAM) sizes);
 	}
