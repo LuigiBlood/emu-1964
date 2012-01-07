@@ -60,7 +60,6 @@ void				EnableStateMenu(void);
 void				DisableStateMenu(void);
 void				PrepareBeforePlay(int IsFullScreen);
 void				KillCPUThread(void);
-void				SetCounterFactor(int);
 void				SetCodeCheckMethod(int);
 void				InitPluginData(void);
 void				Set_1964_Directory(void);

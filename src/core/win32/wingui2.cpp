@@ -1603,7 +1603,6 @@ void CheckLanguages()
 	char			fullpath[MAX_PATH];
 	HMENU			language_submenu = GetSubMenu(file_submenu, 2);
 
-
 	sprintf(SearchPath, "%slanguage\\", directories.main_directory);
 	strcat(SearchPath, "*.lng");
 
