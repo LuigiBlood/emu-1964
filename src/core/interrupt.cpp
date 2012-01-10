@@ -292,11 +292,6 @@ void Handle_DPC(uint32 value)
 	*/
 }
 
-extern unsigned int cpuIdlePercentages[4];
-extern int cpuIdlePercentageIdx;
-BOOL newSecond = FALSE;
-
-
 /*
  =======================================================================================================================
     Process a Signal Processor task. This is where we call audio/video plugin execution routines.
@@ -348,8 +343,8 @@ void RunSPTask(void)
 
 					if(DOUBLE_COUNT>1.0f)
 					{
-						SPcycleUsed/=DOUBLE_COUNT;
-						DPcycleUsed/=DOUBLE_COUNT;
+						SPcycleUsed/=(DWORD)DOUBLE_COUNT;
+						DPcycleUsed/=(DWORD)DOUBLE_COUNT;
 					}
 					else if(DOUBLE_COUNT<1.0f)
 					{

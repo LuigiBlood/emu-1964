@@ -106,9 +106,6 @@ void ProcessToolTips(LPARAM lParam)
 			LoadString(gui.hInst, ID_BUTTON_SYNC_SPEED, str, 256);
 			break; 
 
-		case ID_BUTTON_AUTO_CF:
-			LoadString(gui.hInst, ID_BUTTON_AUTO_CF, str, 256);
-			break;
 		default:
 			return;
     }

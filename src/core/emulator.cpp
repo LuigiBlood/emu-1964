@@ -476,7 +476,10 @@ void N64_Boot(void)
 				RDRamSizeHackSavedDWord2 = *(uint32 *) &gMS_RDRAM[0x2FE1C0];
 
 				/*
-				 * Azimer - DK64 Hack to break out of infinite loop ?				 * I believe this memory location is some sort of copyright protection which ?				 * is written to using the RSP on bootup. The only issue I see is if it ?				 * affects any other roms?
+				 * Azimer - DK64 Hack to break out of infinite loop ?				 
+				 * I believe this memory location is some sort of copyright protection which ?				 
+				 * is written to using the RSP on bootup. The only issue I see is if it ?				 
+				 * affects any other roms?
 				 */
 				if(strncmp(currentromoptions.Game_Name, "DONKEY KONG 64", 14) == 0)
 				/*
@@ -551,7 +554,7 @@ void (__stdcall StartCPUThread) (void *pVoid)
     {
         char op_str[0xff];
         
-			sprintf (op_str, "%08X: %s", gHWS_pc, TranslateStringByString("Unknown Exception in emulation thread"));
+		sprintf (op_str, "%08X: %s", gHWS_pc, TranslateStringByString("Unknown Exception in emulation thread"));
         MessageBox(0, op_str, TranslateStringByString("Error"), MB_ICONINFORMATION);
         PostMessage(gui.hwnd1964main, WM_COMMAND, ID_ROM_STOP, 0);
         WaitForSingleObject(StopEmulatorEvent, 1000);

@@ -139,14 +139,6 @@
 #define ID_FILE_SAVEINI                 235
 #define ID_SETBREAKPOINT                236
 #define ID_CLEAR_BREAKPOINT             237
-#define ID_CF_CF1                       242
-#define ID_CF_CF2                       243
-#define ID_CF_CF3                       244
-#define ID_CF_CF4                       245
-#define ID_CF_CF5                       246
-#define ID_CF_CF6                       247
-#define ID_CF_CF7                       248
-#define ID_CF_CF8                       249
 #define ID_CPU_DYNACODECHECKING_NOCHECK 252
 #define ID_CPU_DYNACODECHECKING_QWORD   253
 #define ID_CPU_DYNACODECHECKING_DWORD   254
@@ -156,7 +148,6 @@
 #define ID_CPU_DYNACODECHECKING_PROTECTEDMEMORY 258
 #define ID_DEBUG_64BITFPU               259
 #define ID_FILE_FRESHROMLIST            260
-#define ID_CF_CFHALF                    261
 #define ID_CPU_DYNACODECHECKING_DMA     262
 #define ID_OPCODEDEBUGGER               263
 #define ID_OPCODEDEBUGGER_BLOCK_ONLY    264
@@ -230,8 +221,6 @@
 #define ID_BUTTON_FRAMESKIP             341
 #define ID_EMULATION_AUTOFRAMESKIP      343
 #define ID_BUTTON_SYNC_SPEED            346
-#define ID_BUTTON_AUTO_CF               348
-#define ID_EMULATION_AUTOCFTIMING       349
 #define ID_POPUPMENU_CHANGEROMDIRECTORY 355
 #define ID_FILE_ROMDIRECTORY8           373
 #define ID_FILE_RECENTGAMES_GAME8       374
@@ -647,7 +636,6 @@
 #define IDC_VEC238                      1438
 #define IDC_ROMOPTION_USEREGC           1438
 #define IDC_DEFAULTOPTIONS_RDRAMSIZE    1439
-#define IDC_ROMOPTION_CF                1439
 #define IDC_DEFAULTOPTIONS_SAVETYPE     1440
 #define IDC_ROMOPTION_FPUHACK           1440
 #define IDC_VEC241                      1441

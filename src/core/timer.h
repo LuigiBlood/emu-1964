@@ -117,7 +117,7 @@ void					Init_Count_Down_Counters(void);
 
 #ifdef SAVEOPCOUNTER
 #define SAVE_OP_COUNTER_INCREASE(val)				SUB_ImmToMemory((_u32) & countdown_counter, val);
-#define SAVE_OP_COUNTER_INCREASE_INTERPRETER(val)	{ countdown_counter -= val * CounterFactors[CounterFactor] * 2; }
+#define SAVE_OP_COUNTER_INCREASE_INTERPRETER(val)	{ countdown_counter -= val * 2; }
 #else
 #define SAVE_OP_COUNTER_INCREASE(val)
 #define SAVE_OP_COUNTER_INCREASE_INTERPRETER(val)

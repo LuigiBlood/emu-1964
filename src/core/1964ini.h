@@ -65,19 +65,6 @@ enum RDRAMSIZETYPE { RDRAMSIZE_DEFAULT, RDRAMSIZE_4MB, RDRAMSIZE_8MB };
 
 enum USEREGISTERCACHING { USEREGC_DEFAULT, USEREGC_YES, USEREGC_NO };
 
-enum COUNTERFACTOR
-{
-	COUTERFACTOR_DEFAULT			= 0,
-	COUTERFACTOR_1,
-	COUTERFACTOR_2,
-	COUTERFACTOR_3,
-	COUTERFACTOR_4,
-	COUTERFACTOR_5,
-	COUTERFACTOR_6,
-	COUTERFACTOR_7,
-	COUTERFACTOR_8
-};
-
 enum USEFPUHACK { USEFPUHACK_DEFAULT, USEFPUHACK_YES, USEFPUHACK_NO };
 
 enum USEDMASEGMENTATION { USEDMASEG_DEFAULT, DELAY_DMA, NO_DELAY, DELAY_DMA_SI, DELAY_DMA_AI, DELAY_DMA_SI_AI };
@@ -109,7 +96,6 @@ typedef struct INI_ENTRY_STRUCT
 	int					Max_FPS;
 	int					Use_TLB;
 	int					Eeprom_size;
-	int					Counter_Factor;
 	int					Use_Register_Caching;
 	int					FPU_Hack;
 	int					timing_Control;
@@ -146,7 +132,6 @@ extern char				*codecheck_type_names[];
 extern char				*maxfps_type_names[];
 extern char				*usetlb_type_names[];
 extern char				*eepromsize_type_names[];
-extern char				*counter_factor_names[];
 extern char				*register_caching_names[];
 extern char				*use_fpu_hack_names[];
 extern char				*timing_control_names[];
