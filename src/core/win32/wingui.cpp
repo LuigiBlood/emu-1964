@@ -30,10 +30,6 @@ unsigned char	Scratch2[700];
 
 extern float DOUBLE_COUNT;
 
-unsigned int		cfmenulist[8] = {
-	ID_CF_CF1,	ID_CF_CF2,	ID_CF_CF3,	ID_CF_CF4,
-	ID_CF_CF5,	ID_CF_CF6,	ID_CF_CF7,	ID_CF_CF8};
-
 unsigned int		codecheckmenulist[8] = {
 	ID_CPU_DYNACODECHECKING_NOCHECK,
 	ID_CPU_DYNACODECHECKING_DMA,
@@ -130,13 +126,10 @@ MenuStatus	recent_rom_directory_menus[MAX_RECENT_ROM_DIR] =
 	{ID_FILE_ROMDIRECTORY8,		TRUE},
 };
 
-extern BOOL newSecond;
 extern HANDLE hwndLV;
 
 void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
-	newSecond = TRUE;	// used by AutoFrameSkip and AutoCF features
-
 	if( Rom_Loaded) 
 	{
 		if( !emustatus.Emu_Is_Paused || emustatus.Emu_Is_Running) 
@@ -152,7 +145,7 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 
 			if(GetTickCount()-lasttime>1000)
 			{
-				vips = emustatus.DListCount-lastdls;
+				vips = (float)emustatus.DListCount-lastdls;
 				lastdls=emustatus.DListCount;
 				lasttime=GetTickCount();
 			}
@@ -414,7 +407,9 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	if(hPrevInstance) return FALSE;
 	SaveCmdLineParameter(lpszCmdLine);
 
-	gui.szBaseWindowTitle = "1964 1.2";
+	char szTitle[64];
+	sprintf(szTitle,"1964 %s", BUILD_NUMBER);
+	gui.szBaseWindowTitle = szTitle;
 	gui.hwnd1964main = NULL;		/* handle to main window */
 	gui.hwndRomList = NULL;			/* Handle to the rom list child window */
 	gui.hStatusBar = NULL;			/* Window Handle of the status bar */
@@ -579,7 +574,7 @@ _HOPPITY:
 void SetOCOptions(void)
 {
 	char szTitle[64];
-	sprintf(szTitle,"1964 [%dMHz] v2.0",(int)(DOUBLE_COUNT*100));
+	sprintf(szTitle,"1964 [%dMHz] %s",(int)(DOUBLE_COUNT*100), BUILD_NUMBER);
 	SetWindowText(gui.hwnd1964main,szTitle);
 	
 	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_25MHZ, MF_UNCHECKED);
@@ -662,7 +657,6 @@ HWND InitWin98UI(HANDLE hInstance, int nCmdShow)
 	return gui.hwnd1964main;
 }
 
-extern int REGISTRY_WriteAutoCF();
 extern void DynaBufferOverrun();
 void SwitchLanguage(int id, BOOL refreshRomList);
 void ResetToDefaultLanguage();
@@ -855,21 +849,6 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		REGISTRY_WriteVISync();
 		break;
 
-	case ID_EMULATION_AUTOCFTIMING:
-	case ID_BUTTON_AUTO_CF:
-		//User clicked menu? If so, make the corresponding button the right setting.            
-		if ((LOWORD(wParam)) == ID_EMULATION_AUTOCFTIMING)
-			CheckButton(ID_BUTTON_AUTO_CF, emuoptions.AutoCF ? FALSE : TRUE);
-		CheckMenuItem( gui.hMenu1964main, ID_EMULATION_AUTOCFTIMING, emuoptions.AutoCF ? MF_UNCHECKED : MF_CHECKED);
-
-		emuoptions.AutoCF^=1;
-		REGISTRY_WriteAutoCF();
-
-		DynaBufferOverrun(); //Make the dna Refresh. (This should happen pretty quickly,  
-		//when the compiler is used again.
-		break;
-
-
 	case ID_VIDEO_CONFIG:
 		if (!guistatus.IsFullScreen)
 		{
@@ -940,46 +919,6 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		CheckMenuItem(gui.hMenu1964main, ID_STATICCOMPILER, MF_UNCHECKED);
 		CheckMenuItem(gui.hMenu1964main, ID_DYNAMICCOMPILER, MF_CHECKED);
 		EmulatorSetCore(DYNACOMPILER);
-		break;
-	case ID_CF_CF1:
-		emuoptions.AutoCF = 1; //The ID_EMULATION_AUTOCFTIMING case shuts this off, thus the opposite logic.
-		currentromoptions.Counter_Factor = 1;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
-		break;
-	case ID_CF_CF2:
-		emuoptions.AutoCF = 1;
-		currentromoptions.Counter_Factor = 2;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
-		break;
-	case ID_CF_CF3:
-		emuoptions.AutoCF = 1;
-		currentromoptions.Counter_Factor = 3;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
-		break;
-	case ID_CF_CF4:
-		emuoptions.AutoCF = 1;
-		currentromoptions.Counter_Factor = 4;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
-		break;
-	case ID_CF_CF5:
-		emuoptions.AutoCF = 1;
-		currentromoptions.Counter_Factor = 5;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
-		break;
-	case ID_CF_CF6:
-		emuoptions.AutoCF = 1;
-		currentromoptions.Counter_Factor = 6;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
-		break;
-	case ID_CF_CF7:
-		emuoptions.AutoCF = 1;
-		currentromoptions.Counter_Factor = 7;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
-		break;
-	case ID_CF_CF8:
-		emuoptions.AutoCF = 1;
-		currentromoptions.Counter_Factor = 8;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
 		break;
 	case ID_INC_SPEED_LIMIT:
 	case ID_VARIABLESPEEDLIMITS_INCREASESPEED:
@@ -2818,10 +2757,6 @@ void PrepareBeforePlay(int IsFullScreen)
 	EnableMenuItem(gui.hMenu1964main, ID_VARIABLESPEEDLIMITS_DECREASESPEED, MF_ENABLED);
 	EnableMenuItem(gui.hMenu1964main, ID_VARIABLESPEEDLIMITS_RESTORECORRECTSPEED, MF_ENABLED);
 	EnableMenuItem(gui.hMenu1964main, ID_CHEATS_APPLY, MF_ENABLED);
-	for( i=0; i<8; i++ )
-	{
-		EnableMenuItem(gui.hMenu1964main, cfmenulist[i], MF_ENABLED);
-	}
 
 	for( i=0; i<8; i++ )
 	{
@@ -2847,15 +2782,6 @@ void PrepareBeforePlay(int IsFullScreen)
 	if(strcpy(current_cheatcode_rom_internal_name, currentromoptions.Game_Name) != 0)
 		CodeList_ReadCode(currentromoptions.Game_Name,cheatfilename);
 
-	
-    if (emuoptions.AutoCF)
-    {
-        sprintf(generalmessage, "AutoCF=%2d", currentromoptions.Counter_Factor);
-    }
-    else
-    {
-		sprintf(generalmessage, "CF=%d", currentromoptions.Counter_Factor);
-    }
 	emustatus.CodeCheckMethod = currentromoptions.Code_Check;
 
 	/*
@@ -2926,8 +2852,6 @@ void PrepareBeforePlay(int IsFullScreen)
 		{
 			InitFrameBufferProtection();
 		}
-		CheckMenuItem(gui.hMenu1964main, cfmenulist[0], MF_UNCHECKED);
-		CheckMenuItem(gui.hMenu1964main, cfmenulist[0], MF_CHECKED);
 		SetStatusBarText(2, generalmessage);
 		CheckMenuItem(gui.hMenu1964main, codecheckmenulist[emustatus.CodeCheckMethod - 1], MF_UNCHECKED);
 		CheckMenuItem(gui.hMenu1964main, codecheckmenulist[emustatus.CodeCheckMethod - 1], MF_CHECKED);
@@ -2978,11 +2902,6 @@ void AfterStop(void)
 	EnableMenuItem(gui.hMenu1964main, ID_CPU_KILL, MF_GRAYED);
 	EnableMenuItem(gui.hMenu1964main, ID_ROM_STOP, MF_GRAYED);
 	EnableMenuItem(gui.hMenu1964main, ID_ROM_PAUSE, MF_GRAYED);
-
-	for( i=0; i<8; i++ )
-	{
-		EnableMenuItem(gui.hMenu1964main, cfmenulist[i], MF_ENABLED);
-	}
 
 	for( i=0; i<16; i++ )
 	{
@@ -3420,7 +3339,6 @@ void SetupAdvancedMenus(void)
 	if(guioptions.show_recent_game_list == FALSE) DeleteRecentGameMenus();
 	if(!emuoptions.SyncVI) CheckMenuItem(gui.hMenu1964main, ID_CPU_AUDIOSYNC, MF_UNCHECKED);
 	if(!emuoptions.AutoFrameSkip) CheckMenuItem(gui.hMenu1964main, ID_EMULATION_AUTOFRAMESKIP, MF_UNCHECKED);
-    if(!emuoptions.AutoCF) CheckMenuItem(gui.hMenu1964main, ID_EMULATION_AUTOCFTIMING, MF_UNCHECKED);
 }
 
 /*
@@ -3615,10 +3533,6 @@ long OnNotifyStatusBar(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		
 		switch(fieldno)
 		{
-		case 2:						/* Counter Factor */
-			/* Reset Counter Factor to default value */
-			SendMessage(gui.hwnd1964main, WM_COMMAND, ID_CF_CF3, 0);
-			break;
 		case 4:						/* CPU core */
 			/* Switch CPU core */
 			if(emustatus.Emu_Is_Running)

@@ -141,19 +141,6 @@ BEGIN
         END
         MENUITEM "Inject Gameshark Green Button Cheats\tF8", ID_CHEATS_APPLY
         MENUITEM SEPARATOR
-        POPUP "Counter Factor"
-        BEGIN
-            MENUITEM "Automatic\tF10",              ID_EMULATION_AUTOCFTIMING, CHECKED
-            MENUITEM SEPARATOR
-            MENUITEM "1 x .5 Half Rate\tCtrl+1",    ID_CF_CF1
-            MENUITEM "1 x 1 Full Rate\tCtrl+2",     ID_CF_CF2
-            MENUITEM "2 x 1 Half Rate (Default)\tCtrl+3", ID_CF_CF3, CHECKED
-            MENUITEM "2 x 2 Full Rate\tCtrl+4",     ID_CF_CF4
-            MENUITEM "3 x 1.5 Half Rate\tCtrl+5",   ID_CF_CF5
-            MENUITEM "3 x 3 Full Rate\tCtrl+6",     ID_CF_CF6
-            MENUITEM "4 x 2 Half Rate\tCtrl+7",     ID_CF_CF7
-            MENUITEM "8 x 4 Half Rate\tCtrl+8",     ID_CF_CF8
-        END
         MENUITEM "Speed Limit\tF9",             ID_CPU_AUDIOSYNC, CHECKED
         MENUITEM "Automatic Frame Skip\tF11",   ID_EMULATION_AUTOFRAMESKIP, CHECKED
         MENUITEM "Screen Shot\tF12",            ID_PLUGINS_SCREENSHOTS
@@ -1139,8 +1126,6 @@ BEGIN
     COMBOBOX        IDC_ROMOPTION_USETLB,84,44,96,55,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     RTEXT           "EEPROM Size:",IDC_STATIC_TXT2,185,13,62,8
     COMBOBOX        IDC_ROMOPTION_EEPROMSIZE,252,12,94,65,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    RTEXT           "Counter Factor:",IDC_STATIC_TXT4,186,29,61,8
-    COMBOBOX        IDC_ROMOPTION_CF,252,28,94,105,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     RTEXT           "Max VI Limit:",IDC_STATIC_TXT6,185,45,62,8
     COMBOBOX        IDC_ROMOPTION_MAXVISPEED,252,44,94,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     GROUPBOX        "Compiler",IDC_STATIC_GROUP2,7,66,347,76
@@ -1307,21 +1292,12 @@ BEGIN
     "/",            ID_ABOUT,               ASCII,  ALT, NOINVERT
     "?",            ID_ABOUT,               ASCII,  ALT, NOINVERT
     "A",            ID_AUD_CONFIG,          VIRTKEY, CONTROL, NOINVERT
-    "1",            ID_CF_CF1,              VIRTKEY, CONTROL, NOINVERT
-    "2",            ID_CF_CF2,              VIRTKEY, CONTROL, NOINVERT
-    "3",            ID_CF_CF3,              VIRTKEY, CONTROL, NOINVERT
-    "4",            ID_CF_CF4,              VIRTKEY, CONTROL, NOINVERT
-    "5",            ID_CF_CF5,              VIRTKEY, CONTROL, NOINVERT
-    "6",            ID_CF_CF6,              VIRTKEY, CONTROL, NOINVERT
-    "7",            ID_CF_CF7,              VIRTKEY, CONTROL, NOINVERT
-    "8",            ID_CF_CF8,              VIRTKEY, CONTROL, NOINVERT
     "D",            ID_CHANGEDIRECTORY,     VIRTKEY, CONTROL, NOINVERT
     VK_F8,          ID_CHEATS_APPLY,        VIRTKEY, NOINVERT
     VK_F9,          ID_CPU_AUDIOSYNC,       VIRTKEY, NOINVERT
     VK_F4,          ID_CPU_KILL,            VIRTKEY, CONTROL, NOINVERT
     VK_SUBTRACT,    ID_DEC_SPEED_LIMIT,     VIRTKEY, NOINVERT
     "I",            ID_DI_CONFIG,           VIRTKEY, CONTROL, NOINVERT
-    VK_F10,         ID_EMULATION_AUTOCFTIMING, VIRTKEY, NOINVERT
     VK_F11,         ID_EMULATION_AUTOFRAMESKIP, VIRTKEY, NOINVERT
     "C",            ID_FILE_CHEAT,          VIRTKEY, CONTROL, NOINVERT
     "L",            ID_FILE_FRESHROMLIST,   VIRTKEY, CONTROL, NOINVERT
@@ -1526,24 +1502,6 @@ BEGIN
     IDC_ROMOPTION_EEPROMSIZE, 0x403, 11, 0
 0x4b32, 0x2042, 0x4545, 0x5250, 0x4d4f, "\000" 
     IDC_ROMOPTION_EEPROMSIZE, 0x403, 11, 0
-0x4b34, 0x2042, 0x4545, 0x5250, 0x4d4f, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 8, 0
-0x6544, 0x6166, 0x6c75, 0x0074, 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
-0x4643, 0x313d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
-0x4643, 0x323d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
-0x4643, 0x333d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
-0x4643, 0x343d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
-0x4643, 0x353d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
-0x4643, 0x363d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
-0x4643, 0x373d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
 0x4643, 0x383d, "\000" 
     IDC_ROMOPTION_MAXVISPEED, 0x403, 8, 0
 0x6544, 0x6166, 0x6c75, 0x0074, 
@@ -1671,7 +1629,6 @@ BEGIN
     BUTTON      ID_BUTTON_HELP
     BUTTON      ID_BUTTON_FRAMESKIP
     BUTTON      ID_BUTTON_SYNC_SPEED
-    BUTTON      ID_BUTTON_AUTO_CF
     BUTTON      IDB_GREEN_CHEAT
 END
 
@@ -1736,7 +1693,6 @@ BEGIN
     ID_BUTTON_HELP          "Help (F1)"
     ID_BUTTON_FRAMESKIP     "Automatic Frame Skip (F11)"
     ID_BUTTON_SYNC_SPEED    "Speed Limit (F9)"
-    ID_BUTTON_AUTO_CF       "Automatic CF Timing Adjust  (F10)"
 END
 
 STRINGTABLE 

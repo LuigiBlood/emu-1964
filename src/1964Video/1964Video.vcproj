@@ -765,10 +765,6 @@
 						>
 					</File>
 				</Filter>
-				<Filter
-					Name="HiresTexture"
-					>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="Parser"

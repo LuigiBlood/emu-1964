@@ -508,7 +508,6 @@ void InterruptsSafe(uint32 JumpType, uint32 targetpc, uint32 DoLink, uint32 Link
     //int     StubAddr; //The retargetable stub for JIT linking
     //int     InjectStubAddrToParam;
 
-    //viCounter is used if not using AutoCF
 	viCounter = compilerstatus.cp0Counter;
 
 
@@ -553,7 +552,6 @@ void InterruptsNewTest(uint32 JumpType, uint32 targetpc, uint32 DoLink, uint32 L
     int     StubAddr; //The retargetable stub for JIT linking
     int     InjectStubAddrToParam;
 
-    //viCounter is used if not using AutoCF
 	viCounter = compilerstatus.cp0Counter;
 
     compilerstatus.KEEP_RECOMPILING = FALSE;

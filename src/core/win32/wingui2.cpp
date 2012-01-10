@@ -1425,7 +1425,6 @@ enum {
 	EDIT_MENU,
 	EMULATION_MENU,
 	SWITCH_COMPILER_MENU,
-	COUNTER_FACTOR_MENU,
 	VARIABLE_SPEED_MENU,
 	PLUGIN_MENU,
 	HELP_MENU,
@@ -1495,16 +1494,6 @@ LangMapEntry langMapEntries[] =
 	{48,	ID_INTERPRETER,	"Interpreter",						0,	0},
 	{49,	ID_DYNAMICCOMPILER,	"Dynamic Compiler (Default)",	0,	0},
 	{50,	ID_CHEATS_APPLY,	"Inject Gameshark Green Button Cheats",	"F8",	0},
-	{51,	COUNTER_FACTOR_MENU,	"Counter Factor",			0,	0},
-	{52,	ID_EMULATION_AUTOCFTIMING,	"Automatic",			"F10",	0},
-	{53,	ID_CF_CF1,	"1 x .5 Half Rate",				"Ctrl+1",	0},
-	{54,	ID_CF_CF2,	"1 x 1 Full Rate",				"Ctrl+2",	0},
-	{55,	ID_CF_CF3,	"2 x 1 Half Rate (Default)",	"Ctrl+3",	0},
-	{56,	ID_CF_CF4,	"2 x 2 Full Rate",				"Ctrl+4",	0},
-	{57,	ID_CF_CF5,	"3 x 1.5 Half Rate",			"Ctrl+5",	0},
-	{58,	ID_CF_CF6,	"3 x 3 Full Rate",				"Ctrl+6",	0},
-	{59,	ID_CF_CF7,	"4 x 2 Half Rate",				"Ctrl+7",	0},
-	{60,	ID_CF_CF8,	"8 x 4 Half Rate",				"Ctrl+8",	0},
 	{61,	ID_CPU_AUDIOSYNC,	"Speed Limit",			"F9",	0},
 	{62,	ID_EMULATION_AUTOFRAMESKIP,	"Automatic Frame Skip",	"F11",	0},
 	{63,	ID_PLUGINS_SCREENSHOTS,	"Screen Shot",				"F12",	0},
@@ -2284,18 +2273,6 @@ void TranslateMenu(HMENU hMenu, HWND mainHWND)
 	SetMenuTranslatedString(subsubmenu,1,ID_DYNAMICCOMPILER);
 
 	SetMenuTranslatedString(submenu,6,ID_CHEATS_APPLY);
-
-	SetMenuTranslatedString(submenu,8,COUNTER_FACTOR_MENU);
-	subsubmenu = GetSubMenu(submenu,8) ;
-	SetMenuTranslatedString(subsubmenu,0,ID_EMULATION_AUTOCFTIMING);
-	SetMenuTranslatedString(subsubmenu,2,ID_CF_CF1);
-	SetMenuTranslatedString(subsubmenu,3,ID_CF_CF2);
-	SetMenuTranslatedString(subsubmenu,4,ID_CF_CF3);
-	SetMenuTranslatedString(subsubmenu,5,ID_CF_CF4);
-	SetMenuTranslatedString(subsubmenu,6,ID_CF_CF5);
-	SetMenuTranslatedString(subsubmenu,7,ID_CF_CF6);
-	SetMenuTranslatedString(subsubmenu,8,ID_CF_CF7);
-	SetMenuTranslatedString(subsubmenu,9,ID_CF_CF8);
 
 	SetMenuTranslatedString(submenu,9,ID_CPU_AUDIOSYNC);
 	SetMenuTranslatedString(submenu,10,ID_EMULATION_AUTOFRAMESKIP);

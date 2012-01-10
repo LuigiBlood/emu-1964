@@ -45,7 +45,6 @@ char		*maxfps_type_names[] = { "Default", "No Limit", "NTSC 60 vi/s", "PAL 50 vi
 				"80 vi/s", "90 vi/s", "100 vi/s", "120 vi/s", "150 vi/s", "180 vi/s", "210 vi/s", };
 char		*usetlb_type_names[] = { "Default", "Yes", "No" };
 char		*eepromsize_type_names[] = { "Default", "No EEPROM", "4Kb EEPROM", "16Kb EEPROM" };
-char		*counter_factor_names[] = { "Default", "CF=1", "CF=2", "CF=3", "CF=4", "CF=5", "CF=6", "CF=7", "CF=8", };
 char		*register_caching_names[] = { "Default", "Yes", "No" };
 char		*use_fpu_hack_names[] = { "Default", "Yes", "No" };
 char		*timing_control_names[] = { "Default", "Delay DMA", "No", "Delay DMA and SI", "Delay DMA and AI", "Delay DMA, SI and AI" };
@@ -94,7 +93,6 @@ void SetDefaultOptions(void)
 	defaultoptions.Use_TLB = USETLB_YES;
 	defaultoptions.Eeprom_size = EEPROMSIZE_4KB;
 	defaultoptions.Use_Register_Caching = USEREGC_YES;
-	defaultoptions.Counter_Factor = COUTERFACTOR_2;
 	defaultoptions.FPU_Hack = USEFPUHACK_YES;
 	defaultoptions.timing_Control = DELAY_DMA;
 	defaultoptions.Link_4KB_Blocks = USE4KBLINKBLOCK_YES;
@@ -131,8 +129,6 @@ void GenerateCurrentRomOptions(void)
 		if(RomListSelectedEntry()->pinientry->RDRAM_Size == 0) currentromoptions.RDRAM_Size = defaultoptions.RDRAM_Size;
 		if(RomListSelectedEntry()->pinientry->Save_Type == 0) currentromoptions.Save_Type = defaultoptions.Save_Type;
 		if(RomListSelectedEntry()->pinientry->Use_TLB == 0) currentromoptions.Use_TLB = defaultoptions.Use_TLB;
-		if(RomListSelectedEntry()->pinientry->Counter_Factor == 0)
-			currentromoptions.Counter_Factor = defaultoptions.Counter_Factor;
 		if(RomListSelectedEntry()->pinientry->Use_Register_Caching == 0)
 			currentromoptions.Use_Register_Caching = defaultoptions.Use_Register_Caching;
 		if(RomListSelectedEntry()->pinientry->FPU_Hack == 0) currentromoptions.FPU_Hack = defaultoptions.FPU_Hack;
@@ -232,7 +228,6 @@ INI_ENTRY *GetNewIniEntry(void)
 	newentry->Save_Type = DEFAULT_SAVETYPE;
 	newentry->Use_TLB = 0;
 	newentry->Eeprom_size = 0;
-	newentry->Counter_Factor = 1;
 	newentry->Use_Register_Caching = 1;
 	newentry->FPU_Hack = 0;
 	newentry->timing_Control = 0;
@@ -458,7 +453,6 @@ BOOL ReadIniEntry(FILE *pstream, INI_ENTRY *pnewentry)
 	pnewentry->Save_Type = DEFAULT_SAVETYPE;
 	pnewentry->Use_TLB = 0;
 	pnewentry->Eeprom_size = 0;
-	pnewentry->Counter_Factor = 0;
 	pnewentry->Use_Register_Caching = 0;
 	pnewentry->FPU_Hack = 0;
 	pnewentry->timing_Control = 0;
@@ -549,11 +543,6 @@ BOOL ReadIniEntry(FILE *pstream, INI_ENTRY *pnewentry)
 		{
 			pnewentry->Use_Register_Caching = atoi(line + 21);
 			if(pnewentry->Use_Register_Caching > 2) pnewentry->Use_Register_Caching = 0;
-		}
-		else if(strncmp(line, "Counter Factor=", 15) == 0)
-		{
-			pnewentry->Counter_Factor = atoi(line + 15);
-			if(pnewentry->Counter_Factor > 8) pnewentry->Counter_Factor = 0;
 		}
 		else if(strncmp(line, "FPU Hack=", 9) == 0)
 		{
@@ -680,8 +669,6 @@ BOOL WriteIniEntry(FILE *pstream, const INI_ENTRY *p)
 
 	fprintf(pstream, "EEPROM Size=%d\n", p->Eeprom_size);
 
-	fprintf(pstream, "Counter Factor=%d\n", p->Counter_Factor);
-
 	fprintf(pstream, "Use Register Caching=%d\n", p->Use_Register_Caching);
 
 	fprintf(pstream, "FPU Hack=%d\n", p->FPU_Hack);
@@ -791,7 +778,6 @@ void CopyIniEntry(INI_ENTRY *dest, const INI_ENTRY *src)
 	dest->Max_FPS = src->Max_FPS;
 	dest->Use_TLB = src->Use_TLB;
 	dest->Eeprom_size = src->Eeprom_size;
-	dest->Counter_Factor = src->Counter_Factor;
 	dest->Use_Register_Caching = src->Use_Register_Caching;
 	dest->FPU_Hack = src->FPU_Hack;
 	dest->timing_Control = src->timing_Control;

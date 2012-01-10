@@ -1386,9 +1386,6 @@ void _tnei(OP_PARAMS)
 //
 void dsllv(OP_PARAMS)
 {
-    int temp2;
-    int RememberAssume32bit;
-    int k;
     
     OpcodePrologue(1, &r4300i_dsllv, 0, PASS_PARAMS);
     if (xRD->mips_reg == 0) return;
@@ -1397,6 +1394,10 @@ void dsllv(OP_PARAMS)
 #ifdef SAFE_DOUBLE_SHIFTS2
 	INTERPRET(r4300i_dsllv);
 #else
+
+		int temp2;
+		int RememberAssume32bit;
+		int k;
 
         RememberAssume32bit = currentromoptions.Assume_32bit;
         currentromoptions.Assume_32bit = ASSUME_32BIT_NO;
@@ -1518,10 +1519,6 @@ void dsllv(OP_PARAMS)
 //
 void dsrlv(OP_PARAMS)
 {
-    int temp2;
-    int RememberAssume32bit;
-    int k, ExtraRegister;
-    
     OpcodePrologue(1, &r4300i_dsrlv, 0, PASS_PARAMS);
     if (xRD->mips_reg == 0) return;
 
@@ -1529,6 +1526,9 @@ void dsrlv(OP_PARAMS)
 #ifdef SAFE_DOUBLE_SHIFTS2
 	INTERPRET(r4300i_dsrlv);
 #else
+		int temp2;
+		int RememberAssume32bit;
+		int k, ExtraRegister;
 
         RememberAssume32bit = currentromoptions.Assume_32bit;
         currentromoptions.Assume_32bit = ASSUME_32BIT_NO;
@@ -1669,15 +1669,16 @@ void dsrav(OP_PARAMS)
 //
 void dsll(OP_PARAMS)
 {
-    int temp2;
-    int RememberAssume32bit;
-    
+   
     OpcodePrologue(1, &r4300i_dsll, 0, PASS_PARAMS);
     if (xRD->mips_reg == 0) return;
 
 #ifdef SAFE_DOUBLE_SHIFTS2
 	INTERPRET(r4300i_dsll);
 #else
+
+	    int temp2;
+		int RememberAssume32bit;
 
         RememberAssume32bit = currentromoptions.Assume_32bit;
         currentromoptions.Assume_32bit = ASSUME_32BIT_NO;
@@ -1718,9 +1719,7 @@ void dsll(OP_PARAMS)
 //
 void dsrl(OP_PARAMS)
 {
-    int temp2;
-    int RememberAssume32bit;
-    
+  
     OpcodePrologue(1, &r4300i_dsrl, 0, PASS_PARAMS);
     if (xRD->mips_reg == 0) return;
 
@@ -1728,6 +1727,8 @@ void dsrl(OP_PARAMS)
 #ifdef SAFE_DOUBLE_SHIFTS2
 	INTERPRET(r4300i_dsrl);
 #else
+		int temp2;
+		int RememberAssume32bit;
 
         RememberAssume32bit = currentromoptions.Assume_32bit;
         currentromoptions.Assume_32bit = ASSUME_32BIT_NO;
@@ -5149,7 +5150,7 @@ void Div(OP_PARAMS)
 	SetTarget(12);
 	POP_RegIfMapped(Reg_ECX);
 
-	SAVE_OP_COUNTER_INCREASE(PCLOCKDIV * 2 * VICounterFactors[CounterFactor]);
+	SAVE_OP_COUNTER_INCREASE(PCLOCKDIV * 2);
 
 }
 
@@ -5237,7 +5238,7 @@ void divu(OP_PARAMS)
 	SetTarget(0);
 	POP_RegIfMapped(Reg_ECX);
 
-	SAVE_OP_COUNTER_INCREASE(PCLOCKDIV * 2 * VICounterFactors[CounterFactor]);
+	SAVE_OP_COUNTER_INCREASE(PCLOCKDIV * 2);
 }
 
 void Negate(_u32 OperandSize, _u32 reg)
@@ -5562,9 +5563,6 @@ void nor(OP_PARAMS)
 //
 void dsll32(OP_PARAMS)
 {
-    int temp2;
-    int RememberAssume32bit;
-    
     OpcodePrologue(1, &r4300i_dsll32, 0, PASS_PARAMS);
     if(xRD->mips_reg == 0) return;
 
@@ -5572,6 +5570,8 @@ void dsll32(OP_PARAMS)
 #ifdef SAFE_DOUBLE_SHIFTS2
 	INTERPRET(r4300i_dsll32);
 #else
+		int temp2;
+		int RememberAssume32bit;
 
         RememberAssume32bit = currentromoptions.Assume_32bit;
         currentromoptions.Assume_32bit = ASSUME_32BIT_NO;
@@ -5602,9 +5602,6 @@ void dsll32(OP_PARAMS)
 //
 void dsrl32(OP_PARAMS)
 {
-    int temp2;
-    int RememberAssume32bit;
-    
     OpcodePrologue(1, &r4300i_dsrl32, 0, PASS_PARAMS);
     if(xRD->mips_reg == 0) return;
 
@@ -5612,7 +5609,9 @@ void dsrl32(OP_PARAMS)
 #ifdef SAFE_DOUBLE_SHIFTS2
 	INTERPRET(r4300i_dsrl32);
 #else
-
+		int temp2;
+		int RememberAssume32bit;
+    
         RememberAssume32bit = currentromoptions.Assume_32bit;
         currentromoptions.Assume_32bit = ASSUME_32BIT_NO;
 
@@ -5642,9 +5641,6 @@ void dsrl32(OP_PARAMS)
 //
 void dsra32(OP_PARAMS)
 {
-    int temp2;
-    int RememberAssume32bit;
-    
     OpcodePrologue(1, &r4300i_dsra32, 0, PASS_PARAMS);
     if(xRD->mips_reg == 0) return;
 
@@ -5652,7 +5648,9 @@ void dsra32(OP_PARAMS)
 #ifdef SAFE_DOUBLE_SHIFTS2
 	INTERPRET(r4300i_dsra32);
 #else
-
+		int temp2;
+		int RememberAssume32bit;
+    
         RememberAssume32bit = currentromoptions.Assume_32bit;
         currentromoptions.Assume_32bit = ASSUME_32BIT_NO;
 
