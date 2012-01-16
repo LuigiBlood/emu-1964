@@ -64,20 +64,6 @@ protected:
 	DirectXDeviceBuilder() {};
 	~DirectXDeviceBuilder() {};
 };
-
-/*
-class GlideDeviceBuilder : public CDeviceBuilder
-{
-public:
-	CGraphicsContext * CreateGraphicsContext(void);
-	CRender * CreateRender(void);
-	CTexture * CreateTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage = AS_NORMAL);
-	CColorCombiner * CreateColorCombiner(void);
-	CBlender * CreateAlphaBlender(void);
-};
-*/
-
-
 #endif
 
 

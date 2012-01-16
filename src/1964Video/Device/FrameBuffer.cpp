@@ -36,8 +36,6 @@ extern TMEMLoadMapInfo g_tmemLoadAddrMap[0x200];	// Totally 4KB TMEM;
 3) This is slow due to the reading process, not the writing
 */
 
-
-
 RecentCIInfo g_RecentCIInfo[5];
 RecentCIInfo *g_uRecentCIInfoPtrs[5] =
 {

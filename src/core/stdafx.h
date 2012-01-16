@@ -16,7 +16,7 @@
 // Windows Header Files:
 #include <windows.h>
 
-#define BUILD_NUMBER "2.0"
+#define BUILD_NUMBER "1.2"
 
 // TODO: reference additional headers your program requires here
 #include <process.h>
