@@ -247,15 +247,7 @@ void DumpTexture(int tex, TextureChannel channel = TXT_RGB )
 
 void DumpRenderTexture(int tex=-1)
 {
-	if( CDeviceBuilder::GetBuilder()->GetGeneralDeviceType() == DIRECTX_DEVICE )
-	{
-		g_pFrameBufferManager->DisplayRenderTexture(tex);
-	}
-	else
-	{
-		debuggerDrawRenderTextureNo = tex;
-		debuggerDrawRenderTexture = TRUE;
-	}
+	g_pFrameBufferManager->DisplayRenderTexture(tex);
 }
 
 void DumpTextureToFile(int tex, TextureChannel channel = TXT_RGB)

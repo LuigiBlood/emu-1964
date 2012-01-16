@@ -71,7 +71,6 @@
 #define IDC_DROP_TEXTURE                1062
 #define IDC_SMART                       1063
 #define IDC_DROP_COMBINER               1064
-#define IDC_RENDER_ENGINE_SELECTION     1065
 #define IDC_FOG                         1066
 #define IDC_DISABLE_COMBINER            1068
 #define IDC_SSE                         1069
@@ -158,7 +157,6 @@
 #define IDC_LOG_MICROCODE               1152
 #define IDC_MIPMAPS                     1153
 #define IDC_LOG_FOG                     1154
-#define IDC_OGL_VERTEX_CLIPPER          1155
 #define IDC_VERTEX_SHADER               1156
 #define IDC_DETAILS                     1157
 #define IDC_CACHE_HIRES_TEXTURE         1666

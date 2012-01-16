@@ -272,9 +272,6 @@ void CGraphicsContext::InitDeviceParameters(void)
 	qsort( &CGraphicsContext::m_FullScreenResolutions, CGraphicsContext::m_numOfResolutions, sizeof(int)*2, SortResolutionsCallback );
 
 	// To initialze device parameters for DirectX
-	COGLGraphicsContext::InitDeviceParameters();
-
-	// To initialze device parameters for DirectX
 	CDXGraphicsContext::InitDeviceParameters();
 }
 

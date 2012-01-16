@@ -55,7 +55,6 @@ extern unsigned int			g_vtxIndex[1000];
 extern TLITVERTEX			g_clippedVtxBuffer[2000];
 extern int					g_clippedVtxCount;
 
-extern uint8				g_oglVtxColors[1000][4];
 extern uint32				g_clipFlag[MAX_VERTS];
 extern uint32				g_clipFlag2[MAX_VERTS];
 extern float				g_fFogCoord[MAX_VERTS];
@@ -240,7 +239,7 @@ extern RDP_Options gRDP;
 */
 void InitRenderBase();
 void SetFogMinMax(float fMin, float fMax, float fMul, float fOffset);
-void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture, bool openGL = true );
+void InitVertex(uint32 dwV, uint32 vtxIndex, bool bTexture);
 void InitVertexTextureConstants();
 bool PrepareTriangle(uint32 dwV0, uint32 dwV1, uint32 dwV2);
 bool IsTriangleVisible(uint32 dwV0, uint32 dwV1, uint32 dwV2);
@@ -259,7 +258,6 @@ void ForceMainTextureIndex(int dwTile);
 void UpdateCombinedMatrix();
 
 void ClipVertexes();
-void ClipVertexesOpenGL();
 void ClipVertexesForRect();
 
 void LogTextureCoords(float fTex0S, float fTex0T, float fTex1S, float fTex1T);

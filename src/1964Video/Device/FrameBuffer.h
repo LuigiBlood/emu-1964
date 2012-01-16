@@ -102,16 +102,6 @@ public:
 		uint32 memsize=0xFFFFFFFF, uint32 pitch=0, D3DFORMAT surf_fmt=D3DFMT_A8R8G8B8);
 };
 
-class OGLFrameBufferManager : public FrameBufferManager
-{
-public:
-	// Device dependent functions
-	virtual void CopyBackBufferToRenderTexture(int idx, RecentCIInfo &ciInfo, RECT* pRect=NULL);			// Copy the current back buffer to temp buffer
-	virtual void StoreBackBufferToRDRAM(uint32 addr, uint32 fmt, uint32 siz, uint32 width, 
-		uint32 height, uint32 bufWidth, uint32 bufHeight, uint32 startaddr=0xFFFFFFFF, 
-		uint32 memsize=0xFFFFFFFF, uint32 pitch=0, D3DFORMAT surf_fmt=D3DFMT_A8R8G8B8);
-};
-
 extern RenderTextureInfo gRenderTextureInfos[];
 extern RenderTextureInfo newRenderTextureInfo;
 

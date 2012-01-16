@@ -343,6 +343,7 @@ bool CRender::FillRect(LONG nX0, LONG nY0, LONG nX1, LONG nY1, uint32 dwColor)
 	bool res=true;
 
 	/*
+	//CHECKME
 	// I don't know why this does not work for OpenGL
 	if( gRDP.otherMode.cycle_type == CYCLE_TYPE_FILL && nX0 == 0 && nY0 == 0 && ((nX1==windowSetting.uViWidth && nY1==windowSetting.uViHeight)||(nX1==windowSetting.uViWidth-1 && nY1==windowSetting.uViHeight-1)) )
 	{
@@ -1268,7 +1269,7 @@ bool CRender::DrawTriangles()
 
 			for( i=0; i<gRSP.numVertices; i++ )
 			{
-				float w = CDeviceBuilder::GetGeneralDeviceType() == OGL_DEVICE ? g_vtxProjected5[i][3] : g_vtxBuffer[i].rhw; 
+				float w = g_vtxBuffer[i].rhw; 
 				if( w < 0 || g_vtxBuffer[i].tcord[t].u > 1.0 || g_vtxBuffer[i].tcord[t].u < 0.0  )
 				{
 					clampS = false;
@@ -1278,7 +1279,7 @@ bool CRender::DrawTriangles()
 
 			for( i=0; i<gRSP.numVertices; i++ )
 			{
-				float w = CDeviceBuilder::GetGeneralDeviceType() == OGL_DEVICE ? g_vtxProjected5[i][3] : g_vtxBuffer[i].rhw; 
+				float w = g_vtxBuffer[i].rhw; 
 				if( w < 0 || g_vtxBuffer[i].tcord[t].v > 1.0 || g_vtxBuffer[i].tcord[t].v < 0.0  )
 				{
 					clampT = false;
