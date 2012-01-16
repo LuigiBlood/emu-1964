@@ -144,7 +144,7 @@ typedef struct {
 	bool	bHandleN64RenderTexture;	// Do we need to handle of the N64 render_texture stuff?
 	bool	bDirectWriteIntoRDRAM;		// When drawing into render_texture, this value =
 										// = true	don't render, but write real N64 graphic value into RDRAM
-										// = false  rendering into render_texture of DX or OGL, the render_texture
+										// = false  rendering into render_texture of DX, the render_texture
 										//			will be copied into RDRAM at the end
 	bool	bFrameBufferIsDrawn;		// flag to mark if the frame buffer is ever drawn
 	bool	bFrameBufferDrawnByTriangles;	// flag to tell if the buffer is even drawn by Triangle cmds

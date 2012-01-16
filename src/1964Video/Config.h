@@ -22,21 +22,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "typedefs.h"
 
-typedef enum
-{
-	OGL_DEVICE,
-	OGL_FRAGMENT_PROGRAM,
-
-	DIRECTX_DEVICE,
-	DIRECTX_9_DEVICE,
-} SupportedDeviceType;
-
-typedef struct
-{
-	char *	name;
-	SupportedDeviceType		type;
-} RenderEngineSetting;
-
 enum {
 	FRM_BUF_NONE,
 	FRM_BUF_IGNORE,
@@ -180,7 +165,6 @@ typedef struct {
 	BOOL	bMipMaps;
 	BOOL	bForceSoftwareTnL;
 	BOOL	bForceSoftwareClipper;
-	BOOL	bOGLVertexClipper;
 	BOOL	bEnableSSE;
 	BOOL	bEnableVertexShader;
 	BOOL	bSkipFrame;
@@ -212,7 +196,6 @@ typedef struct {
 	uint32	DirectXMaxAnisotropy;
 	int		DirectXDevice;
 
-	int		OpenglDepthBufferSetting;
 	uint32	colorQuality;
 
 	HACK_FOR_GAMES	enableHackForGames;
@@ -406,7 +389,6 @@ uint32 CountryCodeToTVSystem(uint32 countryCode);
 enum {
     PSH_OPTIONS,
     PSH_DIRECTX,
-    PSH_OPENGL,
     PSH_TEXTURE,
     PSH_DEFAULTS,
     PSH_ROM_SETTINGS,

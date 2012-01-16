@@ -38,38 +38,16 @@ public:
 
 	static void DeleteBuilder(void);
 	static CDeviceBuilder* GetBuilder(void);
-	static void SelectDeviceType(SupportedDeviceType type);
-	static SupportedDeviceType GetDeviceType(void);
-	static SupportedDeviceType GetGeneralDeviceType(void);
-	static SupportedDeviceType m_deviceGeneralType;
 protected:
 	CDeviceBuilder();
 	~CDeviceBuilder();
 
-	static CDeviceBuilder* CreateBuilder(SupportedDeviceType type);
-	static SupportedDeviceType m_deviceType;
 	static CDeviceBuilder* m_pInstance;
 
 	CRender* m_pRender;
 	CGraphicsContext* m_pGraphicsContext;
 	CColorCombiner* m_pColorCombiner;
 	CBlender* m_pAlphaBlender;
-};
-
-class OGLDeviceBuilder : public CDeviceBuilder
-{
-	friend class CDeviceBuilder;
-public:
-	CGraphicsContext * CreateGraphicsContext(void);
-	CRender * CreateRender(void);
-	CTexture * CreateTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage = AS_NORMAL);
-	CColorCombiner * CreateColorCombiner(CRender *pRender);
-	CBlender * CreateAlphaBlender(CRender *pRender);
-
-protected:
-	OGLDeviceBuilder() {};
-	~OGLDeviceBuilder() {};
-
 };
 
 class DirectXDeviceBuilder : public CDeviceBuilder

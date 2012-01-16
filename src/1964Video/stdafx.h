@@ -58,12 +58,6 @@
 #define SetVertexShaderConstant		SetVertexShaderConstantF
 #include <vector>
 
-#include "gl/gl.h"
-#include "gl/glu.h"
-#include "glext.h"
-#include "glh_extension_ati.h"
-#include "wglext.h"
-
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(p)  { if(p) { delete (p);     (p)=NULL; } }// Microdev check me.
 #endif
@@ -92,7 +86,6 @@
 
 #include "./Combiner/blender.h"
 #include "./Combiner/DirectXCombiner/DirectXBlender.h"
-#include "./Combiner/OpenGLCombiner/OGLBlender.h"
 
 #include "./Combiner/combiner.h"
 #include "./Combiner/GeneralCombiner.h"
@@ -109,15 +102,6 @@
 #include "./Render/ExtendedRender.h"
 #include "./Render/Render.h"
 #include "./Render/DirectX/D3DRender.h"
-
-#include "./Texture/OGLTexture/OGLTexture.h"
-
-#include "./Combiner/OpenGLCombiner/OGLCombiner.h"
-
-#include "./Debugger/OGLDebug.h"
-#include "./Render/OpenGL/OGLRender.h"
-#include "./Render/OpenGL/OGLExtRender.h"
-#include "./Device/OGLDevice/OGLGraphicsContext.h"
 
 #include "resource.h"
 

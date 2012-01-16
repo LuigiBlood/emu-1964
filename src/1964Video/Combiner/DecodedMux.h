@@ -90,8 +90,7 @@ public:
 	bool m_bTexel0IsUsed;
 	bool m_bTexel1IsUsed;
 
-	int  m_maxConstants;	// OpenGL 1.1 does not really support a constant color in combiner
-							// must use shade for constants;
+	int  m_maxConstants;	//CHECKME
 	int  m_maxTextures;		// 1 or 2
 
 

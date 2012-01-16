@@ -310,18 +310,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\glext.h"
-				>
-			</File>
-			<File
-				RelativePath=".\glh_extension_ati.h"
-				>
-			</File>
-			<File
-				RelativePath=".\glh_genext.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Lib\jpegrw.h"
 				>
 			</File>
@@ -441,26 +429,6 @@
 						>
 					</File>
 				</Filter>
-				<Filter
-					Name="OpenGLCombiner"
-					>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLBlender.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLBlender.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLCombiner.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Combiner\OpenGLCombiner\OGLCombiner.h"
-						>
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="Render"
@@ -522,30 +490,6 @@
 					</File>
 					<File
 						RelativePath=".\Render\DirectX\D3DRenderExt.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="OpenGL"
-					>
-					<File
-						RelativePath=".\Render\OpenGL\OGLExtRender.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Render\OpenGL\OGLExtRender.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Render\OpenGL\OGLRender.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Render\OpenGL\OGLRender.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Render\OpenGL\OGLRenderExt.cpp"
 						>
 					</File>
 				</Filter>
@@ -617,18 +561,6 @@
 						>
 					</File>
 				</Filter>
-				<Filter
-					Name="OGLDevice"
-					>
-					<File
-						RelativePath=".\Device\OGLDevice\OGLGraphicsContext.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Device\OGLDevice\OGLGraphicsContext.h"
-						>
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="Utility"
@@ -690,18 +622,6 @@
 					</File>
 					<File
 						RelativePath=".\Texture\DirectXTexture\DirectXTexture.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="OGLTexture"
-					>
-					<File
-						RelativePath=".\Texture\OGLTexture\OGLTexture.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Texture\OGLTexture\OGLTexture.h"
 						>
 					</File>
 				</Filter>

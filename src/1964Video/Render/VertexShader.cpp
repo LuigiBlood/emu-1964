@@ -63,7 +63,7 @@ void ProcessVertexDataExternal(uint32 dwAddr, uint32 dwV0, uint32 dwNum)
 	}
 }
 
-void InitVertexForVertexShader(uint32 dwV, uint32 vtxIndex, bool bTexture, bool openGL)
+void InitVertexForVertexShader(uint32 dwV, uint32 vtxIndex, bool bTexture)
 {
 }
 

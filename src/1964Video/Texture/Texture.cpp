@@ -67,9 +67,9 @@ uint32 CTexture::GetPixelSize()
 }
 
 
-// There are reasons to create this function. D3D and OGL will only create surface of width and height
-// as 2's pow, for example, N64's 20x14 image, D3D and OGL will create a 32x16 surface.
-// When we using such a surface as D3D texture, and the U and V address is for the D3D and OGL surface
+// There are reasons to create this function. D3D will only create surface of width and height
+// as 2's pow, for example, N64's 20x14 image, D3D will create a 32x16 surface.
+// When we using such a surface as D3D texture, and the U and V address is for the D3D surface
 // width and height. It is still OK if the U and V addr value is less than the real image within
 // the D3D surface. But we will have problems if the U and V addr value is larger than it, or even
 // large then 1.0.

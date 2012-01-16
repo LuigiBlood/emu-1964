@@ -1444,12 +1444,8 @@ OK, heres the drill!
 
 	if( gRenderTextureInfos[idxToUse].pRenderTexture == NULL || matchidx < 0 )
 	{
-		if( CDeviceBuilder::m_deviceGeneralType == DIRECTX_DEVICE )
-			gRenderTextureInfos[idxToUse].pRenderTexture = 
+		gRenderTextureInfos[idxToUse].pRenderTexture = 
 				new CDXRenderTexture(tempRenderTextureInfo.bufferWidth, tempRenderTextureInfo.bufferHeight, &gRenderTextureInfos[idxToUse], AS_BACK_BUFFER_SAVE);
-		else
-			gRenderTextureInfos[idxToUse].pRenderTexture = 
-				new COGLRenderTexture(tempRenderTextureInfo.bufferWidth, tempRenderTextureInfo.bufferHeight, &gRenderTextureInfos[idxToUse], AS_BACK_BUFFER_SAVE);
 	}
 
 	// Need to set all variables for gRenderTextureInfos[idxToUse]
@@ -1721,12 +1717,8 @@ void FrameBufferManager::ActiveTextureBuffer(void)
 				w = gRDP.scissor.right;
 			}
 
-			if( CDeviceBuilder::m_deviceGeneralType == DIRECTX_DEVICE )
-				gRenderTextureInfos[idxToUse].pRenderTexture = 
-					new CDXRenderTexture(w, newRenderTextureInfo.bufferHeight, &gRenderTextureInfos[idxToUse], AS_RENDER_TARGET);
-			else
-				gRenderTextureInfos[idxToUse].pRenderTexture = 
-					new COGLRenderTexture(w, newRenderTextureInfo.bufferHeight, &gRenderTextureInfos[idxToUse], AS_RENDER_TARGET);
+			gRenderTextureInfos[idxToUse].pRenderTexture = 
+				new CDXRenderTexture(w, newRenderTextureInfo.bufferHeight, &gRenderTextureInfos[idxToUse], AS_RENDER_TARGET);
 		}
 
 		// Need to set all variables for gRenderTextureInfos[idxToUse]
@@ -1780,12 +1772,9 @@ void FrameBufferManager::ActiveTextureBuffer(void)
 		}
 		else
 		{
-			if( CDeviceBuilder::m_deviceGeneralType == DIRECTX_DEVICE )
-			{
-				TRACE1("Error to set Render Target: %d", idxToUse);
-				TRACE1("Addr = %08X", gRenderTextureInfos[idxToUse].CI_Info.dwAddr);
-				TRACE2("Width = %d, Height=%d", gRenderTextureInfos[idxToUse].N64Width, gRenderTextureInfos[idxToUse].N64Height);
-			}
+			TRACE1("Error to set Render Target: %d", idxToUse);
+			TRACE1("Addr = %08X", gRenderTextureInfos[idxToUse].CI_Info.dwAddr);
+			TRACE2("Width = %d, Height=%d", gRenderTextureInfos[idxToUse].N64Width, gRenderTextureInfos[idxToUse].N64Height);
 		}	
 
 

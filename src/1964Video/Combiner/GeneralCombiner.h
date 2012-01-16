@@ -102,14 +102,14 @@ enum CombinerOp
 	CM_MODULATE,
 	CM_ADD,
 	CM_SUBTRACT,
-	CM_INTERPOLATE,			// == LERP in DirectX, INTERPOLATE = OpenGL
+	CM_INTERPOLATE,			// == LERP in DirectX
 
-	CM_ADDSMOOTH,			// For DirectX only, for OpenGL, use INTERPOLATE
-	CM_BLENDCURRENTALPHA,	// For DirectX only, for OpenGL, use INTERPOLATE
-	CM_BLENDDIFFUSEALPHA,	// For DirectX only, for OpenGL, use INTERPOLATE
-	CM_BLENDFACTORALPHA,	// For DirectX only, for OpenGL, use INTERPOLATE
-	CM_BLENDTEXTUREALPHA,	// For DirectX only, for OpenGL, use INTERPOLATE
-	CM_MULTIPLYADD,			// For DirectX only
+	CM_ADDSMOOTH,
+	CM_BLENDCURRENTALPHA,
+	CM_BLENDDIFFUSEALPHA,
+	CM_BLENDFACTORALPHA,
+	CM_BLENDTEXTUREALPHA,
+	CM_MULTIPLYADD,
 };
 
 #define CM_IGNORE ~0
@@ -117,8 +117,7 @@ enum CombinerOp
 
 /************************************************************************/
 /* This general combiner class is designed for general DirectX combiner */
-/* and OpenGL 1.2/1.3 combiner.	Such combiners have the following       */
-/* limitions and conditions:                                            */
+/* Such combiners have the following limitions and conditions:          */
 /*                                                                      */
 /*	- Supporting at least 2 textures                                    */
 /*	- Supporting at least 2 combiner stages                             */
@@ -151,14 +150,14 @@ protected:
 
 	bool m_bTxtOpAdd;
 	bool m_bTxtOpSub;
-	bool m_bTxtOpLerp;				// LERP is for DirectX, INTERPOLATE is for OpenGL
+	bool m_bTxtOpLerp;
 
-	bool m_bTxtOpAddSmooth;			// For DirectX only, for OpenGL, use INTERPOLATE
-	bool m_bTxtOpBlendCurAlpha;		// For DirectX only, for OpenGL, use INTERPOLATE
-	bool m_bTxtOpBlendDifAlpha;		// For DirectX only, for OpenGL, use INTERPOLATE
-	bool m_bTxtOpBlendFacAlpha;		// For DirectX only, for OpenGL, use INTERPOLATE
-	bool m_bTxtOpBlendTxtAlpha;		// For DirectX only, for OpenGL, use INTERPOLATE
-	bool m_bTxtOpMulAdd;			// For DirectX only
+	bool m_bTxtOpAddSmooth;
+	bool m_bTxtOpBlendCurAlpha;
+	bool m_bTxtOpBlendDifAlpha;
+	bool m_bTxtOpBlendFacAlpha;
+	bool m_bTxtOpBlendTxtAlpha;
+	bool m_bTxtOpMulAdd;
 
 	int	 m_dwGeneralMaxStages;
 

@@ -104,12 +104,6 @@ char	szIniSettingsFileName[300];
 
 //=======================================================
 
-const RenderEngineSetting RenderEngineSettings[] =
-{
-	"DirectX",	DIRECTX_DEVICE,
-	"OpenGL", OGL_DEVICE,
-};
-
 const SettingInfo TextureQualitySettings[] =
 {
 	"Default",			FORCE_DEFAULT_FILTER,
@@ -158,11 +152,6 @@ const SettingInfo colorQualitySettings[] =
 
 const char*	strDXDeviceDescs[] = { "HAL", "REF" };
 
-const SettingInfo openGLDepthBufferSettings[] =
-{
-	"16-bit (def)",	16,
-	"32-bit",	32,
-};
 
 /*
 *	Constants
@@ -204,8 +193,6 @@ const SettingInfo OnScreenDisplaySettings[] =
 int numberOfDirectXRenderBufferSettings = sizeof(DirectXRenderBufferSettings)/sizeof(BufferSettingInfo);
 int numberOfDirectXDepthBufferSettings = sizeof(DirectXDepthBufferSetting)/sizeof(BufferSettingInfo);
 
-const int numberOfRenderEngineSettings = sizeof(RenderEngineSettings)/sizeof(RenderEngineSetting);
-
 void WriteConfiguration(void);
 void GenerateCurrentRomOptions();
 
@@ -231,15 +218,6 @@ inline void ShowItem(HWND hDlg, UINT item, BOOL flag)
 //////////////////////////////////////////////////////////////////////////
 void GenerateFrameBufferOptions(void)
 {
-	if( CDeviceBuilder::GetGeneralDeviceType() == OGL_DEVICE )
-	{
-		// OpenGL does not support much yet
-		if( currentRomOptions.N64FrameBufferEmuType != FRM_BUF_NONE )
-			currentRomOptions.N64FrameBufferEmuType = FRM_BUF_IGNORE;
-		if( currentRomOptions.N64RenderToTextureEmuType != TXT_BUF_NONE )
-			currentRomOptions.N64RenderToTextureEmuType = TXT_BUF_IGNORE;
-	}
-
 	frameBufferOptions.bUpdateCIInfo			= false;
 
 	frameBufferOptions.bCheckBackBufs			= false;
@@ -382,9 +360,6 @@ void WriteConfiguration(void)
 	fprintf(f, "FPSColor ");
 	fprintf(f, "%d\n", options.FPSColor);
 
-	fprintf(f, "OpenGLDepthBufferSetting ");
-	fprintf(f, "%d\n", options.OpenglDepthBufferSetting);
-
 	fprintf(f, "ColorQuality ");
 	fprintf(f, "%d\n", options.colorQuality);
 
@@ -408,9 +383,6 @@ void WriteConfiguration(void)
 
 	fprintf(f, "ForceSoftwareClipper ");
 	fprintf(f, "%d\n", options.bForceSoftwareClipper);
-
-	fprintf(f, "OpenGLVertexClipper ");
-	fprintf(f, "%d\n", options.bOGLVertexClipper);
 
 	fprintf(f, "EnableSSE ");
 	fprintf(f, "%d\n", options.bEnableSSE);
@@ -459,9 +431,6 @@ void WriteConfiguration(void)
 
 	fprintf(f, "FastTextureLoading ");
 	fprintf(f, "%d\n", defaultRomOptions.bFastTexCRC);
-
-	fprintf(f, "RenderEngine ");
-	fprintf(f, "%d\n", (uint32)CDeviceBuilder::GetDeviceType());
 
 	fprintf(f, "ForceTextureFilter ");
 	fprintf(f, "%d\n", (uint32)options.forceTextureFilter);
@@ -622,7 +591,6 @@ void ReadConfiguration(void)
 		options.bForceSoftwareClipper = TRUE;
 		options.bEnableSSE = TRUE;
 		options.bEnableVertexShader = FALSE;
-		options.bOGLVertexClipper = FALSE;
 		options.RenderBufferSetting=1;
 		options.forceTextureFilter = 0;
 		options.textureQuality = TXT_QUALITY_DEFAULT;
@@ -633,7 +601,6 @@ void ReadConfiguration(void)
 		options.bCacheHiResTextures = FALSE;
 		options.bDumpTexturesToFiles = FALSE;
 		options.DirectXDepthBufferSetting = 0;
-		options.OpenglDepthBufferSetting = 16;
 		options.colorQuality = TEXTURE_FMT_A8R8G8B8;
 		options.textureEnhancement = 0;
 		options.textureEnhancementControl = 0;
@@ -704,7 +671,6 @@ void ReadConfiguration(void)
 		options.bFullTMEM = ReadRegistryDwordVal("FullTMEMEmulation");
 		options.bForceSoftwareTnL = ReadRegistryDwordVal("ForceSoftwareTnL");
 		options.bForceSoftwareClipper = ReadRegistryDwordVal("ForceSoftwareClipper");
-		options.bOGLVertexClipper = ReadRegistryDwordVal("OpenGLVertexClipper");
 		options.bEnableSSE = ReadRegistryDwordVal("EnableSSE");
 		options.bEnableVertexShader = ReadRegistryDwordVal("EnableVertexShader");
 		options.bEnableVertexShader = FALSE;
@@ -732,7 +698,6 @@ void ReadConfiguration(void)
 		options.DirectXMaxFSAA = ReadRegistryDwordVal("DirectXMaxFSAA");;
 		options.FPSColor = ReadRegistryDwordVal("FPSColor");;
 		options.DirectXMaxAnisotropy = ReadRegistryDwordVal("DirectXMaxAnisotropy");;
-		options.OpenglDepthBufferSetting = ReadRegistryDwordVal("OpenGLDepthBufferSetting");
 		options.colorQuality = ReadRegistryDwordVal("ColorQuality");
 		defaultRomOptions.bFastTexCRC = ReadRegistryDwordVal("FastTextureLoading");
 		defaultRomOptions.bAccurateTextureMapping = ReadRegistryDwordVal("AccurateTextureMapping");
@@ -742,11 +707,6 @@ void ReadConfiguration(void)
 		defaultRomOptions.bDoubleSizeForSmallTxtrBuf = ReadRegistryDwordVal("DoubleSizeForSmallTxtrBuf");
 		windowSetting.uFullScreenRefreshRate = ReadRegistryDwordVal("FullScreenFrequency");
 
-		SupportedDeviceType render = (SupportedDeviceType)ReadRegistryDwordVal("RenderEngine");
-		if( render == DIRECTX_DEVICE )
-			CDeviceBuilder::SelectDeviceType( DIRECTX_DEVICE );
-		else
-			CDeviceBuilder::SelectDeviceType( OGL_DEVICE );
 	}
 
 	status.isSSEEnabled = status.isSSESupported && options.bEnableSSE;
@@ -1175,11 +1135,6 @@ typedef struct {
 ToolTipMsg ttmsg[] = {
 	
 	{ 
-		IDC_RENDER_ENGINE_SELECTION,
-			"Render Engine",
-			"Select which render engine to use, DirectX or OpenGL.\n"
-	},
-	{ 
 		IDC_DX_SWAP_EFFECT,
 			"DirectX Frame Buffer Swap Effect",
 			"Double buffer flip is faster for full screen\n\n"
@@ -1426,17 +1381,6 @@ ToolTipMsg ttmsg[] = {
 			"The software clipper is needed for most new video cards, but not for most older video cards\n"
 			"If your video card works without it, then don't turn it on since it is CPU intensive, games"
 			" will become slower if you have a slower CPU.\n"
-	},
-	{ 
-		IDC_OGL_VERTEX_CLIPPER,
-			"Software Vertex Clipper",
-			"Enable/Disable Software Vertex Clipper.\n\n"
-			"Games graphics are rendered as triangles. Each triangle is determined by 3 vertexes. A triangle could "
-			"be completely or partially out of screen as its vertexes go out of screen in X, Y and Z direction. The "
-			"process of clipping is to chop the triangle along the boundary by converting the triangle to 1 or "
-			"more in-bound triangles.\n\n"
-			"The software clipper for OpenGL helps to resolve near plane clipping problem. For most games, you don't "
-			"have to use it since OpenGL has its own vertex clipper.\n"
 	},
 	{ 
 		IDC_FORCE_DEPTH_COMPARE,
@@ -2481,14 +2425,6 @@ LRESULT APIENTRY OptionsDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
 			}
 		}
 
-		SendDlgItemMessage(hDlg, IDC_RENDER_ENGINE_SELECTION, CB_RESETCONTENT, 0, 0);
-		for( i=0; i<numberOfRenderEngineSettings; i++ )
-		{
-			SendDlgItemMessage(hDlg, IDC_RENDER_ENGINE_SELECTION, CB_INSERTSTRING, i, (LPARAM) (RenderEngineSettings[i].name));
-			if( CDeviceBuilder::GetGeneralDeviceType() == RenderEngineSettings[i].type )
-				SendDlgItemMessage(hDlg, IDC_RENDER_ENGINE_SELECTION, CB_SETCURSEL, i, 0);
-		}
-
 		SendDlgItemMessage(hDlg, IDC_COLOR_QUALITY, CB_RESETCONTENT, 0, 0);
 		for( i=0; i<sizeof(colorQualitySettings)/sizeof(SettingInfo); i++ )
 		{
@@ -2518,8 +2454,6 @@ LRESULT APIENTRY OptionsDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
 
 		if( status.bGameIsRunning )
 		{
-			item = GetDlgItem(hDlg, IDC_RENDER_ENGINE_SELECTION);
-			EnableWindow(item, FALSE);
 			item = GetDlgItem(hDlg, IDC_RESOLUTION_WINDOW_MODE);
 			EnableWindow(item, FALSE);
 			item = GetDlgItem(hDlg, IDC_COLOR_QUALITY);
@@ -2640,16 +2574,6 @@ LRESULT APIENTRY OptionsDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
 			else
 			{
 				windowSetting.uFullScreenRefreshRate = CGraphicsContext::m_FullScreenRefreshRates[i-1];
-			}
-
-			setting = SendDlgItemMessage(hDlg, IDC_RENDER_ENGINE_SELECTION, CB_GETCURSEL, 0, 0);
-			if( RenderEngineSettings[setting].type == DIRECTX_DEVICE )
-			{
-				CDeviceBuilder::SelectDeviceType(DIRECTX_DEVICE);
-			}
-			else
-			{
-				CDeviceBuilder::SelectDeviceType( OGL_DEVICE );
 			}
 
 			i = SendDlgItemMessage(hDlg, IDC_COLOR_QUALITY, CB_GETCURSEL, 0, 0);
@@ -2965,101 +2889,7 @@ LRESULT APIENTRY DirectXDialogProc(HWND hDlg, unsigned message, LONG wParam, LON
     return FALSE;
 	return(TRUE);
 }
-LRESULT APIENTRY OpenGLDialogProc(HWND hDlg, unsigned message, LONG wParam, LONG lParam)
-{
-	int i;
-	HWND item;
 
-	switch(message)
-	{
-	case WM_INITDIALOG:
-		g_hwndDlg = hDlg;
-		EnumChildWndTooltip();
-
-		item = GetDlgItem(hDlg, IDC_SOFTWARE_CLIPPER );
-		EnableWindow(item, FALSE);
-
-		for( i=0; i<sizeof(openGLDepthBufferSettings)/sizeof(SettingInfo); i++ )
-		{
-			SendDlgItemMessage(hDlg, IDC_DEPTH_BUFFER, CB_INSERTSTRING, i, (LPARAM) openGLDepthBufferSettings[i].description);
-			if( openGLDepthBufferSettings[i].setting == options.OpenglDepthBufferSetting )
-				SendDlgItemMessage(hDlg, IDC_DEPTH_BUFFER, CB_SETCURSEL, i, 0);
-		}
-
-		if( status.bGameIsRunning )
-		{
-			item = GetDlgItem(hDlg, IDC_DEPTH_BUFFER );
-			EnableWindow(item, FALSE);
-		}
-
-		options.bOGLVertexClipper = FALSE;
-		SendDlgItemMessage(hDlg, IDC_OGL_VERTEX_CLIPPER, BM_SETCHECK, options.bOGLVertexClipper ? BST_CHECKED : BST_UNCHECKED, 0);
-
-        return(TRUE);
-    
-    //Propertysheet handling
-	case WM_NOTIFY:
-		{
-		LPNMHDR lpnm = (LPNMHDR) lParam;
-
-        switch (lpnm->code)
-            {
-			case PSN_APPLY:
-				SendMessage(hDlg, WM_COMMAND, IDOK, lParam);
-                EndDialog(lpnm->hwndFrom, TRUE);
-				break;
-
-            case PSN_RESET :
-                //Handle a Cancel button click, if necessary
-                EndDialog(lpnm->hwndFrom, TRUE);
-				break;
-			case PSN_SETACTIVE:
-				if( options.bHideAdvancedOptions )
-				{
-					ShowItem(hDlg,IDC_DEPTH_BUFFER,FALSE);
-					ShowItem(hDlg,IDC_SETTING_LABEL3,FALSE);
-				}
-				else
-				{
-					ShowItem(hDlg,IDC_DEPTH_BUFFER,TRUE);
-					ShowItem(hDlg,IDC_SETTING_LABEL3,TRUE);
-				}
-
-				if(status.bGameIsRunning)
-					DialogToStartRomIsRunning = PSH_OPENGL;
-				else
-					DialogToStartRomIsNotRunning = PSH_OPENGL;
-
-				break;
-			default:
-				OnWMNotify (lParam);
-				return 0;
-			}
-		}
-		return(TRUE);
-
-	case WM_COMMAND:
-		switch(LOWORD(wParam))
-		{
-        case IDOK:
-			
-			i = SendDlgItemMessage(hDlg, IDC_DEPTH_BUFFER, CB_GETCURSEL, 0, 0);
-			options.OpenglDepthBufferSetting = openGLDepthBufferSettings[i].setting;
-			options.bOGLVertexClipper = (SendDlgItemMessage(hDlg, IDC_OGL_VERTEX_CLIPPER, BM_GETCHECK, 0, 0) == BST_CHECKED);
-			
-			EndDialog(hDlg, TRUE);
-			WriteConfiguration();
-
-			return(TRUE);
-
-		case IDCANCEL:
-			EndDialog(hDlg, TRUE);
-			return(TRUE);
-	    }
-    }
-
-    return FALSE;
-}
 LRESULT APIENTRY TextureSettingDialogProc(HWND hDlg, unsigned message, LONG wParam, LONG lParam)
 {
 	int i;
@@ -3649,15 +3479,6 @@ void CreateOptionsDialogs(HWND hParent)
 	psp[PSH_DIRECTX].pfnDlgProc		= (DLGPROC)DirectXDialogProc;
 	psp[PSH_DIRECTX].pszTitle		= "DirectX";
 	psp[PSH_DIRECTX].lParam			= 0;
-
-	psp[PSH_OPENGL].dwSize			= sizeof(PROPSHEETPAGE);
-	psp[PSH_OPENGL].dwFlags			= PSP_USETITLE;
-	psp[PSH_OPENGL].hInstance		= windowSetting.myhInst;
-	psp[PSH_OPENGL].pszTemplate		= "OPENGL";
-	psp[PSH_OPENGL].pszIcon			= NULL;
-	psp[PSH_OPENGL].pfnDlgProc		= (DLGPROC)OpenGLDialogProc;
-	psp[PSH_OPENGL].pszTitle		= "OpenGL";
-	psp[PSH_OPENGL].lParam			= 0;
 
 	psp[PSH_TEXTURE].dwSize			= sizeof(PROPSHEETPAGE);
 	psp[PSH_TEXTURE].dwFlags		= PSP_USETITLE;

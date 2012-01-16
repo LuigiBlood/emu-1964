@@ -21,70 +21,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //========================================================================
 CDeviceBuilder* CDeviceBuilder::m_pInstance=NULL;
-SupportedDeviceType CDeviceBuilder::m_deviceType = DIRECTX_DEVICE;
-SupportedDeviceType CDeviceBuilder::m_deviceGeneralType = DIRECTX_DEVICE;
 
 CDeviceBuilder* CDeviceBuilder::GetBuilder(void)
 {
 	if( m_pInstance == NULL )
-		CreateBuilder(m_deviceType);
-	
-	return m_pInstance;
-}
-
-void CDeviceBuilder::SelectDeviceType(SupportedDeviceType type)
-{
-	if( type != m_deviceType && m_pInstance != NULL )
 	{
-		DeleteBuilder();
-	}
-
-	CDeviceBuilder::m_deviceType = type;
-	switch(type)
-	{
-	case OGL_DEVICE:
-	case OGL_FRAGMENT_PROGRAM:
-		CDeviceBuilder::m_deviceGeneralType = OGL_DEVICE;
-		break;
-	case DIRECTX_DEVICE:
-	case DIRECTX_9_DEVICE:
-		CDeviceBuilder::m_deviceGeneralType = DIRECTX_DEVICE;
-		break;
-	}
-}
-
-SupportedDeviceType CDeviceBuilder::GetDeviceType(void)
-{
-	return CDeviceBuilder::m_deviceType;
-}
-
-SupportedDeviceType CDeviceBuilder::GetGeneralDeviceType(void)
-{
-	return CDeviceBuilder::m_deviceGeneralType;
-}
-
-CDeviceBuilder* CDeviceBuilder::CreateBuilder(SupportedDeviceType type)
-{
-	if( m_pInstance == NULL )
-	{
-		switch( type )
-		{
-		case OGL_DEVICE:
-		case OGL_FRAGMENT_PROGRAM:
-			m_pInstance = new OGLDeviceBuilder();
-			break;
-		case DIRECTX_DEVICE:
-		case DIRECTX_9_DEVICE:
-			m_pInstance = new DirectXDeviceBuilder();
-			break;
-		default:
-			ErrorMsg("Error builder type");
-			exit(1);
-		}
-
+		m_pInstance = new DirectXDeviceBuilder();
 		SAFE_CHECK(m_pInstance);
 	}
-
+	
 	return m_pInstance;
 }
 
@@ -151,97 +96,6 @@ void CDeviceBuilder::DeleteAlphaBlender(void)
 
 
 //========================================================================
-
-CGraphicsContext * OGLDeviceBuilder::CreateGraphicsContext(void)
-{
-	if( g_GraphicsInfo.hStatusBar )
-	{
-		SetWindowText(g_GraphicsInfo.hStatusBar,"Creating OpenGL Device Context");
-	}
-	if( m_pGraphicsContext == NULL )
-	{
-		m_pGraphicsContext = new COGLGraphicsContext();
-		SAFE_CHECK(m_pGraphicsContext);
-		CGraphicsContext::g_pGraphicsContext = m_pGraphicsContext;
-	}
-
-	g_pFrameBufferManager = new FrameBufferManager;
-	return m_pGraphicsContext;
-}
-
-CRender * OGLDeviceBuilder::CreateRender(void)
-{
-	if( m_pRender == NULL )
-	{
-		if( CGraphicsContext::g_pGraphicsContext == NULL && CGraphicsContext::g_pGraphicsContext->Ready() )
-		{
-			ErrorMsg("Can not create ColorCombiner before creating and initializing GraphicsContext");
-			m_pRender = NULL;
-			SAFE_CHECK(m_pRender);
-		}
-
-		COGLGraphicsContext &context = *((COGLGraphicsContext*)CGraphicsContext::g_pGraphicsContext);
-
-		if( context.m_bSupportMultiTexture )
-		{
-			// OGL extension render
-			m_pRender = new COGLExtRender();
-		}
-		else
-		{
-			// Basic OGL Render
-			m_pRender = new OGLRender();
-		}
-		SAFE_CHECK(m_pRender);
-		CRender::g_pRender = m_pRender;
-	}
-
-	return m_pRender;
-}
-
-CTexture * OGLDeviceBuilder::CreateTexture(uint32 dwWidth, uint32 dwHeight, TextureUsage usage)
-{
-	COGLTexture *txtr = new COGLTexture(dwWidth, dwHeight, usage);
-	if( txtr->m_pTexture == NULL )
-	{
-		delete txtr;
-		TRACE0("Cannot create new texture, out of video memory");
-		return NULL;
-	}
-	else
-		return txtr;
-}
-
-CColorCombiner * OGLDeviceBuilder::CreateColorCombiner(CRender *pRender)
-{
-	if( m_pColorCombiner == NULL )
-	{
-		if( CGraphicsContext::g_pGraphicsContext == NULL && CGraphicsContext::g_pGraphicsContext->Ready() )
-		{
-			ErrorMsg("Can not create ColorCombiner before creating and initializing GraphicsContext");
-		}
-		else
-		{
-			m_pColorCombiner = new COGLFragmentShaderCombiner(pRender);
-			TRACE0("OpenGL Fragment Program Combiner is created");
-		}
-
-		SAFE_CHECK(m_pColorCombiner);
-	}
-
-	return m_pColorCombiner;
-}
-
-CBlender * OGLDeviceBuilder::CreateAlphaBlender(CRender *pRender)
-{
-	if( m_pAlphaBlender == NULL )
-	{
-		m_pAlphaBlender = new COGLBlender(pRender);
-		SAFE_CHECK(m_pAlphaBlender);
-	}
-
-	return m_pAlphaBlender;
-}
 
 CGraphicsContext * DirectXDeviceBuilder::CreateGraphicsContext(void)
 {

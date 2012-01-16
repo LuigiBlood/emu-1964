@@ -55,7 +55,6 @@ public:
 	friend class CDXGraphicsContext;
 	friend class FrameBufferManager;
 	friend class DXFrameBufferManager;
-	friend class OGLFrameBufferManager;
 	CRenderTexture(int width, int height, RenderTextureInfo* pInfo, TextureUsage usage)
 	{
 		m_beingRendered = false;
@@ -119,41 +118,6 @@ public:
 protected:
 	MYLPDIRECT3DSURFACE m_pColorBufferSave;
 	MYLPDIRECT3DSURFACE m_pDepthBufferSave;
-};
-
-
-
-class COGLRenderTexture : public CRenderTexture
-{
-	// Haven't implemented yet
-public:
-	COGLRenderTexture(int width, int height, RenderTextureInfo* pInfo, TextureUsage usage);
-	~COGLRenderTexture();
-
-	bool SetAsRenderTarget(bool enable);
-	void LoadTexture(TxtrCacheEntry* pEntry);
-	void StoreToRDRAM(int infoIdx);
-
-#ifdef _DEBUG
-	void Display(int idx);
-#endif
-
-protected:
-	bool InitPBuffer(void);
-	void ShutdownPBuffer(void);
-
-	HPBUFFERARB m_hBuffer;
-	HDC m_hDC;
-	HGLRC m_hRC;
-
-	HDC m_savedDC;
-	HGLRC m_savedRC;
-
-	int		m_widthCreated;
-	int		m_heightCreated;
-
-
-	COGLTexture *m_pOGLTexture;
 };
 
 #endif
