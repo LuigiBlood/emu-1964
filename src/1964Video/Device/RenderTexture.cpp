@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "stdafx.h"
 
-
 CDXRenderTexture::CDXRenderTexture(int width, int height, RenderTextureInfo* pInfo, TextureUsage usage)
 : CRenderTexture(width, height, pInfo, usage)
 {
@@ -57,7 +56,8 @@ CDXRenderTexture::~CDXRenderTexture()
 
 bool CDXRenderTexture::SetAsRenderTarget(bool enable)
 {
-	if( m_usage != AS_RENDER_TARGET )	return false;
+	if( m_usage != AS_RENDER_TARGET )	
+		return false;
 
 	if( enable )
 	{

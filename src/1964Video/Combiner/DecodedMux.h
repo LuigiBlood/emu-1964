@@ -90,7 +90,7 @@ public:
 	bool m_bTexel0IsUsed;
 	bool m_bTexel1IsUsed;
 
-	int  m_maxConstants;	//CHECKME
+	int  m_maxConstants;
 	int  m_maxTextures;		// 1 or 2
 
 

@@ -581,8 +581,6 @@ void InitRenderBase()
 	gRSP.shadeMode=SHADE_SMOOTH;
 	gRDP.keyR=gRDP.keyG=gRDP.keyB=gRDP.keyA=gRDP.keyRGB=gRDP.keyRGBA = 0;
 	gRDP.fKeyA = 0;
-	gRSP.DKRCMatrixIndex = gRSP.dwDKRVtxAddr = gRSP.dwDKRMatrixAddr = 0;
-	gRSP.DKRBillBoard = false;
 
 	gRSP.fTexScaleX = 1/32.0f;
 	gRSP.fTexScaleY = 1/32.0f;
@@ -611,13 +609,6 @@ void InitRenderBase()
 	gRSP.real_clip_ratio_negy = 1;
 	gRSP.real_clip_ratio_posx = 1;
 	gRSP.real_clip_ratio_posy = 1;
-
-	gRSP.DKRCMatrixIndex=0;
-	gRSP.DKRVtxCount=0;
-	gRSP.DKRBillBoard = false;
-	gRSP.dwDKRVtxAddr=0;
-	gRSP.dwDKRMatrixAddr=0;
-
 
 	gRDP.geometryMode	= 0;
 	gRDP.otherModeL		= 0;
@@ -1400,8 +1391,23 @@ bool PrepareTriangle(uint32 dwV0, uint32 dwV1, uint32 dwV2)
 
 	return true;
 }
+bool AddTri(u32 v0, u32 v1, u32 v2)
+{
+	if (IsTriangleVisible(v0, v1, v2))
+	{
+		if (CRender::g_pRender->IsTextureEnabled())
+		{
+			PrepareTextures();
+			InitVertexTextureConstants();
+		}
 
+		CRender::g_pRender->SetCombinerAndBlender();
 
+		PrepareTriangle(v0, v1, v2);
+		return true;
+	}
+	return false;
+}
 
 // Returns TRUE if it thinks the triangle is visible
 // Returns FALSE if it is clipped
@@ -1589,6 +1595,10 @@ void ModifyVertexInfo(uint32 where, uint32 vertex, uint32 val)
 	DEBUGGER_PAUSE_AND_DUMP(NEXT_VERTEX_CMD,{TRACE0("Paused at ModVertex Cmd");});
 }
 
+extern u32 gDKRCMatrixIndex;
+extern u32 gDKRVtxCount;
+extern bool gDKRBillBoard;
+
 void ProcessVertexDataDKR(uint32 dwAddr, uint32 dwV0, uint32 dwNum)
 {
 	UpdateCombinedMatrix();
@@ -1596,24 +1606,24 @@ void ProcessVertexDataDKR(uint32 dwAddr, uint32 dwV0, uint32 dwNum)
 	uint32 pVtxBase = uint32(g_pRDRAMu8 + dwAddr);
 	g_pVtxBase = (FiddledVtx*)pVtxBase;
 
-	Matrix &matWorldProject = gRSP.DKRMatrixes[gRSP.DKRCMatrixIndex];
+	Matrix &matWorldProject(gRSP.DKRMatrixes[gDKRCMatrixIndex]);
 
 	uint32 i;
 	LONG nOff;
 
 	bool addbase=false;
-	if ((!gRSP.DKRBillBoard) || (gRSP.DKRCMatrixIndex != 2) )
+	if ((!gDKRBillBoard) || (gDKRCMatrixIndex != 2) )
 		addbase = false;
 	else
 		addbase = true;
 
-	if( addbase && gRSP.DKRVtxCount == 0 && dwNum > 1 )
+	if( addbase && gDKRVtxCount == 0 && dwNum > 1 )
 	{
-		gRSP.DKRVtxCount++;
+		gDKRVtxCount++;
 	}
 
-	LOG_UCODE("    ProcessVertexDataDKR, CMatrix = %d, Add base=%s", gRSP.DKRCMatrixIndex, gRSP.DKRBillBoard?"true":"false");
-	VTX_DUMP(TRACE2("DKR Setting Vertexes\nCMatrix = %d, Add base=%s", gRSP.DKRCMatrixIndex, gRSP.DKRBillBoard?"true":"false"));
+	LOG_UCODE("    ProcessVertexDataDKR, CMatrix = %d, Add base=%s", gDKRCMatrixIndex, gDKRBillBoard?"true":"false");
+	VTX_DUMP(TRACE2("DKR Setting Vertexes\nCMatrix = %d, Add base=%s", gDKRCMatrixIndex, gDKRBillBoard?"true":"false"));
 
 	nOff = 0;
 	uint32 end = dwV0 + dwNum;
@@ -1630,7 +1640,7 @@ void ProcessVertexDataDKR(uint32 dwAddr, uint32 dwV0, uint32 dwNum)
 		//else
 			D3DXVec3Transform(&g_vtxTransformed[i], (D3DXVECTOR3*)&g_vtxNonTransformed[i], &matWorldProject);	// Convert to w=1
 
-		if( gRSP.DKRVtxCount == 0 && dwNum==1 )
+		if( gDKRVtxCount == 0 && dwNum==1 )
 		{
 			gRSP.DKRBaseVec.x = g_vtxTransformed[i].x;
 			gRSP.DKRBaseVec.y = g_vtxTransformed[i].y;
@@ -1650,7 +1660,7 @@ void ProcessVertexDataDKR(uint32 dwAddr, uint32 dwV0, uint32 dwNum)
 		g_vecProjected[i].y = g_vtxTransformed[i].y * g_vecProjected[i].w;
 		g_vecProjected[i].z = g_vtxTransformed[i].z * g_vecProjected[i].w;
 
-		gRSP.DKRVtxCount++;
+		gDKRVtxCount++;
 
 		VTX_DUMP(TRACE5("vtx %d: %f, %f, %f, %f", i, 
 			g_vtxTransformed[i].x,g_vtxTransformed[i].y,g_vtxTransformed[i].z,g_vtxTransformed[i].w));
