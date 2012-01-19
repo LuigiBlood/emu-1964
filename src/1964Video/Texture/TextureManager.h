@@ -120,17 +120,13 @@ public:
 
 typedef struct TxtrCacheEntry
 {
-	TxtrCacheEntry()://pTexture(NULL),pEnhancedTexture(NULL),txtrBufIdx(0) {}
-	// CODE MODIFICATION
-	pTexture(NULL),pEnhancedTexture(NULL),pEnhancedTextureAlts(NULL),txtrBufIdx(0) {}
-	// /CODE MODIFICATION
+	TxtrCacheEntry(): pTexture(NULL),pEnhancedTexture(NULL),pEnhancedTextureAlts(NULL),txtrBufIdx(0) {}
 
 	~TxtrCacheEntry()
 	{
 		SAFE_DELETE(pTexture);
 		SAFE_DELETE(pEnhancedTexture);
 
-		// CODE MODIFICATION
 		for (int i = 0 ; i < iAltCount ; i++)
 		{
 			SAFE_DELETE(pEnhancedTextureAlts[i]);

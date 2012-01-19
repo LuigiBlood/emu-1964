@@ -694,43 +694,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Parser\RSP_GBI0.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_GBI1.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_GBI2.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_GBI2_ext.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_GBI_Others.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_GBI_Sprite2D.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Parser\RSP_Parser.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Parser\RSP_Parser.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_S2DEX.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parser\RSP_S2DEX.h"
 					>
 				</File>
 				<File
@@ -745,6 +713,78 @@
 					RelativePath=".\Parser\UcodeDefs.h"
 					>
 				</File>
+				<Filter
+					Name="Ucodes"
+					>
+					<File
+						RelativePath=".\Parser\RSP_GBI0.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Parser\RSP_GBI1.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Parser\RSP_GBI2.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Parser\RSP_GBI2_ext.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Parser\RSP_GBI_Others.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Parser\RSP_GBI_Sprite2D.h"
+						>
+					</File>
+					<Filter
+						Name="Custom Ucodes"
+						>
+						<File
+							RelativePath=".\Parser\RSP_Conker.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Parser\RSP_DKR.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Parser\RSP_GE.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Parser\RSP_LL.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Parser\RSP_PD.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Parser\RSP_RS.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Parser\RSP_S2DEX.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Parser\RSP_S2DEX.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Parser\RSP_SOTE.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Parser\RSP_WRUS.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
 			</Filter>
 		</Filter>
 		<File

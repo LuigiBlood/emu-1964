@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 typedef unsigned char				uint8;
 
 typedef signed char					s8;	
+typedef signed short				s16;
 typedef long						s32;
 typedef unsigned long				u32;
 typedef unsigned char				u8;

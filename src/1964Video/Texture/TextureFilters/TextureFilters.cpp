@@ -1685,7 +1685,6 @@ void LoadHiresTexture( TxtrCacheEntry &entry )
 
 }
 
-
 // CODE MODIFICATION
 bool lookForAlternatives( ExtTxtrInfo &ExtTexInfo, int* count, bool* shuffle, int* period, bool* synchronized) {
 	char infoFileName[1024];

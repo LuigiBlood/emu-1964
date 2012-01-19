@@ -122,8 +122,14 @@ public:
 
 	inline RenderShadeMode GetShadeMode() { return gRSP.shadeMode; }
 
-	void SetVtxTextureCoord(uint32 dwV, float tu, float tv)
+	inline void CopyVtx(uint32 dwSrc, uint32 dwDest)
 	{
+		g_fVtxTxtCoords[dwDest].x = g_fVtxTxtCoords[dwSrc].x;
+		g_fVtxTxtCoords[dwDest].y = g_fVtxTxtCoords[dwSrc].y;
+	}
+	inline void SetVtxTextureCoord(uint32 dwV, float tu, float tv)
+	{
+		
 		g_fVtxTxtCoords[dwV].x = tu;
 		g_fVtxTxtCoords[dwV].y = tv;
 	}

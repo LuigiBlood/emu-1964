@@ -89,7 +89,6 @@ bool D3DRender::ClearDeviceObjects()
 bool D3DRender::InitDeviceObjects()
 {
 	// We never change these
-
 	gD3DDevWrapper.SetRenderState( D3DRS_DITHERENABLE, TRUE ); // Re-enabled by Orkin - Makes 16-bit look nicer
 
 	// We do our own culling
