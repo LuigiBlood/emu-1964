@@ -122,8 +122,6 @@ D3DXVECTOR4	g_vtxNonTransformed[MAX_VERTS];
 D3DXVECTOR4	g_vecProjected[MAX_VERTS];
 D3DXVECTOR4	g_vtxTransformed[MAX_VERTS];
 #endif
-float		g_vtxProjected5[1000][5];
-float		g_vtxProjected5Clipped[2000][5];
 //uint32		g_dwVtxFlags[MAX_VERTS];			// Z_POS Z_NEG etc
 VECTOR2		g_fVtxTxtCoords[MAX_VERTS];
 uint32		g_dwVtxDifColor[MAX_VERTS];
@@ -652,7 +650,7 @@ void SetFogMinMax(float fMin, float fMax, float fMul, float fOffset)
 		gRSPfFogMax = fMax/500-1;
 	}
 
-	gRSPfFogDivider = 255/(gRSPfFogMax-gRSPfFogMin);
+	gRSPfFogDivider = 220/(gRSPfFogMax-gRSPfFogMin); //CHECKME 255 replace with 220, Aristotle claimed to of improved fog rendering and this is the only real thing that has changed?
 	CRender::g_pRender->SetFogMinMax(fMin, fMax);
 }
 
