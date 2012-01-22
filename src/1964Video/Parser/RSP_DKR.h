@@ -285,9 +285,11 @@ void RSP_DMA_Tri_DKR(Gfx *gfx)
 
 	for (u32 i = 0; i < dwNum; i++)
 	{
+		
 		uint32 dwV0 = tri->v0;
 		uint32 dwV1 = tri->v1;
 		uint32 dwV2 = tri->v2;
+
 		CRender::g_pRender->SetCullMode(!(tri->flag & 0x40), false);
 
 		TRI_DUMP(TRACE5("DMATRI: %d, %d, %d (%08X-%08X)", dwV0,dwV1,dwV2,(gfx->words.cmd0),(gfx->words.cmd1)));
@@ -313,6 +315,7 @@ void RSP_DMA_Tri_DKR(Gfx *gfx)
 		bTrisAdded = true;
 		PrepareTriangle(dwV0, dwV1, dwV2);
 		tri++;
+
 	}
 
 	if (bTrisAdded)	

@@ -98,7 +98,6 @@ bool D3DRender::InitDeviceObjects()
 	gD3DDevWrapper.SetRenderState(  D3DRS_AMBIENT, COLOR_RGBA(255,255,255,255) );
 	gD3DDevWrapper.SetRenderState( D3DRS_LIGHTING,	  FALSE);
 
-
 	gD3DDevWrapper.SetRenderState(D3DRS_ALPHABLENDENABLE,TRUE );
 	gD3DDevWrapper.SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	gD3DDevWrapper.SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
@@ -225,10 +224,11 @@ bool D3DRender::RenderFillRect(uint32 dwColor, float depth)
 
 void ApplyZBias(uint32 bias)
 {
-	float f1 = bias > 0 ? -0.002f : 0.0f;
-	float f2 = bias > 0 ? 1.0f : 0.0f;
-	gD3DDevWrapper.SetRenderState(D3DRS_DEPTHBIAS,*(DWORD*)(&f1));
-	gD3DDevWrapper.SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *(DWORD*)(&f2));
+	//Fix me - causes Z-fighting in Diddy Kong Racing
+	//float f1 = bias > 0 ? -0.005f : 0.0f;
+	//float f2 = bias > 0 ? 1.0f : 0.0f;
+	//gD3DDevWrapper.SetRenderState(D3DRS_DEPTHBIAS,*(DWORD*)(&f1));
+	//gD3DDevWrapper.SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *(DWORD*)(&f2));
 }
 
 void D3DRender::SetZBias(int bias)
