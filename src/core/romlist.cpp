@@ -919,7 +919,7 @@ LRESULT APIENTRY RomListDialog(HWND hDlg, unsigned message, WORD wParam, LONG lP
 				}
 
 				GetDlgItemText(hDlg, IDC_ROMOPTION_COMMENTS, romlist[rlstatus.selected_rom_index]->pinientry->Comments, 79);
-				GetDlgItemText(hDlg, IDC_ROMOPTION_ALTTITLE, romlist[rlstatus.selected_rom_index]->pinientry->Alt_Title, 79);
+				GetDlgItemText(hDlg, IDC_ROMOPTION_ALTTITLE, romlist[rlstatus.selected_rom_index]->pinientry->Alt_Title, 99);
 
 
 				RomList_UpdateNameAndComments(rlstatus.selected_rom_index);
