@@ -224,16 +224,16 @@ bool D3DRender::RenderFillRect(uint32 dwColor, float depth)
 
 void ApplyZBias(uint32 bias)
 {
-	//Fix me - causes Z-fighting in Diddy Kong Racing
-	//float f1 = bias > 0 ? -0.005f : 0.0f;
-	//float f2 = bias > 0 ? 1.0f : 0.0f;
-	//gD3DDevWrapper.SetRenderState(D3DRS_DEPTHBIAS,*(DWORD*)(&f1));
-	//gD3DDevWrapper.SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *(DWORD*)(&f2));
+
+	float f1 = bias > 0 ? -0.002f : 0.0f;
+	float f2 = bias > 0 ? 1.0f : 0.0f;
+	gD3DDevWrapper.SetRenderState(D3DRS_DEPTHBIAS,*(DWORD*)(&f1));
+	gD3DDevWrapper.SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *(DWORD*)(&f2));
 }
 
 void D3DRender::SetZBias(int bias)
 {
-	if (m_dwZBias != bias)
+	if (m_dwZBias != bias && options.enableHackForGames != HACK_FOR_DKR )
 	{
 		DEBUGGER_IF_DUMP(pauseAtNext, TRACE1("Set zbias = %d", bias));
 
