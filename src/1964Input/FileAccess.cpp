@@ -249,7 +249,11 @@ bool ProcessKey( DWORD dwKey, DWORD dwSection, LPCSTR pszLine, LPTSTR pszFFDevic
 		if (pController)
 			pController->fRawData = atoi(pszLine);
 		break;
-	case CHK_PAKTYPE:
+	case CHK_XINPUT:
+		if (pController)
+			pController->fXInput = atoi(pszLine);
+	break;
+ 	case CHK_PAKTYPE:
 		if (pController)
 			pController->PakType = atoi(pszLine);
 		break;
