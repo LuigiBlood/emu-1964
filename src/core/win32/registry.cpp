@@ -221,6 +221,7 @@ void ReadConfiguration( void)
 	defaultoptions.Use_TLB = USETLB_YES;
 	defaultoptions.Eeprom_size = EEPROMSIZE_4KB;
 	defaultoptions.Use_Register_Caching = USEREGC_YES;
+	defaultoptions.Counter_Factor = COUTERFACTOR_3;
 	defaultoptions.FPU_Hack = USEFPUHACK_YES;
 	defaultoptions.timing_Control = DELAY_DMA;
 	defaultoptions.Link_4KB_Blocks = USE4KBLINKBLOCK_YES;
@@ -333,6 +334,9 @@ void ReadConfiguration( void)
 
 	emuoptions.AutoFrameSkip =
 		REGISTRY_ReadDWORD( "AutoFrameSkip", FALSE);
+
+	emuoptions.AutoCF =
+		REGISTRY_ReadDWORD( "AutoCF", FALSE);
 
 	guioptions.pause_at_inactive =
 		REGISTRY_ReadDWORD( "PauseWhenInactive", TRUE);
@@ -516,6 +520,22 @@ int REGISTRY_WriteVISync()
 
 	dwData = emuoptions.SyncVI;
 	RegSetValueEx( hKey2, "SyncVI",  0, REG_DWORD, (LPBYTE) & dwData, 4);
+
+	REGISTRY_CloseConnection(&hKey1, &hKey2);
+	return TRUE;
+}
+
+//----------------------------------------------------------------
+int REGISTRY_WriteAutoCF()
+{
+	DWORD			dwData;
+	HKEY			hKey1 = NULL,
+	hKey2 = NULL;
+
+	REGISTRY_OpenConnection(&hKey1, &hKey2);
+
+	dwData = emuoptions.AutoCF;
+	RegSetValueEx( hKey2, "AutoCF",  0, REG_DWORD, (LPBYTE) & dwData, 4);
 
 	REGISTRY_CloseConnection(&hKey1, &hKey2);
 	return TRUE;

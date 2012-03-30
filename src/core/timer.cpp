@@ -27,8 +27,8 @@
 BOOL	CPUNeedToDoOtherTask = FALSE;
 BOOL	CPUNeedToCheckInterrupt = FALSE;
 BOOL	CPUNeedToCheckException = FALSE;
-//int		CounterFactor = COUTERFACTOR_1;
-float DOUBLE_COUNT=1.0f;
+int		CounterFactor = COUTERFACTOR_3;
+int     AutoCounterFactor = 3;
 
 AudioStatusType audioStatus;
 
@@ -102,8 +102,8 @@ int					Timer_Event_Count;
 #define NEW_COUNTER_TRACE_MACRO(macro)
 #define NEW_COUNTER_TRACE1(str, arg1)
 #endif
-//int VICounterFactors[9] = { 1, 1, 1, 2, 2, 3, 3, 4, 4 };
-//int CounterFactors[9] = { 1, 1, 2, 2, 4, 3, 6, 4, 8 };	/* 1 = half rate, 2 = full rate */
+int VICounterFactors[9] = { 1, 1, 1, 2, 2, 3, 3, 4, 4 };
+int CounterFactors[9] = { 1, 1, 2, 2, 4, 3, 6, 4, 8 };	/* 1 = half rate, 2 = full rate */
 
 /*
  =======================================================================================================================
@@ -272,8 +272,7 @@ void Add_New_Timer_Event(uint64 newtimer, int type)
 			 * ok, now I have the block size, where am I in the block, I dunno, guess I am in
 			 * the middle to end of the block
 			 */
-			//new_target = new_target + blksize * VICounterFactors[CounterFactor];
-			new_target = new_target + blksize;
+			new_target = new_target + blksize * VICounterFactors[CounterFactor];
 		}
 	}
 
@@ -727,7 +726,7 @@ void Check_VI_and_COMPARE_Interrupt(void)
 	Set_Countdown_Counter();
 }
 
-
+#define DOUBLE_COUNT	1
 
 /*
  =======================================================================================================================
@@ -738,8 +737,8 @@ uint32 Get_COUNT_Register(void)
 	return(uint32)
 		(
 			(current_counter + counter_leap - r.r_.countdown_counter) 
-		*	1 /
-			1 /
+		*	CounterFactors[CounterFactor] /
+			VICounterFactors[CounterFactor] /
 			DOUBLE_COUNT //
 			//rand() %
 			//4
@@ -762,8 +761,8 @@ void Set_COMPARE_Timer_Event(void)
 		Add_New_Timer_Event
 		(
 			((uint64) (compare_reg - count_reg)) *
-				1 /
-				1 *
+				VICounterFactors[CounterFactor] /
+				CounterFactors[CounterFactor] *
 				DOUBLE_COUNT,
 			COMPARE_COUNTER_TYPE
 		);
@@ -773,8 +772,8 @@ void Set_COMPARE_Timer_Event(void)
 		Add_New_Timer_Event
 		(
 			((uint64) (0x100000000 + compare_reg - count_reg)) *
-				1 /
-				1 *
+				VICounterFactors[CounterFactor] /
+				CounterFactors[CounterFactor] *
 				DOUBLE_COUNT,
 			COMPARE_COUNTER_TYPE
 		);
@@ -801,8 +800,8 @@ void Init_Count_Down_Counters(void)
     
     Init_Timer_Event_List();
 	current_counter = gHWS_COP0Reg[COUNT] *
-		1 /
-		1 *
+		VICounterFactors[CounterFactor] /
+		CounterFactors[CounterFactor] *
 		DOUBLE_COUNT;
 	counter_leap = 0;
 	r.r_.countdown_counter = 0;
@@ -818,8 +817,8 @@ void Init_Count_Down_Counters(void)
 					gHWS_COP0Reg[COMPARE] -
 					gHWS_COP0Reg[COUNT]
 				) *
-						1 /
-						1 *
+						VICounterFactors[CounterFactor] /
+						CounterFactors[CounterFactor] *
 						DOUBLE_COUNT,
 				COMPARE_COUNTER_TYPE
 			);
@@ -833,8 +832,8 @@ void Init_Count_Down_Counters(void)
 					gHWS_COP0Reg[COMPARE] -
 					gHWS_COP0Reg[COUNT]
 				) *
-						1 /
-						1 *
+						VICounterFactors[CounterFactor] /
+						CounterFactors[CounterFactor] *
 						DOUBLE_COUNT,
 				COMPARE_COUNTER_TYPE
 			);
@@ -848,8 +847,8 @@ void Init_Count_Down_Counters(void)
 				0x100000000 -
 				gHWS_COP0Reg[COUNT]
 			) *
-					1 /
-					1 *
+					VICounterFactors[CounterFactor] /
+					CounterFactors[CounterFactor] *
 					DOUBLE_COUNT,
 			COMPARE_COUNTER_TYPE
 		);
@@ -874,8 +873,6 @@ void Init_VI_Counter(int tv_type)
 		max_vi_count = NTSC_VI_MAGIC_NUMBER;	/* 883120;//813722;//813196;//NTSC_VI_MAGIC_NUMBER; */
 		max_vi_lines = NTSC_MAX_VI_LINE;
 	}
-	max_vi_count*=DOUBLE_COUNT;
-	
 
 	vi_count_per_line = max_vi_count / max_vi_lines;
 }
@@ -887,7 +884,6 @@ void Init_VI_Counter(int tv_type)
 void Set_VI_Counter_By_VSYNC(void)
 {
 	max_vi_count = (VI_V_SYNC_REG + 1) * 1500;
-	max_vi_count*=DOUBLE_COUNT;
 	if((VI_V_SYNC_REG % 1) != 0)
 	{
 		max_vi_count -= 38;
@@ -895,5 +891,4 @@ void Set_VI_Counter_By_VSYNC(void)
 
 	max_vi_lines = VI_V_SYNC_REG + 1;
 	vi_count_per_line = max_vi_count / max_vi_lines;
-	
 }

@@ -93,6 +93,7 @@ BOOL __cdecl RomListReadDirectory(const char *spath, BOOL usecached)
 	entry.Save_Type = DEFAULT_SAVETYPE;
 	entry.Use_TLB = 0;
 	entry.Eeprom_size = 0;
+	entry.Counter_Factor = 0;
 	entry.Use_Register_Caching = 0;
 	entry.FPU_Hack = 0;
 	entry.timing_Control = DELAY_DMA;
@@ -412,7 +413,8 @@ void __cdecl RomListOpenRom(int index, BOOL RunThisRom)
 			EnableButton(ID_BUTTON_ROM_PROPERTIES, TRUE);
 			EnableMenuItem(gui.hMenu1964main, ID_FILE_CHEAT, MF_ENABLED);
 
-			if( RunThisRom)
+
+			if( RunThisRom || Kaillera_Is_Running == TRUE)
 			{
 				Play(emuoptions.auto_full_screen); /* autoplay */
 			}
@@ -683,6 +685,14 @@ LRESULT APIENTRY RomListDialog(HWND hDlg, unsigned message, WORD wParam, LONG lP
 			);
 		ROM_OPTION_SET_LISTBOX
 			(
+			IDC_ROMOPTION_CF,
+			9,
+			defaultoptions.Counter_Factor,
+			romlist[rlstatus.selected_rom_index]->pinientry->Counter_Factor,
+			counter_factor_names
+			);
+		ROM_OPTION_SET_LISTBOX
+			(
 			IDC_ROMOPTION_FPUHACK,
 			3,
 			defaultoptions.FPU_Hack,
@@ -839,6 +849,14 @@ LRESULT APIENTRY RomListDialog(HWND hDlg, unsigned message, WORD wParam, LONG lP
 					(
 						hDlg,
 						IDC_ROMOPTION_USEREGC,
+						CB_GETCURSEL,
+						0,
+						0
+					) + 1;
+				romlist[rlstatus.selected_rom_index]->pinientry->Counter_Factor = SendDlgItemMessage
+					(
+						hDlg,
+						IDC_ROMOPTION_CF,
 						CB_GETCURSEL,
 						0,
 						0
@@ -1063,8 +1081,6 @@ BOOL WINAPI InitListViewItems(HWND hwndLV, int Sorting)
 
     SendMessage(gui.hwndRomList, LVM_SETTEXTCOLOR, 0, 0x000000);
     SendMessage(gui.hwndRomList, LVM_SETBKCOLOR, 0, 0xffffff);
-	//SetWindowTheme(gui.hwndRomList, L"Explorer", NULL);
-
 
 	if( guioptions.display_boxart )
 	{
@@ -1426,7 +1442,7 @@ void __cdecl EnableButton( int	nID,
 void  __cdecl SetupToolBar()
 {
 		TBADDBITMAP tbab;
-        TBBUTTON tbb[15];
+         TBBUTTON tbb[16];
 
       	gui.hToolBar = CreateWindowEx
 		(	
@@ -1471,7 +1487,7 @@ void  __cdecl SetupToolBar()
 		 tbb[3].iBitmap = 5;
          tbb[3].fsState = TBSTATE_ENABLED;
          tbb[3].fsStyle = TBSTYLE_CHECKGROUP;
-         tbb[3].idCommand = ID_BUTTON_PAUSE; 
+         tbb[3].idCommand = ID_BUTTON_PAUSE;
 
 		 tbb[4].iBitmap = 6;
          tbb[4].fsState = TBSTATE_ENABLED;
@@ -1515,21 +1531,31 @@ void  __cdecl SetupToolBar()
          if (emuoptions.SyncVI)
              tbb[12].fsState|= TBSTATE_CHECKED;
          tbb[12].fsStyle = TBSTYLE_CHECK;
-         tbb[12].idCommand = ID_BUTTON_SYNC_SPEED;      
-       
-		 tbb[13].iBitmap = 10;
+         tbb[12].idCommand = ID_BUTTON_SYNC_SPEED;
+
+         
+		 tbb[13].iBitmap = 12;
          tbb[13].fsState = TBSTATE_ENABLED;
          //AutoFameskip is set before this function is called.
-         if (emuoptions.AutoFrameSkip)
+         if (emuoptions.AutoCF)
              tbb[13].fsState|= TBSTATE_CHECKED;
          tbb[13].fsStyle = TBSTYLE_CHECK;
-         tbb[13].idCommand = ID_BUTTON_FRAMESKIP;
+         tbb[13].idCommand = ID_BUTTON_AUTO_CF;
+         
+         
+		 tbb[14].iBitmap = 10;
+         tbb[14].fsState = TBSTATE_ENABLED;
+         //AutoFameskip is set before this function is called.
+         if (emuoptions.AutoFrameSkip)
+             tbb[14].fsState|= TBSTATE_CHECKED;
+         tbb[14].fsStyle = TBSTYLE_CHECK;
+         tbb[14].idCommand = ID_BUTTON_FRAMESKIP;
          
                 
-         tbb[14].iBitmap = 1;
-         tbb[14].fsState = TBSTATE_ENABLED;
-         tbb[14].fsStyle = TBSTYLE_BUTTON;
-         tbb[14].idCommand = ID_BUTTON_FULL_SCREEN;
+         tbb[15].iBitmap = 1;
+         tbb[15].fsState = TBSTATE_ENABLED;
+         tbb[15].fsStyle = TBSTYLE_BUTTON;
+         tbb[15].idCommand = ID_BUTTON_FULL_SCREEN;
 
 
          

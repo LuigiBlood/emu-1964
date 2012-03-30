@@ -5150,7 +5150,7 @@ void Div(OP_PARAMS)
 	SetTarget(12);
 	POP_RegIfMapped(Reg_ECX);
 
-	SAVE_OP_COUNTER_INCREASE(PCLOCKDIV * 2);
+	SAVE_OP_COUNTER_INCREASE(PCLOCKDIV * 2 * VICounterFactors[CounterFactor]);
 
 }
 
@@ -5238,7 +5238,7 @@ void divu(OP_PARAMS)
 	SetTarget(0);
 	POP_RegIfMapped(Reg_ECX);
 
-	SAVE_OP_COUNTER_INCREASE(PCLOCKDIV * 2);
+	SAVE_OP_COUNTER_INCREASE(PCLOCKDIV * 2 * VICounterFactors[CounterFactor]);
 }
 
 void Negate(_u32 OperandSize, _u32 reg)

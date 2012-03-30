@@ -60,7 +60,7 @@ uint32 SetException_Interrupt(uint32 pc)
 	uint32	newpc = 0x80000180;
 	/*~~~~~~~~~~~~~~~~~~~~~~~*/
 
-	Count_Down(4);
+	Count_Down(4 * VICounterFactors[CounterFactor]);
 
 	if(CPUdelay != 0)				/* are we in branch delay slot? */
 	{								/* yes */
@@ -292,6 +292,247 @@ void Handle_DPC(uint32 value)
 	*/
 }
 
+extern unsigned int cpuIdlePercentages[4];
+extern int cpuIdlePercentageIdx;
+BOOL newSecond = FALSE;
+void Set_AutoCF()
+{
+	BOOL oldViFrameSkip;
+	BOOL oldCounterFactor;
+	int cpuIdlePercentage=0;
+	int i;
+
+	if( newSecond == FALSE )
+		return;
+	else
+		newSecond = FALSE;
+
+	// Only change AutoCF and AutoFrameSkip setting at a second boundary
+
+	for( i=0; i<4; i++ )
+	{
+		cpuIdlePercentage += cpuIdlePercentages[i];
+	}
+	cpuIdlePercentage += cpuIdlePercentages[cpuIdlePercentageIdx];	// extra weight for the last second
+	cpuIdlePercentage /= 5;	// Average the idle percentage over the past 4 seconds
+
+	oldViFrameSkip = emustatus.viframeskip;
+	oldCounterFactor = CounterFactor;
+
+
+	/* Possible combinations:                                               */
+	/*
+	 * 1) AutoCF=On, AutoFrameSkip=On
+	 *     CF=5,  emustatus.viframeskip=1    -----> (1)  ^
+	 *     CF=5,  emustatus.viframeskip=0    -----> (2)  |
+	 *     CF=3,  emustatus.viframeskip=0    -----> (3)  |
+	 *     CF=1,  emustatus.viframeskip=0    -----> (4)  |
+	 *
+	 * 2) AutoCF=On, AutoFrameSkip=Off
+	 *     CF=5     ----> (1)  ^
+	 *     CF=3     ----> (2)  |
+	 *     CF=1     ----> (3)  |
+	 *
+	 * 3) AutoCF=Off,AutoFrameSkip=On
+	 *     emustatus.viframeskip=1     ----> (1)
+	 *     emustatus.viframeskip=0     ----> (2)
+	 *
+	 * 4) Both off, do nothing
+	 *	
+	 */
+
+	if( emuoptions.AutoCF && emuoptions.AutoFrameSkip )
+	{
+		// Case 1, both features are on
+
+		if( oldViFrameSkip == 1 )
+		{
+			if( oldCounterFactor != 5 )
+			{
+				// We will check again frame rate at the next second
+				emustatus.viframeskip = 0;
+				AutoCounterFactor = VICounterFactors[5];
+				CounterFactor = 5;
+			}
+			else if( cpuIdlePercentage > 15 || vips > vips_speed_limits[MAXFPS_AUTO_SYNC]*1.1f )
+			{
+				if( cpuIdlePercentage > 50 )
+				{
+					emustatus.viframeskip = 0;
+					AutoCounterFactor = VICounterFactors[3];
+					CounterFactor = 3;
+				}
+				else
+				{
+					emustatus.viframeskip = 0;
+					AutoCounterFactor = VICounterFactors[5];
+					CounterFactor = 5;
+				}
+			}
+			else
+			{
+				AutoCounterFactor = VICounterFactors[5];
+				CounterFactor = 5;
+			}
+		}
+		else
+		{
+			// oldViFrameSkip = 0
+			if( oldCounterFactor > 4 )
+			{
+				if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.85f )
+				{
+					emustatus.viframeskip = 1;
+					AutoCounterFactor = VICounterFactors[5];
+					CounterFactor = 5;
+				}
+
+//This one is too slow                
+//				else if (cpuIdlePercentage > 50 )
+//				{
+//					AutoCounterFactor = VICounterFactors[1];
+//					CounterFactor = 1;
+//				}
+				else if (cpuIdlePercentage > 20 )
+				{
+					AutoCounterFactor = VICounterFactors[3];
+					CounterFactor = 3;
+				}
+				else
+				{
+					AutoCounterFactor = VICounterFactors[5];
+					CounterFactor = 5;
+				}
+			}
+			else if( oldCounterFactor >2 )
+			{
+				if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.6f )
+				{
+					emustatus.viframeskip = 1;
+					AutoCounterFactor = VICounterFactors[5];
+					CounterFactor = 5;
+				}
+				else if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.9f )
+				{
+					AutoCounterFactor = VICounterFactors[5];
+					CounterFactor = 5;
+				}
+//Too slow
+//				else if ( cpuIdlePercentage > 20 )
+//				{
+//					AutoCounterFactor = VICounterFactors[1];
+//					CounterFactor = 1;
+//				}
+				else
+				{
+					AutoCounterFactor = VICounterFactors[3];
+					CounterFactor = 3;
+				}
+			}
+			else
+			{
+				if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.4f )
+				{
+					emustatus.viframeskip = 1;
+					AutoCounterFactor = VICounterFactors[5];
+					CounterFactor = 5;
+				}
+				else if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.6f )
+				{
+					AutoCounterFactor = VICounterFactors[5];
+					CounterFactor = 5;
+				}
+				else if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.9f )
+				{
+					AutoCounterFactor = VICounterFactors[3];
+					CounterFactor = 3;
+				}
+//Too slow
+//				else
+//				{
+//					AutoCounterFactor = VICounterFactors[1];
+//					CounterFactor = 1;
+//				}
+			}
+		}
+	}
+	else if( emuoptions.AutoCF )
+	{
+		// case 2: AutoCF=on, AutoFrameSkip=Off
+
+		if( oldCounterFactor > 4 )
+		{
+			if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.9f )
+			{
+				// We cannot do anything else to speed up
+				AutoCounterFactor = VICounterFactors[5];
+				CounterFactor = 5;
+			}
+			else if (cpuIdlePercentage > 20 )
+			{
+				AutoCounterFactor = VICounterFactors[3];
+				CounterFactor = 3;
+			}
+		}
+		else if( oldCounterFactor >2 )
+		{
+			if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.9f )
+			{
+				AutoCounterFactor = VICounterFactors[5];
+				CounterFactor = 5;
+			}
+//Too slow
+//			else if ( cpuIdlePercentage > 20 )
+//			{
+//				AutoCounterFactor = VICounterFactors[1];
+//				CounterFactor = 1;
+//			}
+			else
+			{
+				AutoCounterFactor = VICounterFactors[3];
+				CounterFactor = 3;
+			}
+		}
+		else
+		{
+			if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.6f )
+			{
+				AutoCounterFactor = VICounterFactors[5];
+				CounterFactor = 5;
+			}
+			else if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.9f )
+			{
+				AutoCounterFactor = VICounterFactors[3];
+				CounterFactor = 3;
+			}
+//Too slow
+//			else
+//			{
+//				AutoCounterFactor = VICounterFactors[1];
+//				CounterFactor = 1;
+//			}
+		}
+	}
+	else if( emuoptions.AutoFrameSkip )
+	{
+		// case 3: AutoCF=off, AutoFrameSkip=on
+
+		if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.85f )
+		{
+			emustatus.viframeskip = 1;
+		}
+		else if( cpuIdlePercentage > 15 || vips > vips_speed_limits[MAXFPS_AUTO_SYNC]*1.1f )
+		{
+			emustatus.viframeskip = 0;
+		}
+	}
+	else
+	{
+		// Both features are off
+	}
+}
+
+
 /*
  =======================================================================================================================
     Process a Signal Processor task. This is where we call audio/video plugin execution routines.
@@ -336,28 +577,15 @@ void RunSPTask(void)
 				}
 				else
 				{
-					extern float DOUBLE_COUNT;
 					DWORD cycleUsed = VIDEO_ProcessDList();
 					SPcycleUsed = cycleUsed&0xFFFF;
 					DPcycleUsed = cycleUsed>>16;
-
-					if(DOUBLE_COUNT>1.0f)
-					{
-						SPcycleUsed/=(DWORD)DOUBLE_COUNT;
-						DPcycleUsed/=(DWORD)DOUBLE_COUNT;
-					}
-					else if(DOUBLE_COUNT<1.0f)
-					{
-						SPcycleUsed>>=1;
-						DPcycleUsed>>=1;
-					}
-
 				}
 			}
 
 			emustatus.DListCount++;
 			DPC_STATUS_REG = 0x801; /* Makes Banjo Kazooie work - Azimer */
-			//		if((MI_INTR_REG_R & MI_INTR_DP) != 0) Trigger_DPInterrupt();
+	//		if((MI_INTR_REG_R & MI_INTR_DP) != 0) Trigger_DPInterrupt();
 		}
 		DEBUG_SP_TASK_MACRO(TRACE0("SP GRX Task finished"));
 		break;
@@ -379,6 +607,16 @@ void RunSPTask(void)
 
 			emustatus.AListCount++;
 
+			if( Kaillera_Thread_Is_Running )
+			{
+				/* set the interrupt to fire */
+				(MI_INTR_REG_R) |= MI_INTR_AI;
+				if((MI_INTR_MASK_REG_R) & MI_INTR_AI)
+				{
+					SET_EXCEPTION(EXC_INT) gHWS_COP0Reg[CAUSE] |= CAUSE_IP3;
+					HandleInterrupts(0x80000180);
+				}
+			}
 		}
 
 		__except(NULL, EXCEPTION_EXECUTE_HANDLER)
@@ -500,6 +738,7 @@ void Trigger_AIInterrupt(void)
 		HandleInterrupts(0x80000180);
 	}
 
+	//KAILLERA_LOG(fprintf(ktracefile, "AI at VI=%d, compare=%08X\n", viTotalCount, Get_COUNT_Register()));
 }
 
 /*
@@ -524,6 +763,7 @@ void Trigger_CompareInterrupt(void)
 	SET_EXCEPTION(EXC_INT) gHWS_COP0Reg[CAUSE] |= CAUSE_IP8;
 
 	HandleInterrupts(0x80000180);
+	//KAILLERA_LOG(fprintf(ktracefile, "CI at VI=%d, compare=%08X\n", viTotalCount, Get_COUNT_Register()));
 }
 
 /*
@@ -540,6 +780,7 @@ void Trigger_DPInterrupt(void)
 		SET_EXCEPTION(EXC_INT) gHWS_COP0Reg[CAUSE] |= CAUSE_IP3;
 		HandleInterrupts(0x80000180);
 	}
+	//KAILLERA_LOG(fprintf(ktracefile, "DP at VI=%d, compare=%08X\n", viTotalCount, Get_COUNT_Register()));
 }
 
 /*
@@ -555,6 +796,7 @@ extern	BOOL		screenIsUpdated;
 
 void Trigger_VIInterrupt(void)
 {
+	//KAILLERA_LOG(fprintf(ktracefile, "VI at compare=%08X\n", Get_COUNT_Register() ));
 
 	{
 		if( !screenIsUpdated )	// If screen is not updated by write to VIOrigin register
@@ -675,7 +917,7 @@ void Trigger_VIInterrupt(void)
 		vi_field_number = 0;
 	}
 
-	if(emuoptions.auto_apply_cheat_code)
+	if(emuoptions.auto_apply_cheat_code || kailleraAutoApplyCheat)
 	{
 		// Apply the hack codes
 #ifndef CHEATCODE_LOCK_MEMORY
@@ -683,6 +925,8 @@ void Trigger_VIInterrupt(void)
 #endif
 	}
 
+	Set_AutoCF();
+    
 	/* set the interrupt to fire */
 	(MI_INTR_REG_R) |= MI_INTR_VI;
 	if((MI_INTR_MASK_REG_R) & MI_INTR_MASK_VI)
@@ -708,6 +952,7 @@ void Trigger_SIInterrupt(void)
 		SET_EXCEPTION(EXC_INT) gHWS_COP0Reg[CAUSE] |= CAUSE_IP3;
 		HandleInterrupts(0x80000180);
 	}
+	//KAILLERA_LOG(fprintf(ktracefile, "SI at VI=%d, compare=%08X\n", viTotalCount, Get_COUNT_Register()));
 }
 
 /*
@@ -724,6 +969,7 @@ void Trigger_PIInterrupt(void)
 		SET_EXCEPTION(EXC_INT) gHWS_COP0Reg[CAUSE] |= CAUSE_IP3;
 		HandleInterrupts(0x80000180);
 	}
+	//KAILLERA_LOG(fprintf(ktracefile, "PI at VI=%d, compare=%08X\n", viTotalCount, Get_COUNT_Register()));
 }
 
 /*
@@ -740,6 +986,7 @@ void Trigger_SPInterrupt(void)
 		SET_EXCEPTION(EXC_INT) gHWS_COP0Reg[CAUSE] |= CAUSE_IP3;
 		HandleInterrupts(0x80000180);
 	}
+	//KAILLERA_LOG(fprintf(ktracefile, "SP at VI=%d, compare=%08X\n", viTotalCount, Get_COUNT_Register()));
 }
 
 /*

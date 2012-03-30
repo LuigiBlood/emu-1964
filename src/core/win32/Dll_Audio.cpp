@@ -412,6 +412,11 @@ void AUDIO_AiUpdate(BOOL update)
 	{
 		/* DisplayError("%s: Test box is not available for this plug-in.", "Audio Plugin"); */
 	}
+
+	if( Kaillera_Is_Running )
+	{
+		Trigger_AIInterrupt();
+	}
 }
 
 /*

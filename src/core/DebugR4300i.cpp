@@ -80,6 +80,7 @@ void init_debug_options(void)
 	debugoptions.debug_sp_dma = 0;
 	debugoptions.debug_si_dma = 0;
 	debugoptions.debug_pi_dma = 1;
+	debugoptions.debug_netplay = 1;
 	debugoptions.debug_si_mempak = 1;
 	debugoptions.debug_dump_mempak = 0;
 	debugoptions.debug_tlb = 1;
@@ -102,6 +103,9 @@ void init_debug_options(void)
 	debugoptions.debug_exception_services = 0;
 	debugoptions.debug_framebuffer_rw = 0;
 }
+
+
+char	tracemessage[256];	/* message buffer to display message into debug box */
 
 void	RefreshDebugger(void);
 char	op_str[0xFF];
@@ -2084,7 +2088,7 @@ void debug_r4300i_COP1_sqrt_d(uint32 Instruction)
  */
 void debug_r4300i_COP1_sub_s(uint32 Instruction)
 {
-	//DBGPRINT_FD_FS_FT("SUB.S   ");
+	DBGPRINT_FD_FS_FT("SUB.S   ");
 };
 
 /*
@@ -2093,7 +2097,7 @@ void debug_r4300i_COP1_sub_s(uint32 Instruction)
  */
 void debug_r4300i_COP1_sub_d(uint32 Instruction)
 {
-	//DBGPRINT_FD_FS_FT("SUB.D   ");
+	DBGPRINT_FD_FS_FT("SUB.D   ");
 };
 
 /*

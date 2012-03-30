@@ -35,6 +35,7 @@ typedef struct
 	char	InputPlugin[80];
 	char	VideoPlugin[80];
 	char	RSPPlugin[80];
+	char	NetplayPlugin[80];
 } RegSettingsTyp;
 
 extern RegSettingsTyp	gRegSettings;

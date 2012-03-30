@@ -571,7 +571,7 @@ BOOL CodeList_ApplyAllCode(enum APPLYCHEATMODE mode)
 	if( IsBooting && mode != BOOTUPONCE ) 
 		return FALSE;
 
-	if(emuoptions.auto_apply_cheat_code)
+	if( (emuoptions.auto_apply_cheat_code && Kaillera_Is_Running == FALSE) || (Kaillera_Is_Running && kailleraAutoApplyCheat) )
 	{
 		for(i = 0; i < codegroupcount; i++)
 		{

@@ -170,7 +170,7 @@ void DMA_PI_MemCopy_From_DRAM_To_Cart(void)
 
 	PIDMASourceAddress = (PI_DRAM_ADDR_REG & 0x00FFFFFF) | 0x80000000;
 	PIDMATargetAddress = (PI_CART_ADDR_REG & 0x1FFFFFFF) | 0x80000000;
-	PIDMACurrentPosition = 0;
+	PIDMACurrentPosition = 0;;
 	PIDMALength = (PI_RD_LEN_REG & 0x00FFFFFF) + 1;
 
 	DEBUG_PI_DMA_MACRO(
@@ -340,7 +340,7 @@ void DMA_PI_MemCopy_From_Cart_To_DRAM(void)
 		return;
 	}
 
-	PIDMACurrentPosition = 0;
+	PIDMACurrentPosition = 0;;
 	PIDMALength = len;
 
 	/*
@@ -360,7 +360,7 @@ void DMA_PI_MemCopy_From_Cart_To_DRAM(void)
 		{
 			/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 			register uint32 addr = PIDMATargetAddress;
-			register int	i = -(__int32) PIDMALength;
+			register int	i = -(__int32) PIDMALength;;
 			/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 			/* Align to DWORD boundary */
@@ -556,7 +556,7 @@ void DMA_MemCopy_DRAM_To_SP(int WasCalledByRSP)
 		0x80000000;
 
 		/* SPDMATargetAddress = sp_mem_addr_reg; */
-		SPDMACurrentPosition = 0;
+		SPDMACurrentPosition = 0;;
 
 		SP_DMA_BUSY_REG = 1;
 		SP_STATUS_REG |= SP_STATUS_DMA_BUSY;
@@ -672,7 +672,7 @@ void DMA_MemCopy_SP_to_DRAM(int WasCalledByRSP)
 		SPDMASourceAddress = SP_MEM_ADDR_REG;
 		SPDMATargetAddress = SP_DRAM_ADDR_REG & 0x00FFFFFF |
 		0x80000000;
-		SPDMACurrentPosition = 0;
+		SPDMACurrentPosition = 0;;
 
 		SP_DMA_BUSY_REG = 1;
 		SP_STATUS_REG |= SP_STATUS_DMA_BUSY;
@@ -731,6 +731,7 @@ void Do_DMA_MemCopy_SI_To_DRAM(void)
 		/* Skip this DMA */
 		SI_STATUS_REG |= SI_STATUS_INTERRUPT;
 		Trigger_SIInterrupt();
+		//KAILLERA_LOG(fprintf(ktracefile, "SI at pos #1 at compare = %08X\n", Get_COUNT_Register()));
 
 		return;
 	}
@@ -808,6 +809,7 @@ void Do_DMA_MemCopy_SI_To_DRAM(void)
 	EXTRA_DMA_TIMING(64);
 	SI_STATUS_REG |= SI_STATUS_INTERRUPT;
 	Trigger_SIInterrupt();
+	//KAILLERA_LOG(fprintf(ktracefile, "SI at pos #2 at compare = %08X\n", Get_COUNT_Register()));
 
 }
 
@@ -864,6 +866,7 @@ void Do_DMA_MemCopy_DRAM_to_SI(void)
 		/* Skip this DMA */
 		SI_STATUS_REG |= SI_STATUS_INTERRUPT;
 		Trigger_SIInterrupt();
+		//KAILLERA_LOG(fprintf(ktracefile, "SI at pos #3 at compare = %08X\n", Get_COUNT_Register()));
 		return;
 	}
 
@@ -927,7 +930,10 @@ void Do_DMA_MemCopy_DRAM_to_SI(void)
 	}
 
 	EXTRA_DMA_TIMING(64);
+
+	gHWS_COP0Reg[COUNT] = Get_COUNT_Register();		// Need this for netplay synchronization
 	SI_STATUS_REG |= SI_STATUS_INTERRUPT;
+	//KAILLERA_LOG(fprintf(ktracefile, "SI at pos #4 at compare = %08X\n", Get_COUNT_Register()));
 	Trigger_SIInterrupt();
 }
 
@@ -1127,5 +1133,5 @@ void DynDoDMASegment(void)
  */
 void DMAIncreaseTimer(uint32 val)
 {
-	Count_Down(val / 2);	/* assume each pclock will transfer 4 bytes */
+	Count_Down(val * VICounterFactors[CounterFactor] / 2);	/* assume each pclock will transfer 4 bytes */
 }
