@@ -47,6 +47,7 @@ __cdecl
 Play(BOOL WithFullScreen);
 
 void				Stop(void);
+void				KailleraPlay(void);
 void				OpenROM(void);
 void				CloseROM(void);
 void				ChangeDirectory(void);
@@ -60,6 +61,7 @@ void				EnableStateMenu(void);
 void				DisableStateMenu(void);
 void				PrepareBeforePlay(int IsFullScreen);
 void				KillCPUThread(void);
+void				SetCounterFactor(int);
 void				SetCodeCheckMethod(int);
 void				InitPluginData(void);
 void				Set_1964_Directory(void);

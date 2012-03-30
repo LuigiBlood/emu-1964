@@ -16,8 +16,6 @@
 // Windows Header Files:
 #include <windows.h>
 
-#define BUILD_NUMBER "1.2"
-
 // TODO: reference additional headers your program requires here
 #include <process.h>
 #include <commdlg.h>
@@ -57,6 +55,7 @@
 #include "gamesave.h"
 #include "fileio.h"
 #include "FrameBuffer.h"
+#include "kaillera/kaillera.h"
 #include "zlib/unzip.h"
 #include "Registers.h"
 

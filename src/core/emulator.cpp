@@ -195,7 +195,7 @@ void ResumeEmulator(int action_after_pause)
 	emustatus.action_after_resume = action_after_pause;
 
 	/* Apply the hack codes */
-	if( emuoptions.auto_apply_cheat_code )
+	if( emuoptions.auto_apply_cheat_code || kailleraAutoApplyCheat )
 	{
 		CodeList_ApplyAllCode(INGAME);
 #ifdef CHEATCODE_LOCK_MEMORY
@@ -289,6 +289,7 @@ void StopEmulator(void)
 		{
 			RSPRomClosed();
 		}
+		//netplay_rom_closed();
 	}
 
 	// Double confirm the video is closed. This line won't matter if the VIDEO_RomClosed is already closed
@@ -422,6 +423,7 @@ void InitEmu(void)
 	{
 		VIDEO_RomOpen();
 		CONTROLLER_RomOpen();
+		//netplay_rom_open();
 	}
     
 
@@ -439,6 +441,8 @@ void N64_Boot(void)
 	uint32	bootaddr = (*(uint32 *) (gMS_ROM_Image + 8) & 0x007FFFFF) + 0x80000000;
     static int remember_debug_opcode = 0;
 
+   
+	SetCounterFactor(CounterFactor);
 	emustatus.Emu_Is_Running = TRUE;
 	IsBooting = TRUE;
 
@@ -505,7 +509,7 @@ void N64_Boot(void)
 		}
 	}
 
-	if(emuoptions.auto_apply_cheat_code)
+	if(emuoptions.auto_apply_cheat_code || kailleraAutoApplyCheat)
 	{
 		CodeList_ApplyAllCode(BOOTUPONCE);
 #ifdef CHEATCODE_LOCK_MEMORY
@@ -782,7 +786,7 @@ _DoOtherTask:
 		}
 	}
 
-	r.r_.countdown_counter--;
+	r.r_.countdown_counter -= VICounterFactors[CounterFactor];
 	goto _DoOtherTask;
 
 out:
@@ -1048,7 +1052,7 @@ void InterpreterStepCPU(void)
 		) CPUNeedToCheckException = FALSE;
 
        
-        r.r_.countdown_counter--;
+        r.r_.countdown_counter -= VICounterFactors[CounterFactor];
 	    if(r.r_.countdown_counter <= 0)
             Trigger_Timer_Event();
 	    if(Is_CPU_Doing_Other_Tasks())
@@ -1062,7 +1066,7 @@ void InterpreterStepCPU(void)
 
             gHWS_pc += 4; 
 
-            r.r_.countdown_counter--;
+            r.r_.countdown_counter -= VICounterFactors[CounterFactor];
 	        if(r.r_.countdown_counter <= 0)
                 Trigger_Timer_Event();
             if(Is_CPU_Doing_Other_Tasks())
@@ -1074,14 +1078,14 @@ void InterpreterStepCPU(void)
             CPUdelay = 2; 
 
             //no delay slot interrupt processing. Risky.
-            r.r_.countdown_counter--;
+            r.r_.countdown_counter -= VICounterFactors[CounterFactor];
             break;
 		default:
 
             gHWS_pc = CPUdelayPC; 
             CPUdelay = 0; 
 
-	        r.r_.countdown_counter--;
+	        r.r_.countdown_counter -= VICounterFactors[CounterFactor];
 	        if(r.r_.countdown_counter <= 0)
                 Trigger_Timer_Event();
             if(Is_CPU_Doing_Other_Tasks())
