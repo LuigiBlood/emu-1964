@@ -21,7 +21,6 @@ Overview of DX framebuffer code:
 * This is needed for framebuffer effects rendering
 * This is slow due to the lack of hardware render to tex code
 
-
 */
 
 #include "stdafx.h"

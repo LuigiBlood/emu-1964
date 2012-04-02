@@ -143,16 +143,9 @@ CColorCombiner * DirectXDeviceBuilder::CreateColorCombiner(CRender *pRender)
 		bool canUsePixelShader = g_D3DDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(1, 1);
 
 		if(!canUsePixelShader)
-		{
-			//The user doesnt support pixel shaders, show a error message
 			ErrorMsg("Video card does not support pixel shaders, Rice Video will not function properly");
-		}
-		else
-		{
-			//The user supports pixel shaders, create the combiner
-			m_pColorCombiner = new CDirectXPixelShaderCombiner(pRender);
-		}
-	
+
+		m_pColorCombiner = new CDirectXPixelShaderCombiner(pRender);
 		SAFE_CHECK(m_pColorCombiner);
 	}
 

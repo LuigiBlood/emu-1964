@@ -296,19 +296,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Lib\BMGLibJPEG.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Lib\BMGLibPNG.h"
 				>
 			</File>
 			<File
 				RelativePath=".\gfx.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Lib\jpegrw.h"
 				>
 			</File>
 			<File
@@ -556,6 +548,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\RSP_DKR.h"
+					>
+				</File>
+				<File
 					RelativePath=".\RSP_GBI0.h"
 					>
 				</File>
@@ -611,6 +607,38 @@
 					RelativePath=".\UcodeDefs.h"
 					>
 				</File>
+				<Filter
+					Name="Custom"
+					>
+					<File
+						RelativePath=".\RSP_Conker.h"
+						>
+					</File>
+					<File
+						RelativePath=".\RSP_GE.h"
+						>
+					</File>
+					<File
+						RelativePath=".\RSP_LL.h"
+						>
+					</File>
+					<File
+						RelativePath=".\RSP_PD.h"
+						>
+					</File>
+					<File
+						RelativePath=".\RSP_RS.h"
+						>
+					</File>
+					<File
+						RelativePath=".\RSP_SOTE.h"
+						>
+					</File>
+					<File
+						RelativePath=".\RSP_WRUS.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Utility"
@@ -625,10 +653,6 @@
 				</File>
 				<File
 					RelativePath=".\IColor.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Unique.h"
 					>
 				</File>
 			</Filter>
