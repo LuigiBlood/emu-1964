@@ -18,10 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "stdafx.h"
 
-static std::vector<uint64> g_UnkMux;
-extern char* constStr(uint32 op);
-uint32 constFactorMap[2];		//1 map to TFACTOR, 2 map to SPECULAR
-
 //========================================================================
 extern MYD3DCAPS g_D3DDeviceCaps;
 
