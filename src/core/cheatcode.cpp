@@ -742,13 +742,8 @@ LRESULT APIENTRY CheatAndHackDialog(HWND hDlg, unsigned message, WORD wParam, LO
 		}
 
 		SendDlgItemMessage(hDlg, IDC_CHEATCODE_COUNTRY, CB_SETCURSEL, 0, 0);
-
-        
-
 		return(TRUE);
 
-	
-    
     //Propertysheet handling
 	case WM_NOTIFY:
 		{
