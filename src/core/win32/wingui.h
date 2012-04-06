@@ -288,7 +288,6 @@ extern const int	DlgLangMapEntryCounts[];
 
 void FreeDlgLangMapEntries(void);
 void TranslateDialag(HWND hDlg, char *dlgName);
-extern char * TranslateStringByID(DWORD id);
 extern char * TranslateStringByString(char *oriStr);
 
 #define VirtualSafeFree(ptr) {if(ptr) {VirtualFree((ptr),0,MEM_RELEASE);(ptr)=NULL;}}

@@ -2165,28 +2165,6 @@ void UpdateDialogBoxTexts(int dialogboxid)
 	/************************************************************************/
 }
 
-char * TranslateStringByID(DWORD id)
-{
-	/************************************************************************/
-	/* Given an id, this function returns a constant string pointer.        */
-	/* The string is loaded from language files, and to be used as messages */
-	/************************************************************************/
-
-	int i;
-
-	for( i=0; i<NumOfStringMapEntries; i++ )
-	{
-		if( StringMapEntries[i].resID == id )
-		{
-			if( StringMapEntries[i].langStr )
-				return StringMapEntries[i].langStr;
-			else
-				return StringMapEntries[i].oriStr;
-		}
-	}
-
-	return NULL;
-}
 
 char * TranslateStringByString(char *oriStr)
 {

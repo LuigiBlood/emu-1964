@@ -953,11 +953,11 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SetCounterFactor(2);
 		break;
 	case ID_CF_CF3:
-		defaultoptions.Counter_Factor = 3;
+		currentromoptions.Counter_Factor = 3;
 		SetCounterFactor(3);
 		break;
 	case ID_CF_CF4:
-		defaultoptions.Counter_Factor = 4;
+		currentromoptions.Counter_Factor = 4;
 		SetCounterFactor(4);
 		break;
 	case ID_CF_CF5:
