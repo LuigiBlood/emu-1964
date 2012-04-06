@@ -28,6 +28,7 @@ unsigned char	Scratch0[700];
 unsigned char	Scratch1[700];
 unsigned char	Scratch2[700];
 
+extern float DOUBLE_COUNT;
 
 unsigned int		cfmenulist[8] = {
 	ID_CF_CF1,	ID_CF_CF2,	ID_CF_CF3,	ID_CF_CF4,
@@ -151,87 +152,67 @@ extern HANDLE hwndLV;
 
 void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
-	newSecond = TRUE;	// used by AutoFrameSkip and AutoCF features
-
 	if( Rom_Loaded) 
 	{
-		if( emustatus.Emu_Is_Running) 
+		if( !emustatus.Emu_Is_Paused || emustatus.Emu_Is_Running) 
 		{
-			if( !emustatus.Emu_Is_Paused) 
+			vips = (float)(viCountPerSecond);
+
+			sprintf(generalmessage, "CF=%2d", CounterFactor);
+
+            SetStatusBarText(2, generalmessage);
+
+			static int lasttime=0;
+			static int lastdls=0;
+
+			if(GetTickCount()-lasttime>1000)
 			{
-				if( GetVersion() < 0x80000000) 
-				{ /* Windows NT */
-					vips = (float)(viCountPerSecond);
+				vips = emustatus.DListCount-lastdls;
+				lastdls=emustatus.DListCount;
+				lasttime=GetTickCount();
+			}
+			//extern WindowSettingStruct windowSetting;
+			sprintf(generalmessage, " %d REAL FPS", (int) vips);
+
+			viCountPerSecond = 0;
+			QueryPerformanceCounter(&LastSecondTime);
+
+			if( guistatus.IsFullScreen == FALSE) 
+			{
+				SetStatusBarText(1, generalmessage);
+
+				if( guioptions.display_profiler_status ) 
+				{
+					format_profiler_result_msg(generalmessage);
+					reset_profiler();
+				}
+
+				if( guioptions.display_profiler_status ) 
+				{
+					SetStatusBarText(0, generalmessage);
 				} 
-				else 
+				else if(guioptions.display_detail_status) 
 				{
-					vips = (float)(viCountPerSecond);
+					sprintf
+						(
+						generalmessage,
+						"PC=%08x, DList=%d, AList=%d, PI=%d, Cont=%d",
+						gHWS_pc,
+						emustatus.DListCount,
+						emustatus.AListCount,
+						emustatus.PIDMACount,
+						emustatus.ControllerReadCount
+						);
+					SetStatusBarText(0, generalmessage);
 				}
+			}
 
-
-                if (emuoptions.AutoCF)
-                    sprintf(generalmessage, "AutoCF=%2d", CounterFactor);
-                else
-                    sprintf(generalmessage, "CF=%2d", CounterFactor);
-
-                SetStatusBarText(2, generalmessage);
-
-                
-				if( vips >= 100.0) 
-				{
-					if( emuoptions.AutoFrameSkip && emustatus.viframeskip )
-						sprintf(generalmessage, "%3d Skip", (int) vips); //lower case "vi/s" looks like a bug.
-					else
-						sprintf(generalmessage, "%3d VI/s", (int) vips);
-				} 
-				else 
-				{
-					if( emuoptions.AutoFrameSkip && emustatus.viframeskip )
-						sprintf(generalmessage, " %2d Skip", (int) vips); //lower case "vi/s" looks like a bug.
-					else
-						sprintf(generalmessage, " %2d VI/s", (int) vips);
-				}
-
-				viCountPerSecond = 0;
-				QueryPerformanceCounter(&LastSecondTime);
-
-				if( guistatus.IsFullScreen == FALSE) 
-				{
-					SetStatusBarText(1, generalmessage);
-
-					if( guioptions.display_profiler_status || emuoptions.AutoFrameSkip ) 
-					{
-						format_profiler_result_msg(generalmessage);
-						reset_profiler();
-					}
-
-					if( guioptions.display_profiler_status ) 
-					{
-						SetStatusBarText(0, generalmessage);
-					} 
-					else if(guioptions.display_detail_status) 
-					{
-						sprintf
-							(
-							generalmessage,
-							"PC=%08x, DList=%d, AList=%d, PI=%d, Cont=%d",
-							gHWS_pc,
-							emustatus.DListCount,
-							emustatus.AListCount,
-							emustatus.PIDMACount,
-							emustatus.ControllerReadCount
-							);
-						SetStatusBarText(0, generalmessage);
-					}
-				}
-
-				/* Apply the hack codes */
-				if(emuoptions.auto_apply_cheat_code && Kaillera_Is_Running == FALSE )
-				{
+			/* Apply the hack codes */
+			if(emuoptions.auto_apply_cheat_code)
+			{
 #ifndef CHEATCODE_LOCK_MEMORY
-					CodeList_ApplyAllCode(INGAME);
+				CodeList_ApplyAllCode(INGAME);
 #endif
-				}
 			}
 		}
 
@@ -245,7 +226,6 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 				{
 					TranslateMessage(&msg);
 					DispatchMessage(&msg);
-                    //Sleep(10);
 				}
 			}
 		}
@@ -467,8 +447,6 @@ int APIENTRY aWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCm
 	emustatus.Emu_Keep_Running = FALSE;
 	emustatus.processing_exception = FALSE;
 
-	DWORD dwTempOC=REGISTRY_ReadDWORD("OCSpeed",100);	
-
 	SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &WindowScreenSaverStatus, 0); 
 	
 	memset(emustatus.lastVideoPluginLoaded,0,sizeof(emustatus.lastVideoPluginLoaded));
@@ -605,7 +583,6 @@ _HOPPITY:
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-            //Sleep(10);
 		}
 	}
 	else
@@ -614,6 +591,44 @@ _HOPPITY:
 	}
 
 	goto _HOPPITY;
+}
+
+bool SetOCOptions(void)
+{
+	char szTitle[64];
+	sprintf(szTitle,"1964 [%dMHz]",(int)(DOUBLE_COUNT*100));
+	SetWindowText(gui.hwnd1964main,szTitle);
+	
+	CheckMenuItem( gui.hMenu1964main,ID_UNDERCLOCK_25MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_UNDERCLOCK_50MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_100MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_200MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_300MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_400MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_500MHZ, MF_UNCHECKED);
+	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_600MHZ, MF_UNCHECKED);
+
+
+	if(DOUBLE_COUNT==0.25f)	CheckMenuItem( gui.hMenu1964main,ID_UNDERCLOCK_25MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==0.5f)	CheckMenuItem( gui.hMenu1964main,ID_UNDERCLOCK_50MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==1.0f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_100MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==2.0f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_200MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==3.0f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_300MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==4.0f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_400MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==5.0f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_500MHZ, MF_CHECKED);
+	if(DOUBLE_COUNT==6.0f)	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_600MHZ, MF_CHECKED); 
+
+	REGISTRY_WriteDWORD("OCSpeed",(DWORD)(DOUBLE_COUNT*100));
+
+	if(DOUBLE_COUNT!=1.0f)
+	{
+		currentromoptions.Counter_Factor = 1;
+		CounterFactor = 1;
+		CheckMenuItem(gui.hMenu1964main, cfmenulist[0], MF_CHECKED);
+		return true;
+	}
+	
+	return false;
 }
 
 /*
@@ -677,7 +692,6 @@ HWND InitWin98UI(HANDLE hInstance, int nCmdShow)
 	return gui.hwnd1964main;
 }
 
-extern int REGISTRY_WriteAutoCF();
 extern void DynaBufferOverrun();
 void SwitchLanguage(int id, BOOL refreshRomList);
 void ResetToDefaultLanguage();
@@ -690,6 +704,14 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
+	case ID_UNDERCLOCK_25MHZ: DOUBLE_COUNT=0.25f; SetOCOptions();break;
+	case ID_UNDERCLOCK_50MHZ: DOUBLE_COUNT=0.5f; SetOCOptions();break;
+	case ID_OVERCLOCK_100MHZ: DOUBLE_COUNT=1.0f; SetOCOptions();break;
+	case ID_OVERCLOCK_200MHZ: DOUBLE_COUNT=2.0f; SetOCOptions();break;
+	case ID_OVERCLOCK_300MHZ: DOUBLE_COUNT=3.0f; SetOCOptions();break;
+	case ID_OVERCLOCK_400MHZ: DOUBLE_COUNT=4.0f; SetOCOptions();break;
+	case ID_OVERCLOCK_500MHZ: DOUBLE_COUNT=5.0f; SetOCOptions();break;
+	case ID_OVERCLOCK_600MHZ: DOUBLE_COUNT=6.0f; SetOCOptions();break;
 	case ID_ROM_STOP:
 	case ID_BUTTON_STOP:
 		CloseROM();
@@ -794,38 +816,6 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (!guistatus.IsFullScreen)
 			ChangeToRecentDirectory(7);
 		break;
-	case ID_FILE_ROMDIRECTORY9:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(8);
-		break;
-	case ID_FILE_ROMDIRECTORY10:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(9);
-		break;
-	case ID_FILE_ROMDIRECTORY11:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(10);
-		break;
-	case ID_FILE_ROMDIRECTORY12:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(11);
-		break;
-	case ID_FILE_ROMDIRECTORY13:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(12);
-		break;
-	case ID_FILE_ROMDIRECTORY14:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(13);
-		break;
-	case ID_FILE_ROMDIRECTORY15:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(14);
-		break;
-	case ID_FILE_ROMDIRECTORY16:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(15);
-		break;
 	case ID_FILE_RECENTGAMES_GAME1:
 		OpenRecentGame(0);
 		break;
@@ -850,30 +840,6 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case ID_FILE_RECENTGAMES_GAME8:
 		OpenRecentGame(7);
 		break;
-	case ID_FILE_RECENTGAMES_GAME9:
-		OpenRecentGame(8);
-		break;
-	case ID_FILE_RECENTGAMES_GAME10:
-		OpenRecentGame(9);
-		break;
-	case ID_FILE_RECENTGAMES_GAME11:
-		OpenRecentGame(10);
-		break;
-	case ID_FILE_RECENTGAMES_GAME12:
-		OpenRecentGame(11);
-		break;
-	case ID_FILE_RECENTGAMES_GAME13:
-		OpenRecentGame(12);
-		break;
-	case ID_FILE_RECENTGAMES_GAME14:
-		OpenRecentGame(13);
-		break;
-	case ID_FILE_RECENTGAMES_GAME15:
-		OpenRecentGame(14);
-		break;
-	case ID_FILE_RECENTGAMES_GAME16:
-		OpenRecentGame(15);
-		break;		
 	case ID_FILE_CHEAT:
 		if (!guistatus.IsFullScreen)
 			if(emustatus.Emu_Is_Running && Kaillera_Is_Running == FALSE )
@@ -897,25 +863,6 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		CodeList_ApplyAllCode(GSBUTTON);
 		break;
 
-	case ID_EMULATION_AUTOFRAMESKIP:
-	case ID_BUTTON_FRAMESKIP:
-		//User clicked menu? If so, make the corresponding button the right setting.            
-		if ((LOWORD(wParam)) == ID_EMULATION_AUTOFRAMESKIP)
-			CheckButton(ID_BUTTON_FRAMESKIP,
-			emuoptions.AutoFrameSkip ? 
-			FALSE : 
-			TRUE);
-
-		CheckMenuItem( gui.hMenu1964main, 
-			ID_EMULATION_AUTOFRAMESKIP, 
-			emuoptions.AutoFrameSkip ? 
-			MF_UNCHECKED : 
-			MF_CHECKED);
-
-		emuoptions.AutoFrameSkip^=1;
-		REGISTRY_WriteAutoFrameSkip();
-		break;
-
 	case ID_BUTTON_SYNC_SPEED:
 	case ID_CPU_AUDIOSYNC:
 		//User clicked menu? If so, make the corresponding button the right setting.            
@@ -925,26 +872,6 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		emuoptions.SyncVI^=1;
 		REGISTRY_WriteVISync();
 		break;
-
-	case ID_EMULATION_AUTOCFTIMING:
-	case ID_BUTTON_AUTO_CF:
-
-
-		//User clicked menu? If so, make the corresponding button the right setting.            
-		if ((LOWORD(wParam)) == ID_EMULATION_AUTOCFTIMING)
-			CheckButton(ID_BUTTON_AUTO_CF, emuoptions.AutoCF ? FALSE : TRUE);
-		CheckMenuItem( gui.hMenu1964main, ID_EMULATION_AUTOCFTIMING, emuoptions.AutoCF ? MF_UNCHECKED : MF_CHECKED);
-
-		emuoptions.AutoCF^=1;
-		REGISTRY_WriteAutoCF();
-
-		DynaBufferOverrun(); //Make the dna Refresh. (This should happen pretty quickly,  
-		//when the compiler is used again.
-
-		SetCounterFactor(currentromoptions.Counter_Factor);
-
-		break;
-
 
 	case ID_VIDEO_CONFIG:
 		if (!guistatus.IsFullScreen)
@@ -1018,44 +945,36 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		EmulatorSetCore(DYNACOMPILER);
 		break;
 	case ID_CF_CF1:
-		emuoptions.AutoCF = 1; //The ID_EMULATION_AUTOCFTIMING case shuts this off, thus the opposite logic.
 		currentromoptions.Counter_Factor = 1;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
+		SetCounterFactor(1);
 		break;
 	case ID_CF_CF2:
-		emuoptions.AutoCF = 1;
 		currentromoptions.Counter_Factor = 2;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
+		SetCounterFactor(2);
 		break;
 	case ID_CF_CF3:
-		emuoptions.AutoCF = 1;
-		currentromoptions.Counter_Factor = 3;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
+		defaultoptions.Counter_Factor = 3;
+		SetCounterFactor(3);
 		break;
 	case ID_CF_CF4:
-		emuoptions.AutoCF = 1;
-		currentromoptions.Counter_Factor = 4;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
+		defaultoptions.Counter_Factor = 4;
+		SetCounterFactor(4);
 		break;
 	case ID_CF_CF5:
-		emuoptions.AutoCF = 1;
 		currentromoptions.Counter_Factor = 5;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
+		SetCounterFactor(5);
 		break;
 	case ID_CF_CF6:
-		emuoptions.AutoCF = 1;
 		currentromoptions.Counter_Factor = 6;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
+		SetCounterFactor(6);
 		break;
 	case ID_CF_CF7:
-		emuoptions.AutoCF = 1;
 		currentromoptions.Counter_Factor = 7;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
+		SetCounterFactor(7);
 		break;
 	case ID_CF_CF8:
-		emuoptions.AutoCF = 1;
 		currentromoptions.Counter_Factor = 8;
-		SendMessage(gui.hwnd1964main, WM_COMMAND, ID_EMULATION_AUTOCFTIMING, 0);
+		SetCounterFactor(8);
 		break;
 	case ID_LAGNESS_1:
 		SetKailleraLagness(1);
@@ -1149,13 +1068,10 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case ID_ONLINE_HELP:
 		if (!guistatus.IsFullScreen)
-			ShellExecute(gui.hwnd1964main, "open", "http://1964emu.emulation64.com/help.htm", NULL, NULL, SW_SHOWNORMAL);
+			ShellExecute(gui.hwnd1964main, "open", "http://code.google.com/p/emu-1964/issues/list", NULL, NULL, SW_SHOWNORMAL);
 		break;
 	case ID_CONFIGURE_VIDEO:
 		VIDEO_DllConfig(hWnd);
-		break;
-	case ID_HELP_FINDER:
-		DisplayError("Help contents");
 		break;
 
 	case ID_OPCODEDEBUGGER:
@@ -1766,11 +1682,6 @@ int WINAPI kailleraGameCallback(char *game, int player, int numplayers)
 	sprintf(generalmessage, "I am Kaillera player #%d", player);
 	TRACE1("I am Kaillera player #%d", player);
 	SetStatusBarText(0, generalmessage);
-
-	// Always turn off AutoCF for Netplay
-	emuoptions.AutoCF = 0;
-	CheckButton(ID_BUTTON_AUTO_CF, FALSE);
-	CheckMenuItem( gui.hMenu1964main, ID_EMULATION_AUTOCFTIMING, MF_UNCHECKED);
 
 	if(Kaillera_Players>4)	
 		Kaillera_Players = 4;	//N64 supports up to 4 players
@@ -3057,19 +2968,17 @@ LRESULT APIENTRY OptionsDialog(HWND hDlg, unsigned message, WORD wParam, LONG lP
  */
 void SetCounterFactor(int factor)
 {
+	//Set the Overclock options first since these overide the counter factor if its below or above default clock speed (1.0f)
+	SetOCOptions();
+
 	int k;
-
-
     for (k=0; k<8; k++)
         CheckMenuItem(gui.hMenu1964main, cfmenulist[k], MF_UNCHECKED);
 
-    if (!emuoptions.AutoCF)
-    {
-
-    CheckMenuItem(gui.hMenu1964main, cfmenulist[factor - 1], MF_CHECKED);
-
-	if(CounterFactor != factor)
+	if(CounterFactor != factor && DOUBLE_COUNT == 1.0f)
 	{
+		CheckMenuItem(gui.hMenu1964main, cfmenulist[factor - 1], MF_CHECKED);
+
 		if(emustatus.Emu_Is_Running)
 		{
 			if(PauseEmulator())
@@ -3081,17 +2990,9 @@ void SetCounterFactor(int factor)
 
 		CounterFactor = factor;
 
-		if (emuoptions.AutoCF)
-        {
-            sprintf(generalmessage, "AutoCF=%2d", factor);
-        }
-        else
-        {
 		sprintf(generalmessage, "CF=%d", factor);
-        }
 		SetStatusBarText(2, generalmessage);
 	}
-}
 }
 
 /*
@@ -3249,14 +3150,8 @@ void PrepareBeforePlay(int IsFullScreen)
 
 	CounterFactor = currentromoptions.Counter_Factor;
 	
-    if (emuoptions.AutoCF)
-    {
-        sprintf(generalmessage, "AutoCF=%2d", currentromoptions.Counter_Factor);
-    }
-    else
-    {
-		sprintf(generalmessage, "CF=%d", currentromoptions.Counter_Factor);
-    }
+	sprintf(generalmessage, "CF=%d", currentromoptions.Counter_Factor);
+
 	emustatus.CodeCheckMethod = currentromoptions.Code_Check;
 
 	/*
@@ -3302,7 +3197,6 @@ void PrepareBeforePlay(int IsFullScreen)
 	emustatus.DListCount = 0;
 	emustatus.AListCount = 0;
 	emustatus.PIDMACount = 0;
-	emustatus.viframeskip = 0;
 	emustatus.ControllerReadCount = 0;
 	emustatus.FrameBufferProtectionNeedToBeUpdate = TRUE;
 
@@ -3847,8 +3741,6 @@ void SetupAdvancedMenus(void)
 	if(guioptions.show_recent_rom_directory_list == FALSE) DeleteRecentRomDirectoryMenus();
 	if(guioptions.show_recent_game_list == FALSE) DeleteRecentGameMenus();
 	if(!emuoptions.SyncVI) CheckMenuItem(gui.hMenu1964main, ID_CPU_AUDIOSYNC, MF_UNCHECKED);
-	if(!emuoptions.AutoFrameSkip) CheckMenuItem(gui.hMenu1964main, ID_EMULATION_AUTOFRAMESKIP, MF_UNCHECKED);
-    if(!emuoptions.AutoCF) CheckMenuItem(gui.hMenu1964main, ID_EMULATION_AUTOCFTIMING, MF_UNCHECKED);
 }
 
 /*

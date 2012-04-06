@@ -27,6 +27,7 @@
 extern void		Init_Timer_Event_List(void);
 extern uint32	TLB_Error_Vector;
 extern void		zlist_uncompress(OSTask_t *task);
+extern float DOUBLE_COUNT;
 
 uint32			sp_hle_task = 0;
 LARGE_INTEGER	LastVITime = { 0, 0 };
@@ -294,251 +295,11 @@ void Handle_DPC(uint32 value)
 
 extern unsigned int cpuIdlePercentages[4];
 extern int cpuIdlePercentageIdx;
-BOOL newSecond = FALSE;
-void Set_AutoCF()
-{
-	BOOL oldViFrameSkip;
-	BOOL oldCounterFactor;
-	int cpuIdlePercentage=0;
-	int i;
-
-	if( newSecond == FALSE )
-		return;
-	else
-		newSecond = FALSE;
-
-	// Only change AutoCF and AutoFrameSkip setting at a second boundary
-
-	for( i=0; i<4; i++ )
-	{
-		cpuIdlePercentage += cpuIdlePercentages[i];
-	}
-	cpuIdlePercentage += cpuIdlePercentages[cpuIdlePercentageIdx];	// extra weight for the last second
-	cpuIdlePercentage /= 5;	// Average the idle percentage over the past 4 seconds
-
-	oldViFrameSkip = emustatus.viframeskip;
-	oldCounterFactor = CounterFactor;
-
-
-	/* Possible combinations:                                               */
-	/*
-	 * 1) AutoCF=On, AutoFrameSkip=On
-	 *     CF=5,  emustatus.viframeskip=1    -----> (1)  ^
-	 *     CF=5,  emustatus.viframeskip=0    -----> (2)  |
-	 *     CF=3,  emustatus.viframeskip=0    -----> (3)  |
-	 *     CF=1,  emustatus.viframeskip=0    -----> (4)  |
-	 *
-	 * 2) AutoCF=On, AutoFrameSkip=Off
-	 *     CF=5     ----> (1)  ^
-	 *     CF=3     ----> (2)  |
-	 *     CF=1     ----> (3)  |
-	 *
-	 * 3) AutoCF=Off,AutoFrameSkip=On
-	 *     emustatus.viframeskip=1     ----> (1)
-	 *     emustatus.viframeskip=0     ----> (2)
-	 *
-	 * 4) Both off, do nothing
-	 *	
-	 */
-
-	if( emuoptions.AutoCF && emuoptions.AutoFrameSkip )
-	{
-		// Case 1, both features are on
-
-		if( oldViFrameSkip == 1 )
-		{
-			if( oldCounterFactor != 5 )
-			{
-				// We will check again frame rate at the next second
-				emustatus.viframeskip = 0;
-				AutoCounterFactor = VICounterFactors[5];
-				CounterFactor = 5;
-			}
-			else if( cpuIdlePercentage > 15 || vips > vips_speed_limits[MAXFPS_AUTO_SYNC]*1.1f )
-			{
-				if( cpuIdlePercentage > 50 )
-				{
-					emustatus.viframeskip = 0;
-					AutoCounterFactor = VICounterFactors[3];
-					CounterFactor = 3;
-				}
-				else
-				{
-					emustatus.viframeskip = 0;
-					AutoCounterFactor = VICounterFactors[5];
-					CounterFactor = 5;
-				}
-			}
-			else
-			{
-				AutoCounterFactor = VICounterFactors[5];
-				CounterFactor = 5;
-			}
-		}
-		else
-		{
-			// oldViFrameSkip = 0
-			if( oldCounterFactor > 4 )
-			{
-				if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.85f )
-				{
-					emustatus.viframeskip = 1;
-					AutoCounterFactor = VICounterFactors[5];
-					CounterFactor = 5;
-				}
-
-//This one is too slow                
-//				else if (cpuIdlePercentage > 50 )
-//				{
-//					AutoCounterFactor = VICounterFactors[1];
-//					CounterFactor = 1;
-//				}
-				else if (cpuIdlePercentage > 20 )
-				{
-					AutoCounterFactor = VICounterFactors[3];
-					CounterFactor = 3;
-				}
-				else
-				{
-					AutoCounterFactor = VICounterFactors[5];
-					CounterFactor = 5;
-				}
-			}
-			else if( oldCounterFactor >2 )
-			{
-				if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.6f )
-				{
-					emustatus.viframeskip = 1;
-					AutoCounterFactor = VICounterFactors[5];
-					CounterFactor = 5;
-				}
-				else if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.9f )
-				{
-					AutoCounterFactor = VICounterFactors[5];
-					CounterFactor = 5;
-				}
-//Too slow
-//				else if ( cpuIdlePercentage > 20 )
-//				{
-//					AutoCounterFactor = VICounterFactors[1];
-//					CounterFactor = 1;
-//				}
-				else
-				{
-					AutoCounterFactor = VICounterFactors[3];
-					CounterFactor = 3;
-				}
-			}
-			else
-			{
-				if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.4f )
-				{
-					emustatus.viframeskip = 1;
-					AutoCounterFactor = VICounterFactors[5];
-					CounterFactor = 5;
-				}
-				else if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.6f )
-				{
-					AutoCounterFactor = VICounterFactors[5];
-					CounterFactor = 5;
-				}
-				else if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.9f )
-				{
-					AutoCounterFactor = VICounterFactors[3];
-					CounterFactor = 3;
-				}
-//Too slow
-//				else
-//				{
-//					AutoCounterFactor = VICounterFactors[1];
-//					CounterFactor = 1;
-//				}
-			}
-		}
-	}
-	else if( emuoptions.AutoCF )
-	{
-		// case 2: AutoCF=on, AutoFrameSkip=Off
-
-		if( oldCounterFactor > 4 )
-		{
-			if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.9f )
-			{
-				// We cannot do anything else to speed up
-				AutoCounterFactor = VICounterFactors[5];
-				CounterFactor = 5;
-			}
-			else if (cpuIdlePercentage > 20 )
-			{
-				AutoCounterFactor = VICounterFactors[3];
-				CounterFactor = 3;
-			}
-		}
-		else if( oldCounterFactor >2 )
-		{
-			if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.9f )
-			{
-				AutoCounterFactor = VICounterFactors[5];
-				CounterFactor = 5;
-			}
-//Too slow
-//			else if ( cpuIdlePercentage > 20 )
-//			{
-//				AutoCounterFactor = VICounterFactors[1];
-//				CounterFactor = 1;
-//			}
-			else
-			{
-				AutoCounterFactor = VICounterFactors[3];
-				CounterFactor = 3;
-			}
-		}
-		else
-		{
-			if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.6f )
-			{
-				AutoCounterFactor = VICounterFactors[5];
-				CounterFactor = 5;
-			}
-			else if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.9f )
-			{
-				AutoCounterFactor = VICounterFactors[3];
-				CounterFactor = 3;
-			}
-//Too slow
-//			else
-//			{
-//				AutoCounterFactor = VICounterFactors[1];
-//				CounterFactor = 1;
-//			}
-		}
-	}
-	else if( emuoptions.AutoFrameSkip )
-	{
-		// case 3: AutoCF=off, AutoFrameSkip=on
-
-		if( vips < vips_speed_limits[MAXFPS_AUTO_SYNC]*0.85f )
-		{
-			emustatus.viframeskip = 1;
-		}
-		else if( cpuIdlePercentage > 15 || vips > vips_speed_limits[MAXFPS_AUTO_SYNC]*1.1f )
-		{
-			emustatus.viframeskip = 0;
-		}
-	}
-	else
-	{
-		// Both features are off
-	}
-}
-
-
 /*
  =======================================================================================================================
     Process a Signal Processor task. This is where we call audio/video plugin execution routines.
  =======================================================================================================================
  */
-extern int UsingInternalVideo;
 
 void RunSPTask(void)
 {
@@ -564,23 +325,26 @@ void RunSPTask(void)
 				viorg = VI_ORIGIN_REG;
 			}
 
-			if( emuoptions.AutoFrameSkip && emustatus.viframeskip == 1 && viframecount%2 == 0 )
+			if( rsp_plugin_is_loaded == TRUE && emuoptions.UsingRspPlugin == TRUE )
 			{
-				// Skip the frame
-				Trigger_DPInterrupt();
+				SPcycleUsed = DoRspCycles(100);
 			}
 			else
 			{
-				if( rsp_plugin_is_loaded == TRUE && emuoptions.UsingRspPlugin == TRUE )
+				DWORD cycleUsed = VIDEO_ProcessDList();
+				SPcycleUsed = cycleUsed&0xFFFF;
+				DPcycleUsed = cycleUsed>>16;
+
+				if(DOUBLE_COUNT>1.0f)
 				{
-					SPcycleUsed = DoRspCycles(100);
+					SPcycleUsed/=DOUBLE_COUNT;
+					DPcycleUsed/=DOUBLE_COUNT;
 				}
-				else
+				else if(DOUBLE_COUNT<1.0f)
 				{
-					DWORD cycleUsed = VIDEO_ProcessDList();
-					SPcycleUsed = cycleUsed&0xFFFF;
-					DPcycleUsed = cycleUsed>>16;
-				}
+					SPcycleUsed>>=1;
+					DPcycleUsed>>=1;
+				}					
 			}
 
 			emustatus.DListCount++;
@@ -812,13 +576,6 @@ void Trigger_VIInterrupt(void)
 		viTotalCount++;
 	}
 
-	// safety check, the value of viCountPerSecond should not be very high, otherwise
-	// the emulator must have been looped
-	if( viCountPerSecond > 400 )
-	{
-		//Sleep(2);	// Allow other threads to run
-	}
-
 	{
 		// Check for GUI pause/stop/resume events
 		DWORD tostop = WaitForSingleObject( StopEmulatorEvent, 0 );
@@ -924,8 +681,6 @@ void Trigger_VIInterrupt(void)
 		CodeList_ApplyAllCode(INGAME);
 #endif
 	}
-
-	Set_AutoCF();
     
 	/* set the interrupt to fire */
 	(MI_INTR_REG_R) |= MI_INTR_VI;

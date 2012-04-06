@@ -128,12 +128,22 @@ BEGIN
             MENUITEM "Dynamic Compiler (Default)",  ID_DYNAMICCOMPILER, CHECKED
         END
         MENUITEM "Inject Gameshark Green Button Cheats\tF8", ID_CHEATS_APPLY
+		MENUITEM SEPARATOR
+		POPUP "OverClock"
+		BEGIN
+			MENUITEM "25MHz (4x underclock",        ID_UNDERCLOCK_25MHZ
+			MENUITEM "50MHz (2x underclock)",       ID_UNDERCLOCK_50MHZ
+			MENUITEM SEPARATOR
+			MENUITEM "100MHz (Normal Speed)",       ID_OVERCLOCK_100MHZ
+			MENUITEM "200MHz (2x overclock)",       ID_OVERCLOCK_200MHZ
+			MENUITEM "300MHz (3x overclock)",       ID_OVERCLOCK_300MHZ
+			MENUITEM "400MHz (4x overclock)",       ID_OVERCLOCK_400MHZ
+			MENUITEM "500MHz (5x overclock)",       ID_OVERCLOCK_500MHZ
+			MENUITEM "600MHz (6x overclock)",       ID_OVERCLOCK_600MHZ
+		END
         MENUITEM SEPARATOR
         POPUP "Counter Factor"
         BEGIN
-            MENUITEM "Automatic\tF10",              ID_EMULATION_AUTOCFTIMING
-            , CHECKED
-            MENUITEM SEPARATOR
             MENUITEM "1 x .5 Half Rate\tCtrl+1",    ID_CF_CF1, GRAYED
             MENUITEM "1 x 1 Full Rate\tCtrl+2",     ID_CF_CF2, GRAYED
             MENUITEM "2 x 1 Half Rate (Default)\tCtrl+3", ID_CF_CF3
@@ -145,7 +155,6 @@ BEGIN
             MENUITEM "8 x 4 Half Rate\tCtrl+8",     ID_CF_CF8, GRAYED
         END
         MENUITEM "Speed Limit\tF9",             ID_CPU_AUDIOSYNC, CHECKED
-        MENUITEM "Automatic Frame Skip\tF11",   ID_EMULATION_AUTOFRAMESKIP, CHECKED
         MENUITEM "Screen Shot\tF12",            ID_PLUGINS_SCREENSHOTS
         POPUP "Variable Speed Limits"
         BEGIN
@@ -1325,8 +1334,6 @@ BEGIN
     VK_F4,          ID_CPU_KILL,            VIRTKEY, CONTROL, NOINVERT
     VK_SUBTRACT,    ID_DEC_SPEED_LIMIT,     VIRTKEY, NOINVERT
     "I",            ID_DI_CONFIG,           VIRTKEY, CONTROL, NOINVERT
-    VK_F10,         ID_EMULATION_AUTOCFTIMING, VIRTKEY, NOINVERT
-    VK_F11,         ID_EMULATION_AUTOFRAMESKIP, VIRTKEY, NOINVERT
     "C",            ID_FILE_CHEAT,          VIRTKEY, CONTROL, NOINVERT
     "L",            ID_FILE_FRESHROMLIST,   VIRTKEY, CONTROL, NOINVERT
     "S",            ID_FILE_ROMINFO,        VIRTKEY, CONTROL, NOINVERT
@@ -1673,9 +1680,7 @@ BEGIN
     BUTTON      ID_BUTTON_SETUP_PLUGINS
     BUTTON      ID_BUTTON_RESET
     BUTTON      ID_BUTTON_HELP
-    BUTTON      ID_BUTTON_FRAMESKIP
     BUTTON      ID_BUTTON_SYNC_SPEED
-    BUTTON      ID_BUTTON_AUTO_CF
     BUTTON      IDB_GREEN_CHEAT
 END
 
@@ -1716,13 +1721,6 @@ END
 
 STRINGTABLE 
 BEGIN
-    ID_HELP_FINDER          "Help me!"
-    IDS_KEY_RSP_PLUGIN      "RSPPlugin"
-    IDS_DEFAULT_RSP_PLUGIN  "none"
-END
-
-STRINGTABLE 
-BEGIN
     ID_BUTTON330            "Pause"
     ID_BUTTON_FULL_SCREEN   "Full Screen (Alt+Enter)"
     ID_BUTTON_HOME_PAGE     "1964 Home Page"
@@ -1738,9 +1736,7 @@ BEGIN
     ID_BUTTON_SETUP_PLUGINS "Change Plugins (Ctrl+P)"
     ID_BUTTON_RESET         "Reset (F2)"
     ID_BUTTON_HELP          "Help (F1)"
-    ID_BUTTON_FRAMESKIP     "Automatic Frame Skip (F11)"
     ID_BUTTON_SYNC_SPEED    "Speed Limit (F9)"
-    ID_BUTTON_AUTO_CF       "Automatic CF Timing Adjust  (F10)"
 END
 
 STRINGTABLE 

@@ -1527,39 +1527,17 @@ void  __cdecl SetupToolBar()
 		 tbb[12].iBitmap = 11;
          tbb[12].fsState = TBSTATE_ENABLED;
 
-         //AutoFameskip is set before this function is called.
          if (emuoptions.SyncVI)
              tbb[12].fsState|= TBSTATE_CHECKED;
          tbb[12].fsStyle = TBSTYLE_CHECK;
          tbb[12].idCommand = ID_BUTTON_SYNC_SPEED;
-
-         
-		 tbb[13].iBitmap = 12;
-         tbb[13].fsState = TBSTATE_ENABLED;
-         //AutoFameskip is set before this function is called.
-         if (emuoptions.AutoCF)
-             tbb[13].fsState|= TBSTATE_CHECKED;
-         tbb[13].fsStyle = TBSTYLE_CHECK;
-         tbb[13].idCommand = ID_BUTTON_AUTO_CF;
-         
-         
-		 tbb[14].iBitmap = 10;
-         tbb[14].fsState = TBSTATE_ENABLED;
-         //AutoFameskip is set before this function is called.
-         if (emuoptions.AutoFrameSkip)
-             tbb[14].fsState|= TBSTATE_CHECKED;
-         tbb[14].fsStyle = TBSTYLE_CHECK;
-         tbb[14].idCommand = ID_BUTTON_FRAMESKIP;
-         
                 
-         tbb[15].iBitmap = 1;
-         tbb[15].fsState = TBSTATE_ENABLED;
-         tbb[15].fsStyle = TBSTYLE_BUTTON;
-         tbb[15].idCommand = ID_BUTTON_FULL_SCREEN;
+         tbb[13].iBitmap = 1;
+         tbb[13].fsState = TBSTATE_ENABLED;
+         tbb[13].fsStyle = TBSTYLE_BUTTON;
+         tbb[13].idCommand = ID_BUTTON_FULL_SCREEN;
 
-
-         
-         SendMessage(gui.hToolBar, TB_ADDBUTTONS, 16, (LPARAM)&tbb);
+         SendMessage(gui.hToolBar, TB_ADDBUTTONS, 14, (LPARAM)&tbb);
 		 gui.hReBar = CreateRebar(gui.hwnd1964main);
 }
 

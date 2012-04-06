@@ -332,12 +332,6 @@ void ReadConfiguration( void)
 	emuoptions.SyncVI =
 		REGISTRY_ReadDWORD( "SyncVI", TRUE);
 
-	emuoptions.AutoFrameSkip =
-		REGISTRY_ReadDWORD( "AutoFrameSkip", FALSE);
-
-	emuoptions.AutoCF =
-		REGISTRY_ReadDWORD( "AutoCF", FALSE);
-
 	guioptions.pause_at_inactive =
 		REGISTRY_ReadDWORD( "PauseWhenInactive", TRUE);
 	guioptions.pause_at_inactive = FALSE;	// This feature is disabled
@@ -495,21 +489,6 @@ REGISTRY_WriteSizeMove()
 }
 
 //----------------------------------------------------------------
-int REGISTRY_WriteAutoFrameSkip()
-{
-	DWORD			dwData;
-	HKEY			hKey1 = NULL,
-	hKey2 = NULL;
-
-	REGISTRY_OpenConnection(&hKey1, &hKey2);
-
-	dwData = emuoptions.AutoFrameSkip;
-	RegSetValueEx( hKey2, "AutoFrameSkip",  0, REG_DWORD, (LPBYTE) & dwData, 4);
-
-	REGISTRY_CloseConnection(&hKey1, &hKey2);
-	return TRUE;
-}
-//----------------------------------------------------------------
 int REGISTRY_WriteVISync()
 {
 	DWORD			dwData;
@@ -520,22 +499,6 @@ int REGISTRY_WriteVISync()
 
 	dwData = emuoptions.SyncVI;
 	RegSetValueEx( hKey2, "SyncVI",  0, REG_DWORD, (LPBYTE) & dwData, 4);
-
-	REGISTRY_CloseConnection(&hKey1, &hKey2);
-	return TRUE;
-}
-
-//----------------------------------------------------------------
-int REGISTRY_WriteAutoCF()
-{
-	DWORD			dwData;
-	HKEY			hKey1 = NULL,
-	hKey2 = NULL;
-
-	REGISTRY_OpenConnection(&hKey1, &hKey2);
-
-	dwData = emuoptions.AutoCF;
-	RegSetValueEx( hKey2, "AutoCF",  0, REG_DWORD, (LPBYTE) & dwData, 4);
 
 	REGISTRY_CloseConnection(&hKey1, &hKey2);
 	return TRUE;

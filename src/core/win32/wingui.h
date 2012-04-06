@@ -79,7 +79,6 @@ extern void			REGISTRY_WriteStringByIndex( DWORD dwIndex, char *szValue);
 extern void			REGISTRY_WriteStringByName( char* szName, char *szValue);
 extern DWORD		REGISTRY_ReadDWORD( char *szFieldName, DWORD dwDefaultValue);
 extern int			REGISTRY_WriteVISync();
-extern int			REGISTRY_WriteAutoFrameSkip();
 extern int			REGISTRY_WriteSizeMove();
 extern void			REGISTRY_WriteDWORD( char *szFieldName, DWORD dwValue);
 extern BOOL			REGISTRY_OpenConnection( PHKEY hKey1,  PHKEY hKey2);
