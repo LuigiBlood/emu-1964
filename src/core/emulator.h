@@ -56,7 +56,6 @@ struct EmuStatus
 	BOOL					VideoPluginSupportingFrameBuffer;
 	BOOL					FrameBufferProtectionNeedToBeUpdate;
 	BOOL					VideoPluginProvideFrameBufferInfo;
-	BOOL					viframeskip;
 
 	char					lastVideoPluginLoaded[256];
 	char					lastAudioPluginLoaded[256];
@@ -72,8 +71,6 @@ struct EmuOptions
 	BOOL	auto_full_screen;
 	BOOL	dma_in_segments;
 	BOOL	SyncVI;
-	BOOL	AutoFrameSkip;
-    BOOL	AutoCF; //Automatic Counter Factor Timing, If TRUE, CF constantly changes automatically during gameplay.
 	BOOL	UsingRspPlugin;
 	BOOL	UsingInternalRSP;
 };

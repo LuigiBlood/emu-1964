@@ -440,7 +440,6 @@ void N64_Boot(void)
 	int		RDRam_Hacked = 0;
 	uint32	bootaddr = (*(uint32 *) (gMS_ROM_Image + 8) & 0x007FFFFF) + 0x80000000;
     static int remember_debug_opcode = 0;
-
    
 	SetCounterFactor(CounterFactor);
 	emustatus.Emu_Is_Running = TRUE;

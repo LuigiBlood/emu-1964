@@ -54,7 +54,6 @@
 #define ID_OPTIONS_VIDMODE              124
 #define IDM_VIDEO_MODE                  126
 #define ID_CONFIGURE_VIDEO              127
-#define ID_HELP_FINDER                  128
 #define IDM_320_240                     129
 #define IDS_KEY_RSP_PLUGIN              129
 #define IDM_640_480                     130
@@ -251,13 +250,6 @@
 #define ID_HEADERPOPUP_1_SORT_ASCENDING 320
 #define ID_HEADERPOPUP_1_SORT_DESCENDING 321
 #define ID_HEADERPOPUP_1_SELECTING      322
-#define ID_CPU_VIDEOFRAMESKIPPING_FULLAUTOMATIC 323
-#define ID_CPU_VIDEOFRAMESKIPPING_DISABLED 324
-#define ID_CPU_VIDEOFRAMESKIPPING_SKIP1PER6FRAMES 325
-#define ID_CPU_VIDEOFRAMESKIPPING_SKIP1PER5FRAMES 326
-#define ID_CPU_VIDEOFRAMESKIPPING_SKIP1PER4FRAMES 327
-#define ID_CPU_VIDEOFRAMESKIPPING_SKIP1PER3FRAMES 328
-#define ID_CPU_VIDEOFRAMESKIPPING_SKIP1PER2FRAMES 329
 #define ID_BUTTON330                    330
 #define ID_BUTTON_FULL_SCREEN           331
 #define ID_BUTTON_HOME_PAGE             332
@@ -271,13 +263,9 @@
 #define ID_BUTTON_HELP                  340
 #define ID_BUTTON341                    341
 #define ID_BUTTON_INTERNAL_             341
-#define ID_BUTTON_FRAMESKIP             341
-#define ID_EMULATION_AUTOFRAMESKIP      343
 #define ID_BUTTON_SYNC_SPEED            346
 #define ID_BUTTON346                    346
 #define ID_BUTTON347                    347
-#define ID_BUTTON_AUTO_CF               348
-#define ID_EMULATION_AUTOCFTIMING       349
 #define ID_Menu                         353
 #define ID_Menu354                      354
 #define ID_POPUPMENU_CHANGEROMDIRECTORY 355
@@ -331,6 +319,14 @@
 #define ID_POPUPMENU_REMOVEBOXARTIMAGELINK 411
 #define ID_HEADERPOPUP3_REFRESH         413
 #define ID_DEBUGFRAMEBUFFERREAD         415
+#define ID_OVERCLOCK_100MHZ             416
+#define ID_OVERCLOCK_200MHZ             417
+#define ID_OVERCLOCK_300MHZ             418
+#define ID_OVERCLOCK_400MHZ             419
+#define ID_OVERCLOCK_500MHZ             420
+#define ID_OVERCLOCK_600MHZ             421
+#define ID_UNDERCLOCK_50MHZ             422
+#define ID_UNDERCLOCK_25MHZ             423
 #define IDC_CPUR0                       1000
 #define IDC_GPR1                        1001
 #define IDC_GPR2                        1002
@@ -943,7 +939,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        216
-#define _APS_NEXT_COMMAND_VALUE         416
+#define _APS_NEXT_COMMAND_VALUE         424
 #define _APS_NEXT_CONTROL_VALUE         1576
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

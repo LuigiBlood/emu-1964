@@ -85,6 +85,7 @@
 				IgnoreImportLibrary="true"
 				AdditionalOptions="/MACHINE:I386 /FIXED:NO"
 				AdditionalDependencies="odbc32.lib odbccp32.lib d3dx8.lib d3d8.lib dxguid.lib shlwapi.lib winmm.lib opengl32.lib comctl32.lib"
+				OutputFile="..\bin\$(ConfigurationName)\plugin\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""

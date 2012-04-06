@@ -54,11 +54,7 @@ extern BOOL					CPUNeedToCheckInterrupt;	/* This global parameter is set when an
 /* and the CPU is waiting for a COMPARE interrupts */
 extern BOOL					CPUNeedToCheckException;	/* This global parameter is set when any interrupt is fired */
 
-/* and the CPU is waiting for a COMPARE interrupts */
-extern int						viframeskip;				/* This global parameter determines to skip a VI frame */
-
 /* after every few frames */
-extern int				viframeskipcount;
 extern int				framecounter;				/* To count how many frames are displayed per second */
 extern int				viCountPerSecond;			/* To count how many VI interrupts per second */
 extern unsigned int		viTotalCount;				/* Total VI counts  */
@@ -135,7 +131,7 @@ void format_profiler_result_msg(char *msg);
 void reset_profiler(void);
 
 #define DO_PROFILIER(proc) \
-	if( guioptions.display_profiler_status || emustatus.viframeskip == 1 ) start_profiling(proc);
+	if( guioptions.display_profiler_status) start_profiling(proc);
 #define DO_PROFILIER_R4300I		DO_PROFILIER(R4300I_PROF)
 #define DO_PROFILIER_VIDEO		DO_PROFILIER(VIDEO_PROF)
 #define DO_PROFILIER_AUDIO		DO_PROFILIER(AUDIO_PROF)

@@ -27,7 +27,6 @@
 uint16		GfxPluginVersion;
 HINSTANCE	hinstLibVideo = NULL;
 GFX_INFO	Gfx_Info;
-int			UsingInternalVideo=0;
 BOOL		bRomIsOpened = FALSE;
 
 BOOL ToCaptureScreen=FALSE;
@@ -220,16 +219,9 @@ BOOL VIDEO_InitiateGFX(GFX_INFO Gfx_Info)
 
 	__try
 	{
-		if (!UsingInternalVideo) //Make this a guistatus or emustatus or something.
-		{
-			GetWindowRect(gui.hwnd1964main, &Rect);
-			_VIDEO_InitiateGFX(Gfx_Info);
-			GetPluginsResizeRequest(&Rect);
-		}
-		else
-		{
-		//	Internal_VIDEO_InitiateGFX(Gfx_Info);
-		}
+		GetWindowRect(gui.hwnd1964main, &Rect);
+		_VIDEO_InitiateGFX(Gfx_Info);
+		GetPluginsResizeRequest(&Rect);
 	}
 	__except(NULL, EXCEPTION_EXECUTE_HANDLER)
 	{
@@ -297,18 +289,11 @@ void VIDEO_RomOpen(void)
 	{
 		__try
 		{
-			if (!UsingInternalVideo)
-			{
-				RECT Rect;
-				GetWindowRect(gui.hwnd1964main, &Rect);
-				_VIDEO_RomOpen();
-				bRomIsOpened = TRUE;
-				GetPluginsResizeRequest(&Rect);
-			}
-			else
-			{
-//				Internal_VIDEO_RomOpen();
-			}
+			RECT Rect;
+			GetWindowRect(gui.hwnd1964main, &Rect);
+			_VIDEO_RomOpen();
+			bRomIsOpened = TRUE;
+			GetPluginsResizeRequest(&Rect);
 		}
 
 		__except(NULL, EXCEPTION_EXECUTE_HANDLER)
@@ -422,7 +407,6 @@ void VIDEO_DllClose(void)
 	{
 		__try
 		{
-			if (!UsingInternalVideo)
 			_VIDEO_DllClose();
 		}
 
@@ -494,7 +478,6 @@ void VIDEO_About(HWND hParent)
 {
 	if(_VIDEO_About != NULL)
 	{
-		if (!UsingInternalVideo)
 		_VIDEO_About(hParent);
 	}
 	else
@@ -511,8 +494,7 @@ void VIDEO_Test(HWND hParent)
 {
 	if(_VIDEO_Test != NULL)
 	{
-		if (!UsingInternalVideo)
-			_VIDEO_Test(hParent);
+		_VIDEO_Test(hParent);
 	}
 	else
 	{
@@ -528,8 +510,7 @@ void VIDEO_MoveScreen(int x, int y)
 {
 	if(_VIDEO_MoveScreen != NULL)
 	{
-		if (!UsingInternalVideo)
-			_VIDEO_MoveScreen(x, y);
+		_VIDEO_MoveScreen(x, y);
 	}
 }
 
@@ -546,10 +527,7 @@ void VIDEO_UpdateScreen(void)
 
 	if(_VIDEO_UpdateScreen != NULL) __try
 	{
-		if (!UsingInternalVideo)
-		{
-			_VIDEO_UpdateScreen();
-		}
+		_VIDEO_UpdateScreen();
 	}
 	__except(NULL, EXCEPTION_EXECUTE_HANDLER)
 	{
@@ -565,8 +543,7 @@ void VIDEO_DrawScreen(void)
 {
 	if(_VIDEO_DrawScreen != NULL) __try
 	{
-		if (!UsingInternalVideo)
-			_VIDEO_DrawScreen();
+		_VIDEO_DrawScreen();
 	}
 
 	__except(NULL, EXCEPTION_EXECUTE_HANDLER)
@@ -587,8 +564,7 @@ void VIDEO_ViStatusChanged(void)
 	{
 		__try
 		{
-			if (!UsingInternalVideo)
-				_VIDEO_ViStatusChanged();
+			_VIDEO_ViStatusChanged();
 		}
 
 		__except(NULL, EXCEPTION_EXECUTE_HANDLER)
@@ -608,8 +584,7 @@ void VIDEO_ViWidthChanged(void)
 	{
 		__try
 		{
-			if (!UsingInternalVideo)
-				_VIDEO_ViWidthChanged();
+			_VIDEO_ViWidthChanged();
 		}
 
 		__except(NULL, EXCEPTION_EXECUTE_HANDLER)
