@@ -83,17 +83,6 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Change ROM Folder...\tCtrl+D", ID_CHANGEDIRECTORY
         MENUITEM "Refresh ROM List\tCtrl+L",    ID_FILE_FRESHROMLIST
-        POPUP "Recent ROM Folders"
-        BEGIN
-            MENUITEM "Rom Folder 1",                ID_FILE_ROMDIRECTORY1
-            MENUITEM "Rom Folder 2",                ID_FILE_ROMDIRECTORY2
-            MENUITEM "Rom Folder 3",                ID_FILE_ROMDIRECTORY3
-            MENUITEM "Rom Folder 4",                ID_FILE_ROMDIRECTORY4
-            MENUITEM "Rom Folder 5",                ID_FILE_ROMDIRECTORY5
-            MENUITEM "Rom Folder 6",                ID_FILE_ROMDIRECTORY6
-            MENUITEM "Rom Folder 7",                ID_FILE_ROMDIRECTORY7
-            MENUITEM "Rom Folder 8",                ID_FILE_ROMDIRECTORY8
-        END
         POPUP "Recent ROMs"
         BEGIN
             MENUITEM "Game 1",                      ID_FILE_RECENTGAMES_GAME1
@@ -128,26 +117,25 @@ BEGIN
             MENUITEM "Dynamic Compiler (Default)",  ID_DYNAMICCOMPILER, CHECKED
         END
         MENUITEM "Inject Gameshark Green Button Cheats\tF8", ID_CHEATS_APPLY
-		MENUITEM SEPARATOR
-		POPUP "OverClock"
-		BEGIN
-			MENUITEM "25MHz (4x underclock",        ID_UNDERCLOCK_25MHZ
-			MENUITEM "50MHz (2x underclock)",       ID_UNDERCLOCK_50MHZ
-			MENUITEM SEPARATOR
-			MENUITEM "100MHz (Normal Speed)",       ID_OVERCLOCK_100MHZ
-			MENUITEM "200MHz (2x overclock)",       ID_OVERCLOCK_200MHZ
-			MENUITEM "300MHz (3x overclock)",       ID_OVERCLOCK_300MHZ
-			MENUITEM "400MHz (4x overclock)",       ID_OVERCLOCK_400MHZ
-			MENUITEM "500MHz (5x overclock)",       ID_OVERCLOCK_500MHZ
-			MENUITEM "600MHz (6x overclock)",       ID_OVERCLOCK_600MHZ
-		END
+        MENUITEM SEPARATOR
+        POPUP "OverClock"
+        BEGIN
+            MENUITEM "25MHz (4x underclock",        ID_UNDERCLOCK_25MHZ
+            MENUITEM "50MHz (2x underclock)",       ID_UNDERCLOCK_50MHZ
+            MENUITEM SEPARATOR
+            MENUITEM "100MHz (Normal Speed)",       ID_OVERCLOCK_100MHZ
+            MENUITEM "200MHz (2x overclock)",       ID_OVERCLOCK_200MHZ
+            MENUITEM "300MHz (3x overclock)",       ID_OVERCLOCK_300MHZ
+            MENUITEM "400MHz (4x overclock)",       ID_OVERCLOCK_400MHZ
+            MENUITEM "500MHz (5x overclock)",       ID_OVERCLOCK_500MHZ
+            MENUITEM "600MHz (6x overclock)",       ID_OVERCLOCK_600MHZ
+        END
         MENUITEM SEPARATOR
         POPUP "Counter Factor"
         BEGIN
             MENUITEM "1 x .5 Half Rate\tCtrl+1",    ID_CF_CF1, GRAYED
             MENUITEM "1 x 1 Full Rate\tCtrl+2",     ID_CF_CF2, GRAYED
-            MENUITEM "2 x 1 Half Rate (Default)\tCtrl+3", ID_CF_CF3
-            , CHECKED, GRAYED
+            MENUITEM "2 x 1 Half Rate (Default)\tCtrl+3", ID_CF_CF3, CHECKED, GRAYED
             MENUITEM "2 x 2 Full Rate\tCtrl+4",     ID_CF_CF4, GRAYED
             MENUITEM "3 x 1.5 Half Rate\tCtrl+5",   ID_CF_CF5, GRAYED
             MENUITEM "3 x 3 Full Rate\tCtrl+6",     ID_CF_CF6, GRAYED
@@ -1215,9 +1203,7 @@ EXSTYLE WS_EX_TOOLWINDOW
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "File Menu Items",IDC_STATIC_GROUP1,7,7,346,34
-    CONTROL         "Display Recent ROM Folders",IDC_ENABLE_DIRECTORY_LIST,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,21,21,168,10
-    CONTROL         "Display Recent ROMs",IDC_ENABLE_GAME_LIST,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,210,21,135,10
+    CONTROL         "Display Recent ROMs",IDC_ENABLE_GAME_LIST,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,133,21,135,10
     GROUPBOX        "Window Behavior",IDC_STATIC_GROUP2,72,72,204,109
     CONTROL         "Start ROM in Full Screen",IDC_OPTION_AUTOFULLSCREEN,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,106,122,162,10
@@ -1538,23 +1524,23 @@ BEGIN
 0x4b32, 0x2042, 0x4545, 0x5250, 0x4d4f, "\000" 
     IDC_ROMOPTION_EEPROMSIZE, 0x403, 11, 0
 0x4b34, 0x2042, 0x4545, 0x5250, 0x4d4f, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 8, 0
+    1439, 0x403, 8, 0
 0x6544, 0x6166, 0x6c75, 0x0074, 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
+    1439, 0x403, 5, 0
 0x4643, 0x313d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
+    1439, 0x403, 5, 0
 0x4643, 0x323d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
+    1439, 0x403, 5, 0
 0x4643, 0x333d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
+    1439, 0x403, 5, 0
 0x4643, 0x343d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
+    1439, 0x403, 5, 0
 0x4643, 0x353d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
+    1439, 0x403, 5, 0
 0x4643, 0x363d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
+    1439, 0x403, 5, 0
 0x4643, 0x373d, "\000" 
-    IDC_ROMOPTION_CF, 0x403, 5, 0
+    1439, 0x403, 5, 0
 0x4643, 0x383d, "\000" 
     IDC_ROMOPTION_MAXVISPEED, 0x403, 8, 0
 0x6544, 0x6166, 0x6c75, 0x0074, 

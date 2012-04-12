@@ -289,7 +289,6 @@ void StopEmulator(void)
 		{
 			RSPRomClosed();
 		}
-		//netplay_rom_closed();
 	}
 
 	// Double confirm the video is closed. This line won't matter if the VIDEO_RomClosed is already closed
@@ -335,18 +334,6 @@ uint32	RDRamSizeHackSavedDWord2 = 0;
 void CloseEmulator(void)
 {
 	if(currentromoptions.Code_Check == CODE_CHECK_PROTECT_MEMORY) UnprotectAllBlocks();
-
-	/*
-	if(emustatus.reason_to_stop == VIDEOCRASH || emustatus.reason_to_stop == CPUCRASH)
-	{
-		PostMessage(gui.hwnd1964main, WM_COMMAND, ID_ROM_STOP, 0);
-		emustatus.Emu_Keep_Running = TRUE;
-		while(emustatus.Emu_Keep_Running)
-		{
-			Sleep(50);					// wait until wingui processing the STOP command
-		}
-	}
-	*/
 
 	emustatus.Emu_Is_Running = FALSE;
 	Free_Dynarec();
@@ -423,7 +410,6 @@ void InitEmu(void)
 	{
 		VIDEO_RomOpen();
 		CONTROLLER_RomOpen();
-		//netplay_rom_open();
 	}
     
 
