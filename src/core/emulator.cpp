@@ -35,7 +35,7 @@ extern uint32		SetException_Interrupt(uint32 pc);
 BOOL __cdecl		DisplayError_AskIfContinue(char *Message, ...);
 
 void				CloseEmulator(void);
-inline void				RunTheInterpreter(void);
+inline void			RunTheInterpreter(void);
 void				RunTheRegCacheWithoutOpcodeDebugger(void);
 static void			RunTheRegCacheNoCheck(void);
 HANDLE				CPUThreadHandle = NULL;

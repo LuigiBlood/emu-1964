@@ -584,7 +584,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\memory2.cpp"
+				RelativePath=".\memory.cpp"
 				>
 			</File>
 			<File
@@ -1234,19 +1234,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath=".\Memory.cpp"
-			>
-		</File>
-		<File
 			RelativePath=".\Memory.h"
-			>
-		</File>
-		<File
-			RelativePath=".\OpcodeMap.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Registers.cpp"
 			>
 		</File>
 		<File
