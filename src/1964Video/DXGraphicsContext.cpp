@@ -1,4 +1,4 @@
-/*
+cv /*
 Copyright (C) 2003-2009 Rice1964
 
 This program is free software; you can redistribute it and/or
@@ -330,11 +330,8 @@ BOOL CDXGraphicsContext::FindDepthStencilFormat( UINT iAdapter, D3DDEVTYPE Devic
 			if( SUCCEEDED( m_pD3D->CheckDepthStencilMatch( iAdapter, DeviceType,
 				TargetFormat, TargetFormat, D3DFMT_D24S8 ) ) )
 			{
-				
-				
 				*pDepthStencilFormat = D3DFMT_D24S8;
 				return TRUE;
-				
 			}
 		}
 	}
