@@ -1467,7 +1467,6 @@ void KillCPUThread(void)
 		AUDIO_RomClosed();
 		CONTROLLER_RomClosed();
 		VIDEO_RomClosed();
-		//netplay_rom_closed();
 
 		AfterStop();
 	}
@@ -3800,7 +3799,6 @@ void Exit1964(void)
 
 		DeleteAllIniEntries();	/* Release all ini entries */
 		ClearRomList();			/* Clean the Rom List */
-		//unload_netplay_dll();
 		FreePlugins();
 		UnloadDllKaillera();
 

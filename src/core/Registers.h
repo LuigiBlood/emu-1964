@@ -5,9 +5,6 @@ namespace N64
 	class CRegisters
 	{
 	public:
-		CRegisters(void);
-		~CRegisters(void);
-
 		typedef union Integer
 		{
 			__int64 s64;

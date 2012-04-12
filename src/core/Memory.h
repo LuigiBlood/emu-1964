@@ -3,9 +3,6 @@
 class CMemory
 {
 public:
-	CMemory(void);
-	~CMemory(void);
-
 	static const __int32 MAXTLB = 32;
 
 	typedef struct TLB
