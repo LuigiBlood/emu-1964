@@ -336,9 +336,6 @@ void ReadConfiguration( void)
 		REGISTRY_ReadDWORD( "PauseWhenInactive", TRUE);
 	guioptions.pause_at_inactive = FALSE;	// This feature is disabled
 
-	guioptions.show_recent_rom_directory_list =
-		REGISTRY_ReadDWORD( "RomDirectoryListMenu", TRUE);
-
 	guioptions.show_recent_game_list =
 		REGISTRY_ReadDWORD( "GameListMenu", TRUE);
 
@@ -375,21 +372,7 @@ void ReadConfiguration( void)
 
 	rlstatus.romlistNameToDisplay = REGISTRY_ReadDWORD( "RomNameToDisplay", ROMLIST_DISPLAY_ALTER_NAME);
 
-	for( i=0, idx=0; i<MAX_RECENT_ROM_DIR; i++) 
-	{
-		sprintf(str, "RecentRomDirectory%d", i);
-		strcpy(recent_rom_directory_lists[idx], REGISTRY_ReadSTRING(str, "Empty Rom Folder Slot"));
-		if( strcmp(recent_rom_directory_lists[idx], "Empty Rom Folder Slot") != 0 && PathFileExists(recent_rom_directory_lists[idx]) )
-		{
-			idx++;
-		}
-	}
-	for( ;idx<MAX_RECENT_ROM_DIR; idx++)
-	{
-		strcpy(recent_rom_directory_lists[idx], "Empty Rom Folder Slot");
-	}
-
-	for( i=0, idx=0; i<MAX_RECENT_GAME_LIST; i++) 
+	for( i=0, idx=0; i<8; i++) 
 	{
 		sprintf( str, "RecentGame%d", i);
 		strcpy( recent_game_lists[idx], REGISTRY_ReadSTRING(str, "Empty Game Slot"));
@@ -398,7 +381,7 @@ void ReadConfiguration( void)
 			idx++;
 		}
 	}
-	for( ;idx<MAX_RECENT_GAME_LIST; idx++)
+	for( ;idx<8; idx++)
 	{
 		strcpy(recent_game_lists[idx], "Empty Game Slot");
 	}
@@ -443,12 +426,7 @@ void WriteConfiguration( void)
 	REGISTRY_WriteDebug();
 #endif
 
-	for(i = 0; i < MAX_RECENT_ROM_DIR; i++)	{
-		sprintf(str, "RecentRomDirectory%d", i);
-		REGISTRY_WriteStringByName( str, recent_rom_directory_lists[i]);
-	}
-
-	for(i = 0; i < MAX_RECENT_GAME_LIST; i++) {
+	for(i = 0; i < 8; i++) {
 		sprintf(str, "RecentGame%d", i);
 		REGISTRY_WriteStringByName( str, recent_game_lists[i]);
 	}

@@ -715,10 +715,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\netplay-spec.h"
-					>
-				</File>
-				<File
 					RelativePath=".\r4300i.h"
 					>
 				</File>

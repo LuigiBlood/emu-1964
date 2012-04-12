@@ -1740,7 +1740,6 @@ DlgLangMapEntry FolderDialogItems[]=
 DlgLangMapEntry OptionsDialogItems[]=
 {
 	{IDC_STATIC_GROUP1,0,0},
-	{IDC_ENABLE_DIRECTORY_LIST,0,0},
 	{IDC_STATIC_TXT1,0,0},
 	{IDC_ENABLE_GAME_LIST,0,0},
 	{IDC_STATIC_TXT2,0,0},

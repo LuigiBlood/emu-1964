@@ -23,7 +23,6 @@ struct DIRECTORIES	directories;
 struct GUISTATUS	guistatus;
 int					ActiveApp;
 
-/* the legal stuff */
 unsigned char	Scratch0[700];
 unsigned char	Scratch1[700];
 unsigned char	Scratch2[700];
@@ -44,8 +43,7 @@ unsigned int		codecheckmenulist[8] = {
 	ID_CPU_DYNACODECHECKING_BLOCKANDDMA,
 	ID_CPU_DYNACODECHECKING_PROTECTMEMORY};
 
-char				recent_rom_directory_lists[MAX_RECENT_ROM_DIR][260];
-char				recent_game_lists[MAX_RECENT_GAME_LIST][260];
+char				recent_game_lists[8][260];
 char				game_country_name[10];
 int					game_country_tvsystem = 0;
 int					Audio_Is_Initialized = 0;
@@ -81,11 +79,7 @@ void					SetupAdvancedMenus(void);
 void					RegenerateStateSelectorMenus(void);
 void					RegenerateRecentGameMenus(void);
 void					DeleteRecentGameMenus(void);
-void					RegerateRecentRomDirectoryMenus(void);
-void					DeleteRecentRomDirectoryMenus(void);
 void __cdecl			RefreshRecentGameMenus(char *newgamefilename);
-void					RefreshRecentRomDirectoryMenus(char *newromdirectory);
-void					ChangeToRecentDirectory(int id);
 void					OpenRecentGame(int id);
 void					UpdateCIC(void);
 void					init_debug_options(void);
@@ -108,7 +102,8 @@ typedef struct {
 	UINT	id;
 	BOOL	visible;	// is the menu visiable or deleted from the menu bar
 }MenuStatus;
-MenuStatus	recent_game_menus[MAX_RECENT_GAME_LIST] =
+
+MenuStatus	recent_game_menus[8] =
 {
 	{ID_FILE_RECENTGAMES_GAME1,		TRUE},
 	{ID_FILE_RECENTGAMES_GAME2,		TRUE},
@@ -118,33 +113,6 @@ MenuStatus	recent_game_menus[MAX_RECENT_GAME_LIST] =
 	{ID_FILE_RECENTGAMES_GAME6,		TRUE},
 	{ID_FILE_RECENTGAMES_GAME7,		TRUE},
 	{ID_FILE_RECENTGAMES_GAME8,		TRUE},
-	{ID_FILE_RECENTGAMES_GAME9,		TRUE},
-	{ID_FILE_RECENTGAMES_GAME10,	TRUE},
-	{ID_FILE_RECENTGAMES_GAME11,	TRUE},
-	{ID_FILE_RECENTGAMES_GAME12,	TRUE},
-	{ID_FILE_RECENTGAMES_GAME13,	TRUE},
-	{ID_FILE_RECENTGAMES_GAME14,	TRUE},
-	{ID_FILE_RECENTGAMES_GAME15,	TRUE},
-	{ID_FILE_RECENTGAMES_GAME16,	TRUE},
-};
-MenuStatus	recent_rom_directory_menus[MAX_RECENT_ROM_DIR] =
-{
-	{ID_FILE_ROMDIRECTORY1,		TRUE},
-	{ID_FILE_ROMDIRECTORY2,		TRUE},
-	{ID_FILE_ROMDIRECTORY3,		TRUE},
-	{ID_FILE_ROMDIRECTORY4,		TRUE},
-	{ID_FILE_ROMDIRECTORY5,		TRUE},
-	{ID_FILE_ROMDIRECTORY6,		TRUE},
-	{ID_FILE_ROMDIRECTORY7,		TRUE},
-	{ID_FILE_ROMDIRECTORY8,		TRUE},
-	{ID_FILE_ROMDIRECTORY9,		TRUE},
-	{ID_FILE_ROMDIRECTORY10,	TRUE},
-	{ID_FILE_ROMDIRECTORY11,	TRUE},
-	{ID_FILE_ROMDIRECTORY12,	TRUE},
-	{ID_FILE_ROMDIRECTORY13,	TRUE},
-	{ID_FILE_ROMDIRECTORY14,	TRUE},
-	{ID_FILE_ROMDIRECTORY15,	TRUE},
-	{ID_FILE_ROMDIRECTORY16,	TRUE},
 };
 
 extern BOOL newSecond;
@@ -783,38 +751,6 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case ID_POPUPMENU_CHANGEROMDIRECTORY:
 		if (!guistatus.IsFullScreen)
 			ChangeDirectory();
-		break;
-	case ID_FILE_ROMDIRECTORY1:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(0);
-		break;
-	case ID_FILE_ROMDIRECTORY2:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(1);
-		break;
-	case ID_FILE_ROMDIRECTORY3:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(2);
-		break;
-	case ID_FILE_ROMDIRECTORY4:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(3);
-		break;
-	case ID_FILE_ROMDIRECTORY5:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(4);
-		break;
-	case ID_FILE_ROMDIRECTORY6:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(5);
-		break;
-	case ID_FILE_ROMDIRECTORY7:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(6);
-		break;
-	case ID_FILE_ROMDIRECTORY8:
-		if (!guistatus.IsFullScreen)
-			ChangeToRecentDirectory(7);
 		break;
 	case ID_FILE_RECENTGAMES_GAME1:
 		OpenRecentGame(0);
@@ -1843,11 +1779,6 @@ void (__stdcall KailleraDialogThread)(void *pVoid)
 	EnableMenuItem(gui.hMenu1964main, ID_KAILLERA_MODE, MF_GRAYED);
 	EnableMenuItem(gui.hMenu1964main, ID_CHANGEDIRECTORY, MF_GRAYED);
 	EnableMenuItem(gui.hMenu1964main, ID_FILE_FRESHROMLIST, MF_GRAYED);
-	for( i=0; i<16; i++ )
-	{
-		EnableMenuItem(gui.hMenu1964main, recent_rom_directory_menus[i].id,  MF_GRAYED);
-	}
-
 
 	kailleraInit();
 	kailleraSetInfos(&kInfos);
@@ -1861,10 +1792,6 @@ void (__stdcall KailleraDialogThread)(void *pVoid)
 	EnableMenuItem(gui.hMenu1964main, ID_KAILLERA_MODE, (IsKailleraDllLoaded())? MF_ENABLED:MF_GRAYED);
 	EnableMenuItem(gui.hMenu1964main, ID_CHANGEDIRECTORY, MF_ENABLED);
 	EnableMenuItem(gui.hMenu1964main, ID_FILE_FRESHROMLIST, MF_ENABLED);
-	for( i=0; i<8; i++ )
-	{
-		EnableMenuItem(gui.hMenu1964main, recent_rom_directory_menus[i].id,  MF_ENABLED);
-	}
 
 	EnableMenuItem(gui.hMenu1964main, IDM_PLUGINS, MF_ENABLED);
 	KailleraDialogIsRunning = FALSE;
@@ -2110,7 +2037,7 @@ void OpenRecentGame(int id)
 	if(emustatus.Emu_Is_Running) 
 		return;
 
-	if(id >= 0 && id < MAX_RECENT_GAME_LIST )
+	if(id >= 0 && id < 8 )
 	{
 		if(WinLoadRomStep2(recent_game_lists[id]))
 		{
@@ -2585,35 +2512,9 @@ void ChangeDirectory(void)
 		strcpy(directories.rom_directory_to_use, path);
 		strcpy(directories.last_rom_directory, path);
 
-		RefreshRecentRomDirectoryMenus(path);
-
 		ClearRomList();
 		SetStatusBarText(0, TranslateStringByString("Looking for ROM files in the ROM directory and Generating List"));
 		RomListReadDirectory(directories.rom_directory_to_use,FALSE);
-		NewRomList_ListViewFreshRomList();
-		Set_Ready_Message();
-	}
-}
-
-/*
- =======================================================================================================================
- =======================================================================================================================
- */
-void ChangeToRecentDirectory(int id)
-{
-	if(emustatus.Emu_Is_Running) return;
-
-	if(id >= 0 && id < MAX_RECENT_ROM_DIR)
-	{
-		strcpy(generalmessage, recent_rom_directory_lists[id]);
-		strcpy(directories.rom_directory_to_use, generalmessage);
-		strcpy(directories.last_rom_directory, generalmessage);
-		WriteConfiguration();
-		RefreshRecentRomDirectoryMenus(generalmessage);
-
-		ClearRomList();
-		SetStatusBarText(0, TranslateStringByString("Looking for ROM files in the ROM directory and Generating List"));
-		RomListReadDirectory(directories.rom_directory_to_use,TRUE);
 		NewRomList_ListViewFreshRomList();
 		Set_Ready_Message();
 	}
@@ -2626,9 +2527,6 @@ void OptionsDialog_OnInit(HWND hDlg)
 
 	SendDlgItemMessage(	hDlg, IDC_DEFAULTOPTIONS_PAUSEWHENINACTIVE,	BM_SETCHECK,
 		guioptions.pause_at_inactive ? BST_CHECKED : BST_UNCHECKED,	0);
-
-	SendDlgItemMessage(	hDlg, IDC_ENABLE_DIRECTORY_LIST, BM_SETCHECK,
-		guioptions.show_recent_rom_directory_list ? BST_CHECKED : BST_UNCHECKED, 0);
 
 	SendDlgItemMessage(	hDlg, IDC_ENABLE_GAME_LIST,	BM_SETCHECK,
 		guioptions.show_recent_game_list ? BST_CHECKED : BST_UNCHECKED, 0);
@@ -2760,19 +2658,6 @@ void OptionsDialog_OnApply(HWND hDlg)
 			guioptions.display_profiler_status ^= 1;
 			REGISTRY_WriteDWORD( "DisplayProfilerStatus", guioptions.display_profiler_status);
 		}
-	}
-
-	if( guioptions.show_recent_rom_directory_list 
-		!= ( SendDlgItemMessage( hDlg, IDC_ENABLE_DIRECTORY_LIST, BM_GETCHECK, 0, 0)
-		     == BST_CHECKED))
-	{
-		guioptions.show_recent_rom_directory_list ^= 1;
-		REGISTRY_WriteDWORD( "RomDirectoryListMenu", 
-			guioptions.show_recent_rom_directory_list);
-		if(guioptions.show_recent_rom_directory_list)
-			RegerateRecentRomDirectoryMenus();
-		else
-			DeleteRecentRomDirectoryMenus();
 	}
 
 	if(	guioptions.show_recent_game_list 
@@ -3127,7 +3012,6 @@ void PrepareBeforePlay(int IsFullScreen)
 	for( i=0; i<8; i++ )
 	{
 		EnableMenuItem(gui.hMenu1964main, recent_game_menus[i].id, MF_GRAYED);
-		EnableMenuItem(gui.hMenu1964main, recent_rom_directory_menus[i].id,  MF_GRAYED);
 	}
 
 	if(GfxPluginVersion == 0x0103)
@@ -3283,23 +3167,13 @@ void AfterStop(void)
 	for( i=0; i<8; i++ )
 	{
 		EnableMenuItem(gui.hMenu1964main, cfmenulist[i], MF_ENABLED);
-	}
-
-	for( i=0; i<16; i++ )
-	{
 		EnableMenuItem(gui.hMenu1964main, recent_game_menus[i].id, MF_ENABLED);
-		EnableMenuItem(gui.hMenu1964main, recent_rom_directory_menus[i].id,  MF_ENABLED);
 	}
 
 	if( KailleraDialogIsRunning )
 	{
 		EnableMenuItem(gui.hMenu1964main, ID_CHANGEDIRECTORY, MF_GRAYED);
 		EnableMenuItem(gui.hMenu1964main, ID_FILE_FRESHROMLIST, MF_GRAYED);
-		for( i=0; i<16; i++ )
-		{
-			EnableMenuItem(gui.hMenu1964main, recent_rom_directory_menus[i].id,  MF_GRAYED);
-		}
-
 		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_1, MF_ENABLED);
 		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_2, MF_ENABLED);
 		EnableMenuItem(gui.hMenu1964main, ID_LAGNESS_3, MF_ENABLED);
@@ -3418,7 +3292,6 @@ void __cdecl SetStatusBarText(int fieldno, char *text)
 
 HMENU			file_submenu;
 HMENU			CPU_submenu;
-HMENU			recent_rom_directory_submenu;
 HMENU			recent_game_submenu;
 HMENU			switch_compiler_submenu;
 MENUITEMINFO	switch_compiler_submenu_info;
@@ -3426,7 +3299,6 @@ HMENU			dyna_code_checking_submenu;
 HMENU			counter_hack_submenu;
 HMENU			state_save_submenu;
 HMENU			state_load_submenu;
-UINT			recent_rom_directory_submenu_pos;
 UINT			recent_game_submenu_pos;
 UINT			switch_compiler_submenu_pos;
 UINT			dyna_code_checking_submenu_pos;
@@ -3455,28 +3327,14 @@ void ModifyMenuText(UINT menuid, char *newtext)
 void RegenerateRecentGameMenus(void)
 {
 	LoadString(gui.hInst, IDS_RECENT_ROMS, (LPSTR)Scratch1, 700);
-	if(guioptions.show_recent_rom_directory_list)
-	{
-		InsertMenu
-		(
-			file_submenu,
-			recent_game_submenu_pos,
-			MF_BYPOSITION | MF_POPUP,
-			(UINT) recent_game_submenu,
-			(LPCSTR)Scratch1
-		);
-	}
-	else
-	{
-		InsertMenu
-		(
-			file_submenu,
-			recent_rom_directory_submenu_pos,
-			MF_BYPOSITION | MF_POPUP,
-			(UINT) recent_game_submenu,
-			(LPCSTR)Scratch1
-		);
-	}
+	InsertMenu
+	(
+		file_submenu,
+		recent_game_submenu_pos,
+		MF_BYPOSITION | MF_POPUP,
+		(UINT) recent_game_submenu,
+		(LPCSTR)Scratch1
+	);
 }
 
 /*
@@ -3520,15 +3378,15 @@ void __cdecl RefreshRecentGameMenus(char *newgamefilename)
 
     __try
     {
-		for(i = 0; i < MAX_RECENT_GAME_LIST; i++)
+		for(i = 0; i < 8; i++)
 		{
 			if(strcmp(recent_game_lists[i], newgamefilename) == 0 || strcmp(recent_game_lists[i], "Empty Game Slot" ) == 0 ) 
 				break;
 		}
 
-		if(i == MAX_RECENT_GAME_LIST)
+		if(i == 8)
 		{
-			i = MAX_RECENT_GAME_LIST-1;	/* if not found */
+			i = 8-1;	/* if not found */
 		}
 
 		if( recent_game_menus[i].visible == FALSE && i< 8 )
@@ -3556,7 +3414,7 @@ void __cdecl RefreshRecentGameMenus(char *newgamefilename)
 		ModifyMenuText(recent_game_menus[0].id, newgamefilename);
 
 		// Save the list into registry
-		for(i = 0; i < MAX_RECENT_GAME_LIST; i++) 
+		for(i = 0; i < 8; i++) 
 		{
 			sprintf(str, "RecentGame%d", i);
 			REGISTRY_WriteStringByName( str, recent_game_lists[i]);
@@ -3567,96 +3425,6 @@ void __cdecl RefreshRecentGameMenus(char *newgamefilename)
     }
 
 	return;
-}
-
-/*
- =======================================================================================================================
-    char recent_rom_directory_lists[MAX_RECENT_ROM_DIR][260];
- =======================================================================================================================
- */
-void RefreshRecentRomDirectoryMenus(char *newromdirectory)
-{
-	int i;
-	char str[256];
-
-	for(i = 0; i < MAX_RECENT_ROM_DIR; i++)
-	{
-		if(strcmp(recent_rom_directory_lists[i], newromdirectory) == 0 || strcmp(recent_rom_directory_lists[i], "Empty Rom Folder Slot" ) == 0 ) 
-			break;
-	}
-
-	if(i == MAX_RECENT_ROM_DIR) 
-		i = MAX_RECENT_ROM_DIR - 1; /* if not found */
-
-	if( recent_rom_directory_menus[i].visible == FALSE && i< 8)
-	{
-		HMENU file_submenu = GetSubMenu(gui.hMenu1964main, 0);
-		HMENU recentfolder_submenu = GetSubMenu(file_submenu, 10);
-		AppendMenu
-			(
-			recentfolder_submenu,
-			MF_ENABLED|MF_STRING,
-			recent_rom_directory_menus[i].id,
-			"Empty Rom Folder Slot"
-			);
-		recent_rom_directory_menus[i].visible = TRUE;
-	}
-
-	/* need to move the most recent file to the 1st position */
-	for(; i > 0; i--)
-	{
-		strcpy(recent_rom_directory_lists[i], recent_rom_directory_lists[i - 1]);
-		ModifyMenuText(recent_rom_directory_menus[i].id, recent_rom_directory_lists[i]);
-	}
-
-	strcpy(recent_rom_directory_lists[0], newromdirectory);
-	ModifyMenuText(recent_rom_directory_menus[0].id, newromdirectory);
-
-	for(i = 0; i < MAX_RECENT_ROM_DIR; i++)	
-	{
-		sprintf(str, "RecentRomDirectory%d", i);
-		REGISTRY_WriteStringByName( str, recent_rom_directory_lists[i]);
-	}
-}
-
-/*
- =======================================================================================================================
- =======================================================================================================================
- */
-void RegerateRecentRomDirectoryMenus(void)
-{
-	InsertMenu
-	(
-		file_submenu,
-		recent_rom_directory_submenu_pos,
-		MF_BYPOSITION | MF_POPUP,
-		(UINT) recent_rom_directory_submenu,
-		"Recent ROM Folders"
-	);
-}
-
-/*
- =======================================================================================================================
- =======================================================================================================================
- */
-void DeleteRecentRomDirectoryMenus(void)
-{
-	int		i, j, n;
-	char	str[100];
-
-	i = GetMenuItemCount(gui.hMenu1964main);
-	file_submenu = GetSubMenu(gui.hMenu1964main, 0);
-	j = GetMenuItemCount(file_submenu);
-	for(n = j - 1; n >= 0; n--) /* I have to delete the menu in reverse order */
-	{
-		GetMenuString(file_submenu, n, str, 80, MF_BYPOSITION);
-		if(strcmp(str, "Recent ROM Folders") == 0)
-		{
-			recent_rom_directory_submenu = GetSubMenu(file_submenu, n);
-			recent_rom_directory_submenu_pos = n;
-			RemoveMenu(file_submenu, n, MF_BYPOSITION);
-		}
-	}
 }
 
 /*
@@ -3697,27 +3465,7 @@ void SetupAdvancedMenus(void)
 	int i;
 	/*~~*/
 
-	for(i = 0; i < MAX_RECENT_ROM_DIR; i++)
-	{
-		ModifyMenuText(recent_rom_directory_menus[i].id, recent_rom_directory_lists[i]);
-		if(strcmp(recent_rom_directory_lists[i], "Empty Rom Folder Slot" ) == 0)
-		{
-			EnableMenuItem(gui.hMenu1964main, recent_rom_directory_menus[i].id,MF_GRAYED);
-			DeleteMenu(gui.hMenu1964main, recent_rom_directory_menus[i].id, MF_BYCOMMAND);
-			recent_rom_directory_menus[i].visible=FALSE;
-		}
-		else
-		{
-			EnableMenuItem(gui.hMenu1964main, recent_rom_directory_menus[i].id,MF_ENABLED);
-			if( i >= 8 )
-			{
-				DeleteMenu(gui.hMenu1964main, recent_rom_directory_menus[i].id, MF_BYCOMMAND);
-				recent_rom_directory_menus[i].visible=FALSE;
-			}
-		}
-	}
-
-	for(i = 0; i < MAX_RECENT_GAME_LIST; i++)
+	for(i = 0; i < 8; i++)
 	{
 		ModifyMenuText(recent_game_menus[i].id, recent_game_lists[i]);
 		if(strcmp(recent_game_lists[i], "Empty Game Slot" ) == 0)
@@ -3737,7 +3485,6 @@ void SetupAdvancedMenus(void)
 		}
 	}
 
-	if(guioptions.show_recent_rom_directory_list == FALSE) DeleteRecentRomDirectoryMenus();
 	if(guioptions.show_recent_game_list == FALSE) DeleteRecentGameMenus();
 	if(!emuoptions.SyncVI) CheckMenuItem(gui.hMenu1964main, ID_CPU_AUDIOSYNC, MF_UNCHECKED);
 }

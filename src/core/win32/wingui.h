@@ -136,7 +136,6 @@ struct GUIOPTIONS
 	BOOL	use_default_state_save_directory;
 	BOOL	use_default_plugin_directory;
 	BOOL	use_last_rom_directory;
-	BOOL	show_recent_rom_directory_list;
 	BOOL	show_recent_game_list;
 	BOOL	display_detail_status;
 	BOOL	display_profiler_status;
@@ -170,10 +169,7 @@ extern struct GUISTATUS guistatus;
 extern void InitStatusBarParts(void);
 extern void	__cdecl		SetStatusBarText(int, char * );
 
-#define MAX_RECENT_ROM_DIR		16
-#define MAX_RECENT_GAME_LIST	16
-extern char					recent_rom_directory_lists[MAX_RECENT_ROM_DIR][260];
-extern char					recent_game_lists[MAX_RECENT_GAME_LIST][260];
+extern char					recent_game_lists[8][260];
 
 struct DIRECTORIES
 {
