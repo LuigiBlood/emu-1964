@@ -73,7 +73,6 @@
 #define IDB_HELP                        146
 #define ID_INTERPRETER                  147
 #define IDB_PROPERTY                    147
-#define ID_STATICCOMPILER               148
 #define ID_DYNAMICCOMPILER              149
 #define IDB_ROM_OPEN                    149
 #define ID_CLOSEROM                     150

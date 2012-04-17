@@ -864,19 +864,11 @@ void ProcessMenuCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case ID_INTERPRETER:
 		CheckMenuItem(gui.hMenu1964main, ID_INTERPRETER, MF_CHECKED);
-		CheckMenuItem(gui.hMenu1964main, ID_STATICCOMPILER, MF_UNCHECKED);
 		CheckMenuItem(gui.hMenu1964main, ID_DYNAMICCOMPILER, MF_UNCHECKED);
 		EmulatorSetCore(INTERPRETER);
 		break;
-	case ID_STATICCOMPILER:
-		CheckMenuItem(gui.hMenu1964main, ID_INTERPRETER, MF_UNCHECKED);
-		CheckMenuItem(gui.hMenu1964main, ID_STATICCOMPILER, MF_CHECKED);
-		CheckMenuItem(gui.hMenu1964main, ID_DYNAMICCOMPILER, MF_UNCHECKED);
-		EmulatorSetCore(1);
-		break;
 	case ID_DYNAMICCOMPILER:
 		CheckMenuItem(gui.hMenu1964main, ID_INTERPRETER, MF_UNCHECKED);
-		CheckMenuItem(gui.hMenu1964main, ID_STATICCOMPILER, MF_UNCHECKED);
 		CheckMenuItem(gui.hMenu1964main, ID_DYNAMICCOMPILER, MF_CHECKED);
 		EmulatorSetCore(DYNACOMPILER);
 		break;
