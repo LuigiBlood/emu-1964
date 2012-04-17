@@ -118,6 +118,17 @@ BEGIN
         END
         MENUITEM "Inject Gameshark Green Button Cheats\tF8", ID_CHEATS_APPLY
         MENUITEM SEPARATOR
+        POPUP "Counter Factor"
+        BEGIN
+            MENUITEM "1 x .5 Half Rate\tCtrl+1",    ID_CF_CF1, GRAYED
+            MENUITEM "1 x 1 Full Rate\tCtrl+2",     ID_CF_CF2, GRAYED
+            MENUITEM "2 x 1 Half Rate (Default)\tCtrl+3", ID_CF_CF3, CHECKED, GRAYED
+            MENUITEM "2 x 2 Full Rate\tCtrl+4",     ID_CF_CF4, GRAYED
+            MENUITEM "3 x 1.5 Half Rate\tCtrl+5",   ID_CF_CF5, GRAYED
+            MENUITEM "3 x 3 Full Rate\tCtrl+6",     ID_CF_CF6, GRAYED
+            MENUITEM "4 x 2 Half Rate\tCtrl+7",     ID_CF_CF7, GRAYED
+            MENUITEM "8 x 4 Half Rate\tCtrl+8",     ID_CF_CF8, GRAYED
+        END
         POPUP "OverClock"
         BEGIN
             MENUITEM "25MHz (4x underclock",        ID_UNDERCLOCK_25MHZ
@@ -131,17 +142,6 @@ BEGIN
             MENUITEM "600MHz (6x overclock)",       ID_OVERCLOCK_600MHZ
         END
         MENUITEM SEPARATOR
-        POPUP "Counter Factor"
-        BEGIN
-            MENUITEM "1 x .5 Half Rate\tCtrl+1",    ID_CF_CF1, GRAYED
-            MENUITEM "1 x 1 Full Rate\tCtrl+2",     ID_CF_CF2, GRAYED
-            MENUITEM "2 x 1 Half Rate (Default)\tCtrl+3", ID_CF_CF3, CHECKED, GRAYED
-            MENUITEM "2 x 2 Full Rate\tCtrl+4",     ID_CF_CF4, GRAYED
-            MENUITEM "3 x 1.5 Half Rate\tCtrl+5",   ID_CF_CF5, GRAYED
-            MENUITEM "3 x 3 Full Rate\tCtrl+6",     ID_CF_CF6, GRAYED
-            MENUITEM "4 x 2 Half Rate\tCtrl+7",     ID_CF_CF7, GRAYED
-            MENUITEM "8 x 4 Half Rate\tCtrl+8",     ID_CF_CF8, GRAYED
-        END
         MENUITEM "Speed Limit\tF9",             ID_CPU_AUDIOSYNC, CHECKED
         MENUITEM "Screen Shot\tF12",            ID_PLUGINS_SCREENSHOTS
         POPUP "Variable Speed Limits"
@@ -1142,6 +1142,8 @@ BEGIN
     COMBOBOX        IDC_ROMOPTION_USETLB,84,44,96,55,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     RTEXT           "EEPROM Size:",IDC_STATIC_TXT2,185,13,62,8
     COMBOBOX        IDC_ROMOPTION_EEPROMSIZE,252,12,94,65,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+	RTEXT           "Counter Factor:",IDC_STATIC_TXT4,186,29,61,8
+	COMBOBOX        IDC_ROMOPTION_CF,252,28,94,105,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     RTEXT           "Max VI Limit:",IDC_STATIC_TXT6,185,45,62,8
     COMBOBOX        IDC_ROMOPTION_MAXVISPEED,252,44,94,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     GROUPBOX        "Compiler",IDC_STATIC_GROUP2,7,66,347,76
