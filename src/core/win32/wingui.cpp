@@ -139,8 +139,8 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 				lastdls=emustatus.DListCount;
 				lasttime=GetTickCount();
 			}
-			//extern WindowSettingStruct windowSetting;
-			sprintf(generalmessage, " %d REAL FPS", (int) vips);
+
+			sprintf(generalmessage, " %d FPS", (int) vips);
 
 			viCountPerSecond = 0;
 			QueryPerformanceCounter(&LastSecondTime);
