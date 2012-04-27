@@ -357,6 +357,12 @@ void ReadConfiguration( void)
 	guioptions.display_profiler_status =
 		REGISTRY_ReadDWORD( "DisplayProfilerStatus", TRUE);
 
+	guioptions.display_fps =
+		REGISTRY_ReadDWORD( "Displayfps", TRUE);
+
+	guioptions.display_vis =
+		REGISTRY_ReadDWORD( "Displayvis", FALSE);
+
     //A little hack. It would be better to have a single
     //registr value for statusbar statistics, instead of 2 registry values.
     if (guioptions.display_profiler_status && guioptions.display_detail_status)
