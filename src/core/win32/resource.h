@@ -198,6 +198,7 @@
 #define ID_OPCODEDEBUGGER_BLOCK_ONLY    264
 #define ID_DIRTYONLY                    265
 #define ID_PREFERENCE_OPTIONS           266
+#define IDC_FPS                         1002
 #define ID_FILE_RECENTGAMES_GAME1       269
 #define ID_FILE_RECENTGAMES_GAME2       270
 #define ID_FILE_RECENTGAMES_GAME3       271
@@ -340,6 +341,7 @@
 #define IDC_COP03                       1035
 #define IDC_COP04                       1036
 #define IDC_COP05                       1037
+#define IDC_VIS                         40019
 #define IDC_COP06                       1038
 #define IDC_COP07                       1039
 #define IDC_COP08                       1040

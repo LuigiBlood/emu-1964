@@ -139,6 +139,8 @@ struct GUIOPTIONS
 	BOOL	show_recent_game_list;
 	BOOL	display_detail_status;
 	BOOL	display_profiler_status;
+	BOOL	display_fps;
+	BOOL	display_vis;
 	BOOL	display_romlist;
 	BOOL	display_boxart;
 	int		boxart_image_width;

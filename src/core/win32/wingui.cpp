@@ -133,18 +133,33 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 			static int lasttime=0;
 			static int lastdls=0;
 
-			if(GetTickCount()-lasttime>1000)
+			if( guioptions.display_fps)
 			{
-				vips = emustatus.DListCount-lastdls;
-				lastdls=emustatus.DListCount;
-				lasttime=GetTickCount();
+				if(GetTickCount()-lasttime>1000)
+				{
+					vips = emustatus.DListCount-lastdls;
+					lastdls=emustatus.DListCount;
+					lasttime=GetTickCount();
+				}
+
+				sprintf(generalmessage, " %d FPS", (int) vips);
+
+				viCountPerSecond = 0;
+				QueryPerformanceCounter(&LastSecondTime);
 			}
-
-			sprintf(generalmessage, " %d FPS", (int) vips);
-
-			viCountPerSecond = 0;
-			QueryPerformanceCounter(&LastSecondTime);
-
+			if( guioptions.display_vis)
+			{	
+				if( vips >= 100.0) 
+				{
+						sprintf(generalmessage, "%3d VI/s", (int) vips);
+				} 
+				else 
+				{
+						sprintf(generalmessage, " %2d VI/s", (int) vips);
+				}
+				viCountPerSecond = 0;
+				QueryPerformanceCounter(&LastSecondTime);
+			}
 			if( guistatus.IsFullScreen == FALSE) 
 			{
 				SetStatusBarText(1, generalmessage);
@@ -2532,6 +2547,11 @@ void OptionsDialog_OnInit(HWND hDlg)
     SendDlgItemMessage(	hDlg, IDC_NONE, BM_SETCHECK,
         (!guioptions.display_profiler_status && !guioptions.display_detail_status) ? BST_CHECKED : BST_UNCHECKED, 0);
 
+	SendDlgItemMessage(	hDlg, IDC_FPS, BM_SETCHECK,
+		guioptions.display_fps ? BST_CHECKED : BST_UNCHECKED, 0);
+
+	SendDlgItemMessage(	hDlg, IDC_VIS, BM_SETCHECK,
+		guioptions.display_vis ? BST_CHECKED : BST_UNCHECKED, 0);
 }
 
 void FoldersDialog_OnInit(HWND hDlg)
@@ -2669,6 +2689,25 @@ void OptionsDialog_OnApply(HWND hDlg)
     {
         Set_Ready_Message();
     }
+
+	if( guioptions.display_fps
+		!= ( SendDlgItemMessage( hDlg, IDC_FPS, BM_GETCHECK, 0, 0) == BST_CHECKED))
+	{
+		guioptions.display_vis = 0;
+		REGISTRY_WriteDWORD( "Displayvis", guioptions.display_vis);
+		guioptions.display_fps = 1;
+		REGISTRY_WriteDWORD( "Displayfps", guioptions.display_fps);
+	}
+
+	if( guioptions.display_vis
+		!= ( SendDlgItemMessage( hDlg, IDC_VIS, BM_GETCHECK, 0, 0) == BST_CHECKED))
+	{
+		guioptions.display_fps = 0;
+		REGISTRY_WriteDWORD( "Displayfps", guioptions.display_fps);
+		guioptions.display_vis = 1;
+		REGISTRY_WriteDWORD( "Displayvis", guioptions.display_vis);
+	}
+
 }
 
 LRESULT APIENTRY FoldersProc(HWND hDlg, unsigned message, WORD wParam, LONG lParam)
