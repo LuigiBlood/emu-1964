@@ -143,11 +143,8 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 				}
 
 				sprintf(generalmessage, " %d FPS", (int) vips);
-
-				viCountPerSecond = 0;
-				QueryPerformanceCounter(&LastSecondTime);
 			}
-			if( guioptions.display_vis)
+			else
 			{	
 				if( vips >= 100.0) 
 				{
@@ -157,9 +154,11 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 				{
 						sprintf(generalmessage, " %2d VI/s", (int) vips);
 				}
-				viCountPerSecond = 0;
-				QueryPerformanceCounter(&LastSecondTime);
 			}
+
+			viCountPerSecond = 0;
+			QueryPerformanceCounter(&LastSecondTime);
+
 			if( guistatus.IsFullScreen == FALSE) 
 			{
 				SetStatusBarText(1, generalmessage);

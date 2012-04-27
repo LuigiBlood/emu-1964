@@ -471,7 +471,6 @@ void LoadROMSpecificPlugins()
 	LoadPlugins(LOAD_VIDEO_PLUGIN);	
 	LoadPlugins(LOAD_INPUT_PLUGIN);	
 	LoadPlugins(LOAD_AUDIO_PLUGIN);	
-		
 }
 
 /************************************************************************/
