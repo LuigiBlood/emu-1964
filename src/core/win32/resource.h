@@ -198,7 +198,6 @@
 #define ID_OPCODEDEBUGGER_BLOCK_ONLY    264
 #define ID_DIRTYONLY                    265
 #define ID_PREFERENCE_OPTIONS           266
-#define IDC_FPS                         1002
 #define ID_FILE_RECENTGAMES_GAME1       269
 #define ID_FILE_RECENTGAMES_GAME2       270
 #define ID_FILE_RECENTGAMES_GAME3       271
@@ -305,8 +304,10 @@
 #define ID_UNDERCLOCK_25MHZ             423
 #define IDC_CPUR0                       1000
 #define IDC_GPR1                        1001
+#define IDC_FPS                         1002
 #define IDC_GPR2                        1002
 #define IDC_GPR3                        1003
+#define IDC_FPS2                        1003
 #define IDC_GPR4                        1004
 #define IDC_GPR5                        1005
 #define IDC_GPR6                        1006
@@ -341,7 +342,6 @@
 #define IDC_COP03                       1035
 #define IDC_COP04                       1036
 #define IDC_COP05                       1037
-#define IDC_VIS                         40019
 #define IDC_COP06                       1038
 #define IDC_COP07                       1039
 #define IDC_COP08                       1040
@@ -908,6 +908,7 @@
 #define IDC_SPIN_BOXART_X_SPACING       1573
 #define IDC_SPIN_BOXART_Y_SPACING       1574
 #define IDC_ICON_Y_SPACING_STR          1575
+#define IDC_VIS                         40019
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
