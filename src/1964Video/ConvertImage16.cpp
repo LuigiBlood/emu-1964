@@ -912,10 +912,8 @@ void ConvertYUV_16(CTexture *pTexture, const TxtrInfo &tinfo)
 		uint16 * pSrc = (uint16*)(tinfo.pPhysicalAddress);
 		uint8 * pByteSrc = (uint8 *)pSrc;
 
-
 		if (tinfo.bSwapped)
 		{
-
 			for (y = 0; y < tinfo.HeightToLoad; y++)
 			{
 				if ((y%2) == 0)

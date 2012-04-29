@@ -1419,12 +1419,11 @@ enum {
 	LANGUAGE_MENU,
 	SAVESTATE_MENU,
 	LOADSTATE_MENU,
-	RECENT_FOLDER_MENU,
-	RECENT_ROM_MENU,
 	EDIT_MENU,
 	EMULATION_MENU,
 	SWITCH_COMPILER_MENU,
 	COUNTER_FACTOR_MENU,
+	OVERCLOCK_MENU,
 	VARIABLE_SPEED_MENU,
 	PLUGIN_MENU,
 	NETPLAY_MENU,
@@ -1453,126 +1452,122 @@ LangMapEntry langMapEntries[] =
 	{6,		SAVESTATE_MENU,	"Save State",		0,	0},
 	{7,		ID_SAVESTATE,	"To File...",		"Ctrl+F5",	0},
 	{8,		ID_CPU_EXPORTPJ64STATE,	"To  Project64 Save State File...",		0,	0},
-	{9,		ID_SAVE_1964085,	"To 1964.085 File...",						0,	0},
-	{10,	ID_SAVE_STATE_0,	"To Slot 0",	0,	0},
-	{11,	ID_SAVE_STATE_1,	"To Slot 1",	0,	0},
-	{12,	ID_SAVE_STATE_2,	"To Slot 2",	0,	0},
-	{13,	ID_SAVE_STATE_3,	"To Slot 3",	0,	0},
-	{14,	ID_SAVE_STATE_4,	"To Slot 4",	"F5",	0},
-	{15,	ID_SAVE_STATE_5,	"To Slot 5",	0,	0},
-	{16,	ID_SAVE_STATE_6,	"To Slot 6",	0,	0},
-	{17,	ID_SAVE_STATE_7,	"To Slot 7",	0,	0},
-	{18,	ID_SAVE_STATE_8,	"To Slot 8",	0,	0},
-	{19,	ID_SAVE_STATE_9,	"To Slot 9",	0,	0},
-	{20,	LOADSTATE_MENU,		"Load State",	0,	0},
-	{21,	ID_LOADSTATE,	"From File...",		"Ctrl+F7",	0},
-	{22,	ID_CPU_IMPORTPJ64STATE,	"From Project64 Save State File...",	0,	0},
-	{23,	ID_LOAD_STATE_0,	"From Slot 0",		0,	0},
-	{24,	ID_LOAD_STATE_1,	"From Slot 1",		0,	0},
-	{25,	ID_LOAD_STATE_2,	"From Slot 2",		0,	0},
-	{26,	ID_LOAD_STATE_3,	"From Slot 3",		0,	0},
-	{27,	ID_LOAD_STATE_4,	"From Slot 4",	"F7",	0},
-	{28,	ID_LOAD_STATE_5,	"From Slot 5",		0,	0},
-	{29,	ID_LOAD_STATE_6,	"From Slot 6",		0,	0},
-	{30,	ID_LOAD_STATE_7,	"From Slot 7",		0,	0},
-	{31,	ID_LOAD_STATE_8,	"From Slot 8",		0,	0},
-	{32,	ID_LOAD_STATE_9,	"From Slot 9",		0,	0},
-	{33,	ID_CHANGEDIRECTORY,	"Change ROM Folder...",	"Ctrl+D",	0},
-	{34,	ID_FILE_FRESHROMLIST,	"Refresh ROM List",	"Ctrl+L",	0},
-	{35,	RECENT_FOLDER_MENU,	"Recent ROM Folders",	0,	0},
-	{36,	RECENT_ROM_MENU,	"Recent ROMs",			0,	0},
-	{37,	ID_EXIT,	"E&xit",	0,	0},
+	{9,	ID_SAVE_STATE_0,	"To Slot 0",	0,	0},
+	{10,	ID_SAVE_STATE_1,	"To Slot 1",	0,	0},
+	{11,	ID_SAVE_STATE_2,	"To Slot 2",	0,	0},
+	{12,	ID_SAVE_STATE_3,	"To Slot 3",	0,	0},
+	{13,	ID_SAVE_STATE_4,	"To Slot 4",	"F5",	0},
+	{14,	ID_SAVE_STATE_5,	"To Slot 5",	0,	0},
+	{15,	ID_SAVE_STATE_6,	"To Slot 6",	0,	0},
+	{16,	ID_SAVE_STATE_7,	"To Slot 7",	0,	0},
+	{17,	ID_SAVE_STATE_8,	"To Slot 8",	0,	0},
+	{18,	ID_SAVE_STATE_9,	"To Slot 9",	0,	0},
+	{19,	LOADSTATE_MENU,		"Load State",	0,	0},
+	{20,	ID_LOADSTATE,	"From File...",		"Ctrl+F7",	0},
+	{21,	ID_CPU_IMPORTPJ64STATE,	"From Project64 Save State File...",	0,	0},
+	{22,	ID_LOAD_STATE_0,	"From Slot 0",		0,	0},
+	{23,	ID_LOAD_STATE_1,	"From Slot 1",		0,	0},
+	{24,	ID_LOAD_STATE_2,	"From Slot 2",		0,	0},
+	{25,	ID_LOAD_STATE_3,	"From Slot 3",		0,	0},
+	{26,	ID_LOAD_STATE_4,	"From Slot 4",	"F7",	0},
+	{27,	ID_LOAD_STATE_5,	"From Slot 5",		0,	0},
+	{28,	ID_LOAD_STATE_6,	"From Slot 6",		0,	0},
+	{29,	ID_LOAD_STATE_7,	"From Slot 7",		0,	0},
+	{30,	ID_LOAD_STATE_8,	"From Slot 8",		0,	0},
+	{31,	ID_LOAD_STATE_9,	"From Slot 9",		0,	0},
+	{32,	ID_CHANGEDIRECTORY,	"Change ROM Folder...",	"Ctrl+D",	0},
+	{33,	ID_FILE_FRESHROMLIST,	"Refresh ROM List",	"Ctrl+L",	0},
+	{34,	ID_EXIT,	"E&xit",	0,	0},
 
-	{38,	EDIT_MENU,	"&Edit",	0,	0},
-	{39,	ID_FILE_CHEAT,	"Cheat Codes...",				"Ctrl+C",	0},
-	{40,	ID_PREFERENCE_OPTIONS,	"Window Options...",	"Ctrl+W",	0},
-	{41,	ID_FILE_ROMINFO,	"ROM Properties...",		"Ctrl+S",	0},
+	{35,	EDIT_MENU,	"&Edit",	0,	0},
+	{36,	ID_FILE_CHEAT,	"Cheat Codes...",				"Ctrl+C",	0},
+	{37,	ID_PREFERENCE_OPTIONS,	"Window Options...",	"Ctrl+W",	0},
+	{38,	ID_FILE_ROMINFO,	"ROM Properties...",		"Ctrl+S",	0},
 
-	{42,	EMULATION_MENU,		"E&mulation",	0,	0},
-	{43,	ID_ROM_PAUSE,	"&Pause/Play",		"F3",	0},
-	{44,	ID_ROM_START,	"Reset",			"F2",	0},
-	{45,	ID_ROM_STOP,	"&Stop",			"F4",	0},
-	{46,	ID_CPU_KILL,	"Kill CPU Thread",	"Ctrl+F4",	0},
-	{47,	SWITCH_COMPILER_MENU,	"Switch Compiler",			0,	0},
-	{48,	ID_INTERPRETER,	"Interpreter",						0,	0},
-	{49,	ID_DYNAMICCOMPILER,	"Dynamic Compiler (Default)",	0,	0},
-	{50,	ID_CHEATS_APPLY,	"Inject Gameshark Green Button Cheats",	"F8",	0},
-	{51,	COUNTER_FACTOR_MENU,	"Counter Factor",			0,	0},
-	{53,	ID_CF_CF1,	"1 x .5 Half Rate",				"Ctrl+1",	0},
-	{54,	ID_CF_CF2,	"1 x 1 Full Rate",				"Ctrl+2",	0},
-	{55,	ID_CF_CF3,	"2 x 1 Half Rate (Default)",	"Ctrl+3",	0},
-	{56,	ID_CF_CF4,	"2 x 2 Full Rate",				"Ctrl+4",	0},
-	{57,	ID_CF_CF5,	"3 x 1.5 Half Rate",			"Ctrl+5",	0},
-	{58,	ID_CF_CF6,	"3 x 3 Full Rate",				"Ctrl+6",	0},
-	{59,	ID_CF_CF7,	"4 x 2 Half Rate",				"Ctrl+7",	0},
-	{60,	ID_CF_CF8,	"8 x 4 Half Rate",				"Ctrl+8",	0},
-	{61,	ID_CPU_AUDIOSYNC,	"Speed Limit",			"F9",	0},
-	{63,	ID_PLUGINS_SCREENSHOTS,	"Screen Shot",				"F12",	0},
-	{64,	VARIABLE_SPEED_MENU,	"Variable Speed Limits",				0,	0},
-	{65,	ID_VARIABLESPEEDLIMITS_INCREASESPEED,	"Increase Speed",				"Num (+)",	0},
-	{66,	ID_VARIABLESPEEDLIMITS_DECREASESPEED,	"Decrease Speed",				"Num (-)",	0},
-	{67,	ID_VARIABLESPEEDLIMITS_RESTORECORRECTSPEED,	"Restore correct Speed",	"Num (*)",	0},
-	{68,	PLUGIN_MENU,	"&Plug-ins",				0,	0},
-	{69,	IDM_PLUGINS,	"Change Plug-ins...",		"Ctrl+P",	0},
-	{70,	ID_VIDEO_CONFIG,	"&Video Settings...",	"Ctrl+V",	0},
-	{71,	ID_AUD_CONFIG,	"&Audio Settings...",		"Ctrl+A",	0},
-	{72,	ID_DI_CONFIG,	"&Input Settings...",		"Ctrl+I",	0},
-	{73,	ID_RSP_CONFIG,	"RSP Settings...",			"Ctrl+R",	0},
-	{74,	IDM_FULLSCREEN,	"Full Screen",				"Alt+Enter",	0},
-	{75,	NETPLAY_MENU,	"Net Play",		0,	0},
-	{76,	ID_KAILLERA_MODE,	"Connect to Kaillera Server ...",	0,	0},
-	{77,	NETPLAY_LAG_MENU,	"Lag",		0,	0},
-	{78,	ID_LAGNESS_1,	"1 (less)",		0,	0},
-	{79,	ID_LAGNESS_2,	"2",			0,	0},
-	{80,	ID_LAGNESS_3,	"3",			0,	0},
-	{81,	ID_LAGNESS_4,	"4 (default)",	0,	0},
-	{82,	ID_LAGNESS_5,	"5",			0,	0},
-	{83,	ID_LAGNESS_6,	"6",			0,	0},
-	{84,	ID_LAGNESS_7,	"7 (more)",		0,	0},
-	{85,	HELP_MENU,		"&Help",			0,	0},
-	{86,	ID_ONLINE_HELP,	"Online Help",	0,	0},
-	{87,	ID_HELP_HELP,	"Help Manual",	"F1",	0},
-	{88,	ID_CHECKWEB,		"&1964 Home Page",			0,	0},
-	{89,	ID_REDISTRIBUTE,	"GPL Information...",	0,	0},
-	{90,	ID_ABOUT_WARRANTY,	"About Warranty...",	0,	0},
-	{91,	ID_ABOUT,			"&About 1964...",				0,	0},
-	{92,	ID_POPUP_LOADPLAYINWINDOWMODE,	"Load && Play in Window",	0,	0},
-	{95,	ID_POPUP_LOADPLAYINFULLSCREEN,	"Load && Play in Full Screen",	0,	0},
-	{96,	ID_POPUP_CHEATCODE,				"Cheat Codes...",	0,	0},
-	{97,	ID_POPUPMENU_CHANGEROMDIRECTORY,	"Change Rom Folder...",	0,	0},
-	{98,	ID_POPUP_ROM_SETTING,	"ROM Properties...",	0,	0},
-	{99,	POPUP_MENU1,			"Header Popup 1",		0,	0},
-	{100,	ID_HEADERPOPUP_SHOWALTERNATEROMNAME,	"Show Alternate ROM Name",	0,	0},
-	{101,	ID_HEADERPOPUP_SHOW_INTERNAL_NAME,	"Show Internal ROM Name",		0,	0},
-	{102,	ID_HEADERPOPUP_SHOWROMFILENAME,		"Show ROM File Name",	0,	0},
-	{103,	ID_HEADERPOPUP_1_SORT_ASCENDING,	"Sort Ascending",		0,	0},
-	{104,	ID_HEADERPOPUP_1_SORT_DESCENDING,	"Sort Descending",		0,	0},
-	{105,	ID_HEADERPOPUP_1_SELECTING,			"Add/Remove Columns...",	0,	0},
-	{106,	POPUP_MENU2,						"Header Popup 2",						0,	0},
-	{107,	ID_HEADERPOPUP_2_SORT_ASCENDING,	"Sort Asccending",		0,	0},
-	{108,	ID_HEADERPOPUP_2_SORT_DESCENDING,	"Sort Descending",		0,	0},
-	{109,	ID_HEADERPOPUP_2_SELECTING,			"Add/Remove Columns...",	0,	0},
-	{110,	ID_POPUPMENU_PLUGINSETTING,			"ROM Plugin Setting...",	0,	0},
-	{111,	ID_POPUPMENU_ROMINFORMATION,		"ROM Information...",	0,	0},
+	{39,	EMULATION_MENU,		"E&mulation",	0,	0},
+	{40,	ID_ROM_PAUSE,	"&Pause/Play",		"F3",	0},
+	{41,	ID_ROM_START,	"Reset",			"F2",	0},
+	{42,	ID_ROM_STOP,	"&Stop",			"F4",	0},
+	{43,	ID_CPU_KILL,	"Kill CPU Thread",	"Ctrl+F4",	0},
+	{44,	SWITCH_COMPILER_MENU,	"Switch Compiler",			0,	0},
+	{45,	ID_INTERPRETER,	"Interpreter",						0,	0},
+	{46,	ID_DYNAMICCOMPILER,	"Dynamic Compiler (Default)",	0,	0},
+	{47,	ID_CHEATS_APPLY,	"Inject Gameshark Green Button Cheats",	"F8",	0},
+	{48,	COUNTER_FACTOR_MENU,	"Counter Factor",			0,	0},
+	{49,	ID_CF_CF1,	"1 x .5 Half Rate",				"Ctrl+1",	0},
+	{50,	ID_CF_CF2,	"1 x 1 Full Rate",				"Ctrl+2",	0},
+	{51,	ID_CF_CF3,	"2 x 1 Half Rate (Default)",	"Ctrl+3",	0},
+	{52,	ID_CF_CF4,	"2 x 2 Full Rate",				"Ctrl+4",	0},
+	{53,	ID_CF_CF5,	"3 x 1.5 Half Rate",			"Ctrl+5",	0},
+	{54,	ID_CF_CF6,	"3 x 3 Full Rate",				"Ctrl+6",	0},
+	{55,	ID_CF_CF7,	"4 x 2 Half Rate",				"Ctrl+7",	0},
+	{56,	ID_CF_CF8,	"8 x 4 Half Rate",				"Ctrl+8",	0},
+	{57,	ID_CPU_AUDIOSYNC,	"Speed Limit",			"F9",	0},
+	{58,	ID_PLUGINS_SCREENSHOTS,	"Screen Shot",				"F12",	0},
+	{59,	VARIABLE_SPEED_MENU,	"Variable Speed Limits",				0,	0},
+	{60,	ID_VARIABLESPEEDLIMITS_INCREASESPEED,	"Increase Speed",				"Num (+)",	0},
+	{61,	ID_VARIABLESPEEDLIMITS_DECREASESPEED,	"Decrease Speed",				"Num (-)",	0},
+	{62,	ID_VARIABLESPEEDLIMITS_RESTORECORRECTSPEED,	"Restore correct Speed",	"Num (*)",	0},
+	{63,	PLUGIN_MENU,	"&Plug-ins",				0,	0},
+	{64,	IDM_PLUGINS,	"Change Plug-ins...",		"Ctrl+P",	0},
+	{65,	ID_VIDEO_CONFIG,	"&Video Settings...",	"Ctrl+V",	0},
+	{66,	ID_AUD_CONFIG,	"&Audio Settings...",		"Ctrl+A",	0},
+	{67,	ID_DI_CONFIG,	"&Input Settings...",		"Ctrl+I",	0},
+	{68,	ID_RSP_CONFIG,	"RSP Settings...",			"Ctrl+R",	0},
+	{69,	IDM_FULLSCREEN,	"Full Screen",				"Alt+Enter",	0},
+	{70,	NETPLAY_MENU,	"Net Play",		0,	0},
+	{71,	ID_KAILLERA_MODE,	"Connect to Kaillera Server ...",	0,	0},
+	{72,	NETPLAY_LAG_MENU,	"Lag",		0,	0},
+	{73,	ID_LAGNESS_1,	"1 (less)",		0,	0},
+	{74,	ID_LAGNESS_2,	"2",			0,	0},
+	{75,	ID_LAGNESS_3,	"3",			0,	0},
+	{76,	ID_LAGNESS_4,	"4 (default)",	0,	0},
+	{77,	ID_LAGNESS_5,	"5",			0,	0},
+	{78,	ID_LAGNESS_6,	"6",			0,	0},
+	{79,	ID_LAGNESS_7,	"7 (more)",		0,	0},
+	{80,	HELP_MENU,		"&Help",			0,	0},
+	{81,	ID_ONLINE_HELP,	"Online Help",	0,	0},
+	{82,	ID_HELP_HELP,	"Help Manual",	"F1",	0},
+	{83,	ID_CHECKWEB,		"&1964 Home Page",			0,	0},
+	{84,	ID_ABOUT,			"&About 1964...",				0,	0},
+	{85,	ID_POPUP_LOADPLAYINWINDOWMODE,	"Load && Play in Window",	0,	0},
+	{86,	ID_POPUP_LOADPLAYINFULLSCREEN,	"Load && Play in Full Screen",	0,	0},
+	{87,	ID_POPUP_CHEATCODE,				"Cheat Codes...",	0,	0},
+	{88,	ID_POPUPMENU_CHANGEROMDIRECTORY,	"Change Rom Folder...",	0,	0},
+	{89,	ID_POPUP_ROM_SETTING,	"ROM Properties...",	0,	0},
+	{90,	POPUP_MENU1,			"Header Popup 1",		0,	0},
+	{91,	ID_HEADERPOPUP_SHOWALTERNATEROMNAME,	"Show Alternate ROM Name",	0,	0},
+	{92,	ID_HEADERPOPUP_SHOW_INTERNAL_NAME,	"Show Internal ROM Name",		0,	0},
+	{93,	ID_HEADERPOPUP_SHOWROMFILENAME,		"Show ROM File Name",	0,	0},
+	{94,	ID_HEADERPOPUP_1_SORT_ASCENDING,	"Sort Ascending",		0,	0},
+	{95,	ID_HEADERPOPUP_1_SORT_DESCENDING,	"Sort Descending",		0,	0},
+	{96,	ID_HEADERPOPUP_1_SELECTING,			"Add/Remove Columns...",	0,	0},
+	{97,	POPUP_MENU2,						"Header Popup 2",						0,	0},
+	{98,	ID_HEADERPOPUP_2_SORT_ASCENDING,	"Sort Asccending",		0,	0},
+	{99,	ID_HEADERPOPUP_2_SORT_DESCENDING,	"Sort Descending",		0,	0},
+	{100,	ID_HEADERPOPUP_2_SELECTING,			"Add/Remove Columns...",	0,	0},
+	{101,	ID_POPUPMENU_PLUGINSETTING,			"ROM Plugin Setting...",	0,	0},
+	{102,	ID_POPUPMENU_ROMINFORMATION,		"ROM Information...",	0,	0},
 
 	// Add by 1964 1.0
-	{112,	ID_POPUPMENU_ASSIGNBOXARTIMAGE,		"Assign Box Art Image ...",	0,	0},
-	{113,	ID_POPUPMENU_REMOVEBOXARTIMAGELINK,	"Remove Box Art Image Link",	0,	0},
-	{114,	ID_HEADERPOPUP3_SHOWROMLIST,		"Show Rom List",	0,	0},
-	{115,	ID_HEADERPOPUP3_SHOWBOXART,			"Show Box Art",	0,	0},
-	{116,	ID_BOXARTIMAGE_ZOOM_IN,				"Increase Image Size",	0,	0},
-	{117,	ID_BOXARTIMAGE_ZOOM_OUT,			"Decrease Image Size",	0,	0},
-	{118,	ID_BOXARTIMAGE_INCREASEXSPACING,	"Increase X Spacing",	0,	0},
-	{119,	ID_BOXARTIMAGE_DECREASEXSPACING,	"Decrease X Spacing",	0,	0},
-	{120,	ID_BOXARTIMAGE_INCREASEYSPACING,	"Increase Y Spacing",	0,	0},
-	{121,	ID_BOXARTIMAGE_DECREASEYSPACING,	"Decrease Y Spacing",	0,	0},
-	{122,	ID_HEADERPOPUP_SHOWALTERNATEROMNAME,	"Show Alternate ROM Name",	0,	0},
-	{123,	ID_HEADERPOPUP_SHOW_INTERNAL_NAME,	"Show Internal ROM Name",	0,	0},
-	{124,	ID_HEADERPOPUP_SHOWROMFILENAME,		"Show ROM File Name",	0,	0},
-	{125,	ID_HEADERPOPUP_1_SORT_ASCENDING,	"Sort Asccending",	0,	0},
-	{126,	ID_HEADERPOPUP_1_SORT_DESCENDING,	"Sort Descending",	0,	0},
-	{127,	ID_HEADERPOPUP_1_SELECTING,			"Add/Remove Columns...",	0,	0},
-	{128,	ID_HEADERPOPUP3_REFRESH,			"Refresh ROM List",	0,	0},
+	{103,	ID_POPUPMENU_ASSIGNBOXARTIMAGE,		"Assign Box Art Image ...",	0,	0},
+	{104,	ID_POPUPMENU_REMOVEBOXARTIMAGELINK,	"Remove Box Art Image Link",	0,	0},
+	{105,	ID_HEADERPOPUP3_SHOWROMLIST,		"Show Rom List",	0,	0},
+	{106,	ID_HEADERPOPUP3_SHOWBOXART,			"Show Box Art",	0,	0},
+	{107,	ID_BOXARTIMAGE_ZOOM_IN,				"Increase Image Size",	0,	0},
+	{108,	ID_BOXARTIMAGE_ZOOM_OUT,			"Decrease Image Size",	0,	0},
+	{109,	ID_BOXARTIMAGE_INCREASEXSPACING,	"Increase X Spacing",	0,	0},
+	{110,	ID_BOXARTIMAGE_DECREASEXSPACING,	"Decrease X Spacing",	0,	0},
+	{111,	ID_BOXARTIMAGE_INCREASEYSPACING,	"Increase Y Spacing",	0,	0},
+	{112,	ID_BOXARTIMAGE_DECREASEYSPACING,	"Decrease Y Spacing",	0,	0},
+	{113,	ID_HEADERPOPUP_SHOWALTERNATEROMNAME,	"Show Alternate ROM Name",	0,	0},
+	{114,	ID_HEADERPOPUP_SHOW_INTERNAL_NAME,	"Show Internal ROM Name",	0,	0},
+	{115,	ID_HEADERPOPUP_SHOWROMFILENAME,		"Show ROM File Name",	0,	0},
+	{116,	ID_HEADERPOPUP_1_SORT_ASCENDING,	"Sort Asccending",	0,	0},
+	{117,	ID_HEADERPOPUP_1_SORT_DESCENDING,	"Sort Descending",	0,	0},
+	{118,	ID_HEADERPOPUP_1_SELECTING,			"Add/Remove Columns...",	0,	0},
+	{119,	ID_HEADERPOPUP3_REFRESH,			"Refresh ROM List",	0,	0},
+	{120,	OVERCLOCK_MENU,						"Overclock", 0, 0},
 };
 
 int totalLangMapEntries= sizeof(langMapEntries)/sizeof(LangMapEntry);
@@ -1952,26 +1947,25 @@ StringMapEntry StringMapEntries[] = {
 	{115,0,0,	"Help (F1)"},
 	{116,0,0,	"Automatic Frame Skip (F11)"},
 	{117,0,0,	"Speed Limit (F9)"},
-	{118,0,0,	"Automatic CF Timing Adjust  (F10)"},
-	{119,0,0,	"Inject Green Button Cheat (F8)"},
-	{120,0,0,	"Paused"},
-	{121,0,0,	"core"},
-	{122,0,0,	"video"},
-	{123,0,0,	"audio"},
-	{124,0,0,	"compiler"},
-	{125,0,0,	"idle"},
-	{126,0,0,	"netplay"},
-	{127,0,0,	"kaillera"},
-	{128,0,0,	"Demo"},
-	{129,0,0,	"Beta"},
-	{130,0,0,	"USA/Japan"},
-	{131,0,0,	"German"},
-	{132,0,0,	"France"},
-	{133,0,0,	"Italy"},
-	{134,0,0,	"Japan"},
-	{135,0,0,	"Europe"},
-	{136,0,0,	"Spain"},
-	{137,0,0,	"Australia"},
+	{118,0,0,	"Inject Green Button Cheat (F8)"},
+	{119,0,0,	"Paused"},
+	{120,0,0,	"core"},
+	{121,0,0,	"video"},
+	{122,0,0,	"audio"},
+	{123,0,0,	"compiler"},
+	{124,0,0,	"idle"},
+	{125,0,0,	"netplay"},
+	{126,0,0,	"kaillera"},
+	{127,0,0,	"Demo"},
+	{128,0,0,	"Beta"},
+	{129,0,0,	"USA/Japan"},
+	{130,0,0,	"German"},
+	{131,0,0,	"France"},
+	{132,0,0,	"Italy"},
+	{133,0,0,	"Japan"},
+	{134,0,0,	"Europe"},
+	{135,0,0,	"Spain"},
+	{136,0,0,	"Australia"},
 };
 
 const int NumOfStringMapEntries = sizeof(StringMapEntries)/sizeof(StringMapEntry);
@@ -2148,22 +2142,6 @@ BOOL LoadLanguageIntoMemory(char *filename)
 	}
 }
 
-void UpdateAllMenus()
-{
-	/************************************************************************/
-	/* Update all menus by using the language string loaded in the memory   */
-	/************************************************************************/
-}
-
-void UpdateDialogBoxTexts(int dialogboxid)
-{
-	/************************************************************************/
-	/* This function should be called when the dialogbox is initialized.    */
-	/* Given the dialogbox id, this function will update all item texts.    */
-	/************************************************************************/
-}
-
-
 char * TranslateStringByString(char *oriStr)
 {
 	int i;
@@ -2173,7 +2151,7 @@ char * TranslateStringByString(char *oriStr)
 		if( strcmp(StringMapEntries[i].oriStr, oriStr) == 0 )
 		{
 			if( StringMapEntries[i].langStr )
-				return StringMapEntries[i].langStr;
+				return StringMapEntries[i+1].langStr;
 			else
 				return StringMapEntries[i].oriStr;
 		}
@@ -2224,45 +2202,41 @@ void TranslateMenu(HMENU hMenu, HWND mainHWND)
 
 	SetMenuTranslatedString(submenu,3,LANGUAGE_MENU);
 	subsubmenu = GetSubMenu(submenu,3) ;
-	//SetMenuTranslatedString(subsubmenu,0,ID_LANGUAGE_ENGLISH);
 
 	SetMenuTranslatedString(submenu,5,SAVESTATE_MENU);
 	subsubmenu = GetSubMenu(submenu,5) ;
 	SetMenuTranslatedString(subsubmenu,0,ID_SAVESTATE);
 	SetMenuTranslatedString(subsubmenu,1,ID_CPU_EXPORTPJ64STATE);
-	SetMenuTranslatedString(subsubmenu,2,ID_SAVE_1964085);
-	SetMenuTranslatedString(subsubmenu,4,ID_SAVE_STATE_0);
-	SetMenuTranslatedString(subsubmenu,5,ID_SAVE_STATE_1);
-	SetMenuTranslatedString(subsubmenu,6,ID_SAVE_STATE_2);
-	SetMenuTranslatedString(subsubmenu,7,ID_SAVE_STATE_3);
-	SetMenuTranslatedString(subsubmenu,8,ID_SAVE_STATE_4);
-	SetMenuTranslatedString(subsubmenu,9,ID_SAVE_STATE_5);
-	SetMenuTranslatedString(subsubmenu,10,ID_SAVE_STATE_6);
-	SetMenuTranslatedString(subsubmenu,11,ID_SAVE_STATE_7);
-	SetMenuTranslatedString(subsubmenu,12,ID_SAVE_STATE_8);
-	SetMenuTranslatedString(subsubmenu,13,ID_SAVE_STATE_9);
+	SetMenuTranslatedString(subsubmenu,2,ID_SAVE_STATE_0);
+	SetMenuTranslatedString(subsubmenu,3,ID_SAVE_STATE_1);
+	SetMenuTranslatedString(subsubmenu,4,ID_SAVE_STATE_2);
+	SetMenuTranslatedString(subsubmenu,5,ID_SAVE_STATE_3);
+	SetMenuTranslatedString(subsubmenu,6,ID_SAVE_STATE_4);
+	SetMenuTranslatedString(subsubmenu,7,ID_SAVE_STATE_5);
+	SetMenuTranslatedString(subsubmenu,8,ID_SAVE_STATE_6);
+	SetMenuTranslatedString(subsubmenu,9,ID_SAVE_STATE_7);
+	SetMenuTranslatedString(subsubmenu,10,ID_SAVE_STATE_8);
+	SetMenuTranslatedString(subsubmenu,11,ID_SAVE_STATE_9);
 
 	SetMenuTranslatedString(submenu,6,LOADSTATE_MENU);
 	subsubmenu = GetSubMenu(submenu,6) ;
 	SetMenuTranslatedString(subsubmenu,0,ID_LOADSTATE);
 	SetMenuTranslatedString(subsubmenu,1,ID_CPU_IMPORTPJ64STATE);
-	SetMenuTranslatedString(subsubmenu,3,ID_LOAD_STATE_0);
-	SetMenuTranslatedString(subsubmenu,4,ID_LOAD_STATE_1);
-	SetMenuTranslatedString(subsubmenu,5,ID_LOAD_STATE_2);
-	SetMenuTranslatedString(subsubmenu,6,ID_LOAD_STATE_3);
-	SetMenuTranslatedString(subsubmenu,7,ID_LOAD_STATE_4);
-	SetMenuTranslatedString(subsubmenu,8,ID_LOAD_STATE_5);
-	SetMenuTranslatedString(subsubmenu,9,ID_LOAD_STATE_6);
-	SetMenuTranslatedString(subsubmenu,10,ID_LOAD_STATE_7);
-	SetMenuTranslatedString(subsubmenu,11,ID_LOAD_STATE_8);
-	SetMenuTranslatedString(subsubmenu,12,ID_LOAD_STATE_9);
+	SetMenuTranslatedString(subsubmenu,2,ID_LOAD_STATE_0);
+	SetMenuTranslatedString(subsubmenu,3,ID_LOAD_STATE_1);
+	SetMenuTranslatedString(subsubmenu,4,ID_LOAD_STATE_2);
+	SetMenuTranslatedString(subsubmenu,5,ID_LOAD_STATE_3);
+	SetMenuTranslatedString(subsubmenu,6,ID_LOAD_STATE_4);
+	SetMenuTranslatedString(subsubmenu,7,ID_LOAD_STATE_5);
+	SetMenuTranslatedString(subsubmenu,8,ID_LOAD_STATE_6);
+	SetMenuTranslatedString(subsubmenu,9,ID_LOAD_STATE_7);
+	SetMenuTranslatedString(subsubmenu,10,ID_LOAD_STATE_8);
+	SetMenuTranslatedString(subsubmenu,11,ID_LOAD_STATE_9);
 
 	SetMenuTranslatedString(submenu,8,ID_CHANGEDIRECTORY);
 	SetMenuTranslatedString(submenu,9,ID_FILE_FRESHROMLIST);
-	SetMenuTranslatedString(submenu,10,RECENT_FOLDER_MENU);
-	SetMenuTranslatedString(submenu,11,RECENT_ROM_MENU);
 	
-	SetMenuTranslatedString(submenu,13,ID_EXIT);
+	SetMenuTranslatedString(submenu,19,ID_EXIT);
 
 	//Edit menu
 	submenu = GetSubMenu(hMenu,1) ;
@@ -2295,11 +2269,13 @@ void TranslateMenu(HMENU hMenu, HWND mainHWND)
 	SetMenuTranslatedString(subsubmenu,7,ID_CF_CF7);
 	SetMenuTranslatedString(subsubmenu,8,ID_CF_CF8);
 
-	SetMenuTranslatedString(submenu,9,ID_CPU_AUDIOSYNC);
-	SetMenuTranslatedString(submenu,11,ID_PLUGINS_SCREENSHOTS);
+	SetMenuTranslatedString(submenu,9,OVERCLOCK_MENU);
 
-	SetMenuTranslatedString(submenu,12,VARIABLE_SPEED_MENU);
-	subsubmenu = GetSubMenu(submenu,12) ;
+	SetMenuTranslatedString(submenu,11,ID_CPU_AUDIOSYNC);
+	SetMenuTranslatedString(submenu,12,ID_PLUGINS_SCREENSHOTS);
+
+	SetMenuTranslatedString(submenu,13,VARIABLE_SPEED_MENU);
+	subsubmenu = GetSubMenu(submenu,13) ;
 	SetMenuTranslatedString(subsubmenu,0,ID_VARIABLESPEEDLIMITS_INCREASESPEED);
 	SetMenuTranslatedString(subsubmenu,1,ID_VARIABLESPEEDLIMITS_DECREASESPEED);
 	SetMenuTranslatedString(subsubmenu,2,ID_VARIABLESPEEDLIMITS_RESTORECORRECTSPEED);
@@ -2330,9 +2306,7 @@ void TranslateMenu(HMENU hMenu, HWND mainHWND)
 	submenu = GetSubMenu(hMenu,5) ;
 	SetMenuTranslatedString(submenu,0,ID_HELP_HELP);
 	SetMenuTranslatedString(submenu,1,ID_ONLINE_HELP);
-	SetMenuTranslatedString(submenu,2,ID_CHECKWEB);
-	//SetMenuTranslatedString(submenu,4,ID_REDISTRIBUTE);
-	SetMenuTranslatedString(submenu,4,ID_ABOUT_WARRANTY);
+	SetMenuTranslatedString(submenu,3,ID_CHECKWEB);
 	SetMenuTranslatedString(submenu,5,ID_ABOUT);
 
 	DrawMenuBar(mainHWND);

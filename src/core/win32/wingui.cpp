@@ -78,7 +78,6 @@ void					SelectVISpeed(WPARAM wParam);
 void					SetupAdvancedMenus(void);
 void					RegenerateStateSelectorMenus(void);
 void					RegenerateRecentGameMenus(void);
-void					DeleteRecentGameMenus(void);
 void __cdecl			RefreshRecentGameMenus(char *newgamefilename);
 void					OpenRecentGame(int id);
 void					UpdateCIC(void);
@@ -2352,7 +2351,7 @@ void SaveStateByDialog(int format)
 			{
 				if( strcmp (ext,".sav") != 0)
 					strcat(szFileName, ".sav");
-				FileIO_gzSaveStateFile_099(szFileName);
+				FileIO_gzSaveStateFile(szFileName, CURRENT_SAVE_STATE_VERSION);
 
 			}
 			else
@@ -2534,9 +2533,6 @@ void OptionsDialog_OnInit(HWND hDlg)
 	SendDlgItemMessage(	hDlg, IDC_DEFAULTOPTIONS_PAUSEWHENINACTIVE,	BM_SETCHECK,
 		guioptions.pause_at_inactive ? BST_CHECKED : BST_UNCHECKED,	0);
 
-	SendDlgItemMessage(	hDlg, IDC_ENABLE_GAME_LIST,	BM_SETCHECK,
-		guioptions.show_recent_game_list ? BST_CHECKED : BST_UNCHECKED, 0);
-
 	SendDlgItemMessage( hDlg, IDC_ENABLE_DETAIL_STATUS,	BM_SETCHECK,
 		guioptions.display_detail_status ? BST_CHECKED : BST_UNCHECKED,	0);
 
@@ -2671,19 +2667,6 @@ void OptionsDialog_OnApply(HWND hDlg)
 		}
 	}
 
-	if(	guioptions.show_recent_game_list 
-		!= ( SendDlgItemMessage( hDlg, IDC_ENABLE_GAME_LIST, BM_GETCHECK, 0, 0)
-			 == BST_CHECKED))
-	{
-		guioptions.show_recent_game_list ^= 1;
-		REGISTRY_WriteDWORD( "GameListMenu",
-			guioptions.show_recent_game_list);
-		if(guioptions.show_recent_game_list)
-			RegenerateRecentGameMenus();
-		else
-			DeleteRecentGameMenus();
-	}
-	
     if (!guioptions.display_profiler_status && !guioptions.display_detail_status)
     {
         Set_Ready_Message();
@@ -3367,40 +3350,6 @@ void RegenerateRecentGameMenus(void)
 	);
 }
 
-/*
- =======================================================================================================================
- =======================================================================================================================
- */
-void DeleteRecentGameMenus(void)
-{
-	/*~~~~~~~~~~~~~~~*/
-	int		k, i, j, n;
-	char	str[100];
-	/*~~~~~~~~~~~~~~~*/
-
-	i = GetMenuItemCount(gui.hMenu1964main);
-	for(k = 0; k < i; k++)
-	{
-		GetMenuString(gui.hMenu1964main, k, str, 80, MF_BYPOSITION);
-		if(strcmp(str, "&File") == 0)
-		{
-			file_submenu = GetSubMenu(gui.hMenu1964main, k);
-			j = GetMenuItemCount(file_submenu);
-			for(n = j - 1; n >= 0; n--) /* I have to delete the menu in reverse order */
-			{
-				GetMenuString(file_submenu, n, str, 80, MF_BYPOSITION);
-				LoadString(gui.hInst, IDS_RECENT_ROMS, (LPSTR)Scratch1, 700);
-				if(strcmp(str, (LPSTR)Scratch1) == 0)
-				{
-					recent_game_submenu = GetSubMenu(file_submenu, n);
-					recent_game_submenu_pos = n;
-					RemoveMenu(file_submenu, n, MF_BYPOSITION);
-				}
-			}
-		}
-	}
-}
-
 void __cdecl RefreshRecentGameMenus(char *newgamefilename)
 {
 	int i;
@@ -3515,7 +3464,6 @@ void SetupAdvancedMenus(void)
 		}
 	}
 
-	if(guioptions.show_recent_game_list == FALSE) DeleteRecentGameMenus();
 	if(!emuoptions.SyncVI) CheckMenuItem(gui.hMenu1964main, ID_CPU_AUDIOSYNC, MF_UNCHECKED);
 }
 

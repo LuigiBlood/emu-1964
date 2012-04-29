@@ -25,8 +25,6 @@
 BOOL	Is_Reading_Rom_File = FALSE;
 BOOL	To_Stop_Reading_Rom_File = FALSE;
 
-#define CURRENT_SAVE_STATE_VERSION		(0x19640099)
-
 uint32 SaveStateVersionList[] = {
     0x19640064,
     0x19640099,
@@ -1055,7 +1053,7 @@ void FileIO_gzSaveState(void)
 
 	sprintf(ext, "sav%d", StateFileNumber);
 	GetFileName(temp, ext);
-	FileIO_gzSaveStateFile_099(temp);
+	FileIO_gzSaveStateFile(temp, CURRENT_SAVE_STATE_VERSION);
 }
 
 /* SaveState layout */
@@ -1195,10 +1193,6 @@ void FileIO_gzSaveStateFile(const char *filename, DWORD	magic1964)
 	gzclose(stream);
 }
 
-void FileIO_gzSaveStateFile_099(const char *filename)
-{
-	FileIO_gzSaveStateFile(filename, CURRENT_SAVE_STATE_VERSION);
-}
 /*
  =======================================================================================================================
  =======================================================================================================================
@@ -1269,12 +1263,6 @@ void FileIO_gzLoadStateFile(const char *filename)
 	gzread(stream, (uint8 *) gMS_ramRegs8, 0x30);					/* ramRegs8 */
 	gzread(stream, (uint8 *) gMS_SP_MEM, MEMORY_SIZE_SPMEM);		/* SPMEM and SP_REG, size?? */
 
-//    memcpy(tmpROMName, (uint8*)&SP_DMEM + 0x20, 1);
-  //  SwapRomName(tmpROMName);
-    //strcat(tmpROMName, '\0');
-   // DisplayError("%s", tmpROMName);
-    
-    
     gzread(stream, (uint8 *) gMS_SP_REG_1, MEMORY_SIZE_SPREG_1);	/* SPMEM and SP_REG, size?? */
 	gzread(stream, (uint8 *) gMS_SP_REG_2, MEMORY_SIZE_SPREG_2);	/* SPMEM and SP_REG, size?? */
 	gzread(stream, (uint8 *) gMS_DPC, 0x20);						/* DPC */

@@ -43,79 +43,95 @@
 31,From Slot 9
 32,Change ROM Folder...
 33,Refresh ROM List
-34,Recent ROM Folders
-35,Recent ROMs
-36,E&xit
+34,E&xit
 
-37,&Edit
-38,Cheat Codes...
-39,Window Options...
-40,ROM Properties...
+35,&Edit
+36,Cheat Codes...
+37,Window Options...
+38,ROM Properties...
 
-41,E&mulation
-42,&Pause/Play
-43,Reset
-44,&Stop
-45,Kill CPU Thread
-46,Switch Compiler
-47,Interpreter
-48,Dynamic Compiler (Default)
-49,Inject Gameshark Green Button Cheats
-50,Speed Limit
-51,Automatic Frame Skip
-52,Screen Shot
-53,Variable Speed Limits
-54,Increase Speed
-55,Decrease Speed
-56,Restore correct Speed
-57,&Plug-ins
-58,Change Plug-ins...
-59,&Video Settings...
-60,&Audio Settings...
-61,&Input Settings...
-62,RSP Settings...
-63,Full Screen
-
-64,&Help
-65,Online Help
-66,Help Manual
-67,&1964 Home Page
-68,&About 1964...
-69,Load && Play in Window
-70,Load && Play in Full Screen
-71,Cheat Codes...
-72,Change Rom Folder...
-73,ROM Properties...
-74,Header Popup 1
-75,Show Alternate ROM Name
-76,Show Internal ROM Name
-77,Show ROM File Name
-78,Sort Ascending
-79,Sort Descending
-80,Add/Remove Columns...
-81,Header Popup 2
-82,Sort Asccending
-83,Sort Descending
-84,Add/Remove Columns...
-85,ROM Plugin Setting...
-86,ROM Information...
-87,Assign Box Art Image...
-88,Remove Box Art Image Link
-89,Show Rom List
-90,Show Box Art
-91,Increase Image Size
-92,Decrease Image Size
-93,Increase X Spacing
-94,Decrease X Spacing
-95,Increase Y Spacing
-96,Decrease Y Spacing
-97,Show Alternate ROM Name
-98,Show Internal ROM Name
-99,Show ROM File Name
-100,Sort Asccending
-101,Sort Descending
-102,Add/Remove Columns...
-103,Refresh ROM List
+39,E&mulation
+40,&Pause/Play
+41,Reset
+42,&Stop
+43,Kill CPU Thread
+44,Switch Compiler
+45,Interpreter
+46,Dynamic Compiler (Default)
+47,Inject Gameshark Green Button Cheats
+48,Counter Factor
+49,1 x .5 Half Rate
+50,1 x 1 Full Rate
+51,2 x 1 Half Rate (Default)
+52,2 x 2 Full Rate
+53,3 x 1.5 Half Rate
+54,3 x 3 Full Rate
+55,4 x 2 Half Rate
+56,8 x 4 Half Rate
+57,Speed Limit
+58,Screen Shot
+59,Variable Speed Limits
+60,Increase Speed
+61,Decrease Speed
+62,Restore correct Speed
+63,&Plug-ins
+64,Change Plug-ins...
+65,&Video Settings...
+66,&Audio Settings...
+67,&Input Settings...
+68,RSP Settings...
+69,Full Screen
+70,Net Play
+71,Connect to Kaillera Server ...
+72,Lag
+73,1 (less)
+74,2
+75,3
+76,4 (default)
+77,5
+78,6
+79,7 (more)
+80,&Help
+81,Online Help
+82,Help Manual
+83,&1964 Home Page
+84,&About 1964...
+85,Load && Play in Window
+86,Load && Play in Full Screen
+87,Cheat Codes...
+88,Change Rom Folder...
+89,ROM Properties...
+90,Header Popup 1
+91,Show Alternate ROM Name
+92,Show Internal ROM Name
+93,Show ROM File Name
+94,Sort Ascending
+95,Sort Descending
+96,Add/Remove Columns...
+97,Header Popup 2
+98,Sort Asccending
+99,Sort Descending
+100,Add/Remove Columns...
+101,ROM Plugin Setting...
+102,ROM Information...
+103,Assign Box Art Image...
+104,Remove Box Art Image Link
+105,Show Rom List
+106,Show Box Art
+107,Increase Image Size
+108,Decrease Image Size
+109,Increase X Spacing
+110,Decrease X Spacing
+111,Increase Y Spacing
+112,Decrease Y Spacing
+113,Show Alternate ROM Name
+114,Show Internal ROM Name
+115,Show ROM File Name
+116,Sort Asccending
+117,Sort Descending
+118,Add/Remove Columns...
+119,Refresh ROM List
+120,Overclock
 
 ! Dialog box texts
 
@@ -275,107 +291,116 @@ String Section
 22,CreateWindow() failed: Cannot create a window.
 23,Running
 24,Loaded
-25,Saving State
-26,Loading State
-27,State File
-28,All Files
-29,Select Game Save Folder
-30,Select Plugin Folder
-31,Select ROM Folder
-32,Stopped
-33,Ready
-34,Loading RSP Plugin:
-35,Init RSP Plugin ...
-36,Loading Video Plugin:
-37,Init Video Plugin ...
-38,Loading Input Plugin:
-39,Init Input Plugin ...
-40,Loading Audio Plugin:
-41,not available
-42,System Default Video Plugin
-43,System Default Audio Plugin
-44,System Default Input Plugin
-45,System Default RSP Plugin
-46,Video Plugin For Current ROM
-47,Audio Plugin For Current ROM
-48,Input Plugin For Current ROM
-49,RSP Plugin For Current ROM
-50,Error opening this file. Please refresh the ROM list.
-51,Exception in emulation thread
-52,File could not be opened.
-53,This savestate is incompatible with this version of 1964.
-54,Version Conflict
-55,Loading
+25,Kaillera player %d dropped
+26,Saving State
+27,Loading State
+28,State File
+29,All Files
+30,Select Game Save Folder
+31,Select Plugin Folder
+32,Select ROM Folder
+33,Stopped
+34,Ready
+35,Loading RSP Plugin:
+36,Init RSP Plugin ...
+37,Loading Video Plugin:
+38,Init Video Plugin ...
+39,Loading Input Plugin:
+40,Init Input Plugin ...
+41,Loading Audio Plugin:
+42,not available
+43,System Default Video Plugin
+44,System Default Audio Plugin
+45,System Default Input Plugin
+46,System Default RSP Plugin
+47,Video Plugin For Current ROM
+48,Audio Plugin For Current ROM
+49,Input Plugin For Current ROM
+50,RSP Plugin For Current ROM
+51,Error opening this file. Please refresh the ROM list.
+52,Exception in emulation thread
+53,File could not be opened.
+54,This savestate is incompatible with this version of 1964.
+55,Version Conflict
+56,Loading
 56,default
-57,Default
-58,No
-59,Yes
-60,Dyna-Compiler
-61,Interpreter
-62,EEPROM
-63,MEMPAK
-64,SRAM
-65,FLASHRAM
-66,First Used
-67,All Used Types
-68,No Check
-69,Check DMA only
-70,Check DWORD
-71,Check QWORD
-72,Check QWORD & DMA
-73,Check Block
-74,Check Block & DMA
-75,Protect Memory
-76,No Limit
-77,Auto Sync
-78,No EEPROM
-79,4Kb EEPROM
-80,16Kb EEPROM
-81,All Countries
-82,USA - NTSC
-83,Japan - NTSC
-84,USA & Japan - NTSC
-85,Europe - PAL
-86,Australia - PAL
-87,France - PAL
-88,Germany - PAL
-89,(country code mismatch)
-90,Updating ROM browser...
-91,All Countries
-92,USA - NTSC
-93,Japan - NTSC
-94,Are you sure to delete this code?
-95,No Hardware Support Detected
-96,Disabled in this build
-97,Hardware and OS Support Detected
-98,Hardware Support, but No OS Support Detected
-99,Use system default setting
-100,Full Screen (Alt+Enter)
-101,1964 Home Page
-102,ROM Properties (Ctrl+S)
-103,Open (Ctrl+O)
-104,Pause (F3)
-105,Play (F3)
-106,Stop (F4)
-107,Change Plugins (Ctrl+P)
-108,Reset (F2)
-109,Help (F1)
-110,Automatic Frame Skip (F11)
-111,Speed Limit (F9)
-112,Inject Green Button Cheat (F8)
-113,Paused
-114,core
-115,video
-116,audio
-117,compiler
-118,idle
-119,Demo
-120,Beta
-121,USA/Japan
-122,German
-123,France
-124,Italy
-125,Japan
-126,Europe
-127,Spain
-128,Australia
+57,Kaillera timeout
+58,Upload game setting to other players
+59,Upload cheat codes to other players
+60,Kaillera starts the game
+61,Kaillera wait for 1 second
+62,default
+63,Default
+64,No
+65,Yes
+66,Dyna-Compiler
+67,Interpreter
+68,EEPROM
+69,MEMPAK
+70,SRAM
+71,FLASHRAM
+72,First Used
+73,All Used Types
+74,No Check
+75,Check DMA only
+76,Check DWORD
+77,Check QWORD
+78,Check QWORD & DMA
+79,Check Block
+80,Check Block & DMA
+81,Protect Memory
+82,No Limit
+83,Auto Sync
+84,No EEPROM
+85,4Kb EEPROM
+86,16Kb EEPROM
+87,All Countries
+88,USA - NTSC
+89,Japan - NTSC
+90,USA & Japan - NTSC
+91,Europe - PAL
+92,Australia - PAL
+93,France - PAL
+94,Germany - PAL
+95,(country code mismatch)
+96,Updating ROM browser...
+97,All Countries
+98,USA - NTSC
+99,Japan - NTSC
+100,Are you sure to delete this code?
+101,No Hardware Support Detected
+102,Disabled in this build
+103,Hardware and OS Support Detected
+104,Hardware Support, but No OS Support Detected
+105,Use system default setting
+106,Full Screen (Alt+Enter)
+107,1964 Home Page
+108,ROM Properties (Ctrl+S)
+109,Open (Ctrl+O)
+110,Pause (F3)
+111,Play (F3)
+112,Stop (F4)
+113,Change Plugins (Ctrl+P)
+114,Reset (F2)
+115,Help (F1)
+116,Automatic Frame Skip (F11)
+117,Speed Limit (F9)
+118,Inject Green Button Cheat (F8)
+119,Paused
+120,core
+121,video
+122,audio
+123,compiler
+124,idle
+125,netplay
+126,kaillera
+127,Demo
+128,Beta
+129,USA/Japan
+130,German
+131,France
+132,Italy
+133,Japan
+134,Europe
+135,Spain
+136,Australia
