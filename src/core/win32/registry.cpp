@@ -336,9 +336,6 @@ void ReadConfiguration( void)
 		REGISTRY_ReadDWORD( "PauseWhenInactive", TRUE);
 	guioptions.pause_at_inactive = FALSE;	// This feature is disabled
 
-	guioptions.show_recent_game_list =
-		REGISTRY_ReadDWORD( "GameListMenu", TRUE);
-
 	guioptions.boxart_image_width =
 		REGISTRY_ReadDWORD( "BoxartImageWidth", 256);
 

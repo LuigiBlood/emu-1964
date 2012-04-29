@@ -48,8 +48,6 @@
 #define ID_DEBUGGER_SHOWCODELIST        117
 #define ID_DEBUGGER_OPEN                118
 #define ID_DEBUGGER_CLOSE               119
-#define ID_ABOUT_WARRANTY               121
-#define ID_REDISTRIBUTE                 122
 #define ID_RUNTO                        123
 #define ID_OPTIONS_VIDMODE              124
 #define IDM_VIDEO_MODE                  126
@@ -271,7 +269,6 @@
 #define ID_VARIABLESPEEDLIMITS_INCREASESPEED 384
 #define ID_VARIABLESPEEDLIMITS_DECREASESPEED 385
 #define ID_VARIABLESPEEDLIMITS_RESTORECORRECTSPEED 386
-#define ID_SAVE_1964085                 389
 #define ID_DEBUG_NETPLAY                391
 #define ID_FILE_LANGUAGE                392
 #define ID_LANGUAGE_ENGLISH             393

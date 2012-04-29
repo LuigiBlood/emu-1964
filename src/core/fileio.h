@@ -23,6 +23,7 @@
 #ifndef _FILEIO_H__1964_
 #define _FILEIO_H__1964_
 #include "1964ini.h"
+#define CURRENT_SAVE_STATE_VERSION		(0x19640099)
 
 BOOL		ReadRomData(char *RomPath);
 
@@ -42,7 +43,6 @@ void		FileIO_LoadState(void);
 void		FileIO_gzSaveState(void);
 void		FileIO_gzLoadState(void);
 void		FileIO_gzSaveStateFile(const char *filename, DWORD version);
-void		FileIO_gzSaveStateFile_099(const char *filename);
 void		FileIO_gzLoadStateFile(const char *filename);
 void		FileIO_ImportPJ64State(const char *filename);
 void		FileIO_ExportPJ64State(const char *filename);

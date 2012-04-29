@@ -136,7 +136,6 @@ struct GUIOPTIONS
 	BOOL	use_default_state_save_directory;
 	BOOL	use_default_plugin_directory;
 	BOOL	use_last_rom_directory;
-	BOOL	show_recent_game_list;
 	BOOL	display_detail_status;
 	BOOL	display_profiler_status;
 	BOOL	display_fps;
