@@ -202,7 +202,6 @@ DWORD dwStatus;
 EXPORT void CALL Update (BOOL Wait) {
 	DWORD dwEvt;
 
-
 	if (!lpdsbuf) {
 		*AudioInfo.AI_STATUS_REG &= ~AI_STATUS_FIFO_FULL;
 		*AudioInfo.MI_INTR_REG |= MI_INTR_AI;
@@ -214,8 +213,6 @@ EXPORT void CALL Update (BOOL Wait) {
 		gUcode = 88;
 		ucodeDetected = TRUE;
 	}
-
-
 
 	if (Wait) {
 		dwEvt = MsgWaitForMultipleObjects(NUMCAPTUREEVENTS,rghEvent,FALSE,

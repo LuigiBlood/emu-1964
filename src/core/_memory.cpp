@@ -166,8 +166,6 @@ void FreeVirtualDynaMemory(void)
  */
 void InitVirtualMemory1(MemoryState *gMemoryState)
 {
-
-
 	/*
 	 * We have to allocate the RDRAM and ExRDRAM atlocation 0x20000000, so then we can
 	 * do faster £
