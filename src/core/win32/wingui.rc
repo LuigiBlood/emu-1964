@@ -52,7 +52,6 @@ BEGIN
         BEGIN
             MENUITEM "To File...\t F5",             ID_SAVESTATE
             MENUITEM "To  Project64 Save State File...", ID_CPU_EXPORTPJ64STATE
-            MENUITEM SEPARATOR
             MENUITEM "To Slot 0",                   ID_SAVE_STATE_0, CHECKED
             MENUITEM "To Slot 1",                   ID_SAVE_STATE_1
             MENUITEM "To Slot 2",                   ID_SAVE_STATE_2
@@ -68,7 +67,6 @@ BEGIN
         BEGIN
             MENUITEM "From File...\tF7",            ID_LOADSTATE
             MENUITEM "From Project64 Save State File...", ID_CPU_IMPORTPJ64STATE
-            MENUITEM SEPARATOR
             MENUITEM "From Slot 0",                 ID_LOAD_STATE_0, CHECKED
             MENUITEM "From Slot 1",                 ID_LOAD_STATE_1
             MENUITEM "From Slot 2",                 ID_LOAD_STATE_2
@@ -129,7 +127,7 @@ BEGIN
         END
         POPUP "OverClock"
         BEGIN
-            MENUITEM "25MHz (4x underclock",        ID_UNDERCLOCK_25MHZ
+            MENUITEM "25MHz (4x underclock)",        ID_UNDERCLOCK_25MHZ
             MENUITEM "50MHz (2x underclock)",       ID_UNDERCLOCK_50MHZ
             MENUITEM SEPARATOR
             MENUITEM "100MHz (Normal Speed)",       ID_OVERCLOCK_100MHZ
