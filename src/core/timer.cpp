@@ -102,6 +102,7 @@ int					Timer_Event_Count;
 #define NEW_COUNTER_TRACE_MACRO(macro)
 #define NEW_COUNTER_TRACE1(str, arg1)
 #endif
+
 int VICounterFactors[9] = { 1, 1, 1, 2, 2, 3, 3, 4, 4 };
 int CounterFactors[9] = { 1, 1, 2, 2, 4, 3, 6, 4, 8 };	/* 1 = half rate, 2 = full rate */
 
