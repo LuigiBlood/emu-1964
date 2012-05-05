@@ -1568,6 +1568,14 @@ LangMapEntry langMapEntries[] =
 	{118,	ID_HEADERPOPUP_1_SELECTING,			"Add/Remove Columns...",	0,	0},
 	{119,	ID_HEADERPOPUP3_REFRESH,			"Refresh ROM List",	0,	0},
 	{120,	OVERCLOCK_MENU,						"Overclock", 0, 0},
+	{121,	ID_UNDERCLOCK_25MHZ,				"25MHz (4x Underclock)", 0, 0},
+	{122,	ID_UNDERCLOCK_50MHZ,				"50MHz (2x Underclock)", 0, 0},
+	{123,	ID_OVERCLOCK_100MHZ,				"100MHz (Normal Speed)", 0, 0},
+	{124,	ID_OVERCLOCK_200MHZ,				"200MHz (2x Overclock)", 0, 0},
+	{125,	ID_OVERCLOCK_300MHZ,				"300MHz (3x Overclock)", 0, 0},
+	{126,	ID_OVERCLOCK_400MHZ,				"400MHz (4x Overclock)", 0, 0},
+	{127,	ID_OVERCLOCK_500MHZ,				"500MHz (5x Overclock)", 0, 0},
+	{128,	ID_OVERCLOCK_600MHZ,				"600MHz (6x Overclock)", 0, 0},
 };
 
 int totalLangMapEntries= sizeof(langMapEntries)/sizeof(LangMapEntry);
@@ -2206,36 +2214,40 @@ void TranslateMenu(HMENU hMenu, HWND mainHWND)
 	subsubmenu = GetSubMenu(submenu,5) ;
 	SetMenuTranslatedString(subsubmenu,0,ID_SAVESTATE);
 	SetMenuTranslatedString(subsubmenu,1,ID_CPU_EXPORTPJ64STATE);
-	SetMenuTranslatedString(subsubmenu,2,ID_SAVE_STATE_0);
-	SetMenuTranslatedString(subsubmenu,3,ID_SAVE_STATE_1);
-	SetMenuTranslatedString(subsubmenu,4,ID_SAVE_STATE_2);
-	SetMenuTranslatedString(subsubmenu,5,ID_SAVE_STATE_3);
-	SetMenuTranslatedString(subsubmenu,6,ID_SAVE_STATE_4);
-	SetMenuTranslatedString(subsubmenu,7,ID_SAVE_STATE_5);
-	SetMenuTranslatedString(subsubmenu,8,ID_SAVE_STATE_6);
-	SetMenuTranslatedString(subsubmenu,9,ID_SAVE_STATE_7);
-	SetMenuTranslatedString(subsubmenu,10,ID_SAVE_STATE_8);
-	SetMenuTranslatedString(subsubmenu,11,ID_SAVE_STATE_9);
+	SetMenuTranslatedString(subsubmenu,3,ID_SAVE_STATE_0);
+	SetMenuTranslatedString(subsubmenu,4,ID_SAVE_STATE_1);
+	SetMenuTranslatedString(subsubmenu,5,ID_SAVE_STATE_2);
+	SetMenuTranslatedString(subsubmenu,6,ID_SAVE_STATE_3);
+	SetMenuTranslatedString(subsubmenu,7,ID_SAVE_STATE_4);
+	SetMenuTranslatedString(subsubmenu,8,ID_SAVE_STATE_5);
+	SetMenuTranslatedString(subsubmenu,9,ID_SAVE_STATE_6);
+	SetMenuTranslatedString(subsubmenu,10,ID_SAVE_STATE_7);
+	SetMenuTranslatedString(subsubmenu,11,ID_SAVE_STATE_8);
+	SetMenuTranslatedString(subsubmenu,12,ID_SAVE_STATE_9);
 
 	SetMenuTranslatedString(submenu,6,LOADSTATE_MENU);
 	subsubmenu = GetSubMenu(submenu,6) ;
 	SetMenuTranslatedString(subsubmenu,0,ID_LOADSTATE);
 	SetMenuTranslatedString(subsubmenu,1,ID_CPU_IMPORTPJ64STATE);
-	SetMenuTranslatedString(subsubmenu,2,ID_LOAD_STATE_0);
-	SetMenuTranslatedString(subsubmenu,3,ID_LOAD_STATE_1);
-	SetMenuTranslatedString(subsubmenu,4,ID_LOAD_STATE_2);
-	SetMenuTranslatedString(subsubmenu,5,ID_LOAD_STATE_3);
-	SetMenuTranslatedString(subsubmenu,6,ID_LOAD_STATE_4);
-	SetMenuTranslatedString(subsubmenu,7,ID_LOAD_STATE_5);
-	SetMenuTranslatedString(subsubmenu,8,ID_LOAD_STATE_6);
-	SetMenuTranslatedString(subsubmenu,9,ID_LOAD_STATE_7);
-	SetMenuTranslatedString(subsubmenu,10,ID_LOAD_STATE_8);
-	SetMenuTranslatedString(subsubmenu,11,ID_LOAD_STATE_9);
+	SetMenuTranslatedString(subsubmenu,3,ID_LOAD_STATE_0);
+	SetMenuTranslatedString(subsubmenu,4,ID_LOAD_STATE_1);
+	SetMenuTranslatedString(subsubmenu,5,ID_LOAD_STATE_2);
+	SetMenuTranslatedString(subsubmenu,6,ID_LOAD_STATE_3);
+	SetMenuTranslatedString(subsubmenu,7,ID_LOAD_STATE_4);
+	SetMenuTranslatedString(subsubmenu,8,ID_LOAD_STATE_5);
+	SetMenuTranslatedString(subsubmenu,9,ID_LOAD_STATE_6);
+	SetMenuTranslatedString(subsubmenu,10,ID_LOAD_STATE_7);
+	SetMenuTranslatedString(subsubmenu,11,ID_LOAD_STATE_8);
+	SetMenuTranslatedString(subsubmenu,12,ID_LOAD_STATE_9);
 
 	SetMenuTranslatedString(submenu,8,ID_CHANGEDIRECTORY);
 	SetMenuTranslatedString(submenu,9,ID_FILE_FRESHROMLIST);
-	
-	SetMenuTranslatedString(submenu,19,ID_EXIT);
+	int i = 10;
+	while(strcmp(recent_game_lists[i], "Empty Game Slot" ) == 1)
+	{
+		i++;
+	}
+	SetMenuTranslatedString(submenu,i+2,ID_EXIT);
 
 	//Edit menu
 	submenu = GetSubMenu(hMenu,1) ;
@@ -2269,6 +2281,15 @@ void TranslateMenu(HMENU hMenu, HWND mainHWND)
 	SetMenuTranslatedString(subsubmenu,8,ID_CF_CF8);
 
 	SetMenuTranslatedString(submenu,9,OVERCLOCK_MENU);
+	subsubmenu = GetSubMenu(submenu,9);
+	SetMenuTranslatedString(subsubmenu,0,ID_UNDERCLOCK_25MHZ);
+	SetMenuTranslatedString(subsubmenu,1,ID_UNDERCLOCK_50MHZ);
+	SetMenuTranslatedString(subsubmenu,3,ID_OVERCLOCK_100MHZ);
+	SetMenuTranslatedString(subsubmenu,4,ID_OVERCLOCK_200MHZ);
+	SetMenuTranslatedString(subsubmenu,5,ID_OVERCLOCK_300MHZ);
+	SetMenuTranslatedString(subsubmenu,6,ID_OVERCLOCK_400MHZ);
+	SetMenuTranslatedString(subsubmenu,7,ID_OVERCLOCK_500MHZ);
+	SetMenuTranslatedString(subsubmenu,8,ID_OVERCLOCK_600MHZ);
 
 	SetMenuTranslatedString(submenu,11,ID_CPU_AUDIOSYNC);
 	SetMenuTranslatedString(submenu,12,ID_PLUGINS_SCREENSHOTS);

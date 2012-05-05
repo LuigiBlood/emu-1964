@@ -133,6 +133,14 @@
 118,Ajouter/Enlever les Colonnes...
 119,Rafraîchir la Liste de ROM
 120,Overclocker
+121,25MHz (4x Underclocker)
+122,50MHz (2x Underclocker)
+123,100MHz (Vitesse normale)
+124,200MHx (2x Overclocker)
+125,300MHx (3x Overclocker)
+126,400MHx (4x Overclocker)
+127,500MHx (5x Overclocker)
+128,600MHx (6x Overclocker)
 
 ! Dialog box texts
 

@@ -132,6 +132,14 @@
 118,Add/Remove Columns...
 119,Refresh ROM List
 120,Overclock
+121,25MHz (4x Underclock)
+122,50MHz (2x Underclock)
+123,100MHz (Normal Speed)
+124,200MHx (2x Overclock)
+125,300MHx (3x Overclock)
+126,400MHx (4x Overclock)
+127,500MHx (5x Overclock)
+128,600MHx (6x Overclock)
 
 ! Dialog box texts
 

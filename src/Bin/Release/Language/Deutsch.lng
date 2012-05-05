@@ -135,6 +135,14 @@
 118,Spalten hinzufügen/entfernen...
 119,ROMliste aktualisieren
 120,Übertakten
+121,25MHz (4x Untertakten)
+122,50MHz (2x Untertakten)
+123,100MHz (Normale Geschwindigkeit)
+124,200MHx (2x Übertakten)
+125,300MHx (3x Übertakten)
+126,400MHx (4x Übertakten)
+127,500MHx (5x Übertakten)
+128,600MHx (6x Übertakten)
 
 ! Dialog box texts
 
