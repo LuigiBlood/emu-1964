@@ -176,17 +176,9 @@ Dialog=2
 4,ROM Dateiname
 5,Anzuzeigender Kommentar
 
-!CRITICAL_MESSAGE
-!Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=3
-0,Dieses Fenster schließen
-1,Nachrichten löschen
-
-
-
 !FOLDERS DIALOGEX
 !Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=4
+Dialog=3
 0,ROMs
 1,Zuletzt geöffneten Ordner nutzen
 2,Spielstände
@@ -194,13 +186,9 @@ Dialog=4
 4,Plugins
 5,Standard nutzen: $1964.exe\\Plugin
 
-
-
-
-
 !OPTIONS
 !Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=5
+Dialog=4
 0,Datei-Menü Punkte
 1,Kürzlich genutzte ROM-Ordner anzeigen
 2,Wieviele?
@@ -215,11 +203,9 @@ Dialog=5
 11,Profiler
 12,Deaktiviert
 
-
-
 !PLUGINS
 !Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=6
+Dialog=5
 0,Über
 1,Über
 2,Über
@@ -234,17 +220,15 @@ Dialog=6
 
 !ROM_INFO
 !Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=8
+Dialog=6
 0,Dateiname:
 1,Interner ROM-Name:
 2,Land:
 3,Dateipfad:
 
-
-
 !ROM_OPTIONS
 !Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=8
+Dialog=7
 0,Hardware
 1,Expansion Pack:
 2,Speicher-Typ:
@@ -268,7 +252,7 @@ Dialog=8
 
 !UNAVAILABLE DIALOGEX
 !Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=10
+Dialog=8
 0,Zurzeit nicht verfügbar.
 
 
@@ -412,3 +396,4 @@ String Section
 134,Europa
 135,Spanien
 136,Australien
+137,Keiner

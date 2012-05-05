@@ -173,17 +173,9 @@ Dialog=2
 4,Rom File Name
 5,Columns to Display
 
-!CRITICAL_MESSAGE
-!Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=3
-0,Close This Window
-1,Clear Messages
-
-
-
 !FOLDERS DIALOGEX
 !Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=4
+Dialog=3
 0,ROMs
 1,Use the last opened folder
 2,Game Saves
@@ -193,7 +185,7 @@ Dialog=4
 
 !OPTIONS
 !Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=5
+Dialog=4
 0,File Menu Items
 1,Display Recent ROM Folders
 2,How many?
@@ -208,11 +200,9 @@ Dialog=5
 11,Profiler
 12,Disabled
 
-
-
 !PLUGINS
 !Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=6
+Dialog=5
 0,About
 1,About
 2,About
@@ -227,7 +217,7 @@ Dialog=6
 
 !ROM_INFO
 !Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=7
+Dialog=6
 0,File name:
 1,Rom Internal Name:
 2,Country:
@@ -235,7 +225,7 @@ Dialog=7
 
 !ROM_OPTIONS
 !Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=8
+Dialog=7
 0,Hardware
 1,Expansion Pak:
 2,Save Type:
@@ -259,7 +249,7 @@ Dialog=8
 
 !UNAVAILABLE DIALOGEX
 !Don't translate the next line, the "Dialog=n" line is a key line
-Dialog=9
+Dialog=8
 0,Not Available at this time.
 
 
@@ -404,3 +394,4 @@ String Section
 134,Europe
 135,Spain
 136,Australia
+137,None

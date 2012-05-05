@@ -762,7 +762,7 @@ void FillPluginComboList(HWND hDlg, DWORD id, int type, char* current, BOOL useD
 
 	if( type == PLUGIN_TYPE_RSP )
 	{
-		index = SendDlgItemMessage(hDlg, IDC_COMBO_RSP, CB_ADDSTRING, 0, (LPARAM) "None");
+		index = SendDlgItemMessage(hDlg, IDC_COMBO_RSP, CB_ADDSTRING, 0, (LPARAM) TranslateStringByString("None"));
 		if(_stricmp("none", current) == 0)
 			SendDlgItemMessage(hDlg, id, CB_SETCURSEL, (WPARAM) index, (LPARAM) 0);
 		if( current[0] == 0 && useDefaultPlugin )
@@ -1966,6 +1966,7 @@ StringMapEntry StringMapEntries[] = {
 	{134,0,0,	"Europe"},
 	{135,0,0,	"Spain"},
 	{136,0,0,	"Australia"},
+	{137,0,0,	"None"},
 };
 
 const int NumOfStringMapEntries = sizeof(StringMapEntries)/sizeof(StringMapEntry);
@@ -2144,14 +2145,12 @@ BOOL LoadLanguageIntoMemory(char *filename)
 
 char * TranslateStringByString(char *oriStr)
 {
-	int i;
-
-	for( i=0; i<NumOfStringMapEntries; i++ )
+	for(int i=0; i<NumOfStringMapEntries; i++ )
 	{
 		if( strcmp(StringMapEntries[i].oriStr, oriStr) == 0 )
 		{
-			if( StringMapEntries[i].langStr )
-				return StringMapEntries[i+1].langStr;
+			if( StringMapEntries[i].langStr)
+				return StringMapEntries[i].langStr;
 			else
 				return StringMapEntries[i].oriStr;
 		}

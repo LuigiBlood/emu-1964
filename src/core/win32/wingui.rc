@@ -127,7 +127,7 @@ BEGIN
         END
         POPUP "OverClock"
         BEGIN
-            MENUITEM "25MHz (4x underclock)",        ID_UNDERCLOCK_25MHZ
+            MENUITEM "25MHz (4x underclock)",       ID_UNDERCLOCK_25MHZ
             MENUITEM "50MHz (2x underclock)",       ID_UNDERCLOCK_50MHZ
             MENUITEM SEPARATOR
             MENUITEM "100MHz (Normal Speed)",       ID_OVERCLOCK_100MHZ
@@ -1120,8 +1120,8 @@ BEGIN
     GROUPBOX        "Input",IDC_STATIC_GROUP_INPUT,7,108,345,48,BS_CENTER
     CONTROL         206,IDC_STATIC,"Static",SS_BITMAP | SS_REALSIZEIMAGE | SS_SUNKEN,13,172,35,32,WS_EX_TRANSPARENT
     CONTROL         "Display default plugin setting",IDC_DEFAULT_PLUGIN_RADIO,
-                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,76,217,101,10
-    CONTROL         "Display ROM plugin setting",IDC_ROM_PLUGIN_RADIO,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,182,217,98,10
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,23,219,156,10
+    CONTROL         "Display ROM plugin setting",IDC_ROM_PLUGIN_RADIO,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,186,219,159,10
 END
 
 ROM_OPTIONS DIALOGEX 0, 0, 361, 244
