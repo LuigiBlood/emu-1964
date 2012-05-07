@@ -1741,10 +1741,6 @@ DlgLangMapEntry FolderDialogItems[]=
 
 DlgLangMapEntry OptionsDialogItems[]=
 {
-	{IDC_STATIC_GROUP1,0,0},
-	{IDC_STATIC_TXT1,0,0},
-	{IDC_ENABLE_GAME_LIST,0,0},
-	{IDC_STATIC_TXT2,0,0},
 	{IDC_STATIC_GROUP2,0,0},
 	{IDC_DEFAULTOPTIONS_PAUSEWHENINACTIVE,0,0},
 	{IDC_OPTION_AUTOFULLSCREEN,0,0},
@@ -2242,12 +2238,8 @@ void TranslateMenu(HMENU hMenu, HWND mainHWND)
 
 	SetMenuTranslatedString(submenu,8,ID_CHANGEDIRECTORY);
 	SetMenuTranslatedString(submenu,9,ID_FILE_FRESHROMLIST);
-	int i = 10;
-	while(strcmp(recent_game_lists[i], "Empty Game Slot" ) == 1)
-	{
-		i++;
-	}
-	SetMenuTranslatedString(submenu,i+2,ID_EXIT);
+
+	//SetMenuTranslatedString(submenu,29,ID_EXIT);
 
 	//Edit menu
 	submenu = GetSubMenu(hMenu,1) ;
