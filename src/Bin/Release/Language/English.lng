@@ -194,19 +194,14 @@ Dialog=3
 !OPTIONS
 !Don't translate the next line, the "Dialog=n" line is a key line
 Dialog=4
-0,File Menu Items
-1,Display Recent ROM Folders
-2,How many?
-3,Display Recent ROMs
-4,How many?
-5,Window Behavior
-6,Pause When 1964 Window Is Inactive
-7,Start ROM in Full Screen
-8,Display Error Log Window
-9,Status Bar Monitoring
-10,Counters
-11,Profiler
-12,Disabled
+0,Window Behavior
+1,Pause When 1964 Window Is Inactive
+2,Start ROM in Full Screen
+3,Display Error Log Window
+4,Status Bar Monitoring
+5,Counters
+6,Profiler
+7,Disabled
 
 !PLUGINS
 !Don't translate the next line, the "Dialog=n" line is a key line

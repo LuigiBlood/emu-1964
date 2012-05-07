@@ -195,19 +195,14 @@ Dialog=3
 !OPTIONS
 !Don't translate the next line, the "Dialog=n" line is a key line
 Dialog=4
-0,Objets du Menu Fichier
-1,Afficher les Dossiers des ROMS Récentes
-2,Combien ?
-3,Afficher les ROMS Récentes
-4,Combien ?
-5,Comportement de la Fenêtre
-6,Pause lorsque la Fenêtre de 1964 est Inactive
-7,Démarrer la ROM en Plein Ecran
-8,Afficher la Fenêtre d'Enregistrement d'Erreur
-9,Surveillance de la Barre de Statut
-10,Compteurs
-11,Profiler
-12,Désactivé
+0,Comportement de la Fenêtre
+1,Pause lorsque la Fenêtre de 1964 est Inactive
+2,Démarrer la ROM en Plein Ecran
+3,Afficher la Fenêtre d'Enregistrement d'Erreur
+4,Surveillance de la Barre de Statut
+5,Compteurs
+6,Profiler
+7,Désactivé
 
 
 
@@ -218,13 +213,12 @@ Dialog=5
 1,A Propos De
 2,A Propos De
 3,A Propos De
-4,&Télécharger les Plug-ins Online
-5,Audio
-6,Vidéo
-7,RSP
-8,Contrôleur
-9,Afficher les Paramètres du Plugin par Défaut
-10,Afficher les Paramètres du Plugin ROM
+4,Audio
+5,Vidéo
+6,RSP
+7,Contrôleur
+8,Afficher les Paramètres du Plugin par Défaut
+9,Afficher les Paramètres du Plugin ROM
 
 !ROM_INFO
 !Don't translate the next line, the "Dialog=n" line is a key line

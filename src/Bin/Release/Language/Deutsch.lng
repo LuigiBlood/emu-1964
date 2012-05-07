@@ -197,19 +197,14 @@ Dialog=3
 !OPTIONS
 !Don't translate the next line, the "Dialog=n" line is a key line
 Dialog=4
-0,Datei-Menü Punkte
-1,Kürzlich genutzte ROM-Ordner anzeigen
-2,Wieviele?
-3,Kürzlich genutzte ROMs anzeigen
-4,Wieviele?
-5,Fensterverhalten
-6,Pausieren, wenn 1964-Fenster inaktiv
-7,ROM in Vollbild starten
-8,Fehler-Logbuch anzeigen
-9,Statusleisten Anzeigen
-10,Zähler
-11,Profiler
-12,Deaktiviert
+0,Fensterverhalten
+1,Pausieren, wenn 1964-Fenster inaktiv
+2,ROM in Vollbild starten
+3,Fehler-Logbuch anzeigen
+4,Statusleisten Anzeigen
+5,Zähler
+6,Profiler
+7,Deaktiviert
 
 !PLUGINS
 !Don't translate the next line, the "Dialog=n" line is a key line
