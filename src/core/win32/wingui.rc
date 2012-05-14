@@ -52,7 +52,7 @@ BEGIN
         BEGIN
             MENUITEM "To File...\t F5",             ID_SAVESTATE
             MENUITEM "To  Project64 Save State File...", ID_CPU_EXPORTPJ64STATE
-			MENUITEM SEPARATOR
+            MENUITEM SEPARATOR
             MENUITEM "To Slot 0",                   ID_SAVE_STATE_0, CHECKED
             MENUITEM "To Slot 1",                   ID_SAVE_STATE_1
             MENUITEM "To Slot 2",                   ID_SAVE_STATE_2
@@ -68,7 +68,7 @@ BEGIN
         BEGIN
             MENUITEM "From File...\tF7",            ID_LOADSTATE
             MENUITEM "From Project64 Save State File...", ID_CPU_IMPORTPJ64STATE
-			MENUITEM SEPARATOR
+            MENUITEM SEPARATOR
             MENUITEM "From Slot 0",                 ID_LOAD_STATE_0, CHECKED
             MENUITEM "From Slot 1",                 ID_LOAD_STATE_1
             MENUITEM "From Slot 2",                 ID_LOAD_STATE_2
@@ -366,7 +366,7 @@ BEGIN
     CTEXT           "\nGreets: Angelo, ContraSF, Cricket, _Demo_, duddie, Emul8or, epsilon, F|RES, FlyingNR6, hartec, Houe, hWnd, icepir8, LaC, Lemmy Lionel, Niki Waibel, Phrodide, rcp, Scav, slacka, Smiff, SpectRe, Spikez, subice, StrmnNrmn, TNSe",IDC_STATIC_TEXT2,10,64,155,63
     GROUPBOX        "About",IDC_STATIC_BOX_TITLE,8,12,165,219
     GROUPBOX        "System Information",IDC_STATIC_GROUP_2,187,12,165,219
-    RTEXT           "SSE Optimizations Enabled?:",IDC_STATIC_TEXT5,196,30,59,19
+    RTEXT           "SSE Optimizations Enabled?:",IDC_STATIC_TEXT5,196,30,59,23
     LTEXT           "Static",IDC_IS_SSE_SUPPORTED,267,38,77,27
     RTEXT           "Reason:",IDC_STATIC_TEXT6,197,65,58,9
     LTEXT           "Static",IDC_SSE_CAUSE,267,65,77,28
