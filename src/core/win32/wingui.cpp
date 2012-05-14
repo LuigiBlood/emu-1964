@@ -129,30 +129,29 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 
             SetStatusBarText(2, generalmessage);
 
+//		FPS
+			if( guioptions.display_fps)
+			{
+			int fps;			
 			static int lasttime=0;
 			static int lastdls=0;
 
-			if( guioptions.display_fps)
+			if( emustatus.DListCount-lastdls < 65)
 			{
-				if(GetTickCount()-lasttime>1000)
-				{
-					vips = emustatus.DListCount-lastdls;
-					lastdls=emustatus.DListCount;
-					lasttime=GetTickCount();
-				}
-
-				sprintf(generalmessage, " %d FPS", (int) vips);
+				fps = emustatus.DListCount-lastdls;
+				lastdls=emustatus.DListCount;
 			}
 			else
+			{
+				fps = (emustatus.DListCount-lastdls)/5;
+				lastdls=emustatus.DListCount;
+			}
+				 sprintf(generalmessage, " %d FPS", (int) fps);
+			}
+//		VI/s
+			else
 			{	
-				if( vips >= 100.0) 
-				{
-						sprintf(generalmessage, "%3d VI/s", (int) vips);
-				} 
-				else 
-				{
-						sprintf(generalmessage, " %2d VI/s", (int) vips);
-				}
+				 sprintf(generalmessage, " %d VI/s", (int) vips);
 			}
 
 			viCountPerSecond = 0;
