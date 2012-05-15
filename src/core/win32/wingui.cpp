@@ -132,28 +132,38 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 //		FPS
 			if( guioptions.display_fps)
 			{
-			int fps;			
-			static int lasttime=0;
-			static int lastdls=0;
+				int fps;			
+				static int lastdls=0;
+				static int lasttime=0;
 
-			if( emustatus.DListCount-lastdls < 65)
-			{
-				fps = emustatus.DListCount-lastdls;
-				lastdls=emustatus.DListCount;
-			}
-			else
-			{
-				fps = (emustatus.DListCount-lastdls)/5;
-				lastdls=emustatus.DListCount;
-			}
-				 sprintf(generalmessage, " %d FPS", (int) fps);
+				if(GetTickCount()-lasttime>1000)
+				{
+					if( emustatus.DListCount-lastdls < 65)
+					{
+						fps = emustatus.DListCount-lastdls;
+					}
+					else
+					{
+						fps = (emustatus.DListCount-lastdls)/5;
+					}
+					lastdls=emustatus.DListCount;
+					lasttime=GetTickCount();
+				}
+
+			sprintf(generalmessage, " %3d FPS", (int) fps);
 			}
 //		VI/s
 			else
-			{	
-				 sprintf(generalmessage, " %d VI/s", (int) vips);
+			{
+				if( vips >= 100.0)
+				{
+					sprintf(generalmessage, " %2d VI/s", (int) vips);
+				}
+				else
+				{
+					sprintf(generalmessage, " %3d VI/s", (int) vips);
+				}
 			}
-
 			viCountPerSecond = 0;
 			QueryPerformanceCounter(&LastSecondTime);
 
