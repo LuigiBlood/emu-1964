@@ -149,21 +149,14 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 					lastdls=emustatus.DListCount;
 					lasttime=GetTickCount();
 				}
-
-			sprintf(generalmessage, " %3d FPS", (int) fps);
+				sprintf(generalmessage, " %d FPS", fps);
 			}
 //		VI/s
 			else
 			{
-				if( vips >= 100.0)
-				{
-					sprintf(generalmessage, " %2d VI/s", (int) vips);
-				}
-				else
-				{
-					sprintf(generalmessage, " %3d VI/s", (int) vips);
-				}
+				sprintf(generalmessage, " %.0f VI/s", vips);
 			}
+			
 			viCountPerSecond = 0;
 			QueryPerformanceCounter(&LastSecondTime);
 
@@ -586,9 +579,9 @@ _HOPPITY:
 bool SetOCOptions(void)
 {
 	char szTitle[64];
-	sprintf(szTitle,"1964 [%dMHz]",(int)(DOUBLE_COUNT*100));
+	sprintf(szTitle,"1964 %s [%.0fMHz]",romlist[rlstatus.selected_rom_index]->pinientry->Game_Name, (DOUBLE_COUNT*100));
 	SetWindowText(gui.hwnd1964main,szTitle);
-	
+
 	CheckMenuItem( gui.hMenu1964main,ID_UNDERCLOCK_25MHZ, MF_UNCHECKED);
 	CheckMenuItem( gui.hMenu1964main,ID_UNDERCLOCK_50MHZ, MF_UNCHECKED);
 	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_100MHZ, MF_UNCHECKED);
@@ -3284,10 +3277,10 @@ void InitStatusBarParts(void)
 		 * sizes[4] = sizes[5]-40;
 		 */
 		sizes[4] = rc.right - rc.left - 25;
-		sizes[3] = sizes[4] - 15;
-		sizes[2] = sizes[3] - 30;
-		sizes[1] = sizes[2] - 75; //CF
-		sizes[0] = sizes[1] - 80;
+		sizes[3] = sizes[4] - 20;
+		sizes[2] = sizes[3] - 40;
+		sizes[1] = sizes[2] - 55; //CF
+		sizes[0] = sizes[1] - 67;
 
 		SendMessage(gui.hStatusBar, SB_SETPARTS, 5, (LPARAM) sizes);
 	}
