@@ -207,8 +207,6 @@ void ResumeEmulator(int action_after_pause)
 	CheckButton(ID_BUTTON_PLAY, TRUE);
 	CheckButton(ID_BUTTON_PAUSE, FALSE);
 
-	sprintf(generalmessage, "%s - %s", gui.szWindowTitle, TranslateStringByString("Running"));
-	SetStatusBarText(0, generalmessage);
 	SetEvent( ResumeEmulatorEvent );
 	QueryPerformanceCounter(&LastSecondTime);
 }
