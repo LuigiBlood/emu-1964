@@ -578,10 +578,6 @@ _HOPPITY:
 
 bool SetOCOptions(void)
 {
-	char szTitle[64];
-	sprintf(szTitle,"1964 %s [%.0fMHz]",romlist[rlstatus.selected_rom_index]->pinientry->Game_Name, (DOUBLE_COUNT*100));
-	SetWindowText(gui.hwnd1964main,szTitle);
-
 	CheckMenuItem( gui.hMenu1964main,ID_UNDERCLOCK_25MHZ, MF_UNCHECKED);
 	CheckMenuItem( gui.hMenu1964main,ID_UNDERCLOCK_50MHZ, MF_UNCHECKED);
 	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_100MHZ, MF_UNCHECKED);
@@ -1541,7 +1537,8 @@ void __cdecl Play(BOOL WithFullScreen)
 		CPUThreadHandle = CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)StartCPUThread,NULL,0, &ThreadID);
 
 
-		sprintf(generalmessage, "%s - %s", gui.szWindowTitle, TranslateStringByString("Running"));
+		sprintf(generalmessage, "%s - [%.0fMHz]", gui.szWindowTitle, (DOUBLE_COUNT*100));
+		SetWindowText(gui.hwnd1964main, generalmessage);
 
 		if(WithFullScreen && (emustatus.Emu_Is_Resetting == 0))
 		{
@@ -1977,7 +1974,6 @@ BOOL __cdecl WinLoadRomStep2(char *szFileName)
 	gHWS_pc = 0xA4000040;	/* We do it in r4300i_inithardware */
 	
 	UpdateCIC();
-	sprintf(generalmessage, "%s - %s", gui.szWindowTitle, TranslateStringByString("Loaded"));
 	Set_Ready_Message();
 	
 	EnableMenuItem(gui.hMenu1964main, ID_ROM_PAUSE, MF_GRAYED);
@@ -3234,11 +3230,6 @@ void AfterStop(void)
 	ShowWindow(gui.hStatusBar, SW_HIDE);
 	ShowWindow(gui.hStatusBar, SW_SHOW);
 	SetStatusBarText(3, defaultoptions.RDRAM_Size == RDRAMSIZE_4MB ? "4MB" : "8MB");
-
-	sprintf(generalmessage, "%s - %s", gui.szWindowTitle, TranslateStringByString("Stopped"));
-	
-	Set_Ready_Message();
-	SetStatusBarText(1, " 0 VI/s");
 
 	if( NeedFreshromListAfterStop == TRUE )
 	{
