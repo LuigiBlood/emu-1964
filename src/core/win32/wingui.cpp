@@ -578,6 +578,11 @@ _HOPPITY:
 
 bool SetOCOptions(void)
 {
+	if(Rom_Loaded)
+	{
+		sprintf(generalmessage, "%s - [%.0fMHz]", gui.szWindowTitle, (DOUBLE_COUNT*100));
+		SetWindowText(gui.hwnd1964main, generalmessage);
+	}
 	CheckMenuItem( gui.hMenu1964main,ID_UNDERCLOCK_25MHZ, MF_UNCHECKED);
 	CheckMenuItem( gui.hMenu1964main,ID_UNDERCLOCK_50MHZ, MF_UNCHECKED);
 	CheckMenuItem( gui.hMenu1964main,ID_OVERCLOCK_100MHZ, MF_UNCHECKED);
@@ -1535,10 +1540,6 @@ void __cdecl Play(BOOL WithFullScreen)
 
 		r4300i_Reset();
 		CPUThreadHandle = CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)StartCPUThread,NULL,0, &ThreadID);
-
-
-		sprintf(generalmessage, "%s - [%.0fMHz]", gui.szWindowTitle, (DOUBLE_COUNT*100));
-		SetWindowText(gui.hwnd1964main, generalmessage);
 
 		if(WithFullScreen && (emustatus.Emu_Is_Resetting == 0))
 		{
