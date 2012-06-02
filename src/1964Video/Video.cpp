@@ -345,8 +345,20 @@ FUNC_TYPE(int) NAME_DEFINE(RomOpen) (void)
 	}
 	status.bDisableFPS=false;
 
-	g_dwRamSize = 0x400000;
-	
+    __try{
+            uint32 dummy;
+            dummy = g_GraphicsInfo.RDRAM[0x400000];
+            dummy = g_GraphicsInfo.RDRAM[0x500000];
+            dummy = g_GraphicsInfo.RDRAM[0x600000];
+            dummy = g_GraphicsInfo.RDRAM[0x700000];
+            dummy = g_GraphicsInfo.RDRAM[0x7FFFFC];
+            g_dwRamSize = 0x800000;
+    }
+    __except(NULL, EXCEPTION_EXECUTE_HANDLER)
+    {
+            g_dwRamSize = 0x400000;
+    }
+
 #ifdef _DEBUG
 	if( debuggerPause )
 	{
