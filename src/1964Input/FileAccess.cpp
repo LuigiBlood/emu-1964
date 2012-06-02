@@ -458,6 +458,7 @@ bool ProcessKey( DWORD dwKey, DWORD dwSection, LPCSTR pszLine, LPTSTR pszFFDevic
 						DebugWrite(_T("ProcessKey: couldn't find a device in g_devList for %s %d\n"), pszDeviceName, bDeviceNr);
 						gGUID = GUID_NULL;
 						btnWorking.parentDevice = NULL;
+						return false;
 					}
 				}
 			}

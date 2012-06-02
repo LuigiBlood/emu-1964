@@ -857,6 +857,7 @@ extern ConvertFunction	gConvertTlutFunctions[ 8 ][ 4 ];
 extern ConvertFunction	gConvertFunctions_16[ 8 ][ 4 ];
 extern ConvertFunction	gConvertFunctions_16_FullTMEM[ 8 ][ 4 ];
 extern ConvertFunction	gConvertTlutFunctions_16[ 8 ][ 4 ];
+
 void CTextureManager::ConvertTexture(TxtrCacheEntry * pEntry, bool fromTMEM)
 {
 	static uint32 dwCount = 0;
