@@ -1722,6 +1722,12 @@ BEGIN
     IDB_GREEN_CHEAT         "Inject Green Button Cheat (F8)"
 END
 
+STRINGTABLE 
+BEGIN
+    IDS_KEY_RSP_PLUGIN      "RSPPlugin"
+    IDS_DEFAULT_RSP_PLUGIN  "none"
+END
+
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
