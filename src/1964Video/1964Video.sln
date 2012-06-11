@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RiceVideo", "RiceVideo.vcproj", "{1120AACC-8C31-486A-A9B8-0568DFF718F4}"
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RiceVideo", "1964Video.vcproj", "{1120AACC-8C31-486A-A9B8-0568DFF718F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
