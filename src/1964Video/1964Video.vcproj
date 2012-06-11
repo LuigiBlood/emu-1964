@@ -47,10 +47,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="4"
-				InlineFunctionExpansion="1"
-				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
+				Optimization="0"
+				InlineFunctionExpansion="0"
+				EnableIntrinsicFunctions="false"
+				FavorSizeOrSpeed="0"
 				OmitFramePointers="false"
 				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;DIRECTX8;_CRT_SECURE_NO_WARNINGS"
@@ -67,7 +67,7 @@
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
-				CallingConvention="0"
+				CallingConvention="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -88,8 +88,8 @@
 				OutputFile="..\bin\$(ConfigurationName)\plugin\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=""
-				IgnoreDefaultLibraryNames="libci.lib;libcmtd.lib"
+				IgnoreAllDefaultLibraries="false"
+				IgnoreDefaultLibraryNames="libci; libcmt.lib"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile="../obj/RiceVideo/Release/RiceVideo.pdb"
 				GenerateMapFile="true"
