@@ -316,8 +316,8 @@ Possible Blending Factors:
 		//}
 #endif
 
-//		switch ( blendmode_1 )
-		switch ( blendmode_2<<2 )
+		switch ( blendmode_1 )
+//		switch ( blendmode_2<<2 )
 		{
 		case BLEND_XLU:	// IN * A_IN + MEM * (1-A_IN)
 		case BLEND_BI_AIN:	// Bl * AIn + Mem * 1-A

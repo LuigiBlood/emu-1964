@@ -3789,16 +3789,16 @@ Nazo Puyo Mode - All Practice Stages Cleared 4,2=0,50000402-0000,811631E8-FFFF,
 
 [Quake]
 NumberOfGroups=42
-Infinite Ammo,1=1,50000202-0000,80163A2D-0064,50000402-0000,81163A2C-03E7,
-Have All Weapons,1=1,801639EB-007F,
+Infinite Ammo,1=0,50000202-0000,80163A2D-0064,50000402-0000,81163A2C-03E7,
+Have All Weapons,1=0,801639EB-007F,
 Debug Mode,1=0,8006C4C2-0001,
-Have All Keys,1=1,801639E9-000F,
-Infinite Armor,1=1,81163944-42C8,
-Infinite Health,1=1,81163930-42C8,
+Have All Keys,1=0,801639E9-000F,
+Infinite Armor,1=0,81163944-42C8,
+Infinite Health,1=0,81163930-42C8,
 Infinite Bio Suit,1=0,81163980-42C8,
-Have Quad Damage,1=1,8116397C-42C8,
-Have Ring of Shadows,1=1,811639E8-42C8,
-Rapid Fire,1=1,D00CA9E0-0020,8016396D-0001,
+Have Quad Damage,1=0,8116397C-42C8,
+Have Ring of Shadows,1=0,811639E8-42C8,
+Rapid Fire,1=0,D00CA9E0-0020,8016396D-0001,
 Press L for Peaceful Enemies,1="Press L at the beginning of each stage and as long as you dont attack the enemies in any given room they wont attack you.",0,D00CA9E1-0020,811639F2-42C8,
 Multi Infinite Health Player 1,1=0,81166290-42C8,
 Multi Infinite Armor Player 1,1=0,811662A4-42C8,
@@ -4540,11 +4540,11 @@ Infinite Courage,4=0,810BB096-0007,F107D9B0-0000,
 
 [Shadow of the Empire]
 NumberOfGroups=29
-All Levels Infinite Lives,1=1,800E05CB-00FF,
+All Levels Infinite Lives,1=0,800E05CB-00FF,
 All Levels Infinite Missiles,1=0,800E1265-00FF,
-All Stages Invincible,1=1,8107A770-2400,
+All Stages Invincible,1=0,8107A770-2400,
 All Stages Infinite Health,1=0,81072D0C-2400,
-All Stages Lasers Never Overheat,1=1,81073948-2400,
+All Stages Lasers Never Overheat,1=0,81073948-2400,
 All Stages Upper Lasers,1="Don't Use With Never Overheat Code ",0,81073944-3C06,81073946-4EFF,
 All Stages Infinite Pulse Ammo,1=0,81074204-2400,
 All Stages Infinite Flame Ammo,1=0,81073720-2400,
@@ -4949,12 +4949,12 @@ Max Combo,1=0,810A3644-7FFF,
 
 [STAR WARS EP1 RACER]
 NumberOfGroups=10
-No Damage,1="If when Racing Your Pod Over heats & bursts into flames Press R Button & you will Repair the Damage",1,800A52D7-0001,
-Always 1st,1=1,81118FEC-0001,
-Infinite Truguts,1=1,81113E7A-FFFF,81113E78-7FFF,
+No Damage,1="If when Racing Your Pod Over heats & bursts into flames Press R Button & you will Repair the Damage",0,800A52D7-0001,
+Always 1st,1=0,81118FEC-0001,
+Infinite Truguts,1=0,81113E7A-FFFF,81113E78-7FFF,
 Enable In-Game cheat Menu & Cheats,1="Here you can Activate the IN-Built Cheats Menu at the Front Screen Just Press C-Button Right.This will open up All Tracks & Characters In Free Play & Time Attack also In A Race.Press The Start/Pause button to Access the In-Cheat-Menu Option.You can also ch×·	€",0,8009B7D7-0001,8109B7DA-FFFF,
-Unlock All Tracks & Characters,1="When using Unlock All Tracks & Characters For can to pick & choose what ever you want to play As & where",1,80113E68-00FF,80113E69-00FF,80113E6A-00FF,80113E6B-00FF,81113E68-FFFF,81113E6A-FFFF,80113E74-007D,81113E76-FFFF,
-Have All Tracks Completed,1=1,81113E6A-FFFF,81113E6C-3FFF,81113E6E-3FFF,81113E70-3FFF,81113E72-00FF,
+Unlock All Tracks & Characters,1="When using Unlock All Tracks & Characters For can to pick & choose what ever you want to play As & where",0,80113E68-00FF,80113E69-00FF,80113E6A-00FF,80113E6B-00FF,81113E68-FFFF,81113E6A-FFFF,80113E74-007D,81113E76-FFFF,
+Have All Tracks Completed,1=0,81113E6A-FFFF,81113E6C-3FFF,81113E6E-3FFF,81113E70-3FFF,81113E72-00FF,
 No Damage,4="If when Racing Your Pod Over heats & bursts into flames Press R Button & you will Repair the Damage",0,800AA5D7-0001,
 Infinite Truguts,4=0,8111CB1A-FFFF,8111CB18-7FFF,
 Always 1st,4=0,80121C8C-0001,80125489-0001,
@@ -5206,7 +5206,7 @@ All Equipment Upgrades,2=0,801EF4CD-0023,811EF51A-201B,
 Have All Masks,2=0,801EF4E8-005A,801EF4E9-0055,801EF4EA-0063,801EF4EB-0061,801EF4EC-005C,801EF4ED-004E,801EF4EE-0056,801EF4EF-0062,801EF4F0-0054,801EF4F1-005E,801EF4F2-0064,801EF4F3-004F,801EF4F4-0058,801EF4F5-0059,801EF4F6-0053,801EF4F7-005B,801EF4F8-0052,801EF4F9-0050,801EF4FA-005F,801EF4FB-005D,801EF4FC-0057,801EF4FD-0060,801EF4FE-0065,801EF4FF-0051,
 
 [THE LEGEND OF ZELDA]
-NumberOfGroups=76
+NumberOfGroups=85
 Infinite 999 Rupees,1=0,8011A672-0067,8111A604-03E7,
 Play As Link Always Old,1="If you Put Old Link On & Load from A Young Link Save You will have Acces to all Old Link Things. But warning Do Not Try to use the Heros Bow Or it will crash.",0,8011A5D7-0000,
 Play As Link Always Young,1=0,8011A5D7-0001,
@@ -5283,6 +5283,15 @@ Press L To Levitate,2="Press The L Button To Levitate & Let go to come down Agai
 Infinite Time on all other Timers,2="This cheat works on all Race Timers not the final Boss and Under Water with iron Boots etc",0,8011B9A1-0032,
 Infinite Timer Escaping From Gannons Tower,2="This cheat works only on The Final Boss",0,8011B9A5-00B4,
 Epona Max Carrots Lon Lon Raunch,2="This is For Practicing,Racing.Warning take this off before jumping the exit fence after winning Epona",0,801D8BCA-0006,801F2208-0001,801EEC88-0001,
+(U) (V1.0) menu fix cheat=0,801DA5CB-0002,
+(U) (V1.1) menu fix cheat=0,801DA78B-0002,
+(U) (V1.2) menu fix cheat=0,801DAE8B-0002,
+(U) (GC) menu fix cheat=0,801DB78B-0002,
+(E) (V1.0) menu fix cheat=0,801D860B-0002,
+(E) (V1.1) menu fix cheat=0,801D864B-0002,
+(E) (GC) menu fix cheat=0,801D8F8B-0002,
+(U) (GC)-Master Quest menu fix cheat=0,801DB74B-0002,
+(E) (GC)-Master Quest menu fix cheat=0,801D8F4B-0002,
 
 [Tigger's Honey Hunt]
 NumberOfGroups=2
