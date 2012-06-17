@@ -1822,7 +1822,7 @@ bool CDXGraphicsContext::IsResultGood(HRESULT hr, bool displayError)
 			TRACE1("D3D Error: %s", szError);
 			ErrorMsg(szError);
 #else
-			const char *errmsg = DXGetErrorString9(hr);
+			const char *errmsg = DXGetErrorString(hr);
 			TRACE1("D3D Error: %s", errmsg);
 			//ErrorMsg(errmsg);
 #endif

@@ -93,9 +93,17 @@ void GetPluginDir( char * Directory )
 FUNC_TYPE(void) NAME_DEFINE(GetDllInfo) ( PLUGIN_INFO * PluginInfo )
 {
 #ifdef _DEBUG
+#if DIRECTX_VERSION > 8
+	sprintf(PluginInfo->Name, "%s %s Debug-DX9",project_name, FILE_VERSION);
+#else
 	sprintf(PluginInfo->Name, "%s %s Debug",project_name, FILE_VERSION);
+#endif
+#else
+#if DIRECTX_VERSION > 8
+	sprintf(PluginInfo->Name, "%s %s-DX9",project_name, FILE_VERSION);
 #else
 	sprintf(PluginInfo->Name, "%s %s",project_name, FILE_VERSION);
+#endif
 #endif
 	PluginInfo->Version        = 0x0103;
 	PluginInfo->Type           = PLUGIN_TYPE_GFX;
@@ -108,7 +116,11 @@ FUNC_TYPE(void) NAME_DEFINE(GetDllInfo) ( PLUGIN_INFO * PluginInfo )
 FUNC_TYPE(void) NAME_DEFINE(DllAbout) ( HWND hParent )
 {
 	char temp[300];
+#if DIRECTX_VERSION == 8
 	sprintf(temp,"%s %s (%s)\nDirectX 8\nBased on Rice's 6.1.1 beta 10 source code",project_name, FILE_VERSION,BUILD_NUMBER) ;
+#else
+	sprintf(temp,"%s %s (%s)\nDirectX 9\nBased on Rice's 6.1.1 beta 10 source code",project_name, FILE_VERSION,BUILD_NUMBER) ;
+#endif
 	MsgInfo(temp);
 }
 
