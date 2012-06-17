@@ -54,7 +54,7 @@
 #include <d3dx9.h>
 #include <d3d9types.h>
 #include <D3dx9math.h>
-#include <dxerr9.h>
+#include <dxerr.h>
 #define MYLPDIRECT3DTEXTURE			LPDIRECT3DTEXTURE9
 #define MYD3DADAPTER_IDENTIFIER		D3DADAPTER_IDENTIFIER9
 #define MYIDirect3DSurface			IDirect3DSurface9
