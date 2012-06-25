@@ -894,7 +894,7 @@ TxtrCacheEntry* LoadTexture(uint32 tileno)
 
 void PrepareTextures()
 {
-	if( gRDP.textureIsChanged || !currentRomOptions.bFastTexCRC ||
+	if( gRDP.textureIsChanged ||
 		CRender::g_pRender->m_pColorCombiner->m_pDecodedMux->m_ColorTextureFlag[0] ||
 		CRender::g_pRender->m_pColorCombiner->m_pDecodedMux->m_ColorTextureFlag[1] )
 	{
