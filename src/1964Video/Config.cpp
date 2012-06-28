@@ -848,7 +848,7 @@ void GenerateCurrentRomOptions()
 	}
 	else if ((_strnicmp(g_curRomInfo.szGameName, "Extreme G 2",11) == 0))
 	{
-		options.enableHackForGames = HACK_FOR_EXTREME_G2;
+		options.enableHackForGames = HACK_FOR_SOUTH_PARK_RALLY;
 	}
 	else if ((_strnicmp(g_curRomInfo.szGameName, "MarioGolf64",11) == 0))
 	{

@@ -1140,14 +1140,14 @@ UcodeMap ucodeMap9 =
 	//g0
 };
 
-//uCode 10 - unknown
+/*//uCode 10 - unknown
 //Games: Conker
 //FIX ME This causes rendering problems for unknown resasons
 UcodeMap ucodeMap10 =
 {
 	RSP_GBI1_SpNoop,  RSP_Vtx_Conker,	 RSP_GBI1_ModifyVtx, RSP_GBI2_CullDL,
 	RSP_GBI1_BranchZ, RSP_GBI2_Tri1,	 RSP_Quad_Conker,	 RSP_Quad_Conker,
-	RSP_GBI2_Line3D,  RSP_S2DEX_BG_1CYC, RSP_S2DEX_BG_COPY,  RSP_S2DEX_OBJ_RENDERMODE/*RSP_RDP_Nothing*/,
+	RSP_GBI2_Line3D,  RSP_S2DEX_BG_1CYC, RSP_S2DEX_BG_COPY,  RSP_S2DEX_OBJ_RENDERMODE,//RSP_RDP_Nothing
 	RSP_RDP_Nothing,  RSP_RDP_Nothing,	 RSP_RDP_Nothing,	 RSP_RDP_Nothing,
 	//10
 	RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker, RSP_Tri4_Conker,
@@ -1225,7 +1225,7 @@ UcodeMap ucodeMap10 =
 	DLParser_SetFogColor, DLParser_SetBlendColor, DLParser_SetPrimColor, DLParser_SetEnvColor,
 	DLParser_SetCombine,  DLParser_SetTImg,		  DLParser_SetZImg,		 DLParser_SetCImg
 	//g0
-};
+};*/
 
 // uCode 11 - RSP SW 2.0 Gemini
 // Games: Gemini
