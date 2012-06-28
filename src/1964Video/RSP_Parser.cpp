@@ -370,7 +370,6 @@ void RDP_SetUcodeMap(int ucode)
 	case 0:	// Mario and demos
 		break;
 	case 1:	// F3DEX GBI1
-	case 20:
 		break;
 	case 2: // Golden Eye
 		memcpy( &LoadedUcodeMap, &ucodeMap0, sizeof(UcodeMap));
@@ -395,8 +394,6 @@ void RDP_SetUcodeMap(int ucode)
 	case 5:	// F3DEX GBI2
 		break;
 	case 6: // DKR, Jet Force Gemini, Mickey
-		break;
-	case 11: // DKR, Jet Force Gemini, Mickey
 		break;
 	case 7: // S2DEX GBI1
 		break;
@@ -431,6 +428,8 @@ void RDP_SetUcodeMap(int ucode)
 		LoadedUcodeMap[0xdb]=RSP_MoveWord_Conker;
 		LoadedUcodeMap[0xdc]=RSP_MoveMem_Conker;
 		status.bUseModifiedUcodeMap = true;
+		break;
+	case 11: // DKR, Jet Force Gemini, Mickey
 		break;
 	case 12: // Silicon Velley, Space Station
 		memcpy( &LoadedUcodeMap, &ucodeMap1, sizeof(UcodeMap));
@@ -501,6 +500,8 @@ void RDP_SetUcodeMap(int ucode)
 		LoadedUcodeMap[0x00]=DLParser_RSP_Last_Legion_0x00;
 		LoadedUcodeMap[0xe4]=DLParser_TexRect_Last_Legion;
 		status.bUseModifiedUcodeMap = true;
+		break;
+	case 20:
 		break;
 	default:
 		memcpy( &LoadedUcodeMap, &ucodeMap5, sizeof(UcodeMap));
