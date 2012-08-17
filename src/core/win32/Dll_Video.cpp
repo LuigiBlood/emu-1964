@@ -212,6 +212,7 @@ void GetPluginsResizeRequest(LPRECT lpRect)
 
 BOOL VIDEO_InitiateGFX(GFX_INFO Gfx_Info)
 {
+	VIDEO_DllClose();
 	RECT Rect;
 	
 	GFX_PluginRECT.UseThis = FALSE;
